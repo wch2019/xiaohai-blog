@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.7</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.xiaohai</groupId>
+    <artifactId>xiaohai-blog</artifactId>
+    <version>0.0.1</version>
+    <name>xiaohai-blog</name>
+    <description>xiaohai个人博客</description>
+
+    <!--默认是 jar, 修改为pom。 这样才可以作为父项目存在。-->
+    <packaging>pom</packaging>
+
+    <!--对子项目的关联。-->
+    <modules>
+        <module>xiaohai-admin</module>
+        <module>xiaohai-common</module>
+        <module>xiaohai-generator</module>
+    </modules>
+
+    <properties>
+        <xiaohai.version>0.0.1</xiaohai.version>
+        <java.version>17</java.version>
+    </properties>
+    <!-- 依赖声明 -->
+    <dependencyManagement>
+        <dependencies>
+            <!--common 通用工具-->
+            <dependency>
+                <groupId>com.xiaohai</groupId>
+                <artifactId>xiaohai-common</artifactId>
+                <version>${xiaohai.version}</version>
+            </dependency>
+            <!--generator 代码生成-->
+            <dependency>
+                <groupId>com.xiaohai</groupId>
+                <artifactId>xiaohai-generator</artifactId>
+                <version>${xiaohai.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
