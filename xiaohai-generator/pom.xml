@@ -15,15 +15,11 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
 
+		<!--common通用工具-->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>com.xiaohai</groupId>
+			<artifactId>xiaohai-common</artifactId>
 		</dependency>
 	</dependencies>
 

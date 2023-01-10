@@ -1,4 +1,4 @@
-package com.example.admin;
+package com.xiaohai.admin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

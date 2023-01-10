@@ -6,9 +6,9 @@ import com.example.shiro.common.daomain.PageEntity;
 import com.example.shiro.common.daomain.Response;
 
 /**
- * <p>
+ *
  * ${table.comment!} 服务类
- * </p>
+ *
  *
  * @author ${author}
  * @since ${date}

@@ -16,26 +16,17 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
-        <!-- SpringBoot Web容器 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-       <!-- SpringbootTest 使用Junit4开发 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
+
+
         <!--common通用工具-->
         <dependency>
             <groupId>com.xiaohai</groupId>
             <artifactId>xiaohai-common</artifactId>
+        </dependency>
+        <!--generator 代码生成-->
+        <dependency>
+            <groupId>com.xiaohai</groupId>
+            <artifactId>xiaohai-generator</artifactId>
         </dependency>
     </dependencies>
 

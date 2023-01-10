@@ -1,1 +1,39 @@
-
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shiro?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    username: root
+    password: 123456
+#==============================mybatis-plus配置==============================
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    #是否控制台 print mybatis-plus 的 LOGO
+    banner: false
+#==============================springdoc-openapi项目配置=======================================
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    #正式改为false
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
+    #正式改为false
+    enabled: true
+  group-configs:
+    - group: '展示页'
+      #组匹配的路径列表（逗号分隔）
+      paths-to-match: '/**'
+      #要扫描组的包列表（逗号分隔）
+      packages-to-scan: com.xiaohai.admin
+    - group: '管理页'
+      paths-to-match: '/**'
+      packages-to-scan: com.xiaohai.admin

@@ -1,0 +1,33 @@
+package com.xiaohai.common.daomain;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.Date;
+
+/**
+ * @author wangchenghai
+ * @date 2023/01/09 13:47:42
+ */
+public class BaseEntity {
+    @Schema(description = "创建人", example = "创建人")
+    @TableField(fill = FieldFill.INSERT)
+    private String createdBy;
+
+
+    @Schema(description = "创建时间", example = "2022-12-28 13:55:41")
+    @TableField(fill = FieldFill.INSERT)
+    private Date createdTime;
+
+
+    @Schema(description = "更新人", example = "更新人")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private String updatedBy;
+
+
+    @Schema(description = "更新时间", example = "2022-12-28 13:55:41")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updatedTime;
+}
