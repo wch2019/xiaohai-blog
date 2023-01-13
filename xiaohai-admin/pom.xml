@@ -18,7 +18,7 @@
     <dependencies>
 
 
-        <!--common通用工具-->
+        <!--common 通用工具-->
         <dependency>
             <groupId>com.xiaohai</groupId>
             <artifactId>xiaohai-common</artifactId>
@@ -27,6 +27,11 @@
         <dependency>
             <groupId>com.xiaohai</groupId>
             <artifactId>xiaohai-generator</artifactId>
+        </dependency>
+        <!--system 系统模块 -->
+        <dependency>
+            <groupId>com.xiaohai</groupId>
+            <artifactId>xiaohai-system</artifactId>
         </dependency>
     </dependencies>
 

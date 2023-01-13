@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaohai.system.dao.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xiaohai.system.pojo.entity.UserEntity">
+        <id column="id" property="id" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="nick_name" property="nickName" />
+        <result column="gender" property="gender" />
+        <result column="avatar" property="avatar" />
+        <result column="email" property="email" />
+        <result column="qq_number" property="qqNumber" />
+        <result column="we_chat" property="weChat" />
+        <result column="mobile" property="mobile" />
+        <result column="summary" property="summary" />
+        <result column="status" property="status" />
+        <result column="login_ip" property="loginIp" />
+        <result column="login_date" property="loginDate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_by,
+        created_time,
+        updated_by,
+        updated_time,
+        id, username, password, nick_name, gender, avatar, email, qq_number, we_chat, mobile, summary, status, login_ip, login_date
+    </sql>
+
+</mapper>

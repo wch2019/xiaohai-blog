@@ -2,8 +2,7 @@ package ${package.Service};
 
 import ${package.Entity}.${entity};
 import ${superServiceClassPackage};
-import com.example.shiro.common.daomain.PageEntity;
-import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.daomain.ReturnPageData;
 
 /**
  *
@@ -52,11 +51,11 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     ${entity} findById(Long id);
 
     /**
-    * 查询${table.comment!}列表/分页数据
+    * 查询${table.comment!}列表数据
     *
-    * @param page      分页
+    * @param ${entity?uncap_first} ${table.comment!}
     * @return          Response
     */
-    Response findListByPage(PageEntity page,${entity} ${entity?uncap_first});
+    ReturnPageData<${entity}> findListByPage(${entity} ${entity?uncap_first});
 }
 </#if>

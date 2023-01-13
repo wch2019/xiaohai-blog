@@ -4,8 +4,9 @@ import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
-import com.example.shiro.common.daomain.PageEntity;
-import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.MapUtils;
+import com.xiaohai.common.utils.PageUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -47,14 +48,10 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     @Override
-    public Response findListByPage(PageEntity page, ${entity} ${entity?uncap_first}){
-        QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
-        if (page.isPaginated()) {
-            IPage<${entity}> wherePage = new Page<>(page.getPageNum(),page.getPageSize());
-            return new Response().success("查询角色权限分页数据成功！", baseMapper.selectPage(wherePage, wrapper));
-        }else{
-            return new Response().success("查询角色权限数据列表成功！", baseMapper.selectList(wrapper));
-        }
+    public ReturnPageData<${entity}> findListByPage(${entity} ${entity?uncap_first}){
+        IPage<${entity}> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
+        IPage<${entity}> iPage = baseMapper.selectPage(wherePage,Wrappers.query(${entity?uncap_first}));
+        return ReturnPageData.fillingData(iPage);
     }
 }
 </#if>

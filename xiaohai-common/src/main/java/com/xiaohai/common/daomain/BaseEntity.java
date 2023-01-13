@@ -2,6 +2,7 @@ package com.xiaohai.common.daomain;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,22 +15,23 @@ import java.util.Date;
  */
 @Data
 public class BaseEntity {
+    @JsonProperty
     @Schema(description = "创建人", example = "创建人")
     @TableField(fill = FieldFill.INSERT)
-    private String createdBy;
+    private Integer createdBy;
 
 
-    @Schema(description = "创建时间", example = "2022-12-28 13:55:41")
+    @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdTime;
 
 
     @Schema(description = "更新人", example = "更新人")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private String updatedBy;
+    private Integer updatedBy;
 
 
-    @Schema(description = "更新时间", example = "2022-12-28 13:55:41")
+    @Schema(description = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedTime;
 }

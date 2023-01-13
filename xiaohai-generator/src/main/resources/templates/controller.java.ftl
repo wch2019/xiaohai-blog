@@ -1,15 +1,15 @@
 package ${package.Controller};
 
-import com.example.shiro.common.daomain.PageEntity;
 import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.daomain.ReturnPageData;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ${package.Service}.${table.serviceName};
 import ${package.Entity}.${entity};
 
-import javax.annotation.Resource;
 <#if restControllerStyle>
 import org.springframework.web.bind.annotation.RestController;
 <#else>
@@ -69,10 +69,12 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
         return  Response.success("id查询${table.comment!}成功！",${(table.serviceName?substring(1))?uncap_first}.findById(id));
     }
 
-    @Operation(summary = "查询${table.comment!}列表/分页数据")
+    @Operation(summary = "查询${table.comment!}列表数据")
+    @Parameter(name = "pageNum", description = "页码", required = true)
+    @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
-    public Response findListByPage(PageEntity page,${entity} ${entity?uncap_first}){
-        return ${(table.serviceName?substring(1))?uncap_first}.findListByPage(page,${entity?uncap_first});
+    public Response<ReturnPageData<${entity}>> findListByPage(${entity} ${entity?uncap_first}){
+        return Response.success("查询${table.comment!}列表成功！",${(table.serviceName?substring(1))?uncap_first}.findListByPage(${entity?uncap_first}));
     }
 
     }

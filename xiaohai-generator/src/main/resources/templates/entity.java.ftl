@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 <#if entityLombokModel>
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
     <#if chainModel>
@@ -28,6 +29,7 @@ import lombok.experimental.Accessors;
 <#if entityLombokModel>
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
     <#if chainModel>
 @Accessors(chain = true)
     </#if>
@@ -36,7 +38,7 @@ import lombok.experimental.Accessors;
 @TableName("${schemaName}${table.name}")
 </#if>
 <#if springdoc>
-@Schema(name = "${entity}", description = "$!{table.comment}")
+@Schema(name = "${entity}", description = "${table.comment!}")
 <#elseif swagger>
 @ApiModel(value = "${entity}对象", description = "${table.comment!}")
 </#if>

@@ -83,6 +83,12 @@
                 <artifactId>xiaohai-generator</artifactId>
                 <version>${xiaohai.version}</version>
             </dependency>
+            <!--system 系统模块 -->
+            <dependency>
+                <groupId>com.xiaohai</groupId>
+                <artifactId>xiaohai-system</artifactId>
+                <version>${xiaohai.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

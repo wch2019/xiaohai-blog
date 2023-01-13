@@ -5,9 +5,11 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/shiro?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/xiaohai_blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false
     username: root
     password: 123456
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 #==============================mybatis-plus配置==============================
 mybatis-plus:
   mapper-locations: classpath*:mapper/*Mapper.xml
@@ -29,11 +31,11 @@ springdoc:
     #正式改为false
     enabled: true
   group-configs:
+    - group: '管理页'
+      paths-to-match: '/**'
+      packages-to-scan: com.xiaohai.system
     - group: '展示页'
       #组匹配的路径列表（逗号分隔）
       paths-to-match: '/**'
       #要扫描组的包列表（逗号分隔）
-      packages-to-scan: com.xiaohai.admin
-    - group: '管理页'
-      paths-to-match: '/**'
       packages-to-scan: com.xiaohai.admin
