@@ -3,7 +3,7 @@ package ${package.Service};
 import ${package.Entity}.${entity};
 import ${superServiceClassPackage};
 import com.example.shiro.common.daomain.PageEntity;
-import com.example.shiro.common.daomain.Response;
+import com.xiaohai.common.daomain.Response;
 
 /**
  *

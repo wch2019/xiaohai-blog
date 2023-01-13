@@ -5,7 +5,7 @@ import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import com.example.shiro.common.daomain.PageEntity;
-import com.example.shiro.common.daomain.Response;
+import com.xiaohai.common.daomain.Response;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

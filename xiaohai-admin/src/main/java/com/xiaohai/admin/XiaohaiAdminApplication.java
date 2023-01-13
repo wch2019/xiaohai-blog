@@ -5,12 +5,14 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @SpringBootApplication
+@ComponentScan("com.xiaohai")
 @MapperScan("com.xiaohai.system.dao")
 @Slf4j
 public class XiaohaiAdminApplication {
