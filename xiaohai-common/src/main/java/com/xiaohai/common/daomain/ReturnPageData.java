@@ -1,8 +1,8 @@
 package com.xiaohai.common.daomain;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -15,23 +15,19 @@ import java.util.List;
  * @param
  */
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class ReturnPageData<T> {
-    @Schema(description = "查询列表总记录数")
-    private long total;
-    @Schema(description = "每页显示条数，默认 10")
-    private long size;
-    @Schema(description = "当前页")
-    private long current;
+public class ReturnPageData<T> extends PageData{
+
     @Schema(description = "查询数据列表")
     private List<T> records;
 
-    public static <T> ReturnPageData<T> fillingData(IPage<T> iPage) {
-        ReturnPageData<T> returnPageData = new ReturnPageData<T>();
-        returnPageData.setTotal(iPage.getTotal());
-        returnPageData.setSize(iPage.getSize());
-        returnPageData.setCurrent(iPage.getCurrent());
-        returnPageData.setRecords(iPage.getRecords());
+    public static <T> ReturnPageData<T> fillingData(PageData pageData,List<T> records) {
+        ReturnPageData<T> returnPageData = new ReturnPageData<>();
+        returnPageData.setTotal(pageData.getTotal());
+        returnPageData.setSize(pageData.getSize());
+        returnPageData.setCurrent(pageData.getCurrent());
+        returnPageData.setRecords(records);
         return returnPageData;
     }
 }

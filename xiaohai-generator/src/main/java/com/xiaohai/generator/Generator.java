@@ -5,14 +5,12 @@ import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -26,10 +24,10 @@ import java.util.function.Consumer;
 public class Generator {
     /**路径*/
     private static final String PROJECT_PATH  = System.getProperty("user.dir")+"/xiaohai-system";
+    /** 自定义文件路径*/
+    private static final String OTHER_PATH = PROJECT_PATH + "/src/main/java/com/xiaohai/system";
     /**数据库地址*/
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/xiaohai_blog?&characterEncoding=utf8&useSSL=false&serverTimezone=UTC";
-    /** 数据库连接类型*/
-    private static final String DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
     /** 数据库账号*/
     private static final String USERNAME = "root";
     /** 数据库密码*/
@@ -68,6 +66,7 @@ public class Generator {
                 //模板引擎修改
                 .templateEngine(new FreemarkerTemplateEngine())
                 .templateConfig(getTemplateConfig())
+                .injectionConfig(initInjectionConfig())
                 .strategyConfig(getStrategyConfig())
                 .execute();
     }
@@ -141,6 +140,61 @@ public class Generator {
                 .controller("/templates/controller.java")
                 .build();
     }
+    private static Consumer<InjectionConfig.Builder>  initInjectionConfig() {
+        /**自定义生成模板参数**/
+        Map<String, Object> paramMap = new HashMap<>();
+        Other other=new Other();
+        other.setDto(PARENT_PACKAGE+"."+MODULE_NAME+".pojo.dto");
+        other.setVo(PARENT_PACKAGE+"."+MODULE_NAME+".pojo.vo");
+        other.setQuery(PARENT_PACKAGE+"."+MODULE_NAME+".pojo.query");
+        paramMap.put("other",other);
+        List<CustomFile> customFiles=new ArrayList<>();
+        /**DTO实体**/
+        customFiles.add(new CustomFile.Builder()
+                //模板路径
+                .templatePath("/templates/dto.java.ftl")
+                //文件名称
+                .fileName("Dto.java")
+                //文件路径
+                .filePath(OTHER_PATH)
+                //自定义文件包名
+                .packageName("pojo/dto")
+                //是否覆盖已有文件（默认 false）
+                .enableFileOverride().build());
+        /**Vo实体**/
+        customFiles.add(new CustomFile.Builder()
+                //模板路径
+                .templatePath("/templates/vo.java.ftl")
+                //文件名称
+                .fileName("Vo.java")
+                //文件路径
+                .filePath(OTHER_PATH)
+                //自定义文件包名
+                .packageName("pojo/vo")
+                //是否覆盖已有文件（默认 false）
+                .enableFileOverride().build());
+        /**Query实体**/
+        customFiles.add(new CustomFile.Builder()
+                //模板路径
+                .templatePath("/templates/query.java.ftl")
+                //文件名称
+                .fileName("Query.java")
+                //文件路径
+                .filePath(OTHER_PATH)
+                //自定义文件包名
+                .packageName("pojo/query")
+                //是否覆盖已有文件（默认 false）
+                .enableFileOverride().build());
+
+        return consumer->consumer
+                // 自定义配置 Map 对象
+                .customMap(paramMap)
+                //自定义模板文件列表
+                .customFile(customFiles)
+                .beforeOutputFile((tableInfo, objectMap) -> {
+                    System.out.println("tableInfo: " + tableInfo.getEntityName() + " objectMap: " + objectMap.size());
+                });
+    }
 
     /**
      * 处理 all 情况
@@ -150,6 +204,7 @@ public class Generator {
     protected static List<String> getTables(String tables) {
         return "all".equals(tables) ? Collections.emptyList() : Arrays.asList(tables.split(","));
     }
+
     /**
      * 策略配置(StrategyConfig)
      * @return
@@ -183,7 +238,7 @@ public class Generator {
                     // 全局主键类型
                     .idType(IdType.AUTO)
                     //格式化文件名称
-                    .formatFileName("%sEntity")
+//                    .formatFileName("%sEntity")
                     .build();
 
             /**
@@ -223,10 +278,6 @@ public class Generator {
                     // 启用 BaseColumnList
                     .enableBaseColumnList()
                     .build();
-
-
-
-
         };
     }
 }

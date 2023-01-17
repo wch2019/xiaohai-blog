@@ -3,6 +3,9 @@ package ${package.Service};
 import ${package.Entity}.${entity};
 import ${superServiceClassPackage};
 import com.xiaohai.common.daomain.ReturnPageData;
+import ${other.query}.${entity}Query;
+import ${other.vo}.${entity}Vo;
+import ${other.dto}.${entity}Dto;
 
 /**
  *
@@ -21,10 +24,10 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
      * 添加${table.comment!}
      *
-     * @param ${entity?uncap_first} ${table.comment!}
+     * @param vo ${table.comment!} VO（View Object）：显示层对象
      * @return Integer
      */
-    Integer add(${entity} ${entity?uncap_first});
+    Integer add(${entity}Vo vo);
 
     /**
      * 删除${table.comment!}
@@ -37,10 +40,10 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
      * 修改${table.comment!}
      *
-     * @param ${entity?uncap_first} ${table.comment!}
+     * @param vo ${table.comment!} VO（View Object）：显示层对象
      * @return Integer
      */
-    Integer updateData(${entity} ${entity?uncap_first});
+    Integer updateData(${entity}Vo vo);
 
     /**
      * id查询数据
@@ -53,9 +56,9 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
     * 查询${table.comment!}列表数据
     *
-    * @param ${entity?uncap_first} ${table.comment!}
-    * @return          Response
+    * @param query ${table.comment!} Query 数据查询对象
+    * @return Response
     */
-    ReturnPageData<${entity}> findListByPage(${entity} ${entity?uncap_first});
+    ReturnPageData<${entity}Dto> findListByPage(${entity}Query query);
 }
 </#if>

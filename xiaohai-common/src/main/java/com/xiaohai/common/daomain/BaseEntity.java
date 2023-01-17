@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author wangchenghai
  * @date 2023/01/09 13:47:42
  */
 @Data
-public class BaseEntity {
+public class BaseEntity{
     @JsonProperty
     @Schema(description = "创建人", example = "创建人")
     @TableField(fill = FieldFill.INSERT)

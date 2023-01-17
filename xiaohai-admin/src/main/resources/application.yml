@@ -31,11 +31,11 @@ springdoc:
     #正式改为false
     enabled: true
   group-configs:
-    - group: '管理页'
-      paths-to-match: '/**'
-      packages-to-scan: com.xiaohai.system
     - group: '展示页'
       #组匹配的路径列表（逗号分隔）
       paths-to-match: '/**'
       #要扫描组的包列表（逗号分隔）
       packages-to-scan: com.xiaohai.admin
+    - group: '管理页'
+      paths-to-match: '/**'
+      packages-to-scan: com.xiaohai.system
