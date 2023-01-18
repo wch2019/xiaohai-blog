@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaohai.system.dao.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xiaohai.system.pojo.entity.Menu">
+        <id column="id" property="id" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="parent_id" property="parentId" />
+        <result column="icon" property="icon" />
+        <result column="menu_sort" property="menuSort" />
+        <result column="menu_name" property="menuName" />
+        <result column="menu_type" property="menuType" />
+        <result column="path" property="path" />
+        <result column="component" property="component" />
+        <result column="perms" property="perms" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_by,
+        created_time,
+        updated_by,
+        updated_time,
+        id, parent_id, icon, menu_sort, menu_name, menu_type, path, component, perms, status
+    </sql>
+
+</mapper>
