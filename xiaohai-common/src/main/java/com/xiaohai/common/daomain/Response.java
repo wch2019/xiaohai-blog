@@ -184,5 +184,16 @@ public class Response<T> {
         return new Response<>(httpStatus.value(), msg, data);
     }
 
+    /**
+     * 返回错误消息
+     * @param httpStatus
+     * @param msg
+     * @return
+     * @param <T>
+     */
+    public static<T> Response<T> failure(HttpStatus httpStatus, String msg) {
+        return new Response<>(httpStatus.value(), msg, null);
+    }
+
 
 }

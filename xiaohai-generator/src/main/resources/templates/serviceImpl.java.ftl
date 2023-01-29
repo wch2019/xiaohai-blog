@@ -43,18 +43,18 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     @Override
     public Integer delete(Long id){
-        return  baseMapper.deleteById(id);
+        return baseMapper.deleteById(id);
     }
 
     @Override
     public Integer updateData(${entity}Vo vo){
         ${entity} ${entity?uncap_first}=new ${entity}();
         BeanUtils.copyProperties(vo,${entity?uncap_first});
-        return  baseMapper.updateById(${entity?uncap_first});
+        return baseMapper.updateById(${entity?uncap_first});
     }
 
     @Override
-    public  ${entity} findById(Long id){
+    public ${entity} findById(Long id){
         return baseMapper.selectById(id);
     }
 
@@ -66,9 +66,9 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         IPage<${entity}> iPage = baseMapper.selectPage(wherePage,Wrappers.query(${entity?uncap_first}));
         List<${entity}Dto> list=new ArrayList<>();
         for(${entity} ${entity?uncap_first}s:iPage.getRecords()){
-        ${entity}Dto ${entity?uncap_first}Dto=new ${entity}Dto();
-        BeanUtils.copyProperties(${entity?uncap_first}s,${entity?uncap_first}Dto);
-        list.add(${entity?uncap_first}Dto);
+            ${entity}Dto ${entity?uncap_first}Dto=new ${entity}Dto();
+            BeanUtils.copyProperties(${entity?uncap_first}s,${entity?uncap_first}Dto);
+            list.add(${entity?uncap_first}Dto);
         }
         PageData pageData=new PageData();
         BeanUtils.copyProperties(iPage,pageData);

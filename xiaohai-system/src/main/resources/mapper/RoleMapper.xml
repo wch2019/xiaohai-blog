@@ -23,5 +23,19 @@
         updated_time,
         id, code, name, remarks, status
     </sql>
+    <select id="listByCodes" resultType="java.lang.String">
+        SELECT r.code
+        FROM `sys_role` AS r,
+             `sys_user_role` ur
+        WHERE r.`id` = ur.`role_id`
+          AND ur.`user_id` = #{userId};
+    </select>
+    <select id="listByRoleIds" resultType="java.lang.Long">
+        SELECT r.id
+        FROM `sys_role` AS r,
+             `sys_user_role` ur
+        WHERE r.`id` = ur.`role_id`
+          AND ur.`user_id` = #{userId};
+    </select>
 
 </mapper>

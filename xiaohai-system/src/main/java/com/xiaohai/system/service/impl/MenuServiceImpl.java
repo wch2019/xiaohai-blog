@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 菜单权限表 服务实现类
  *
  * @author xiaohai
@@ -30,43 +29,43 @@ import java.util.List;
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
     @Override
-    public Integer add(MenuVo vo){
-        Menu menu=new Menu();
-        BeanUtils.copyProperties(vo,menu);
+    public Integer add(MenuVo vo) {
+        Menu menu = new Menu();
+        BeanUtils.copyProperties(vo, menu);
         return baseMapper.insert(menu);
     }
 
     @Override
-    public Integer delete(Long id){
-        return  baseMapper.deleteById(id);
+    public Integer delete(Long id) {
+        return baseMapper.deleteById(id);
     }
 
     @Override
-    public Integer updateData(MenuVo vo){
-        Menu menu=new Menu();
-        BeanUtils.copyProperties(vo,menu);
-        return  baseMapper.updateById(menu);
+    public Integer updateData(MenuVo vo) {
+        Menu menu = new Menu();
+        BeanUtils.copyProperties(vo, menu);
+        return baseMapper.updateById(menu);
     }
 
     @Override
-    public  Menu findById(Long id){
+    public Menu findById(Long id) {
         return baseMapper.selectById(id);
     }
 
     @Override
-    public ReturnPageData<MenuDto> findListByPage(MenuQuery query){
-        Menu menu=new Menu();
-        BeanUtils.copyProperties(query,menu);
+    public ReturnPageData<MenuDto> findListByPage(MenuQuery query) {
+        Menu menu = new Menu();
+        BeanUtils.copyProperties(query, menu);
         IPage<Menu> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Menu> iPage = baseMapper.selectPage(wherePage,Wrappers.query(menu));
-        List<MenuDto> list=new ArrayList<>();
-        for(Menu menus:iPage.getRecords()){
-        MenuDto menuDto=new MenuDto();
-        BeanUtils.copyProperties(menus,menuDto);
-        list.add(menuDto);
+        IPage<Menu> iPage = baseMapper.selectPage(wherePage, Wrappers.query(menu));
+        List<MenuDto> list = new ArrayList<>();
+        for (Menu menus : iPage.getRecords()) {
+            MenuDto menuDto = new MenuDto();
+            BeanUtils.copyProperties(menus, menuDto);
+            list.add(menuDto);
         }
-        PageData pageData=new PageData();
-        BeanUtils.copyProperties(iPage,pageData);
-        return ReturnPageData.fillingData(pageData,list);
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, list);
     }
 }

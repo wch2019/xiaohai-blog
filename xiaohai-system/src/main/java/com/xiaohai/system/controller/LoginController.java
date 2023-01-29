@@ -2,11 +2,13 @@ package com.xiaohai.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RoleVo;
 import com.xiaohai.system.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * @author wangchenghai
@@ -28,11 +32,11 @@ public class LoginController {
 
     @Operation(summary = "登录")
     @PostMapping("login")
-    public Response<String> login(@Validated @RequestBody LoginVo vo){
+    public Response<String> login(@Valid @RequestBody LoginVo vo){
         return  Response.success("登录成功！", loginService.login(vo));
     }
 
-    @Operation(summary = "退出")
+    @Operation(summary = "退出",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckLogin
     @GetMapping("logout")
     public Response<Object> logout() {
