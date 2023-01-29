@@ -13,7 +13,7 @@ import com.xiaohai.system.pojo.dto.RoleDto;
  *
  *
  * @author xiaohai
- * @since 2023-01-18
+ * @since 2023-01-29
  */
 public interface RoleService extends IService<Role> {
 

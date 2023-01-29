@@ -1,5 +1,6 @@
 package ${package.Controller};
 
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,32 +49,32 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
     private final ${table.serviceName} ${(table.serviceName?substring(1))?uncap_first};
 
 
-    @Operation(summary = "新增${table.comment!}",security = {@SecurityRequirement(name = "authentication")})
+    @Operation(summary = "新增${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
     public Response<Integer> add(@RequestBody ${entity}Vo vo){
         return  Response.success("新增${table.comment!}成功！", ${(table.serviceName?substring(1))?uncap_first}.add(vo));
     }
 
-    @Operation(summary = "删除${table.comment!}",security = {@SecurityRequirement(name = "authentication")})
+    @Operation(summary = "删除${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @DeleteMapping("{id}")
     public Response<Integer> delete(@PathVariable("id") Long id){
         return  Response.success("删除${table.comment!}成功！",${(table.serviceName?substring(1))?uncap_first}.delete(id));
     }
 
-    @Operation(summary = "更新${table.comment!}",security = {@SecurityRequirement(name = "authentication")})
+    @Operation(summary = "更新${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PutMapping()
     public Response<Integer> update(@RequestBody ${entity}Vo vo){
         return  Response.success("更新${table.comment!}成功！",${(table.serviceName?substring(1))?uncap_first}.updateData(vo));
     }
 
 
-    @Operation(summary = "id查询${table.comment!}",security = {@SecurityRequirement(name = "authentication")})
+    @Operation(summary = "id查询${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
     public Response<${entity}> findById(@PathVariable Long id){
         return  Response.success("id查询${table.comment!}成功！",${(table.serviceName?substring(1))?uncap_first}.findById(id));
     }
 
-    @Operation(summary = "查询${table.comment!}列表数据",security = {@SecurityRequirement(name = "authentication")})
+    @Operation(summary = "查询${table.comment!}列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()

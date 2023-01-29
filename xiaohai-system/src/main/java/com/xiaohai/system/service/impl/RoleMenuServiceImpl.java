@@ -24,7 +24,7 @@ import java.util.List;
  * 角色权限关联表 服务实现类
  *
  * @author xiaohai
- * @since 2023-01-18
+ * @since 2023-01-29
  */
 @Service
 public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> implements RoleMenuService {

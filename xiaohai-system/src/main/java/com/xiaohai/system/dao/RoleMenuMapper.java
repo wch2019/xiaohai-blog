@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author xiaohai
- * @since 2023-01-18
+ * @since 2023-01-29
  */
 public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
 

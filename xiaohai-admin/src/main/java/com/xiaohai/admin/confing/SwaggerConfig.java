@@ -1,14 +1,19 @@
 package com.xiaohai.admin.confing;
 
 
+import com.xiaohai.common.constant.Constants;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Open Api
@@ -19,12 +24,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SwaggerConfig {
-    public static final String SESSION_ID = "authentication";
 
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList(SESSION_ID))
+                .addSecurityItem(new SecurityRequirement().addList(Constants.SESSION_ID))
                 .components(securityComponent())
                 .info(new Info().title("blog")
                         .description("blog接口文档").contact(new Contact().name("xiaohai"))
@@ -33,7 +37,7 @@ public class SwaggerConfig {
 
     /**
      * 添加授权标头
-     *  knife4j存在问题等待开发者解决
+     *
      * @param
      * @return io.swagger.v3.oas.models.Components
      * @author wangchenghai
@@ -41,9 +45,9 @@ public class SwaggerConfig {
      */
     private Components securityComponent() {
         return new Components()
-                .addSecuritySchemes(SESSION_ID,
+                .addSecuritySchemes(Constants.SESSION_ID,
                         new SecurityScheme()
-                                .name(SESSION_ID)
+                                .name(Constants.SESSION_ID)
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER));
     }

@@ -1,5 +1,6 @@
 package com.xiaohai.admin.controller;
 
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.server.Server;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ServerController
 {
     @GetMapping()
-    @Operation(security = {@SecurityRequirement(name = "authentication")})
+    @Operation(security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     public Response<Object> getInfo() throws Exception {
         Server server = new Server();
         server.copyTo();

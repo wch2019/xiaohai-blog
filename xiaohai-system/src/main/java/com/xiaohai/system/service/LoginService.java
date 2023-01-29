@@ -1,8 +1,6 @@
 package com.xiaohai.system.service;
 
 import com.xiaohai.system.pojo.vo.LoginVo;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @author wangchenghai
