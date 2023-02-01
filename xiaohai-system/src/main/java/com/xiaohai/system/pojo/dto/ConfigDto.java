@@ -1,35 +1,28 @@
-package com.xiaohai.system.pojo.entity;
+package com.xiaohai.system.pojo.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.xiaohai.common.daomain.BaseEntity;
 import java.io.Serializable;
 import java.io.Serial;
+import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * <p>
- * 系统配置
- * </p>
- *
- * @author xiaohai
- * @since 2023-02-01
- */
+* <p>
+* 系统配置 DTO 数据传输对象
+* </p>
+*
+* @author xiaohai
+* @since 2023-02-01
+*/
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
-@TableName("sys_config")
-@Schema(name = "Config", description = "系统配置")
-public class Config extends BaseEntity  implements Serializable  {
+@Schema(name = "ConfigDto", description = "系统配置 DTO 数据传输对象")
+public class ConfigDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "id")
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @Schema(description = "邮箱地址")

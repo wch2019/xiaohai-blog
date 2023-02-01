@@ -26,16 +26,16 @@ public class ConfigVo implements Serializable {
     private Integer id;
 
     @Schema(description = "邮箱地址")
-    private String maillHost;
+    private String emailHost;
 
     @Schema(description = "邮箱发件人")
-    private String maillUsername;
+    private String emailUsername;
 
     @Schema(description = "邮箱授权码")
-    private String maillPassword;
+    private String emailPassword;
 
     @Schema(description = "邮箱发送端口")
-    private String emailPort;
+    private Integer emailPort;
 
     @Schema(description = "本地文件地址")
     private String filePath;
