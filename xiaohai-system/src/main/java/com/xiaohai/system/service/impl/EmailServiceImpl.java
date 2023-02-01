@@ -36,15 +36,17 @@ public class EmailServiceImpl implements EmailService {
     @PostConstruct
     public void init(){
         Config systemConfig = configMapper.selectOne(new QueryWrapper<Config>().last("LIMIT 1"));
-        javaMailSender.setHost(systemConfig.getEmailHost());
-        javaMailSender.setUsername(systemConfig.getEmailUsername());
-        javaMailSender.setPassword(systemConfig.getEmailPassword());
-        javaMailSender.setPort(systemConfig.getEmailPort());
-        javaMailSender.setDefaultEncoding("UTF-8");
-        Properties p = new Properties();
-        p.setProperty("mail.smtp.auth", "true");
-        p.setProperty("mail.debug", "true");
-        javaMailSender.setJavaMailProperties(p);
+        if(systemConfig!=null){
+            javaMailSender.setHost(systemConfig.getEmailHost());
+            javaMailSender.setUsername(systemConfig.getEmailUsername());
+            javaMailSender.setPassword(systemConfig.getEmailPassword());
+            javaMailSender.setPort(systemConfig.getEmailPort());
+            javaMailSender.setDefaultEncoding("UTF-8");
+            Properties p = new Properties();
+            p.setProperty("mail.smtp.auth", "true");
+            p.setProperty("mail.debug", "true");
+            javaMailSender.setJavaMailProperties(p);
+        }
     }
 
 
