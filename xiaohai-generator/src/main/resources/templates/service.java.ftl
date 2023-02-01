@@ -49,8 +49,8 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      * id查询数据
      *
      * @param id id
-     * @return   Integer
-     */
+     * @return   ${entity}
+*/
     ${entity} findById(Long id);
 
     /**
