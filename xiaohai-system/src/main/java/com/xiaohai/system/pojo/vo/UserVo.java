@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 /**
 * <p>
 * 用户表 VO（View Object）：显示层对象
@@ -26,6 +28,7 @@ public class UserVo implements Serializable {
     private Integer id;
 
     @Schema(description = "用户名")
+    @NotBlank(message = "用户名不能为空")
     private String username;
 
     @Schema(description = "密码")
@@ -41,6 +44,7 @@ public class UserVo implements Serializable {
     private String avatar;
 
     @Schema(description = "用户邮箱")
+    @NotBlank(message = "邮箱不能为空")
     private String email;
 
     @Schema(description = "qq号")

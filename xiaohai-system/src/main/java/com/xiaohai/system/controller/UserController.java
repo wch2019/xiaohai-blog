@@ -18,6 +18,8 @@ import com.xiaohai.system.pojo.dto.UserDto;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
 *
 * 用户表Controller
@@ -36,7 +38,7 @@ public class UserController {
 
     @Operation(summary = "新增用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
-    public Response<Integer> add(@RequestBody UserVo vo){
+    public Response<Integer> add(@Valid @RequestBody UserVo vo){
         return  Response.success("新增用户表成功！", serService.add(vo));
     }
 

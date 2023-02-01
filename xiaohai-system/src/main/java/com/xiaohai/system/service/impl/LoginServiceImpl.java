@@ -25,7 +25,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String login(LoginVo vo) {
-        User user=userMapper.selectOne(new QueryWrapper<User>().eq("username",vo.getUsername()).eq("password", EncryptUtils.aesEncrypt(vo.getPassword())));
+        User user=userMapper.selectOne(new QueryWrapper<User>()
+                .eq("username",vo.getUsername())
+                .or().eq("email",vo.getUsername()).
+                eq("password", EncryptUtils.aesEncrypt(vo.getPassword())));
         Assert.isTrue(user != null, "用户帐号或者密码错误!");
         if (vo.getRememberMe()) {
             //记住我 7天有效
