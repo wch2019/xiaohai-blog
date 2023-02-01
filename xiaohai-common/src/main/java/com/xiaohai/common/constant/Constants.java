@@ -25,4 +25,8 @@ public class Constants {
      * 默认分页条数
      */
     public static final String DEFAULT_SIZE = "10";
+    /**
+     * 当前用户信息
+     */
+    public static final String CURRENT_USER = "current_user";
 }

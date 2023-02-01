@@ -1,7 +1,9 @@
 package com.xiaohai.system.service.impl;
 
+import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.entity.User;
@@ -20,11 +22,19 @@ import org.springframework.util.Assert;
 public class LoginServiceImpl implements LoginService {
 
     private final UserMapper userMapper;
+
     @Override
     public String login(LoginVo vo) {
         User user=userMapper.selectOne(new QueryWrapper<User>().eq("username",vo.getUsername()).eq("password", EncryptUtils.aesEncrypt(vo.getPassword())));
         Assert.isTrue(user != null, "用户帐号或者密码错误!");
-        StpUtil.login(user.getId().longValue());
+        if (vo.getRememberMe()) {
+            //记住我 7天有效
+            StpUtil.login(user.getId().longValue(),new SaLoginModel().setIsLastingCookie(true).setTimeout(60 * 60 * 24 * 7));
+        }else {
+            StpUtil.login(user.getId().longValue());
+        }
+        // 在登录时缓存user对象
+        StpUtil.getSession().set(Constants.CURRENT_USER,userMapper.selectById(user.getId()));
         return StpUtil.getTokenValue();
     }
 }

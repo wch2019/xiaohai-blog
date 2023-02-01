@@ -1,5 +1,6 @@
 package com.xiaohai.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -46,6 +47,7 @@ public class UserController {
     }
 
     @Operation(summary = "更新用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:user:put")
     @PutMapping()
     public Response<Integer> update(@RequestBody UserVo vo){
         return  Response.success("更新用户表成功！",serService.updateData(vo));

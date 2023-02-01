@@ -140,6 +140,11 @@ public class Generator {
                 .controller("/templates/controller.java")
                 .build();
     }
+
+    /**
+     * 自定义生成模板
+     * @return
+     */
     private static Consumer<InjectionConfig.Builder>  initInjectionConfig() {
         /**自定义生成模板参数**/
         Map<String, Object> paramMap = new HashMap<>();

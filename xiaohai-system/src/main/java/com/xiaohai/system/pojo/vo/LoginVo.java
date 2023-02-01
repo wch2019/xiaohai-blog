@@ -28,4 +28,7 @@ public class LoginVo {
     @NotBlank(message = "密码不能为空")
     @Schema(description = "密码", example = "123456")
     private String password;
+
+    @Schema(description = "记住我", example = "false")
+    private Boolean rememberMe;
 }
