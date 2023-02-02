@@ -61,10 +61,4 @@ public class UserVo implements Serializable {
 
     @Schema(description = "帐号状态（0正常 1停用）")
     private String status;
-
-    @Schema(description = "最后登录ip")
-    private String loginIp;
-
-    @Schema(description = "最后登录时间")
-    private LocalDateTime loginDate;
 }

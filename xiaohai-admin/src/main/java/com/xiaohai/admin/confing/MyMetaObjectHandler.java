@@ -1,5 +1,6 @@
 package com.xiaohai.admin.confing;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
@@ -27,16 +28,16 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         log.info(" -------------------- [MyBatisPlus自动填充处理] start insert fill ...  --------------------");
-        this.setFieldValByName("createdBy", 1, metaObject);
+        this.setFieldValByName("createdBy", StpUtil.getLoginIdDefaultNull(), metaObject);
         this.setFieldValByName("createdTime",LocalDateTime.now(), metaObject);
-        this.setFieldValByName("updatedBy", 1, metaObject);
+        this.setFieldValByName("updatedBy", StpUtil.getLoginIdDefaultNull(), metaObject);
         this.setFieldValByName("updatedTime", LocalDateTime.now(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info(" -------------------- [MyBatisPlus自动填充处理] start update fill ...  --------------------");
-        this.setFieldValByName("updatedBy", 1, metaObject);
+        this.setFieldValByName("updatedBy", StpUtil.getLoginIdDefaultNull(), metaObject);
         this.setFieldValByName("updatedTime", LocalDateTime.now(), metaObject);
     }
 

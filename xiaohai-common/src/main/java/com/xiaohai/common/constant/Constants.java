@@ -29,4 +29,8 @@ public class Constants {
      * 当前用户信息
      */
     public static final String CURRENT_USER = "current_user";
+    /**
+     *系统默认密码
+     */
+    public static final String SYSTEM_PASSWORD = "123456";
 }

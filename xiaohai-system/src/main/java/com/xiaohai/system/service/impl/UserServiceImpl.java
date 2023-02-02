@@ -35,11 +35,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Integer add(UserVo vo) {
-        Long count = baseMapper.selectCount(new QueryWrapper<User>().eq("username", vo.getUsername()));
-        Assert.isTrue(count == 0, "新增用户'" + vo.getUsername() + "'失败，登录账号已存在");
+        Long countEmail = baseMapper.selectCount(new QueryWrapper<User>().eq("email",vo.getEmail()));
+        Assert.isTrue(countEmail == 0, "新增邮箱" + vo.getEmail() + "失败，邮箱已存在");
+        Long countUser = baseMapper.selectCount(new QueryWrapper<User>().eq("username", vo.getUsername()));
+        Assert.isTrue(countUser == 0, "新增用户" + vo.getUsername() + "失败，账号已存在");
         User user = new User();
         BeanUtils.copyProperties(vo, user);
-        user.setPassword(EncryptUtils.aesEncrypt(user.getPassword()));
         return baseMapper.insert(user);
     }
 
@@ -50,6 +51,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Integer updateData(UserVo vo) {
+        //清空密码，此处不更新密码
+        vo.setPassword(null);
+        //清空邮箱，此处不更新邮箱
+        vo.setEmail(null);
         // 当前操作用户
         User nowUser = (User) StpUtil.getSession().get(Constants.CURRENT_USER);
         if (nowUser.getUsername().equals(vo.getUsername()) && nowUser.getId().equals(vo.getId())) {
@@ -58,7 +63,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return baseMapper.updateById(user);
         } else {
             Long count = baseMapper.selectCount(new QueryWrapper<User>().eq("username", vo.getUsername()));
-            Assert.isTrue(count == 0, "更新用户'" + vo.getUsername() + "'失败，登录账号已存在");
+            Assert.isTrue(count == 0, "更新用户" + vo.getUsername() + "失败，账号已存在");
             User user = new User();
             BeanUtils.copyProperties(vo, user);
             return baseMapper.updateById(user);

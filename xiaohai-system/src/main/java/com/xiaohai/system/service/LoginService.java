@@ -1,6 +1,10 @@
 package com.xiaohai.system.service;
 
 import com.xiaohai.system.pojo.vo.LoginVo;
+import com.xiaohai.system.pojo.vo.RegisterVo;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
 
 /**
  * @author wangchenghai
@@ -21,4 +25,10 @@ public interface LoginService {
      * @return
      */
     String sendEmailCode(String email);
+
+    /**
+     * 注册用户
+     * @param vo
+     */
+    Integer register(RegisterVo vo);
 }

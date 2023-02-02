@@ -4,17 +4,24 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.vo.LoginVo;
+import com.xiaohai.system.pojo.vo.RegisterVo;
+import com.xiaohai.system.pojo.vo.UserVo;
 import com.xiaohai.system.service.EmailService;
 import com.xiaohai.system.service.LoginService;
+import com.xiaohai.system.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.mail.MessagingException;
+import java.util.Objects;
 
 /**
  * @author wangchenghai
@@ -27,6 +34,11 @@ public class LoginServiceImpl implements LoginService {
     private final UserMapper userMapper;
 
     private final EmailService emailService;
+
+    private final RedisTemplate<Object,Object> redisTemplate;
+
+    private final UserService serService;
+
 
     @Override
     public String login(LoginVo vo) {
@@ -56,5 +68,16 @@ public class LoginServiceImpl implements LoginService {
             return "系统异常，无法正常发送验证码";
         }
 
+    }
+
+    @Override
+    public Integer register(RegisterVo vo) {
+        String code=(String)redisTemplate.opsForValue().get(RedisConstants.EMAIL_CODE+ vo.getEmail());
+        Assert.isTrue(vo.getCode().equals(code), "验证码不正确!");
+        //密码加密
+        vo.setPassword(EncryptUtils.aesEncrypt(vo.getPassword()));
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(vo, userVo);
+        return serService.add(userVo);
     }
 }

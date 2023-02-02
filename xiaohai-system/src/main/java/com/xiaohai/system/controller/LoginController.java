@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.system.pojo.vo.LoginVo;
+import com.xiaohai.system.pojo.vo.RegisterVo;
 import com.xiaohai.system.pojo.vo.RoleVo;
 import com.xiaohai.system.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,12 @@ public class LoginController {
     @Operation(summary = "发送邮箱验证码")
     public Response<String> sendEmailCode(String email){
         return Response.success(loginService.sendEmailCode(email));
+    }
+
+    @Operation(summary = "用户信息注册")
+    @PostMapping("register")
+    public Response<Integer> register(@Valid @RequestBody RegisterVo vo){
+        return  Response.success("注册成功！",loginService.register(vo));
     }
 
     @Operation(summary = "退出",security = {@SecurityRequirement(name = Constants.SESSION_ID)})

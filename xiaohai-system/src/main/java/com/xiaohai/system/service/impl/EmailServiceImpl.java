@@ -114,7 +114,7 @@ public class EmailServiceImpl implements EmailService {
      */
     @Override
     public void sendCode(String email) throws MessagingException {
-        int code = new Random().nextInt(900000) + 100000;
+        String code = String.valueOf(new Random().nextInt(900000) + 100000);
         String content = "<html>\n" +
                 "\t<body><div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'html', 'ZC0004_vDfNJayMtMUuKGIAzzsWvc8');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">\n" +
                 "  <div id=\"qm_con_body\">\n" +

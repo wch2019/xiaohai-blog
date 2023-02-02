@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.EncryptUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -39,6 +40,8 @@ public class UserController {
     @Operation(summary = "新增用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
     public Response<Integer> add(@Valid @RequestBody UserVo vo){
+        //密码默认
+        vo.setPassword(EncryptUtils.aesEncrypt(Constants.SYSTEM_PASSWORD));
         return  Response.success("新增用户表成功！", serService.add(vo));
     }
 
