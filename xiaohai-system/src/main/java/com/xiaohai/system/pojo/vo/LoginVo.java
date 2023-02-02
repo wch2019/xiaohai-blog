@@ -30,5 +30,5 @@ public class LoginVo {
     private String password;
 
     @Schema(description = "记住我", example = "false")
-    private Boolean rememberMe;
+    private Boolean rememberMe=false;
 }

@@ -14,4 +14,11 @@ public interface LoginService {
      * @return
      */
     String login(LoginVo vo);
+
+    /**
+     * 用户绑定邮箱，发送验证码
+     * @param email
+     * @return
+     */
+    String sendEmailCode(String email);
 }

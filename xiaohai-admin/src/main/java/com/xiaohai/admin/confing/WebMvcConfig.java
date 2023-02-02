@@ -21,7 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 //swagger
                 .excludePathPatterns("/favicon.ico", "/webjars/**", "/img.icons/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger-ui/**", "/doc.html", "/swagger-ui.html")
                 //登录
-                .excludePathPatterns("/login");
+                .excludePathPatterns("/login","/sendEmailCode");
         //分页拦截器
         registry.addInterceptor(new PageableInterceptor());
     }
