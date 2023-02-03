@@ -32,6 +32,19 @@ spring:
         max-idle: 10
         # 连接池中的最小空闲连接
         min-idle: 0
+#==============================线程池配置==============================
+task:
+  executor:
+    # 核心线程池数
+    core_pool_size: 10
+    # 最大线程池数
+    max_pool_size: 200
+    # 任务队列的容量
+    queue_capacity: 1200
+    # 非核心线程的存活时间
+    keep_alive_seconds: 60
+    # 线程池的前缀名称
+    name_prefix: hai-task-
 #==============================Sa-Token配置==============================
 sa-token:
   # token名称 (同时也是cookie名称)
