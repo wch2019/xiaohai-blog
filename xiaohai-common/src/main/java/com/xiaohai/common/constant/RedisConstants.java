@@ -14,5 +14,5 @@ public class RedisConstants {
     /**
      * 邮箱验证码
      */
-    public static final String EMAIL_CODE = "email_code_";
+    public static final String EMAIL_CODE = "email_code:";
 }

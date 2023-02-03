@@ -2,12 +2,13 @@ package com.xiaohai.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.constant.RedisConstants;
+import com.xiaohai.common.utils.RedisUtils;
+import com.xiaohai.common.utils.SpringUtils;
 import com.xiaohai.system.dao.ConfigMapper;
 import com.xiaohai.system.pojo.entity.Config;
 import com.xiaohai.system.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -25,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
-    private final RedisTemplate<Object,Object> redisTemplate;
     private final ConfigMapper configMapper;
 
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
@@ -169,8 +169,7 @@ public class EmailServiceImpl implements EmailService {
                 "</html>\n";
        send(email,content);
        log.info("邮箱验证码发送成功,邮箱:{},验证码:{}",email,code);
-       redisTemplate.opsForValue().set(RedisConstants.EMAIL_CODE+ email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
-
+        SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE+ email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
     }
 
     private void send(String email, String template) throws MessagingException {
