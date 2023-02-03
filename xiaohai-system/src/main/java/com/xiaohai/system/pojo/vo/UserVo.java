@@ -3,6 +3,8 @@ package com.xiaohai.system.pojo.vo;
 import java.io.Serializable;
 import java.io.Serial;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,4 +63,8 @@ public class UserVo implements Serializable {
 
     @Schema(description = "帐号状态（0正常 1停用）")
     private String status;
+
+    @Schema(description = "角色组")
+    @NotBlank(message = "角色为空")
+    private Long[] roleIds;
 }

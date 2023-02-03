@@ -46,32 +46,32 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
 <#else>public class ${table.controllerName} {
 </#if>
 
-    private final ${table.serviceName} ${(table.serviceName?substring(1))?uncap_first};
+    private final ${table.serviceName} ${(table.serviceName)?uncap_first};
 
 
     @Operation(summary = "新增${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
     public Response<Integer> add(@RequestBody ${entity}Vo vo){
-        return  Response.success("新增${table.comment!}成功！", ${(table.serviceName?substring(1))?uncap_first}.add(vo));
+        return  Response.success("新增${table.comment!}成功！", ${(table.serviceName)?uncap_first}.add(vo));
     }
 
     @Operation(summary = "删除${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @DeleteMapping("{id}")
     public Response<Integer> delete(@PathVariable("id") Long id){
-        return  Response.success("删除${table.comment!}成功！",${(table.serviceName?substring(1))?uncap_first}.delete(id));
+        return  Response.success("删除${table.comment!}成功！",${(table.serviceName)?uncap_first}.delete(id));
     }
 
     @Operation(summary = "更新${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PutMapping()
     public Response<Integer> update(@RequestBody ${entity}Vo vo){
-        return  Response.success("更新${table.comment!}成功！",${(table.serviceName?substring(1))?uncap_first}.updateData(vo));
+        return  Response.success("更新${table.comment!}成功！",${(table.serviceName)?uncap_first}.updateData(vo));
     }
 
 
     @Operation(summary = "id查询${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
     public Response<${entity}> findById(@PathVariable Long id){
-        return  Response.success("id查询${table.comment!}成功！",${(table.serviceName?substring(1))?uncap_first}.findById(id));
+        return  Response.success("id查询${table.comment!}成功！",${(table.serviceName)?uncap_first}.findById(id));
     }
 
     @Operation(summary = "查询${table.comment!}列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -79,7 +79,7 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
     public Response<ReturnPageData<${entity}Dto>> findListByPage(${entity}Query query){
-        return Response.success("查询${table.comment!}列表成功！",${(table.serviceName?substring(1))?uncap_first}.findListByPage(query));
+        return Response.success("查询${table.comment!}列表成功！",${(table.serviceName)?uncap_first}.findListByPage(query));
     }
 
     }

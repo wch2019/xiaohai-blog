@@ -34,7 +34,7 @@ import javax.validation.Valid;
 @RequestMapping("/system/user")
 public class UserController {
 
-    private final UserService serService;
+    private final UserService userService;
 
 
     @Operation(summary = "新增用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -42,27 +42,27 @@ public class UserController {
     public Response<Integer> add(@Valid @RequestBody UserVo vo){
         //密码默认
         vo.setPassword(EncryptUtils.aesEncrypt(Constants.SYSTEM_PASSWORD));
-        return  Response.success("新增用户表成功！", serService.add(vo));
+        return  Response.success("新增用户表成功！", userService.add(vo));
     }
 
     @Operation(summary = "删除用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @DeleteMapping("{id}")
     public Response<Integer> delete(@PathVariable("id") Long id){
-        return  Response.success("删除用户表成功！",serService.delete(id));
+        return  Response.success("删除用户表成功！",userService.delete(id));
     }
 
     @Operation(summary = "更新用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @SaCheckPermission("system:user:put")
+//    @SaCheckPermission("system:user:put")
     @PutMapping()
-    public Response<Integer> update(@RequestBody UserVo vo){
-        return  Response.success("更新用户表成功！",serService.updateData(vo));
+    public Response<Integer> update(@Valid @RequestBody UserVo vo){
+        return  Response.success("更新用户表成功！",userService.updateData(vo));
     }
 
 
     @Operation(summary = "id查询用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
     public Response<User> findById(@PathVariable Long id){
-        return  Response.success("id查询用户表成功！",serService.findById(id));
+        return  Response.success("id查询用户表成功！",userService.findById(id));
     }
 
     @Operation(summary = "查询用户表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -70,7 +70,7 @@ public class UserController {
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
     public Response<ReturnPageData<UserDto>> findListByPage(UserQuery query){
-        return Response.success("查询用户表列表成功！",serService.findListByPage(query));
+        return Response.success("查询用户表列表成功！",userService.findListByPage(query));
     }
 
     }

@@ -19,6 +19,7 @@ import com.xiaohai.system.pojo.vo.UserVo;
 import com.xiaohai.system.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -34,11 +35,12 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Override
+    @Transactional
     public Integer add(UserVo vo) {
         Long countEmail = baseMapper.selectCount(new QueryWrapper<User>().eq("email",vo.getEmail()));
-        Assert.isTrue(countEmail == 0, "新增邮箱" + vo.getEmail() + "失败，邮箱已存在");
+        Assert.isTrue(countEmail == 0, "新增邮箱：" + vo.getEmail() + "失败，邮箱已存在");
         Long countUser = baseMapper.selectCount(new QueryWrapper<User>().eq("username", vo.getUsername()));
-        Assert.isTrue(countUser == 0, "新增用户" + vo.getUsername() + "失败，账号已存在");
+        Assert.isTrue(countUser == 0, "新增用户：" + vo.getUsername() + "失败，账号已存在");
         User user = new User();
         BeanUtils.copyProperties(vo, user);
         return baseMapper.insert(user);
@@ -46,10 +48,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Integer delete(Long id) {
+        //TODO 需添加删除验证
         return baseMapper.deleteById(id);
     }
 
     @Override
+    @Transactional
     public Integer updateData(UserVo vo) {
         //清空密码，此处不更新密码
         vo.setPassword(null);
@@ -62,8 +66,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             BeanUtils.copyProperties(vo, user);
             return baseMapper.updateById(user);
         } else {
-            Long count = baseMapper.selectCount(new QueryWrapper<User>().eq("username", vo.getUsername()));
-            Assert.isTrue(count == 0, "更新用户" + vo.getUsername() + "失败，账号已存在");
+            Long count = baseMapper.selectCount(new QueryWrapper<User>().eq("username", vo.getUsername()).ne("id",vo.getId()));
+            Assert.isTrue(count == 0, "更新用户：" + vo.getUsername() + "失败，账号已存在");
             User user = new User();
             BeanUtils.copyProperties(vo, user);
             return baseMapper.updateById(user);

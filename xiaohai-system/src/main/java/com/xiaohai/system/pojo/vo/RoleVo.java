@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 /**
 * <p>
 * 角色表 VO（View Object）：显示层对象
@@ -26,6 +28,7 @@ public class RoleVo implements Serializable {
     private Integer id;
 
     @Schema(description = "角色编码")
+    @NotBlank(message = "角色编码为空")
     private String code;
 
     @Schema(description = "角色名称")

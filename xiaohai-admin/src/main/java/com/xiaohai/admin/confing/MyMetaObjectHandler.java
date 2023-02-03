@@ -27,17 +27,19 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
+        Integer by= StpUtil.getLoginIdDefaultNull()==null?null: Integer.valueOf((String)StpUtil.getLoginId());
         log.info(" -------------------- [MyBatisPlus自动填充处理] start insert fill ...  --------------------");
-        this.setFieldValByName("createdBy", StpUtil.getLoginIdDefaultNull(), metaObject);
+        this.setFieldValByName("createdBy", by, metaObject);
         this.setFieldValByName("createdTime",LocalDateTime.now(), metaObject);
-        this.setFieldValByName("updatedBy", StpUtil.getLoginIdDefaultNull(), metaObject);
+        this.setFieldValByName("updatedBy", by, metaObject);
         this.setFieldValByName("updatedTime", LocalDateTime.now(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info(" -------------------- [MyBatisPlus自动填充处理] start update fill ...  --------------------");
-        this.setFieldValByName("updatedBy", StpUtil.getLoginIdDefaultNull(), metaObject);
+        Integer by= StpUtil.getLoginIdDefaultNull()==null?null: Integer.valueOf((String)StpUtil.getLoginId());
+        this.setFieldValByName("updatedBy", by, metaObject);
         this.setFieldValByName("updatedTime", LocalDateTime.now(), metaObject);
     }
 

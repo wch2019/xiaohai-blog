@@ -17,6 +17,8 @@ import com.xiaohai.system.pojo.dto.RoleDto;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
 *
 * 角色表Controller
@@ -30,32 +32,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/system/role")
 public class RoleController {
 
-    private final RoleService oleService;
+    private final RoleService roleService;
 
 
     @Operation(summary = "新增角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
-    public Response<Integer> add(@RequestBody RoleVo vo){
-        return  Response.success("新增角色表成功！", oleService.add(vo));
+    public Response<Integer> add(@Valid @RequestBody RoleVo vo){
+        return  Response.success("新增角色表成功！", roleService.add(vo));
     }
 
     @Operation(summary = "删除角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @DeleteMapping("{id}")
     public Response<Integer> delete(@PathVariable("id") Long id){
-        return  Response.success("删除角色表成功！",oleService.delete(id));
+        return  Response.success("删除角色表成功！", roleService.delete(id));
     }
 
     @Operation(summary = "更新角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PutMapping()
-    public Response<Integer> update(@RequestBody RoleVo vo){
-        return  Response.success("更新角色表成功！",oleService.updateData(vo));
+    public Response<Integer> update(@Valid @RequestBody RoleVo vo){
+        return  Response.success("更新角色表成功！", roleService.updateData(vo));
     }
 
 
     @Operation(summary = "id查询角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
     public Response<Role> findById(@PathVariable Long id){
-        return  Response.success("id查询角色表成功！",oleService.findById(id));
+        return  Response.success("id查询角色表成功！", roleService.findById(id));
     }
 
     @Operation(summary = "查询角色表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -63,7 +65,7 @@ public class RoleController {
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
     public Response<ReturnPageData<RoleDto>> findListByPage(RoleQuery query){
-        return Response.success("查询角色表列表成功！",oleService.findListByPage(query));
+        return Response.success("查询角色表列表成功！", roleService.findListByPage(query));
     }
 
     }

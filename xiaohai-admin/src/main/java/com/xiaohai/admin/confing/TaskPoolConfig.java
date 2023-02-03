@@ -47,9 +47,13 @@ public class TaskPoolConfig {
         taskExecutor.setKeepAliveSeconds(keepAliveSeconds);
         //配置线程池中的线程的名称前缀
         taskExecutor.setThreadNamePrefix(namePrefix);
-        // 该方法用来设置 线程池关闭 的时候 等待 所有任务都完成后，再继续 销毁 其他的 Bean，
-        // 这样这些 异步任务 的 销毁 就会先于 数据库连接池对象 的销毁。
-        // 线程活跃时间（秒）表明等待所有线程执行完，默认为false。
+        /*
+         * 设置是否等待定时任务在关机时完成，不中断正在运行的任务并执行队列中的所有任务。默认为“false”，通过中断正在进行的任务和清除队列立即关闭。
+         * 如果您更喜欢以更长的关机阶段为代价来完成完全完成的任务，则将此标志切换为“true”。
+         * 该方法用来设置 线程池关闭 的时候 等待 所有任务都完成后，再继续 销毁 其他的 Bean，
+         * 这样这些 异步任务 的 销毁 就会先于 数据库连接池对象 的销毁。
+         *  等待所有线程执行完，默认为false
+         */
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         //等待所有任务结束后再关闭线程池（任务的等待时间 如果超过这个时间还没有销毁就 强制销毁，以确保应用最后能够被关闭，而不是阻塞住）
         taskExecutor.setAwaitTerminationSeconds(60);
