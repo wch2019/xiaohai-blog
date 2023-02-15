@@ -6,29 +6,33 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Admin Template' // page title
+const name = defaultSettings.title || '点码管理系统' // 网页标题
 
-// If your port is set to 80,
-// use administrator privileges to execute the command line.
-// For example, Mac: sudo npm run
-// You can change the port by the following methods:
-// port = 9528 npm run dev OR npm run dev --port = 9528
-const port = process.env.port || process.env.npm_config_port || 9528 // dev port
+// 如果端口设置为 80，
+// 使用管理员权限执行命令行。
+// 例如，Mac： sudo npm run
+// 您可以通过以下方法更改端口：
+// port = 9528 npm run dev 或 npm run dev --port = 9528
+const port = process.env.port || process.env.npm_config_port || 9528 // 端口
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
-   * You will need to set publicPath if you plan to deploy your site under a sub path,
-   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
-   * In most cases please use '/' !!!
+   * 如果您计划在子路径下部署站点，则需要设置 publicPath，
+   * 例如 GitHub Pages。如果您计划将站点部署到 https://foo.github.io/bar/,
+   * 则 publicPath 应设置为"/bar/".
+   * 在大多数情况下，请使用“/”!!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
   publicPath: '/',
+  // 在npm run build 或 yarn build 时 ，生成文件的目录名称（要和baseUrl的生产环境路径一致）（默认dist）
   outputDir: 'dist',
+  // 用于放置生成的静态资源 (js、css、img、fonts) 的；（项目打包之后，静态资源会放在这个文件夹下）
   assetsDir: 'static',
+  // 是否开启eslint保存检测，有效值：ture | false | 'error'
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  // webpack-dev-server 相关配置
   devServer: {
     port: port,
     open: true,
@@ -50,6 +54,7 @@ module.exports = {
   },
   chainWebpack(config) {
     // it can improve the speed of the first screen, it is recommended to turn on preload
+    //可以提高首屏速度，建议开启预载
     config.plugin('preload').tap(() => [
       {
         rel: 'preload',

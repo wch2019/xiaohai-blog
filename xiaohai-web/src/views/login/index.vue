@@ -7,9 +7,7 @@
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
+
         <el-input
           ref="username"
           v-model="loginForm.username"
@@ -18,13 +16,14 @@
           type="text"
           tabindex="1"
           auto-complete="on"
-        />
+        >
+          <template #prefix>
+          <svg-icon icon-class="user"/>
+          </template>
+        </el-input>
       </el-form-item>
 
       <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
         <el-input
           :key="passwordType"
           ref="password"
@@ -35,59 +34,60 @@
           tabindex="2"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
+        >
+          <template #prefix>
+            <svg-icon icon-class="password" />
+          </template>
+          <template #suffix>
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPwd"/>
+          </template>
+        </el-input>
+
       </el-form-item>
       <div style="margin-bottom: 10px;margin-left: 2px">
         <el-checkbox v-model="loginForm.rememberMe">
           <span style="color: white">记住我</span>
         </el-checkbox>
       </div>
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+                 @click.native.prevent="handleLogin">
         <span v-if="!loading">登 录</span>
         <span v-else>登 录 中...</span>
       </el-button>
-
-<!--      <div class="tips">-->
-<!--        <span style="margin-right:20px;">username: admin</span>-->
-<!--        <span> password: any</span>-->
-<!--      </div>-->
 
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import {validUsername} from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能少于6位数字'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111',
-        rememberMe:false
+        username: '',
+        password: '',
+        rememberMe: false
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{required: true, trigger: 'blur', validator: validateUsername}],
+        password: [{required: true, trigger: 'blur', validator: validatePassword}]
       },
       loading: false,
       passwordType: 'password',
@@ -96,13 +96,36 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
     }
   },
+  created() {
+    this.getCode();
+    this.getCookie();
+  },
   methods: {
+    getCode() {
+      getCodeImg().then(res => {
+        this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
+        if (this.captchaEnabled) {
+          this.codeUrl = "data:image/gif;base64," + res.img;
+          this.loginForm.uuid = res.uuid;
+        }
+      });
+    },
+    getCookie() {
+      const username = Cookies.get("username");
+      const password = Cookies.get("password");
+      const rememberMe = Cookies.get('rememberMe')
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password === undefined ? this.loginForm.password : decrypt(password),
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+      };
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -118,7 +141,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+            this.$router.push({path: this.redirect || '/'})
             this.loading = false
           }).catch(() => {
             this.loading = false
@@ -181,19 +204,19 @@ export default {
 <!--</style>-->
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   //display: flex;
   //justify-content: center;
   //align-items: center;
   //height: 100%;
-  background-image: url("@/assets/bg.jpg");
+  //background-image: url("@/assets/bg.jpg");
   background-size: cover;
   min-height: 100%;
-  //background-color: $bg;
+  background-color: $bg;
   width: 100%;
   overflow: hidden;
 
@@ -219,11 +242,13 @@ $light_gray:#eee;
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
+    //margin: 6px 5px 6px 1px;
+    text-align: center;
+    height: 100%;
+    //color: $dark_gray;
+    //vertical-align: middle;
+    //width: 30px;
+    //display: inline-block;
   }
 
   .title-container {
