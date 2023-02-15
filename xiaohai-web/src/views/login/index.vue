@@ -1,61 +1,65 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+<!--    <img :src="imgSrc" width="100%" height="100%" alt="" />-->
+    <div class="loginPart">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" auto-complete="on"
+               label-position="left">
+        <h2>点码后台管理系统</h2>
+        <el-form-item prop="username" class="aaa">
 
-      <div class="title-container">
-        <h3 class="title">点码后台管理系统</h3>
+          <el-input
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="请输入用户名/手机号 "
+            name="username"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+          >
+            <template #prefix>
+              <svg-icon icon-class="user"/>
+            </template>
+          </el-input>
+        </el-form-item>
+
+        <el-form-item prop="password" class="aaa">
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="loginForm.password"
+            :type="passwordType"
+            placeholder="请输入密码"
+            name="password"
+            tabindex="2"
+            auto-complete="on"
+            @keyup.enter.native="handleLogin"
+          >
+            <template #prefix>
+              <svg-icon icon-class="password"/>
+            </template>
+            <template #suffix>
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPwd"/>
+            </template>
+          </el-input>
+
+        </el-form-item>
+
+        <div style="margin-bottom: 10px;margin-left: 2px">
+          <el-checkbox v-model="loginForm.rememberMe">
+            <span style="color: white">记住我</span>
+          </el-checkbox>
+        </div>
+        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+                   @click.native.prevent="handleLogin">
+          <span v-if="!loading">登 录</span>
+          <span v-else>登 录 中...</span>
+        </el-button>
+
+      </el-form>
+      <div style="text-align: right;color: white;">
+        <el-link type="warning">没有账号？去注册</el-link>
       </div>
-
-      <el-form-item prop="username">
-
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="用户名"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        >
-          <template #prefix>
-          <svg-icon icon-class="user"/>
-          </template>
-        </el-input>
-      </el-form-item>
-
-      <el-form-item prop="password">
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="密码"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        >
-          <template #prefix>
-            <svg-icon icon-class="password" />
-          </template>
-          <template #suffix>
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPwd"/>
-          </template>
-        </el-input>
-
-      </el-form-item>
-      <div style="margin-bottom: 10px;margin-left: 2px">
-        <el-checkbox v-model="loginForm.rememberMe">
-          <span style="color: white">记住我</span>
-        </el-checkbox>
-      </div>
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                 @click.native.prevent="handleLogin">
-        <span v-if="!loading">登 录</span>
-        <span v-else>登 录 中...</span>
-      </el-button>
-
-    </el-form>
+    </div>
   </div>
 </template>
 
@@ -80,6 +84,7 @@ export default {
       }
     }
     return {
+      imgSrc: require('@/assets/bg.jpg'),
       loginForm: {
         username: '',
         password: '',
@@ -156,121 +161,59 @@ export default {
 }
 </script>
 
-<!--<style lang="scss">-->
-<!--/* 修复input 背景不协调 和光标变色 */-->
-<!--/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */-->
-
-<!--$bg: #414e5d;-->
-<!--$light_gray:#fff;-->
-<!--$cursor: #fff;-->
-
-<!--@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {-->
-<!--  .login-container .el-input input {-->
-<!--    color: $cursor;-->
-<!--  }-->
-<!--}-->
-
-<!--/* reset element-ui css */-->
-<!--.login-container {-->
-<!--  .el-input {-->
-<!--    display: inline-block;-->
-<!--    height: 47px;-->
-<!--    width: 85%;-->
-
-<!--    input {-->
-<!--      background: transparent;-->
-<!--      border: 0px;-->
-<!--      -webkit-appearance: none;-->
-<!--      border-radius: 0px;-->
-<!--      padding: 12px 5px 12px 15px;-->
-<!--      color: $light_gray;-->
-<!--      height: 47px;-->
-<!--      caret-color: $cursor;-->
-
-<!--      &:-webkit-autofill {-->
-<!--        box-shadow: 0 0 0px 1000px $bg inset !important;-->
-<!--        -webkit-text-fill-color: $cursor !important;-->
-<!--      }-->
-<!--    }-->
-<!--  }-->
-
-<!--  .el-form-item {-->
-<!--    border: 1px solid rgba(255, 255, 255, 0.1);-->
-<!--    background: rgba(0, 0, 0, 0.1);-->
-<!--    border-radius: 5px;-->
-<!--    color: #454545;-->
-<!--  }-->
-<!--}-->
-<!--</style>-->
-
 <style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
 
 .login-container {
-  //display: flex;
-  //justify-content: center;
-  //align-items: center;
-  //height: 100%;
-  //background-image: url("@/assets/bg.jpg");
+  background-image: url("../../assets/bg.jpg");
   background-size: cover;
   min-height: 100%;
-  background-color: $bg;
   width: 100%;
   overflow: hidden;
+}
 
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
-  }
+.loginPart {
+  position: absolute;
+  /*定位方式绝对定位absolute*/
+  top: 50%;
+  left: 50%;
+  /*顶和高同时设置50%实现的是同时水平垂直居中效果*/
+  transform: translate(-50%, -50%);
+  /*实现块元素百分比下居中*/
+  width: 450px;
+  padding: 50px;
+  background: rgba(16, 15, 15, 0.5);
+  /*背景颜色为黑色，透明度为0.8*/
+  box-sizing: border-box;
+  /*box-sizing设置盒子模型的解析模式为怪异盒模型，
+  将border和padding划归到width范围内*/
+  box-shadow: 0px 15px 25px rgba(0, 0, 0, .5);
+  /*边框阴影  水平阴影0 垂直阴影15px 模糊25px 颜色黑色透明度0.5*/
+  border-radius: 15px;
+  /*边框圆角，四个角均为15px*/
+}
 
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
+.loginPart h2 {
+  margin: 0 0 30px;
+  padding: 0;
+  color: #fff;
+  text-align: center;
+  /*文字居中*/
+}
 
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
-
-  .svg-container {
-    //margin: 6px 5px 6px 1px;
-    text-align: center;
-    height: 100%;
-    //color: $dark_gray;
-    //vertical-align: middle;
-    //width: 30px;
-    //display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
+ .aaa ::v-deep .el-input__inner {
+  width: 100%;
+  //padding:10px 0;
+  font-size:16px;
+  color:#fff !important;
+  letter-spacing: 1px;
+  /*字符间的间距1px*/
+  margin-bottom: 30px;
+  border:none;
+  border-bottom: 1px solid #fff;
+  outline:none;
+  /*outline用于绘制元素周围的线
+  outline：none在这里用途是将输入框的边框的线条使其消失*/
+  background: transparent !important;
+  /*背景颜色为透明*/
 }
 </style>
