@@ -76,7 +76,7 @@ public class EmailServiceImpl implements EmailService {
                 """
                     <html>
                     <body>
-                        <p>您在<a href='http://www.shiyit.com'>博客</a>站点申请友链加入审核通过!!</span>
+                        <p>您在<a href='http://www.shiyit.com'>点码博客</a>站点申请友链加入审核通过!!</span>
                         <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
                         <p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p>
                     </body>
@@ -98,7 +98,7 @@ public class EmailServiceImpl implements EmailService {
     public void friendFailedSendEmail(String email,String reason){
         String content = "<html>\n" +
                 "<body>\n" +
-                "    <p>您在"+"<a href='http://www.shiyit.com'>博客</a>"+"站点申请的友链加入审核未通过!具体原因为:"+ reason +"</span>\n" +
+                "    <p>您在"+"<a href='http://www.shiyit.com'>点码博客</a>"+"站点申请的友链加入审核未通过!具体原因为:"+ reason +"</span>\n" +
                 "<p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>" +
                 "<p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p></body>\n" +
                 "</html>";
@@ -128,14 +128,14 @@ public class EmailServiceImpl implements EmailService {
                 "            <tr style=\"background-color: #f8f8f8;\">\n" +
                 "              <td>\n" +
                 "                <img style=\"padding: 15px 0 15px 30px;width:50px\" src=\"http://img.shiyit.com/FjzfvfWYZVED7eXMS4EL8KNR949K\">" +
-                "                <span>博客. </span>\n" +
+                "                <span>点码博客. </span>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "            <tr>\n" +
                 "              <td class=\"p-intro\">\n" +
                 "                <h1 style=\"font-size: 26px; font-weight: bold;\">验证您的邮箱地址</h1>\n" +
-                "                <p style=\"line-height:1.75em;\">感谢您使用 博客. </p>\n" +
-                "                <p style=\"line-height:1.75em;\">以下是您的邮箱验证码，请将它输入到 博客 的邮箱验证码输入框中:</p>\n" +
+                "                <p style=\"line-height:1.75em;\">感谢您使用 点码博客. </p>\n" +
+                "                <p style=\"line-height:1.75em;\">以下是您的邮箱验证码，请将它输入到 点码博客 的邮箱验证码输入框中:</p>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "            <tr>\n" +
@@ -145,13 +145,13 @@ public class EmailServiceImpl implements EmailService {
                 "            </tr>\n" +
                 "            <tr>\n" +
                 "              <td class=\"p-intro\">\n" +
-                "                <p style=\"line-height:1.75em;\">这一封邮件包括一些您的私密的 博客 账号信息，请不要回复或转发它，以免带来不必要的信息泄露风险。 </p>\n" +
+                "                <p style=\"line-height:1.75em;\">这一封邮件包括一些您的私密的 点码博客 账号信息，请不要回复或转发它，以免带来不必要的信息泄露风险。 </p>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "            <tr>\n" +
                 "              <td class=\"p-intro\">\n" +
                 "                <hr>\n" +
-                "                <p style=\"text-align: center;line-height:1.75em;\">xiaohai - 博客</p>\n" +
+                "                <p style=\"text-align: center;line-height:1.75em;\">xiaohai - 点码博客</p>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "          </tbody>\n" +
@@ -178,7 +178,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mineHelper = new MimeMessageHelper(mimeMessage, true);
         // 设置邮件主题
-        mineHelper.setSubject("博客");
+        mineHelper.setSubject("点码博客");
         // 设置邮件发送者
         mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
         // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
