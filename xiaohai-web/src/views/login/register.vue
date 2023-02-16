@@ -32,6 +32,8 @@
             <template #prefix>
               <svg-icon icon-class="email"/>
             </template>
+            <el-link slot="suffix" type="warning" @click="getCode" v-if="captchaEnabled">发送验证码</el-link>
+            <span slot="suffix" v-else>{{ count }}s后重新获取</span>
           </el-input>
         </el-form-item>
         <el-form-item prop="code" class="inputNew">
@@ -47,8 +49,6 @@
             <template #prefix>
               <svg-icon icon-class="validCode"/>
             </template>
-            <el-link slot="suffix" @click="getCode" v-if="captchaEnabled">发送验证码</el-link>
-            <span slot="suffix" v-else>{{ count }}s后重新获取</span>
           </el-input>
         </el-form-item>
         <el-form-item prop="password" class="inputNew">
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-
+import {sendEmailCode} from '@/api/login'
 export default {
   name: 'Register',
   data() {
@@ -111,6 +111,21 @@ export default {
         callback();
       }
     };
+    //邮箱验证
+    const validateEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请正确填写邮箱'));
+      } else {
+        if (value !== '') {
+          var reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+          if(!reg.test(value)){
+            callback(new Error('请输入有效的邮箱'));
+          }
+        }
+        callback();
+      }
+    };
+
     return {
       count: '',
       timer: null,
@@ -136,7 +151,8 @@ export default {
           {required: true, trigger: "blur", message: "请再次输入您的密码"},
           {required: true, validator: equalToPassword, trigger: "blur"}
         ],
-        code: [{required: true, trigger: "change", message: "请输入验证码"}]
+        code: [{required: true, trigger: "change", message: "请输入验证码"}],
+        email: [{ validator: validateEmail, trigger: 'blur' }]
       },
       loading: false,
       redirect: undefined
@@ -156,31 +172,33 @@ export default {
   methods: {
     //背景随机
     getImg() {
-      const num = Math.floor(Math.random() * 3 + 1);
+      const num = Math.floor(Math.random() * 5 + 1);
       this.imgSrc = require('@/assets/login/' + num + '.jpg')
     },
     getCode() {
-      const TIME_COUNT = 30;
-      if (!this.timer) {
-        this.count = TIME_COUNT;
-        this.captchaEnabled = false;
-        this.timer = setInterval(() => {
-          if (this.count > 0 && this.count <= TIME_COUNT) {
-            this.count--;
-          } else {
-            this.captchaEnabled = true;
-            clearInterval(this.timer);
-            this.timer = null;
-          }
-        }, 1000)
+      console.log(this.registerForm.email)
+      if(this.registerForm.email!==''){
+        let data={
+          email:this.registerForm.email
+        }
+        sendEmailCode(data).then(response => {
+          // (response.data)
+        });
+        const TIME_COUNT = 60;
+        if (!this.timer) {
+          this.count = TIME_COUNT;
+          this.captchaEnabled = false;
+          this.timer = setInterval(() => {
+            if (this.count > 0 && this.count <= TIME_COUNT) {
+              this.count--;
+            } else {
+              this.captchaEnabled = true;
+              clearInterval(this.timer);
+              this.timer = null;
+            }
+          }, 1000)
+        }
       }
-      // getCodeImg().then(res => {
-      //   this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
-      //   if (this.captchaEnabled) {
-      //     this.codeUrl = "data:image/gif;base64," + res.img;
-      //     this.loginForm.uuid = res.uuid;
-      //   }
-      // });
     },
     getCookie() {
       // const username = Cookies.get("username");
@@ -193,20 +211,20 @@ export default {
       // };
     },
     handleRegister() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({path: this.redirect || '/'})
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     this.loading = true
+      //     this.$store.dispatch('user/login', this.loginForm).then(() => {
+      //       this.$router.push({path: this.redirect || '/'})
+      //       this.loading = false
+      //     }).catch(() => {
+      //       this.loading = false
+      //     })
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
     }
   }
 }

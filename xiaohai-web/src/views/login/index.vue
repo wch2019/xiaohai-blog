@@ -102,7 +102,7 @@ export default {
       // getBing().then(data=>{
       //   console.log(data)
       // });
-      const num = Math.floor(Math.random() * 3 + 1);
+      const num = Math.floor(Math.random() * 5 + 1);
       this.imgSrc=require('@/assets/login/'+num+'.jpg')
     },
     //跳转注册

@@ -28,3 +28,11 @@ export function getBing() {
     method: 'get'
   })
 }
+export function sendEmailCode(data) {
+  return request({
+    url: '/sendEmailCode',
+    method: 'get',
+    params: data,
+    timeout: 20000
+  })
+}

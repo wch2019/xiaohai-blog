@@ -6,7 +6,7 @@ import {getToken} from '@/utils/auth'
 // 创建axios实例
 const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VUE_APP_PROXY_TARGET+process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // 跨域请求时发送 Cookie
   timeout: 5000 // 请求超时时间
 })
@@ -43,9 +43,9 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
+    console.log(res)
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 200) {
       Message({
         message: res.message || 'Error',
         type: 'error',
