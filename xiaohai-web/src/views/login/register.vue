@@ -1,15 +1,14 @@
 <template>
   <div class="login-container" :style="{backgroundImage:'url('+imgSrc+')'}">
     <div class="loginPart">
-      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" auto-complete="on"
+      <el-form ref="loginForm" :model="registerForm" :rules="registerRules" auto-complete="on"
                label-position="left">
         <h2>DotCode后台管理系统</h2>
         <el-form-item prop="username" class="inputNew">
-
           <el-input
             ref="username"
-            v-model="loginForm.username"
-            placeholder="请输入用户名/邮箱 "
+            v-model="registerForm.username"
+            placeholder="请输入用户名"
             name="username"
             type="text"
             tabindex="1"
@@ -20,66 +19,126 @@
             </template>
           </el-input>
         </el-form-item>
-
-        <el-form-item prop="password" class="inputNew">
+        <el-form-item prop="email" class="inputNew">
           <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="请输入密码"
-            name="password"
+            ref="email"
+            v-model="registerForm.email"
+            placeholder="请输入邮箱"
+            name="email"
+            type="text"
             tabindex="2"
             auto-complete="on"
-            @keyup.enter.native="handleLogin"
           >
             <template #prefix>
-              <svg-icon icon-class="password"/>
-            </template>
-            <template #suffix>
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPwd"/>
+              <svg-icon icon-class="email"/>
             </template>
           </el-input>
-
+        </el-form-item>
+        <el-form-item prop="code" class="inputNew">
+          <el-input
+            ref="code"
+            v-model="registerForm.code"
+            placeholder="请输入邮箱验证码"
+            name="code"
+            type="text"
+            tabindex="3"
+            auto-complete="on"
+          >
+            <template #prefix>
+              <svg-icon icon-class="validCode"/>
+            </template>
+            <el-link   slot="suffix" @click="getCode" v-if="captchaEnabled" >发送验证码</el-link>
+            <span   slot="suffix" v-else>{{count}}s后重新获取</span>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password" class="inputNew">
+          <el-input
+            ref="password"
+            name="password"
+            v-model="registerForm.password"
+            type="password"
+            placeholder="密码"
+            auto-complete="on"
+            tabindex="4"
+          >
+            <template #prefix>
+            <svg-icon icon-class="password" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="confirmPassword" class="inputNew">
+          <el-input
+            ref="confirmPassword"
+            v-model="registerForm.confirmPassword"
+            type="password"
+            placeholder="确认密码"
+            auto-complete="on"
+            tabindex="5"
+            @keyup.enter.native="handleRegister"
+          >
+            <template #prefix>
+            <svg-icon icon-class="password" />
+            </template>
+          </el-input>
         </el-form-item>
 
-        <div style="margin-bottom: 10px;margin-left: 2px">
-          <el-checkbox v-model="loginForm.rememberMe">
-            <span style="color: white">记住我</span>
-          </el-checkbox>
-        </div>
         <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                   @click.native.prevent="handleLogin">
-          <span v-if="!loading">登 录</span>
-          <span v-else>登 录 中...</span>
+                   @click.native.prevent="handleRegister">
+          <span v-if="!loading">注 册</span>
+          <span v-else>注 册 中...</span>
         </el-button>
 
       </el-form>
       <div style="text-align: right;color: white;">
-          <el-link type="warning" @click="registerClick()">没有账号？去注册</el-link>
+        <router-link to='/login'>
+          <el-link type="warning">注册完成？去登录</el-link>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getBing } from '@/api/login'
+
 export default {
-  name: 'Login',
+  name: 'Register',
   data() {
+    //验证是否相同
+    const equalToPassword = (rule, value, callback) => {
+      if (this.registerForm.password !== value) {
+        callback(new Error("两次输入的密码不一致"));
+      } else {
+        callback();
+      }
+    };
     return {
+      count: '',
+      timer: null,
+      captchaEnabled: true,
       imgSrc: require('@/assets/login/3.jpg'),
-      loginForm: {
-        username: '',
-        password: '',
-        rememberMe: false
+      registerForm: {
+        username: "",
+        password: "",
+        confirmPassword: "",
+        code: "",
+        email: ""
       },
-      loginRules: {
-        username: [{required: true, trigger: 'blur', message:"请输入您的用户名"}],
-        password: [{required: true, trigger: 'blur', message: "请输入您的密码"}]
+      registerRules: {
+        username: [
+          { required: true, trigger: "blur", message: "请输入您的账号" },
+          { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, trigger: "blur", message: "请输入您的密码" },
+          { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
+        ],
+        confirmPassword: [
+          { required: true, trigger: "blur", message: "请再次输入您的密码" },
+          { required: true, validator: equalToPassword, trigger: "blur" }
+        ],
+        code: [{ required: true, trigger: "change", message: "请输入验证码" }]
       },
       loading: false,
-      passwordType: 'password',
       redirect: undefined
     }
   },
@@ -93,23 +152,28 @@ export default {
   },
   created() {
     this. getImg();
-    this.getCode();
-    this.getCookie();
   },
   methods: {
     //背景随机
     getImg(){
-      // getBing().then(data=>{
-      //   console.log(data)
-      // });
       const num = Math.floor(Math.random() * 3 + 1);
       this.imgSrc=require('@/assets/login/'+num+'.jpg')
     },
-    //跳转注册
-    registerClick() {
-      this.$router.push('/register');
-    },
     getCode() {
+      const TIME_COUNT = 30;
+      if (!this.timer) {
+        this.count = TIME_COUNT;
+        this.captchaEnabled = false;
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--;
+          } else {
+            this.captchaEnabled = true;
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        }, 1000)
+      }
       // getCodeImg().then(res => {
       //   this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
       //   if (this.captchaEnabled) {
@@ -128,19 +192,7 @@ export default {
       //   rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       // };
     },
-    //是否显示输入内容
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
-    //登录
-    handleLogin() {
+    handleRegister() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true

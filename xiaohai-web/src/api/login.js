@@ -22,3 +22,9 @@ export function logout() {
     method: 'post'
   })
 }
+export function getBing() {
+  return request({
+    url: 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8',
+    method: 'get'
+  })
+}

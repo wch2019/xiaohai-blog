@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '点码管理系统',
+  title: 'DotCode后台管理系统',
 
   /**
    * @type {boolean} true | false
