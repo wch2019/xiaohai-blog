@@ -47,8 +47,8 @@
             <template #prefix>
               <svg-icon icon-class="validCode"/>
             </template>
-            <el-link   slot="suffix" @click="getCode" v-if="captchaEnabled" >发送验证码</el-link>
-            <span   slot="suffix" v-else>{{count}}s后重新获取</span>
+            <el-link slot="suffix" @click="getCode" v-if="captchaEnabled">发送验证码</el-link>
+            <span slot="suffix" v-else>{{ count }}s后重新获取</span>
           </el-input>
         </el-form-item>
         <el-form-item prop="password" class="inputNew">
@@ -62,7 +62,7 @@
             tabindex="4"
           >
             <template #prefix>
-            <svg-icon icon-class="password" />
+              <svg-icon icon-class="password"/>
             </template>
           </el-input>
         </el-form-item>
@@ -77,7 +77,7 @@
             @keyup.enter.native="handleRegister"
           >
             <template #prefix>
-            <svg-icon icon-class="password" />
+              <svg-icon icon-class="password"/>
             </template>
           </el-input>
         </el-form-item>
@@ -125,18 +125,18 @@ export default {
       },
       registerRules: {
         username: [
-          { required: true, trigger: "blur", message: "请输入您的账号" },
-          { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
+          {required: true, trigger: "blur", message: "请输入您的账号"},
+          {min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur'}
         ],
         password: [
-          { required: true, trigger: "blur", message: "请输入您的密码" },
-          { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
+          {required: true, trigger: "blur", message: "请输入您的密码"},
+          {min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur'}
         ],
         confirmPassword: [
-          { required: true, trigger: "blur", message: "请再次输入您的密码" },
-          { required: true, validator: equalToPassword, trigger: "blur" }
+          {required: true, trigger: "blur", message: "请再次输入您的密码"},
+          {required: true, validator: equalToPassword, trigger: "blur"}
         ],
-        code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+        code: [{required: true, trigger: "change", message: "请输入验证码"}]
       },
       loading: false,
       redirect: undefined
@@ -151,13 +151,13 @@ export default {
     }
   },
   created() {
-    this. getImg();
+    this.getImg();
   },
   methods: {
     //背景随机
-    getImg(){
+    getImg() {
       const num = Math.floor(Math.random() * 3 + 1);
-      this.imgSrc=require('@/assets/login/'+num+'.jpg')
+      this.imgSrc = require('@/assets/login/' + num + '.jpg')
     },
     getCode() {
       const TIME_COUNT = 30;
@@ -250,17 +250,17 @@ export default {
   /*文字居中*/
 }
 
- ::v-deep .inputNew .el-input__inner  {
+::v-deep .inputNew .el-input__inner {
   width: 100%;
   //padding:10px 0;
-  font-size:16px;
-  color:#fff !important;
+  font-size: 16px;
+  color: #fff !important;
   letter-spacing: 1px;
   /*字符间的间距1px*/
-  margin-bottom: 30px;
-  border:none;
+  margin-bottom: 10px;
+  border: none;
   border-bottom: 1px solid #fff;
-  outline:none;
+  outline: none;
   /*outline用于绘制元素周围的线
   outline：none在这里用途是将输入框的边框的线条使其消失*/
   background: transparent !important;
