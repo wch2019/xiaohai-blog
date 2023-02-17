@@ -32,6 +32,7 @@ service.interceptors.request.use(config => {
 // response 响应拦截器
 service.interceptors.response.use(
   /**
+   * 如果您想获取 http 信息，例如标头或状态，请返回响应 =>响应
    * If you want to get http information such as headers or status
    * Please return  response => response
    */
@@ -42,8 +43,8 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    console.log(response.status)
     const res = response.data
-    console.log(res)
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       Message({
@@ -71,12 +72,14 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    if (error.response) {
+      // 请求已发出，但服务器响应的状态码不在 2xx 范围内
+      Message({message: error.response.data.msg, type: 'error', duration: 5 * 1000})
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+      Message({message: error.message, type: 'error', duration: 5 * 1000})
+    }
     return Promise.reject(error)
   }
 )

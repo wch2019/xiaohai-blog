@@ -95,6 +95,25 @@
         </router-link>
       </div>
     </div>
+    <!--引入粒子特效-->
+    <vue-particles
+      color="#fff"
+      :particleOpacity="0.7"
+      :particlesNumber="60"
+      shapeType="circle"
+      :particleSize="4"
+      linesColor="#fff"
+      :linesWidth="1"
+      :lineLinked="true"
+      :lineOpacity="0.4"
+      :linesDistance="150"
+      :moveSpeed="2"
+      :hoverEffect="true"
+      hoverMode="grab"
+      :clickEffect="true"
+      clickMode="push"
+    >
+    </vue-particles>
   </div>
 </template>
 
@@ -151,7 +170,7 @@ export default {
           {required: true, trigger: "blur", message: "请再次输入您的密码"},
           {required: true, validator: equalToPassword, trigger: "blur"}
         ],
-        code: [{required: true, trigger: "change", message: "请输入验证码"}],
+        code: [{required: true, trigger: "blur", message: "请输入验证码"}],
         email: [{ validator: validateEmail, trigger: 'blur' }]
       },
       loading: false,
@@ -177,7 +196,8 @@ export default {
     },
     getCode() {
       console.log(this.registerForm.email)
-      if(this.registerForm.email!==''){
+      let reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if(this.registerForm.email!=='' && reg.test(this.registerForm.email)){
         let data={
           email:this.registerForm.email
         }
@@ -235,6 +255,7 @@ export default {
 .login-container {
   background-size: cover;
   min-height: 100%;
+  max-height: 100%;
   width: 100%;
   overflow: hidden;
 }

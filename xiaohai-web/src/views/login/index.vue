@@ -59,6 +59,25 @@
           <el-link type="warning" @click="registerClick()">没有账号？去注册</el-link>
       </div>
     </div>
+    <!--引入粒子特效-->
+    <vue-particles
+      color="#fff"
+      :particleOpacity="0.7"
+      :particlesNumber="60"
+      shapeType="circle"
+      :particleSize="4"
+      linesColor="#fff"
+      :linesWidth="1"
+      :lineLinked="true"
+      :lineOpacity="0.4"
+      :linesDistance="150"
+      :moveSpeed="2"
+      :hoverEffect="true"
+      hoverMode="grab"
+      :clickEffect="true"
+      clickMode="push"
+    >
+    </vue-particles>
   </div>
 </template>
 
@@ -99,9 +118,6 @@ export default {
   methods: {
     //背景随机
     getImg(){
-      // getBing().then(data=>{
-      //   console.log(data)
-      // });
       const num = Math.floor(Math.random() * 5 + 1);
       this.imgSrc=require('@/assets/login/'+num+'.jpg')
     },
@@ -165,6 +181,7 @@ export default {
 .login-container {
   background-size: cover;
   min-height: 100%;
+  max-height: 100%;
   width: 100%;
   overflow: hidden;
 }
