@@ -9,7 +9,7 @@ public class Constants {
     /**
      * 认证字段
      */
-    public static final String SESSION_ID = "authentication";
+    public static final String SESSION_ID = "authorization";
 
     /**
      * 分页页数

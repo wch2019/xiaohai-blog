@@ -61,6 +61,8 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: false
+  #是否尝试从 cookie 里读取 Token
+  is-read-cookie: false
 
 #==============================mybatis-plus配置==============================
 mybatis-plus:
