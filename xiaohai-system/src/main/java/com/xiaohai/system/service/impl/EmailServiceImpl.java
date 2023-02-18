@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -31,9 +32,9 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
     @PostConstruct
-    public void init(){
+    public void init() {
         Config systemConfig = configMapper.selectOne(new QueryWrapper<Config>().last("LIMIT 1"));
-        if(systemConfig!=null){
+        if (systemConfig != null) {
             javaMailSender.setHost(systemConfig.getEmailHost());
             javaMailSender.setUsername(systemConfig.getEmailUsername());
             javaMailSender.setPassword(systemConfig.getEmailPassword());
@@ -47,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
      * 通知我
      */
     @Override
-    public void emailNoticeMe(String subject,String content) {
+    public void emailNoticeMe(String subject, String content) {
 
         // 构建一个邮件对象
         SimpleMailMessage message = new SimpleMailMessage();
@@ -67,53 +68,49 @@ public class EmailServiceImpl implements EmailService {
 
     /**
      * 友链通过发送通知
+     *
      * @param email 邮箱账号
      */
     @Override
-    public void friendPassSendEmail(String email){
+    public void friendPassSendEmail(String email) {
 
         String content =
-                """
-                    <html>
-                    <body>
-                        <p>您在<a href='http://www.shiyit.com'>点码博客</a>站点申请友链加入审核通过!!</span>
-                        <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
-                        <p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p>
-                    </body>
-                    </html>
-                """;
-        try {
-            send(email,content);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+                        """
+                            <html>
+                            <body>
+                                <p>您在<a href='http://www.shiyit.com'>DotCode</a>站点申请友链加入审核通过!!</span>
+                                <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
+                                <p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p>
+                            </body>
+                            </html>
+                        """;
+        send(email, content);
     }
 
     /**
      * 友链未通过发送通知
-     * @param email 邮箱账号
+     *
+     * @param email  邮箱账号
      * @param reason 原因
      */
     @Override
-    public void friendFailedSendEmail(String email,String reason){
+    public void friendFailedSendEmail(String email, String reason) {
         String content = "<html>\n" +
                 "<body>\n" +
-                "    <p>您在"+"<a href='http://www.shiyit.com'>点码博客</a>"+"站点申请的友链加入审核未通过!具体原因为:"+ reason +"</span>\n" +
+                "    <p>您在" + "<a href='http://www.shiyit.com'>DotCode</a>" + "站点申请的友链加入审核未通过!具体原因为:" + reason + "</span>\n" +
                 "<p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>" +
                 "<p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p></body>\n" +
                 "</html>";
-        try {
-            send(email,content);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        send(email, content);
     }
 
     /**
      * 发送邮箱验证码
+     * 异步处理
      */
     @Override
-    public void sendCode(String email) throws MessagingException {
+    @Async("syncExecutorPool")
+    public void sendCode(String email) {
         String code = String.valueOf(new Random().nextInt(900000) + 100000);
         String content = "<html>\n" +
                 "\t<body><div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'html', 'ZC0004_vDfNJayMtMUuKGIAzzsWvc8');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">\n" +
@@ -128,30 +125,30 @@ public class EmailServiceImpl implements EmailService {
                 "            <tr style=\"background-color: #f8f8f8;\">\n" +
                 "              <td>\n" +
                 "                <img style=\"padding: 15px 0 15px 30px;width:50px\" src=\"http://img.shiyit.com/FjzfvfWYZVED7eXMS4EL8KNR949K\">" +
-                "                <span>点码博客. </span>\n" +
+                "                <span>DotCode. </span>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "            <tr>\n" +
                 "              <td class=\"p-intro\">\n" +
                 "                <h1 style=\"font-size: 26px; font-weight: bold;\">验证您的邮箱地址</h1>\n" +
-                "                <p style=\"line-height:1.75em;\">感谢您使用 点码博客. </p>\n" +
-                "                <p style=\"line-height:1.75em;\">以下是您的邮箱验证码，请将它输入到 点码博客 的邮箱验证码输入框中:</p>\n" +
+                "                <p style=\"line-height:1.75em;\">感谢您使用 DotCode. </p>\n" +
+                "                <p style=\"line-height:1.75em;\">以下是您的邮箱验证码，请将它输入到 DotCode 的邮箱验证码输入框中:</p>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "            <tr>\n" +
                 "              <td class=\"p-code\">\n" +
-                "                <p style=\"color: #253858;text-align:center;line-height:1.75em;background-color: #f2f2f2;min-width: 200px;margin: 0 auto;font-size: 28px;border-radius: 5px;border: 1px solid #d9d9d9;font-weight: bold;\">"+code+"</p>\n" +
+                "                <p style=\"color: #253858;text-align:center;line-height:1.75em;background-color: #f2f2f2;min-width: 200px;margin: 0 auto;font-size: 28px;border-radius: 5px;border: 1px solid #d9d9d9;font-weight: bold;\">" + code + "</p>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "            <tr>\n" +
                 "              <td class=\"p-intro\">\n" +
-                "                <p style=\"line-height:1.75em;\">这一封邮件包括一些您的私密的 点码博客 账号信息，请不要回复或转发它，以免带来不必要的信息泄露风险。 </p>\n" +
+                "                <p style=\"line-height:1.75em;\">这一封邮件包括一些您的私密的 DotCode 账号信息，请不要回复或转发它，以免带来不必要的信息泄露风险。 </p>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "            <tr>\n" +
                 "              <td class=\"p-intro\">\n" +
                 "                <hr>\n" +
-                "                <p style=\"text-align: center;line-height:1.75em;\">xiaohai - 点码博客</p>\n" +
+                "                <p style=\"text-align: center;line-height:1.75em;\">xiaohai - DotCode</p>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
                 "          </tbody>\n" +
@@ -167,27 +164,31 @@ public class EmailServiceImpl implements EmailService {
                 "  </style>\n" +
                 "</div></body>\n" +
                 "</html>\n";
-       send(email,content);
-       log.info("邮箱验证码发送成功,邮箱:{},验证码:{}",email,code);
-        SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE+ email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        send(email, content);
+        log.info("邮箱验证码发送成功,邮箱:{},验证码:{}", email, code);
+        SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE + email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
     }
 
-    private void send(String email, String template) throws MessagingException {
+    private void send(String email, String template) {
+        try {
+            //创建一个MINE消息
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mineHelper = new MimeMessageHelper(mimeMessage, true);
+            // 设置邮件主题
+            mineHelper.setSubject("DotCode");
+            // 设置邮件发送者
+            mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
+            // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
+            mineHelper.setTo(email);
+            // 设置邮件发送日期
+            mineHelper.setSentDate(new Date());
+            // 设置邮件的正文
+            mineHelper.setText(template, true);
+            // 发送邮件
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            log.error("系统异常，无法正常发送验证码");
+        }
 
-        //创建一个MINE消息
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mineHelper = new MimeMessageHelper(mimeMessage, true);
-        // 设置邮件主题
-        mineHelper.setSubject("点码博客");
-        // 设置邮件发送者
-        mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
-        // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
-        mineHelper.setTo(email);
-        // 设置邮件发送日期
-        mineHelper.setSentDate(new Date());
-        // 设置邮件的正文
-        mineHelper.setText(template,true);
-        // 发送邮件
-        javaMailSender.send(mimeMessage);
     }
 }

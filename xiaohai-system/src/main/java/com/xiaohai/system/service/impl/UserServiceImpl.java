@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.UserDto;
@@ -33,6 +32,11 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Override
+    public User findByInfo() {
+        return (User) StpUtil.getSession().get(Constants.CURRENT_USER);
+    }
 
     @Override
     @Transactional

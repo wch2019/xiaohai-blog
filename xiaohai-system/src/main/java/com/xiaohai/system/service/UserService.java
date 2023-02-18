@@ -17,7 +17,11 @@ import com.xiaohai.system.pojo.dto.UserDto;
  */
 public interface UserService extends IService<User> {
 
-
+    /**
+     * 获取用户登录信息
+     * @return
+     */
+    User findByInfo();
     /**
      * 添加用户表
      *

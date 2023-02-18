@@ -1,23 +1,20 @@
 package com.xiaohai.system.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.EncryptUtils;
+import com.xiaohai.system.pojo.dto.UserDto;
+import com.xiaohai.system.pojo.entity.User;
+import com.xiaohai.system.pojo.query.UserQuery;
+import com.xiaohai.system.pojo.vo.UserVo;
+import com.xiaohai.system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import com.xiaohai.system.service.UserService;
-import com.xiaohai.system.pojo.entity.User;
-import com.xiaohai.system.pojo.query.UserQuery;
-import com.xiaohai.system.pojo.vo.UserVo;
-import com.xiaohai.system.pojo.dto.UserDto;
-
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -36,6 +33,11 @@ public class UserController {
 
     private final UserService userService;
 
+    @Operation(summary = "获取用户登录信息",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping("/info")
+    public Response<User> findByInfo(){
+        return  Response.success("获取用户登录信息成功！",userService.findByInfo());
+    }
 
     @Operation(summary = "新增用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()

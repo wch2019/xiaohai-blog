@@ -1,13 +1,14 @@
 package com.xiaohai.system.service;
 
-import javax.mail.MessagingException;
-
+/**
+ * @author Code01
+ */
 public interface EmailService {
     /**
      * 发送验证码
      * @param email 邮箱账号
      */
-    void sendCode(String email) throws MessagingException;
+    void sendCode(String email);
 
 
     /**

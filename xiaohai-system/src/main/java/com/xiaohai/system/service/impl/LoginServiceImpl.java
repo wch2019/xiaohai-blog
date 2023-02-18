@@ -21,8 +21,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.mail.MessagingException;
-
 /**
  * @author wangchenghai
  * @date 2023/01/18 13:47:03
@@ -41,37 +39,31 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String login(LoginVo vo) {
-        User user=userMapper.selectOne(new QueryWrapper<User>()
-                .eq("username",vo.getUsername())
-                .or().eq("email",vo.getUsername()).
+        User user = userMapper.selectOne(new QueryWrapper<User>()
+                .eq("username", vo.getUsername())
+                .or().eq("email", vo.getUsername()).
                 eq("password", EncryptUtils.aesEncrypt(vo.getPassword())));
         Assert.isTrue(user != null, "用户帐号或者密码错误!");
         if (Boolean.TRUE.equals(vo.getRememberMe())) {
             //记住我 7天有效
-            StpUtil.login(user.getId().longValue(),new SaLoginModel().setIsLastingCookie(true).setTimeout(60 * 60 * 24 * 7));
-        }else {
+            StpUtil.login(user.getId().longValue(), new SaLoginModel().setIsLastingCookie(true).setTimeout(60 * 60 * 24 * 7));
+        } else {
             StpUtil.login(user.getId().longValue());
         }
         // 在登录时缓存user对象
-        StpUtil.getSession().set(Constants.CURRENT_USER,userMapper.selectById(user.getId()));
+        StpUtil.getSession().set(Constants.CURRENT_USER, userMapper.selectById(user.getId()));
         return StpUtil.getTokenValue();
     }
 
     @Override
     public String sendEmailCode(String email) {
-        try {
-            emailService.sendCode(email);
-            return "验证码已发送，请前往邮箱查看!!";
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return "系统异常，无法正常发送验证码";
-        }
-
+        emailService.sendCode(email);
+        return "验证码已发送，请前往邮箱查看!";
     }
 
     @Override
     public Integer register(RegisterVo vo) {
-        String code=SpringUtils.getBean(RedisUtils.class).getCacheObject(RedisConstants.EMAIL_CODE+ vo.getEmail());
+        String code = SpringUtils.getBean(RedisUtils.class).getCacheObject(RedisConstants.EMAIL_CODE + vo.getEmail());
         Assert.isTrue(vo.getCode().equals(code), "验证码不正确!");
         //密码加密
         vo.setPassword(EncryptUtils.aesEncrypt(vo.getPassword()));
