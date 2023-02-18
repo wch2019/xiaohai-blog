@@ -8,31 +8,32 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function register(data) {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: '/register',
+    method: 'post',
+    data
+  })
+}
+
+export function getInfo() {
+  return request({
+    url: '/system/user/info',
+    method: 'get'
   })
 }
 
 export function logout() {
   return request({
-    url: '/vue-admin-template/user/logout',
+    url: '/logout',
     method: 'post'
   })
 }
-export function getBing() {
-  return request({
-    url: 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8',
-    method: 'get'
-  })
-}
+
 export function sendEmailCode(data) {
   return request({
     url: '/sendEmailCode',
     method: 'get',
-    params: data,
-    timeout: 20000
+    params: data
   })
 }

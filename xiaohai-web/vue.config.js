@@ -40,7 +40,7 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
-        target: "http://localhost:8081",
+        target: 'http://localhost:8081',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
@@ -61,7 +61,7 @@ module.exports = {
   },
   chainWebpack(config) {
     // it can improve the speed of the first screen, it is recommended to turn on preload
-    //可以提高首屏速度，建议开启预载
+    // 可以提高首屏速度，建议开启预载
     config.plugin('preload').tap(() => [
       {
         rel: 'preload',

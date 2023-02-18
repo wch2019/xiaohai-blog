@@ -1,8 +1,13 @@
 <template>
   <div class="login-container" :style="{backgroundImage:'url('+imgSrc+')'}">
     <div class="loginPart">
-      <el-form ref="loginForm" :model="registerForm" :rules="registerRules" auto-complete="on"
-               label-position="left">
+      <el-form
+        ref="loginForm"
+        :model="registerForm"
+        :rules="registerRules"
+        auto-complete="on"
+        label-position="left"
+      >
         <h2>DotCode后台管理系统</h2>
         <el-form-item prop="username" class="inputNew">
           <el-input
@@ -15,7 +20,7 @@
             auto-complete="on"
           >
             <template #prefix>
-              <svg-icon icon-class="user"/>
+              <svg-icon icon-class="user" />
             </template>
           </el-input>
         </el-form-item>
@@ -30,10 +35,10 @@
             auto-complete="on"
           >
             <template #prefix>
-              <svg-icon icon-class="email"/>
+              <svg-icon icon-class="email" />
             </template>
-            <el-link slot="suffix" type="warning" @click="getCode" v-if="captchaEnabled">发送验证码</el-link>
-            <span slot="suffix" v-else>{{ count }}s后重新获取</span>
+            <el-link v-if="captchaEnabled" slot="suffix" type="warning" @click="getCode">发送验证码</el-link>
+            <span v-else slot="suffix">{{ count }}s后重新获取</span>
           </el-input>
         </el-form-item>
         <el-form-item prop="code" class="inputNew">
@@ -47,22 +52,22 @@
             auto-complete="on"
           >
             <template #prefix>
-              <svg-icon icon-class="validCode"/>
+              <svg-icon icon-class="validCode" />
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password" class="inputNew">
           <el-input
             ref="password"
-            name="password"
             v-model="registerForm.password"
+            name="password"
             type="password"
             placeholder="密码"
             auto-complete="on"
             tabindex="4"
           >
             <template #prefix>
-              <svg-icon icon-class="password"/>
+              <svg-icon icon-class="password" />
             </template>
           </el-input>
         </el-form-item>
@@ -77,20 +82,24 @@
             @keyup.enter.native="handleRegister"
           >
             <template #prefix>
-              <svg-icon icon-class="password"/>
+              <svg-icon icon-class="password" />
             </template>
           </el-input>
         </el-form-item>
 
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                   @click.native.prevent="handleRegister">
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleRegister"
+        >
           <span v-if="!loading">注 册</span>
           <span v-else>注 册 中...</span>
         </el-button>
 
       </el-form>
       <div style="text-align: right;color: white;">
-        <router-link to='/login'>
+        <router-link to="/login">
           <el-link type="warning">注册完成？去登录</el-link>
         </router-link>
       </div>
@@ -98,52 +107,52 @@
     <!--引入粒子特效-->
     <vue-particles
       color="#fff"
-      :particleOpacity="0.7"
-      :particlesNumber="60"
-      shapeType="circle"
-      :particleSize="4"
-      linesColor="#fff"
-      :linesWidth="1"
-      :lineLinked="true"
-      :lineOpacity="0.4"
-      :linesDistance="150"
-      :moveSpeed="2"
-      :hoverEffect="true"
-      hoverMode="grab"
-      :clickEffect="true"
-      clickMode="push"
-    >
-    </vue-particles>
+      :particle-opacity="0.7"
+      :particles-number="60"
+      shape-type="circle"
+      :particle-size="4"
+      lines-color="#fff"
+      :lines-width="1"
+      :line-linked="true"
+      :line-opacity="0.4"
+      :lines-distance="150"
+      :move-speed="2"
+      :hover-effect="true"
+      hover-mode="grab"
+      :click-effect="true"
+      click-mode="push"
+    />
   </div>
 </template>
 
 <script>
-import {sendEmailCode} from '@/api/login'
+import { sendEmailCode, register } from '@/api/login'
+import { Message } from 'element-ui'
 export default {
   name: 'Register',
   data() {
-    //验证是否相同
+    // 验证是否相同
     const equalToPassword = (rule, value, callback) => {
       if (this.registerForm.password !== value) {
-        callback(new Error("两次输入的密码不一致"));
+        callback(new Error('两次输入的密码不一致'))
       } else {
-        callback();
+        callback()
       }
-    };
-    //邮箱验证
+    }
+    // 邮箱验证
     const validateEmail = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请正确填写邮箱'));
+        callback(new Error('请正确填写邮箱'))
       } else {
         if (value !== '') {
-          var reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-          if(!reg.test(value)){
-            callback(new Error('请输入有效的邮箱'));
+          var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+          if (!reg.test(value)) {
+            callback(new Error('请输入有效的邮箱'))
           }
         }
-        callback();
+        callback()
       }
-    };
+    }
 
     return {
       count: '',
@@ -151,26 +160,26 @@ export default {
       captchaEnabled: true,
       imgSrc: require('@/assets/login/3.jpg'),
       registerForm: {
-        username: "",
-        password: "",
-        confirmPassword: "",
-        code: "",
-        email: ""
+        username: '',
+        password: '',
+        confirmPassword: '',
+        code: '',
+        email: ''
       },
       registerRules: {
         username: [
-          {required: true, trigger: "blur", message: "请输入您的账号"},
-          {min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur'}
+          { required: true, trigger: 'blur', message: '请输入您的账号' },
+          { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
         ],
         password: [
-          {required: true, trigger: "blur", message: "请输入您的密码"},
-          {min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur'}
+          { required: true, trigger: 'blur', message: '请输入您的密码' },
+          { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
         ],
         confirmPassword: [
-          {required: true, trigger: "blur", message: "请再次输入您的密码"},
-          {required: true, validator: equalToPassword, trigger: "blur"}
+          { required: true, trigger: 'blur', message: '请再次输入您的密码' },
+          { required: true, validator: equalToPassword, trigger: 'blur' }
         ],
-        code: [{required: true, trigger: "blur", message: "请输入验证码"}],
+        code: [{ required: true, trigger: 'blur', message: '请输入验证码' }],
         email: [{ validator: validateEmail, trigger: 'blur' }]
       },
       loading: false,
@@ -179,72 +188,67 @@ export default {
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
     }
   },
   created() {
-    this.getImg();
+    this.getImg()
   },
   methods: {
-    //背景随机
+    // 背景随机
     getImg() {
-      const num = Math.floor(Math.random() * 5 + 1);
+      const num = Math.floor(Math.random() * 5 + 1)
       this.imgSrc = require('@/assets/login/' + num + '.jpg')
     },
+    // 获取邮箱验证码
     getCode() {
-      console.log(this.registerForm.email)
-      let reg=/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-      if(this.registerForm.email!=='' && reg.test(this.registerForm.email)){
-        let data={
-          email:this.registerForm.email
+      this.$refs.loginForm.validateField('email', (val) => {
+        if (!val) {
+          const data = {
+            email: this.registerForm.email
+          }
+          sendEmailCode(data).then(res => {
+            console.log(res)
+            Message({ message: res.msg, type: 'success', duration: 5 * 1000 })
+          })
+          const TIME_COUNT = 60
+          if (!this.timer) {
+            this.count = TIME_COUNT
+            this.captchaEnabled = false
+            this.timer = setInterval(() => {
+              if (this.count > 0 && this.count <= TIME_COUNT) {
+                this.count--
+              } else {
+                this.captchaEnabled = true
+                clearInterval(this.timer)
+                this.timer = null
+              }
+            }, 1000)
+          }
+        } else {
+          console.log('error submit!!')
+          return false
         }
-        sendEmailCode(data).then(response => {
-          // (response.data)
-        });
-        const TIME_COUNT = 60;
-        if (!this.timer) {
-          this.count = TIME_COUNT;
-          this.captchaEnabled = false;
-          this.timer = setInterval(() => {
-            if (this.count > 0 && this.count <= TIME_COUNT) {
-              this.count--;
-            } else {
-              this.captchaEnabled = true;
-              clearInterval(this.timer);
-              this.timer = null;
-            }
-          }, 1000)
-        }
-      }
-    },
-    getCookie() {
-      // const username = Cookies.get("username");
-      // const password = Cookies.get("password");
-      // const rememberMe = Cookies.get('rememberMe')
-      // this.loginForm = {
-      //   username: username === undefined ? this.loginForm.username : username,
-      //   password: password === undefined ? this.loginForm.password : decrypt(password),
-      //   rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
-      // };
+      })
     },
     handleRegister() {
-      // this.$refs.loginForm.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true
-      //     this.$store.dispatch('user/login', this.loginForm).then(() => {
-      //       this.$router.push({path: this.redirect || '/'})
-      //       this.loading = false
-      //     }).catch(() => {
-      //       this.loading = false
-      //     })
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          register(this.registerForm).then(res => {
+            Message({ message: res.msg, type: 'success', duration: 5 * 1000 })
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

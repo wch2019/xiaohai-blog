@@ -1,8 +1,13 @@
 <template>
   <div class="login-container" :style="{backgroundImage:'url('+imgSrc+')'}">
     <div class="loginPart">
-      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" auto-complete="on"
-               label-position="left">
+      <el-form
+        ref="loginForm"
+        :model="loginForm"
+        :rules="loginRules"
+        auto-complete="on"
+        label-position="left"
+      >
         <h2>DotCode后台管理系统</h2>
         <el-form-item prop="username" class="inputNew">
 
@@ -16,7 +21,7 @@
             auto-complete="on"
           >
             <template #prefix>
-              <svg-icon icon-class="user"/>
+              <svg-icon icon-class="user" />
             </template>
           </el-input>
         </el-form-item>
@@ -34,68 +39,72 @@
             @keyup.enter.native="handleLogin"
           >
             <template #prefix>
-              <svg-icon icon-class="password"/>
+              <svg-icon icon-class="password" />
             </template>
             <template #suffix>
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPwd"/>
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPwd" />
             </template>
           </el-input>
 
         </el-form-item>
 
         <div style="margin-bottom: 10px;margin-left: 2px">
-          <el-checkbox v-model="loginForm.rememberMe">
-            <span style="color: white">记住我</span>
-          </el-checkbox>
+          <el-tooltip class="item" effect="dark" content="7天有效" placement="right">
+            <el-checkbox v-model="loginForm.rememberMe">
+              <span style="color: white">记住我</span>
+            </el-checkbox>
+          </el-tooltip>
         </div>
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                   @click.native.prevent="handleLogin">
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleLogin"
+        >
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
 
       </el-form>
       <div style="text-align: right;color: white;">
-          <el-link type="warning" @click="registerClick()">没有账号？去注册</el-link>
+        <el-link type="warning" @click="registerClick()">没有账号？去注册</el-link>
       </div>
     </div>
     <!--引入粒子特效-->
     <vue-particles
       color="#fff"
-      :particleOpacity="0.7"
-      :particlesNumber="60"
-      shapeType="circle"
-      :particleSize="4"
-      linesColor="#fff"
-      :linesWidth="1"
-      :lineLinked="true"
-      :lineOpacity="0.4"
-      :linesDistance="150"
-      :moveSpeed="2"
-      :hoverEffect="true"
-      hoverMode="grab"
-      :clickEffect="true"
-      clickMode="push"
-    >
-    </vue-particles>
+      :particle-opacity="0.7"
+      :particles-number="60"
+      shape-type="circle"
+      :particle-size="4"
+      lines-color="#fff"
+      :lines-width="1"
+      :line-linked="true"
+      :line-opacity="0.4"
+      :lines-distance="150"
+      :move-speed="2"
+      :hover-effect="true"
+      hover-mode="grab"
+      :click-effect="true"
+      click-mode="push"
+    />
   </div>
 </template>
 
 <script>
-import { getBing } from '@/api/login'
 export default {
   name: 'Login',
   data() {
     return {
       imgSrc: require('@/assets/login/3.jpg'),
       loginForm: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123456',
         rememberMe: false
       },
       loginRules: {
-        username: [{required: true, trigger: 'blur', message:"请输入您的用户名"}],
-        password: [{required: true, trigger: 'blur', message: "请输入您的密码"}]
+        username: [{ required: true, trigger: 'blur', message: '请输入您的用户名' }],
+        password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }]
       },
       loading: false,
       passwordType: 'password',
@@ -104,26 +113,26 @@ export default {
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
     }
   },
   created() {
-    this. getImg();
-    this.getCode();
-    this.getCookie();
+    this.getImg()
+    this.getCode()
+    this.getCookie()
   },
   methods: {
-    //背景随机
-    getImg(){
-      const num = Math.floor(Math.random() * 5 + 1);
-      this.imgSrc=require('@/assets/login/'+num+'.jpg')
+    // 背景随机
+    getImg() {
+      const num = Math.floor(Math.random() * 5 + 1)
+      this.imgSrc = require('@/assets/login/' + num + '.jpg')
     },
-    //跳转注册
+    // 跳转注册
     registerClick() {
-      this.$router.push('/register');
+      this.$router.push('/register')
     },
     getCode() {
       // getCodeImg().then(res => {
@@ -144,7 +153,7 @@ export default {
       //   rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       // };
     },
-    //是否显示输入内容
+    // 是否显示输入内容
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -155,13 +164,13 @@ export default {
         this.$refs.password.focus()
       })
     },
-    //登录
+    // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({path: this.redirect || '/'})
+            this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
             this.loading = false
@@ -215,17 +224,16 @@ export default {
   /*文字居中*/
 }
 
- ::v-deep .inputNew .el-input__inner  {
+::v-deep .inputNew .el-input__inner {
   width: 100%;
-  //padding:10px 0;
-  font-size:16px;
-  color:#fff !important;
+  font-size: 16px;
+  color: #fff !important;
   letter-spacing: 1px;
   /*字符间的间距1px*/
   margin-bottom: 30px;
-  border:none;
+  border: none;
   border-bottom: 1px solid #fff;
-  outline:none;
+  outline: none;
   /*outline用于绘制元素周围的线
   outline：none在这里用途是将输入框的边框的线条使其消失*/
   background: transparent !important;
