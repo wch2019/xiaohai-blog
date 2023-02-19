@@ -8,7 +8,7 @@ const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
   baseURL: process.env.VUE_APP_PROXY_TARGET + process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // 跨域请求时发送 Cookie
-  timeout: 5000 // 请求超时时间,
+  timeout: 15000 // 请求超时时间,
 })
 
 // request 请求拦截器

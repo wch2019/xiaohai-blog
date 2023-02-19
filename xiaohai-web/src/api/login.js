@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// 登录
 export function login(data) {
   return request({
     url: '/login',
@@ -7,7 +8,7 @@ export function login(data) {
     data
   })
 }
-
+// 注册
 export function register(data) {
   return request({
     url: '/register',
@@ -15,21 +16,21 @@ export function register(data) {
     data
   })
 }
-
+// 获取当前用户信息
 export function getInfo() {
   return request({
     url: '/system/user/info',
     method: 'get'
   })
 }
-
+// 退出
 export function logout() {
   return request({
     url: '/logout',
-    method: 'post'
+    method: 'get'
   })
 }
-
+// 邮箱验证码
 export function sendEmailCode(data) {
   return request({
     url: '/sendEmailCode',

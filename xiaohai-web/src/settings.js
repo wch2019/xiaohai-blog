@@ -1,16 +1,20 @@
 module.exports = {
 
-  title: 'DotCode后台管理系统',
+  title: 'DotCode',
+  /**
+   * 是否系统布局配置
+   */
+  showSettings: true,
 
   /**
    * @type {boolean} true | false
    * @description 是否固定头部
    */
-  fixedHeader: false,
+  fixedHeader: true,
 
   /**
    * @type {boolean} true | false
    * @description 是否在侧边栏中显示徽标
    */
-  sidebarLogo: false
+  sidebarLogo: true
 }

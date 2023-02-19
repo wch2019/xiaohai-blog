@@ -57,10 +57,36 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'el-icon-house' }
     }]
   },
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/system/menu',
+    name: 'system',
+    meta: { title: '系统管理', icon: 'el-icon-setting' },
+    children: [
+      {
+        path: 'menu',
+        name: 'menu',
+        component: () => import('@/views/system/menu'),
+        meta: { title: '菜单管理', icon: 'el-icon-menu', noCache: true }
+      }
+      // {
+      //   path: 'role',
+      //   name: 'role',
+      //   component: () => import('@/views/system/role'),
+      //   meta: { title: '角色管理', icon: 'role', noCache: true }
+      // }, {
+      //   path: 'user',
+      //   name: 'user',
+      //   component: () => import('@/views/system/user'),
+      //   meta: { title: '用户管理', icon: 'user', noCache: true }
+      // }
 
+    ]
+  },
   {
     path: '/example',
     component: Layout,
@@ -95,7 +121,24 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/error',
+    component: Layout,
+    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: '404',
+        name: 'error',
+        component: () => import('@/views/error/404.vue'),
+        meta: { title: '404', icon: 'form' }
+      }, {
+        path: '404',
+        name: 'error',
+        component: () => import('@/views/error/404.vue'),
+        meta: { title: 'Error', icon: 'form' }
+      }
+    ]
+  },
   {
     path: '/nested',
     component: Layout,
