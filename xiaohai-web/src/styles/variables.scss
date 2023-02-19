@@ -1,3 +1,18 @@
+
+// 默认菜单主题风格
+$base-menu-color:#bfcbd9;
+$base-menu-color-active:#f4f4f5;
+$base-menu-background:#304156;
+$base-logo-title-color: #ffffff;
+
+$base-menu-light-color:rgba(0,0,0,.70);
+$base-menu-light-background:#ffffff;
+$base-logo-light-title-color: #001529;
+
+$base-sub-menu-background:#1f2d3d;
+$base-sub-menu-hover:#001528;
+
+
 // sidebar
 $menuText:#bfcbd9;
 $menuActiveText:#409EFF;
@@ -17,9 +32,20 @@ $sideBarWidth: 210px;
   menuText: $menuText;
   menuActiveText: $menuActiveText;
   subMenuActiveText: $subMenuActiveText;
-  menuBg: $menuBg;
+  //menuBg: $menuBg;
   menuHover: $menuHover;
-  subMenuBg: $subMenuBg;
+  //subMenuBg: $subMenuBg;
   subMenuHover: $subMenuHover;
+
   sideBarWidth: $sideBarWidth;
+
+  menuColor: $base-menu-color;
+  menuLightColor: $base-menu-light-color;
+  menuColorActive: $base-menu-color-active;
+
+  menuBackground: $base-menu-background;
+  menuLightBackground: $base-menu-light-background;
+
+  logoTitleColor: $base-logo-title-color;
+  logoLightTitleColor: $base-logo-light-title-color
 }

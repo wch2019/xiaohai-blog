@@ -1,14 +1,14 @@
 <template>
-  <div :class="{'has-logo':showLogo}">
+  <div :class="{'has-logo':showLogo}" :style="{ backgroundColor: settings.sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
     <logo v-if="showLogo" :collapse="isCollapse" />
-    <el-scrollbar wrap-class="scrollbar-wrapper">
+    <el-scrollbar :class="settings.sideTheme"  wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
-        :unique-opened="false"
-        :active-text-color="variables.menuActiveText"
+        :background-color="settings.sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground"
+        :text-color="settings.sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor"
+        :unique-opened="true"
+        :active-text-color="settings.theme"
         :collapse-transition="false"
         mode="vertical"
       >
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
@@ -27,6 +27,7 @@ import variables from '@/styles/variables.scss'
 export default {
   components: { SidebarItem, Logo },
   computed: {
+    ...mapState(['settings']),
     ...mapGetters([
       'sidebar'
     ]),

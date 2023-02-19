@@ -121,24 +121,24 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/error',
-    component: Layout,
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: '404',
-        name: 'error',
-        component: () => import('@/views/error/404.vue'),
-        meta: { title: '404', icon: 'form' }
-      }, {
-        path: '404',
-        name: 'error',
-        component: () => import('@/views/error/404.vue'),
-        meta: { title: 'Error', icon: 'form' }
-      }
-    ]
-  },
+  // {
+  //   path: '/error',
+  //   component: Layout,
+  //   meta: { title: 'Example', icon: 'el-icon-s-help' },
+  //   children: [
+  //     {
+  //       path: '404',
+  //       name: 'error',
+  //       component: () => import('@/views/error/404.vue'),
+  //       meta: { title: '404', icon: 'form' }
+  //     }, {
+  //       path: '404',
+  //       name: 'error',
+  //       component: () => import('@/views/error/404.vue'),
+  //       meta: { title: 'Error', icon: 'form' }
+  //     }
+  //   ]
+  // },
   {
     path: '/nested',
     component: Layout,

@@ -1,8 +1,10 @@
 import defaultSettings from '@/settings'
 
-const { showSettings, fixedHeader, sidebarLogo } = defaultSettings
+const { sideTheme, showSettings, fixedHeader, sidebarLogo } = defaultSettings
 
 const state = {
+  theme: '#409EFF',
+  sideTheme: sideTheme || sideTheme,
   showSettings: showSettings,
   fixedHeader: fixedHeader,
   sidebarLogo: sidebarLogo
