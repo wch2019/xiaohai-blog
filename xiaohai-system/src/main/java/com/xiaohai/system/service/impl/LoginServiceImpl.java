@@ -50,8 +50,9 @@ public class LoginServiceImpl implements LoginService {
         } else {
             StpUtil.login(user.getId().longValue());
         }
+        user.setPassword(null);
         // 在登录时缓存user对象
-        StpUtil.getSession().set(Constants.CURRENT_USER, userMapper.selectById(user.getId()));
+        StpUtil.getSession().set(Constants.CURRENT_USER,user);
         return StpUtil.getTokenValue();
     }
 
