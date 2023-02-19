@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Objects;
@@ -30,11 +31,13 @@ public class EmailServiceImpl implements EmailService {
     private final ConfigMapper configMapper;
 
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+    private  String form = "";
 
     @PostConstruct
     public void init() {
         Config systemConfig = configMapper.selectOne(new QueryWrapper<Config>().last("LIMIT 1"));
         if (systemConfig != null) {
+            form=systemConfig.getEmailUsername();
             javaMailSender.setHost(systemConfig.getEmailHost());
             javaMailSender.setUsername(systemConfig.getEmailUsername());
             javaMailSender.setPassword(systemConfig.getEmailPassword());
@@ -48,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
      * 通知我
      */
     @Override
-    public void emailNoticeMe(String subject, String content) {
+    public void emailNoticeMe(String subject, String content,String email) {
 
         // 构建一个邮件对象
         SimpleMailMessage message = new SimpleMailMessage();
@@ -57,7 +60,7 @@ public class EmailServiceImpl implements EmailService {
         // 设置邮件发送者
         message.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
         // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
-        message.setTo("1372195290@qq.com");
+        message.setTo(email);
         // 设置邮件发送日期
         message.setSentDate(new Date());
         // 设置邮件的正文
@@ -84,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
                             </body>
                             </html>
                         """;
-        send(email, content);
+        send(email, content,"友链通过发送通知");
     }
 
     /**
@@ -101,7 +104,7 @@ public class EmailServiceImpl implements EmailService {
                 "<p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>" +
                 "<p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p></body>\n" +
                 "</html>";
-        send(email, content);
+        send(email, content,"友链未通过发送通知");
     }
 
     /**
@@ -164,20 +167,21 @@ public class EmailServiceImpl implements EmailService {
                 "  </style>\n" +
                 "</div></body>\n" +
                 "</html>\n";
-        send(email, content);
+        send(email, content,"DotCode验证码");
         log.info("邮箱验证码发送成功,邮箱:{},验证码:{}", email, code);
         SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE + email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
     }
 
-    private void send(String email, String template) {
+    private void send(String email, String template,String subject) {
         try {
             //创建一个MINE消息
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mineHelper = new MimeMessageHelper(mimeMessage, true);
             // 设置邮件主题
-            mineHelper.setSubject("DotCode");
+            mineHelper.setSubject(subject);
             // 设置邮件发送者
-            mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
+            mineHelper.setFrom(new InternetAddress("DotCode小站<"+form+">"));
+//            mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
             // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
             mineHelper.setTo(email);
             // 设置邮件发送日期
