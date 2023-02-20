@@ -5,9 +5,25 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+
+      <template v-if="device!=='mobile'">
+        <search id="header-search" class="right-menu-item" />
+
+        <el-tooltip content="门户页面" effect="dark" placement="bottom">
+          <Website id="website" class="right-menu-item" />
+        </el-tooltip>
+        <el-tooltip effect="dark" content="修改密码" placement="bottom">
+          <password class="right-menu-item"></password>
+        </el-tooltip>
+        <el-tooltip effect="dark" content="全屏" placement="bottom">
+<!--          <screenfull id="screenfull" class="right-menu-item hover-effect" />-->
+        </el-tooltip>
+
+      </template>
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -35,16 +51,25 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import Website from '@/components/DotCode/Website'
+import Password from '@/components/DotCode/password'
+// import Screenfull from "@/components/Screenfull"
+import Search from '@/components/HeaderSearch'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Password,
+    Website,
+    // Screenfull,
+    Search
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'device'
     ])
   },
   methods: {

@@ -20,6 +20,7 @@ const mutations = {
 }
 
 const actions = {
+  // 修改布局设置
   changeSetting({ commit }, data) {
     commit('CHANGE_SETTING', data)
   }
