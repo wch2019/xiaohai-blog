@@ -13,7 +13,7 @@ const name = defaultSettings.title || 'DotCode后台管理系统' // 网页标�
 // 例如，Mac： sudo npm run
 // 您可以通过以下方法更改端口：
 // port = 9528 npm run dev 或 npm run dev --port = 9528
-const port = process.env.port || process.env.npm_config_port || 9528 // 端口
+const port = process.env.port || process.env.npm_config_port || 8080 // 端口
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {

@@ -1,22 +1,22 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar"/>
 
-    <breadcrumb class="breadcrumb-container" />
+    <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
 
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <search id="header-search" class="right-menu-item"/>
 
         <el-tooltip content="门户页面" effect="dark" placement="bottom">
-          <Website id="website" class="right-menu-item" />
+          <Website id="website" class="right-menu-item hover-effect"/>
         </el-tooltip>
-        <el-tooltip effect="dark" content="修改密码" placement="bottom">
-          <password class="right-menu-item"></password>
+        <el-tooltip  content="修改密码" placement="bottom">
+          <password class="right-menu-item hover-effect"/>
         </el-tooltip>
         <el-tooltip effect="dark" content="全屏" placement="bottom">
-<!--          <screenfull id="screenfull" class="right-menu-item hover-effect" />-->
+          <screenfull id="screenfull" class="right-menu-item hover-effect"/>
         </el-tooltip>
 
       </template>
@@ -24,7 +24,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
@@ -52,9 +52,9 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Website from '@/components/DotCode/Website'
-import Password from '@/components/DotCode/password'
-// import Screenfull from "@/components/Screenfull"
+import Screenfull from '@/components/Screenfull'
 import Search from '@/components/HeaderSearch'
+import Password from '@/components/DotCode/password'
 
 export default {
   components: {
@@ -62,7 +62,7 @@ export default {
     Hamburger,
     Password,
     Website,
-    // Screenfull,
+    Screenfull,
     Search
   },
   computed: {
@@ -90,7 +90,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -98,7 +98,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
