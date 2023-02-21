@@ -1,79 +1,61 @@
 <template>
-  <div class="drawer-container">
-    <div>
-      <div class="setting-drawer-content">
-        <div class="setting-drawer-title">
-          <h3 class="drawer-title">主题风格设置</h3>
+  <el-drawer size="280px" :visible="visible" :with-header="false" :append-to-body="true" :before-close="handleClose" >
+    <div class="drawer-container">
+      <div>
+        <div class="setting-drawer-content">
+          <div class="setting-drawer-title">
+            <h3 class="drawer-title">主题风格设置</h3>
+          </div>
+          <div class="setting-drawer-block-checbox">
+            <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
+              <img src="@/assets/images/dark.svg" alt="dark">
+              <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
+                <i aria-label="图标: check" class="anticon anticon-check">
+                  <svg viewBox="64 64 896 896" data-icon="check" width="1em" height="1em" :fill="theme" aria-hidden="true" focusable="false" class="">
+                    <path d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"/>
+                  </svg>
+                </i>
+              </div>
+            </div>
+            <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-light')">
+              <img src="@/assets/images/light.svg" alt="light">
+              <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
+                <i aria-label="图标: check" class="anticon anticon-check">
+                  <svg viewBox="64 64 896 896" data-icon="check" width="1em" height="1em" :fill="theme" aria-hidden="true" focusable="false" class="">
+                    <path d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"/>
+                  </svg>
+                </i>
+              </div>
+            </div>
+          </div>
+
+          <div class="drawer-item">
+            <span>主题颜色</span>
+            <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
+          </div>
         </div>
-        <div class="setting-drawer-block-checbox">
-          <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
-            <img src="@/assets/images/dark.svg" alt="dark">
-            <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
-              <i aria-label="图标: check" class="anticon anticon-check">
-                <svg
-                  viewBox="64 64 896 896"
-                  data-icon="check"
-                  width="1em"
-                  height="1em"
-                  :fill="theme"
-                  aria-hidden="true"
-                  focusable="false"
-                  class=""
-                >
-                  <path
-                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
-                  />
-                </svg>
-              </i>
-            </div>
-          </div>
-          <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-light')">
-            <img src="@/assets/images/light.svg" alt="light">
-            <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
-              <i aria-label="图标: check" class="anticon anticon-check">
-                <svg
-                  viewBox="64 64 896 896"
-                  data-icon="check"
-                  width="1em"
-                  height="1em"
-                  :fill="theme"
-                  aria-hidden="true"
-                  focusable="false"
-                  class=""
-                >
-                  <path
-                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
-                  />
-                </svg>
-              </i>
-            </div>
-          </div>
+
+        <el-divider/>
+
+        <h3 class="drawer-title">系统布局配置</h3>
+
+        <div class="drawer-item">
+          <span>开启 Tags-Views</span>
+          <el-switch v-model="tagsView" class="drawer-switch" />
         </div>
 
         <div class="drawer-item">
-          <span>主题颜色</span>
-          <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
+          <span>固定 Header</span>
+          <el-switch v-model="fixedHeader" class="drawer-switch" />
         </div>
-      </div>
-      <el-divider />
-      <h3 class="drawer-title">系统布局配置</h3>
 
-      <div class="drawer-item">
-        <span>开启 Tags-View</span>
-        <el-switch v-model="tagsView" class="drawer-switch" />
-      </div>
-
-      <div class="drawer-item">
-        <span>固定 Header</span>
-        <el-switch v-model="fixedHeader" class="drawer-switch" />
-      </div>
-
-      <div class="drawer-item">
-        <span>侧边栏 Logo</span>
-        <el-switch v-model="sidebarLogo" class="drawer-switch" />
-      </div>
+        <div class="drawer-item">
+          <span>显示 Logo</span>
+          <el-switch v-model="sidebarLogo" class="drawer-switch" />
+        </div>
     </div>
-  </div>
+    </div>
+  </el-drawer>
 </template>
 
 <script>
@@ -88,6 +70,11 @@ export default {
     }
   },
   computed: {
+    visible: {
+      get() {
+        return this.$store.state.settings.showSettings
+      }
+    },
     fixedHeader: {
       get() {
         return this.$store.state.settings.fixedHeader
@@ -123,6 +110,9 @@ export default {
     }
   },
   methods: {
+    handleClose(){
+      this.$store.state.settings.showSettings=false
+    },
     themeChange(val) {
       this.$store.dispatch('settings/changeSetting', {
         key: 'theme',
@@ -137,6 +127,7 @@ export default {
       })
       this.sideTheme = val
     }
+
   }
 }
 </script>

@@ -8,7 +8,7 @@ module.exports = {
   /**
    * 是否系统布局配置
    */
-  showSettings: true,
+  showSettings: false,
 
   /**
    * @type {boolean} true | false

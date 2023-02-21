@@ -12,13 +12,16 @@
         <el-tooltip content="门户页面" effect="dark" placement="bottom">
           <Website id="website" class="right-menu-item hover-effect"/>
         </el-tooltip>
-        <el-tooltip  content="修改密码" placement="bottom">
-          <password class="right-menu-item hover-effect"/>
+<!--        <el-tooltip  content="修改密码" placement="bottom">-->
+<!--          <password class="right-menu-item"/>-->
+<!--        </el-tooltip>-->
+        <el-tooltip  content="主题设置" placement="bottom">
+<!--          <i class="el-icon-setting right-menu-item hover-effect" @click="setting = true"/>-->
+          <svg-icon icon-class="theme" style="height: 2.5em;font-size: 18px;cursor: pointer"  class="right-menu-item hover-effect" @click="setting = true" />
         </el-tooltip>
         <el-tooltip effect="dark" content="全屏" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect"/>
         </el-tooltip>
-
       </template>
 
       <el-dropdown class="avatar-container" trigger="click">
@@ -27,9 +30,9 @@
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+          <router-link to="/user/index">
             <el-dropdown-item>
-              Home
+              个人信息
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
@@ -70,7 +73,18 @@ export default {
       'sidebar',
       'avatar',
       'device'
-    ])
+    ]),
+    setting: {
+      get() {
+        return this.$store.state.settings.showSettings
+      },
+      set(val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'showSettings',
+          value: val
+        })
+      }
+    }
   },
   methods: {
     toggleSideBar() {

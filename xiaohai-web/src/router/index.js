@@ -44,11 +44,23 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/user',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/profile/index'),
+        name: 'Profile',
+        meta: { title: '个人中心', icon: 'user', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/404',
     component: () => import('@/views/error/404.vue'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -57,7 +69,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'el-icon-house' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
   {
