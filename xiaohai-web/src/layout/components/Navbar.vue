@@ -17,7 +17,7 @@
 <!--        </el-tooltip>-->
         <el-tooltip  content="主题设置" placement="bottom">
 <!--          <i class="el-icon-setting right-menu-item hover-effect" @click="setting = true"/>-->
-          <svg-icon icon-class="theme" style="height: 2.5em;font-size: 18px;cursor: pointer"  class="right-menu-item hover-effect" @click="setting = true" />
+            <svg-icon icon-class="theme" class="right-menu-item" @click="setting = true" />
         </el-tooltip>
         <el-tooltip effect="dark" content="全屏" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect"/>
@@ -174,5 +174,10 @@ export default {
       }
     }
   }
+}
+.a-icon {
+  cursor: pointer;
+  font-size: 18px;
+  vertical-align: middle;
 }
 </style>

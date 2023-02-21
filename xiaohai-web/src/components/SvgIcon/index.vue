@@ -49,9 +49,10 @@ export default {
 .svg-icon {
   width: 1em;
   height: 1em;
-  vertical-align: -0.15em;
+  vertical-align: middle;
   fill: currentColor;
   overflow: hidden;
+  font-size: 18px;
 }
 
 .svg-external-icon {

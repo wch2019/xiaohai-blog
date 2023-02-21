@@ -60,6 +60,7 @@ export default {
   background: #2b2f3a;
   text-align: center;
   overflow: hidden;
+  border-bottom: 1px solid #d3dce6;
 
   & .sidebar-logo-link {
     height: 100%;

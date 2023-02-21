@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg-icon class="websiteSvg" icon-class="website" @click.native="goto" style="height: 2.5em;font-size: 18px;cursor: pointer" />
+    <svg-icon class="websiteSvg" icon-class="website" @click.native="goto"/>
   </div>
 </template>
 
