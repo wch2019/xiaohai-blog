@@ -1,46 +1,30 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar"/>
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb class="breadcrumb-container"/>
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item"/>
+        <search id="header-search" class="right-menu-item" />
 
-        <el-tooltip content="门户页面" effect="dark" placement="bottom">
-          <Website id="website" class="right-menu-item hover-effect"/>
+        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+
+        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+
         </el-tooltip>
-<!--        <el-tooltip  content="修改密码" placement="bottom">-->
-<!--          <password class="right-menu-item"/>-->
-<!--        </el-tooltip>-->
-        <el-tooltip  content="主题设置" placement="bottom">
-<!--          <i class="el-icon-setting right-menu-item hover-effect" @click="setting = true"/>-->
-            <svg-icon icon-class="theme" class="right-menu-item" @click="setting = true" />
-        </el-tooltip>
-        <el-tooltip effect="dark" content="全屏" placement="bottom">
-          <screenfull id="screenfull" class="right-menu-item hover-effect"/>
-        </el-tooltip>
+
       </template>
 
-      <el-dropdown class="avatar-container" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
-          <i class="el-icon-caret-bottom"/>
+          <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+        <el-dropdown-menu slot="dropdown">
           <router-link to="/user/index">
-            <el-dropdown-item>
-              个人信息
-            </el-dropdown-item>
+            <el-dropdown-item> 个人信息</el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
@@ -54,17 +38,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import Website from '@/components/DotCode/Website'
 import Screenfull from '@/components/Screenfull'
 import Search from '@/components/HeaderSearch'
-import Password from '@/components/DotCode/password'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    Password,
-    Website,
     Screenfull,
     Search
   },
@@ -73,18 +53,7 @@ export default {
       'sidebar',
       'avatar',
       'device'
-    ]),
-    setting: {
-      get() {
-        return this.$store.state.settings.showSettings
-      },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'showSettings',
-          value: val
-        })
-      }
-    }
+    ])
   },
   methods: {
     toggleSideBar() {
@@ -104,7 +73,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
     line-height: 46px;
@@ -112,7 +81,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color:transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
@@ -121,6 +90,11 @@ export default {
 
   .breadcrumb-container {
     float: left;
+  }
+
+  .errLog-container {
+    display: inline-block;
+    vertical-align: top;
   }
 
   .right-menu {
@@ -174,10 +148,5 @@ export default {
       }
     }
   }
-}
-.a-icon {
-  cursor: pointer;
-  font-size: 18px;
-  vertical-align: middle;
 }
 </style>

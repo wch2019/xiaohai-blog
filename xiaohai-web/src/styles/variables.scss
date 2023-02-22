@@ -1,3 +1,12 @@
+// base color
+$blue:#324157;
+$light-blue:#3A71A8;
+$red:#C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow:#FEC171;
+$panGreen: #30B08F;
 // 默认菜单主题风格
 $base-menu-color:#bfcbd9;
 $base-menu-color-active:#f4f4f5;
@@ -10,11 +19,10 @@ $base-logo-light-title-color: #001529;
 
 $base-sub-menu-background:#1f2d3d;
 $base-sub-menu-hover:#001528;
-
 // sidebar
 $menuText:#bfcbd9;
 $menuActiveText:#409EFF;
-$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+$subMenuActiveText:#f4f4f5; // https://github.com/ElemeFE/element/issues/12951
 
 $menuBg:#304156;
 $menuHover:#263445;
@@ -34,7 +42,6 @@ $sideBarWidth: 210px;
   //menuHover: $menuHover;
   //subMenuBg: $subMenuBg;
   //subMenuHover: $subMenuHover;
-
   sideBarWidth: $sideBarWidth;
 
   menuColor: $base-menu-color;
