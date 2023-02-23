@@ -6,12 +6,14 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+<!--        <search id="header-search" class="right-menu-item" />-->
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <el-tooltip content="门户地址" effect="dark" placement="bottom">
+          <Website id="website" class="right-menu-item hover-effect" ></Website>
+        </el-tooltip>
 
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
-
+        <el-tooltip content="全屏" effect="dark" placement="bottom">
+        <screenfull id="screen-full" class="right-menu-item hover-effect" />
         </el-tooltip>
 
       </template>
@@ -40,12 +42,14 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import Search from '@/components/HeaderSearch'
+import Website from '@/components/DotCode/Website'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
     Screenfull,
+    Website,
     Search
   },
   computed: {

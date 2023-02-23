@@ -200,8 +200,8 @@
   </div>
 </template>
 <script>
-import { fetchMenu, createMenu, removeMenu, updateMenu } from '@/api/system/menu'
-import IconsDialog from '@/components/IconsDialog'
+import { listMenu, addMenu, delMenu, updateMenu } from '@/api/system/menu'
+import IconsDialog from '@/components/IconsDialog/index.vue'
 // import { mapGetters } from 'vuex'
 // import { hasAuth } from '@/utils/auth'
 

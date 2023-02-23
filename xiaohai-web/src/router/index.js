@@ -50,7 +50,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/user/profile/index'),
+        component: () => import('@/views/system/user/profile/index'),
         name: 'Profile',
         meta: { title: '个人中心', icon: 'user', noCache: true }
       }
@@ -82,7 +82,7 @@ export const constantRoutes = [
       {
         path: 'menu',
         name: 'menu',
-        component: () => import('@/views/system/menu'),
+        component: () => import('@/views/system/menu/menu.vue'),
         meta: { title: '菜单管理', icon: 'el-icon-menu', noCache: true }
       }
       // {

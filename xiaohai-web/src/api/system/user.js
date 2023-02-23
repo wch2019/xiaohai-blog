@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api = '/system/user'
 
 // 查询用户表列表数据
-export function findListByPage(data) {
+export function listUser(data) {
   return request({
     url: api,
     method: 'get',
@@ -12,7 +12,7 @@ export function findListByPage(data) {
 }
 
 // 新增用户表
-export function create(data) {
+export function addUser(data) {
   return request({
     url: api,
     method: 'post',
@@ -21,7 +21,7 @@ export function create(data) {
 }
 
 // 更新用户表
-export function update(data) {
+export function updateUser(data) {
   return request({
     url: api,
     method: 'put',
@@ -30,16 +30,15 @@ export function update(data) {
 }
 
 // id查询用户表
-export function findById(data) {
+export function getUser(data) {
   return request({
-    url: api,
-    method: 'get',
-    data
+    url: api + '/' + data,
+    method: 'get'
   })
 }
 
 // 删除用户表
-export function remove(data) {
+export function delUser(data) {
   return request({
     url: api,
     method: 'delete',

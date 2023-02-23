@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api = '/system/menu'
 
 // 查询菜单列表数据
-export function fetchMenu(data) {
+export function listMenu(data) {
   return request({
     url: api,
     method: 'get',
@@ -12,7 +12,7 @@ export function fetchMenu(data) {
 }
 
 // 新增菜单
-export function createMenu(data) {
+export function addMenu(data) {
   return request({
     url: api,
     method: 'post',
@@ -30,16 +30,15 @@ export function updateMenu(data) {
 }
 
 // id查询菜单
-export function findById(data) {
+export function getMenu(data) {
   return request({
-    url: api,
-    method: 'get',
-    data
+    url: api + '/' + data,
+    method: 'get'
   })
 }
 
 // 删除菜单
-export function removeMenu(data) {
+export function delMenu(data) {
   return request({
     url: api,
     method: 'delete',

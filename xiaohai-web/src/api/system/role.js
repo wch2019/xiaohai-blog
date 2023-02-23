@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api = '/system/role'
 
 // 查询角色列表数据
-export function findListByPage(data) {
+export function listRole(data) {
   return request({
     url: api,
     method: 'get',
@@ -12,7 +12,7 @@ export function findListByPage(data) {
 }
 
 // 新增角色
-export function create(data) {
+export function addRole(data) {
   return request({
     url: api,
     method: 'post',
@@ -21,7 +21,7 @@ export function create(data) {
 }
 
 // 更新角色
-export function update(data) {
+export function updateRole(data) {
   return request({
     url: api,
     method: 'put',
@@ -30,16 +30,15 @@ export function update(data) {
 }
 
 // id查询角色
-export function findById(data) {
+export function getRole(data) {
   return request({
-    url: api,
-    method: 'get',
-    data
+    url: api + '/' + data,
+    method: 'get'
   })
 }
 
 // 删除角色
-export function remove(data) {
+export function delRole(data) {
   return request({
     url: api,
     method: 'delete',
