@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,7 +42,7 @@ public class UserController {
 
     @Operation(summary = "新增用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
-    public Response<Integer> add(@Valid @RequestBody UserVo vo){
+    public Response<Integer> add(@Validated @RequestBody UserVo vo){
         //密码默认
         vo.setPassword(EncryptUtils.aesEncrypt(Constants.SYSTEM_PASSWORD));
         return  Response.success("新增用户表成功！", userService.add(vo));
@@ -56,7 +57,7 @@ public class UserController {
     @Operation(summary = "更新用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
 //    @SaCheckPermission("system:user:put")
     @PutMapping()
-    public Response<Integer> update(@Valid @RequestBody UserVo vo){
+    public Response<Integer> update(@Validated @RequestBody UserVo vo){
         return  Response.success("更新用户表成功！",userService.updateData(vo));
     }
 

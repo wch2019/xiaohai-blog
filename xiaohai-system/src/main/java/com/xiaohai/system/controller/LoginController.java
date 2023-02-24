@@ -30,7 +30,7 @@ public class LoginController {
 
     @Operation(summary = "登录")
     @PostMapping("login")
-    public Response<String> login(@Valid @RequestBody LoginVo vo){
+    public Response<String> login(@Validated @RequestBody LoginVo vo){
         return  Response.success("登录成功！", loginService.login(vo));
     }
 
@@ -42,7 +42,7 @@ public class LoginController {
 
     @Operation(summary = "用户信息注册")
     @PostMapping("register")
-    public Response<Integer> register(@Valid @RequestBody RegisterVo vo){
+    public Response<Integer> register(@Validated @RequestBody RegisterVo vo){
         return  Response.success("注册成功！",loginService.register(vo));
     }
 

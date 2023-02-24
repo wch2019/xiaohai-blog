@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.xiaohai.system.service.RoleService;
 import com.xiaohai.system.pojo.entity.Role;
@@ -37,7 +38,7 @@ public class RoleController {
 
     @Operation(summary = "新增角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
-    public Response<Integer> add(@Valid @RequestBody RoleVo vo){
+    public Response<Integer> add(@Validated @RequestBody RoleVo vo){
         return  Response.success("新增角色表成功！", roleService.add(vo));
     }
 
@@ -49,7 +50,7 @@ public class RoleController {
 
     @Operation(summary = "更新角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PutMapping()
-    public Response<Integer> update(@Valid @RequestBody RoleVo vo){
+    public Response<Integer> update(@Validated @RequestBody RoleVo vo){
         return  Response.success("更新角色表成功！", roleService.updateData(vo));
     }
 
