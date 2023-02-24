@@ -92,4 +92,4 @@ springdoc:
       packages-to-scan: com.xiaohai.admin
     - group: '管理页'
       paths-to-match: '/**'
-      packages-to-scan: com.xiaohai.system
+      packages-to-scan: com.xiaohai.system,com.xiaohai.admin
