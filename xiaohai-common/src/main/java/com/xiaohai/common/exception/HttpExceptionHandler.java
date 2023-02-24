@@ -1,4 +1,4 @@
-package com.xiaohai.admin.confing.exception;
+package com.xiaohai.common.exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;

@@ -1,4 +1,4 @@
-package com.xiaohai.admin.confing.exception;
+package com.xiaohai.common.exception;
 
 /**
  * @author wangchenghai

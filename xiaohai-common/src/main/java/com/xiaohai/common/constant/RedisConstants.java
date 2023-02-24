@@ -15,4 +15,9 @@ public class RedisConstants {
      * 邮箱验证码
      */
     public static final String EMAIL_CODE = "email_code:";
+
+    /**
+     * 字典管理 cache key
+     */
+    public static final String SYS_DICT_KEY = "sys_dict:";
 }

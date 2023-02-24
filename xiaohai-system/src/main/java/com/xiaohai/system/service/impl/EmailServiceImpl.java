@@ -3,7 +3,7 @@ package com.xiaohai.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.utils.RedisUtils;
-import com.xiaohai.common.utils.SpringUtils;
+import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.system.dao.ConfigMapper;
 import com.xiaohai.system.pojo.entity.Config;
 import com.xiaohai.system.service.EmailService;

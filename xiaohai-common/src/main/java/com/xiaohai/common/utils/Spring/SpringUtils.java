@@ -1,4 +1,4 @@
-package com.xiaohai.common.utils;
+package com.xiaohai.common.utils.Spring;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;

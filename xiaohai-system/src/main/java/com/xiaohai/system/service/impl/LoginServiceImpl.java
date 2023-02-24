@@ -7,7 +7,7 @@ import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.common.utils.RedisUtils;
-import com.xiaohai.common.utils.SpringUtils;
+import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.vo.LoginVo;
