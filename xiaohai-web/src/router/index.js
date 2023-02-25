@@ -84,6 +84,12 @@ export const constantRoutes = [
         name: 'menu',
         component: () => import('@/views/system/menu/menu.vue'),
         meta: { title: '菜单管理', icon: 'el-icon-menu', noCache: true }
+      },
+      {
+        path: 'dict',
+        name: 'dict',
+        component: () => import('@/views/system/dict/index.vue'),
+        meta: { title: '字典管理', icon: 'el-icon-menu', noCache: true }
       }
       // {
       //   path: 'role',

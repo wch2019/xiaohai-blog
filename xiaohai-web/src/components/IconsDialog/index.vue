@@ -34,7 +34,7 @@
   </div>
 </template>
 <script>
-import iconList from './icon.json'
+import iconList from '../IconSelect/icon.json'
 
 const originList = iconList.map(name => `el-icon-${name}`)
 

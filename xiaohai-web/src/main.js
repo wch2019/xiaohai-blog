@@ -12,10 +12,13 @@ import App from './App'
 import store from './store'
 import router from './router'
 
-
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import { parseTime} from "@/utils/index";
+
+// 全局方法挂载
+Vue.prototype.parseTime = parseTime
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

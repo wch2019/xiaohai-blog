@@ -27,37 +27,37 @@
           </el-col>
           <el-col v-if="form.menuType !== 'F'" :span="24">
             <el-form-item label="菜单图标" prop="icon">
-              <!--              <el-popover-->
-              <!--                placement="bottom-start"-->
-              <!--                width="460"-->
-              <!--                trigger="click"-->
-              <!--                @show="$refs['iconSelect'].reset()"-->
-              <!--              >-->
-              <!--                <IconSelect ref="iconSelect" @selected="selected"/>-->
-              <!--                <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>-->
-              <!--                  <svg-icon-->
-              <!--                    v-if="form.icon"-->
-              <!--                    slot="prefix"-->
-              <!--                    :icon-class="form.icon"-->
-              <!--                    class="el-input__icon"-->
-              <!--                    style="height: 32px;width: 16px;"-->
-              <!--                  />-->
-              <!--                  <i v-else slot="prefix" class="el-icon-search el-input__icon"/>-->
-              <!--                </el-input>-->
-              <!--              </el-popover>-->
+              <el-popover
+                placement="bottom-start"
+                width="460"
+                trigger="click"
+                @show="$refs['iconSelect'].reset()"
+              >
+                <IconSelect ref="iconSelect" @selected="selected" />
+                <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
+                  <svg-icon
+                    v-if="form.icon"
+                    slot="prefix"
+                    :icon-class="form.icon"
+                    class="el-input__icon"
+                    style="height: 32px;width: 16px;"
+                  />
+                  <i v-else slot="prefix" class="el-icon-search el-input__icon" />
+                </el-input>
+              </el-popover>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="菜单名称" prop="menuName">
               <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="显示排序" prop="orderNum">
               <el-input-number v-model="form.menuSort" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
-          <el-col v-if="form.menuType !== 'F'" :span="12">
+          <el-col v-if="form.menuType !== 'F'" :span="24">
             <el-form-item prop="path">
               <span slot="label">
                 <el-tooltip content="访问的路由地址，如：`user`" placement="top">
@@ -68,7 +68,7 @@
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
           </el-col>
-          <el-col v-if="form.menuType === 'C'" :span="12">
+          <el-col v-if="form.menuType === 'C'" :span="24">
             <el-form-item prop="component">
               <span slot="label">
                 <el-tooltip content="路径，如：`system/user/index" placement="top">
@@ -79,7 +79,7 @@
               <el-input v-model="form.component" placeholder="请输入组件路径" />
             </el-form-item>
           </el-col>
-          <el-col v-if="form.menuType !== 'M'" :span="12">
+          <el-col v-if="form.menuType !== 'M'" :span="24">
             <el-form-item prop="perms">
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
               <span slot="label">
@@ -93,7 +93,8 @@
               </span>
             </el-form-item>
           </el-col>
-            <el-form-item  v-if="form.menuType != 'F'" prop="status">
+          <el-col v-if="form.menuType != 'F'" :span="24">
+            <el-form-item prop="status">
               <span slot="label">
                 <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
                   <i class="el-icon-question" />
@@ -105,6 +106,7 @@
                 <el-radio label="1">停用</el-radio>
               </el-radio-group>
             </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,13 +117,13 @@
   </div>
 </template>
 <script>
-import IconsDialog from '@/components/IconsDialog/index.vue'
+import IconSelect from '@/components/IconSelect'
 import { listMenu, addMenu, delMenu, updateMenu, getMenu } from '@/api/system/menu'
 
 export default {
   name: 'Menu',
   components: {
-    IconsDialog
+    IconSelect
   },
   data() {
     return {
