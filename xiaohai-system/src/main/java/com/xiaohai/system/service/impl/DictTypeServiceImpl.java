@@ -93,20 +93,14 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
     }
 
     @Override
-    public ReturnPageData<DictTypeDto> findListByPage(DictTypeQuery query) {
+    public ReturnPageData<DictType> findListByPage(DictTypeQuery query) {
         DictType dictType = new DictType();
         BeanUtils.copyProperties(query, dictType);
         IPage<DictType> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<DictType> iPage = baseMapper.selectPage(wherePage, Wrappers.query(dictType));
-        List<DictTypeDto> list = new ArrayList<>();
-        for (DictType dictTypes : iPage.getRecords()) {
-            DictTypeDto dictTypeDto = new DictTypeDto();
-            BeanUtils.copyProperties(dictTypes, dictTypeDto);
-            list.add(dictTypeDto);
-        }
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
-        return ReturnPageData.fillingData(pageData, list);
+        return ReturnPageData.fillingData(pageData, iPage.getRecords());
     }
 
     @Override

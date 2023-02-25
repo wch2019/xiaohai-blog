@@ -58,7 +58,7 @@ public interface DictTypeService extends IService<DictType> {
     * @param query 字典类型表 Query 数据查询对象
     * @return Response
     */
-    ReturnPageData<DictTypeDto> findListByPage(DictTypeQuery query);
+    ReturnPageData<DictType> findListByPage(DictTypeQuery query);
 
     /**
      * 重置字典缓存数据

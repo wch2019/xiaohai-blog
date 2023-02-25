@@ -62,7 +62,7 @@ public class DictTypeController {
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
-    public Response<ReturnPageData<DictTypeDto>> findListByPage(DictTypeQuery query) {
+    public Response<ReturnPageData<DictType>> findListByPage(DictTypeQuery query) {
         return Response.success("查询字典类型列表成功！", dictTypeService.findListByPage(query));
     }
 
