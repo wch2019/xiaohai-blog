@@ -24,5 +24,13 @@
         updated_time,
         id, dict_sort, dict_type, dict_label, dict_value, status
     </sql>
+    <select id="selectDictTypeList" resultType="com.xiaohai.common.daomain.DictData">
+        select *
+        from sys_dict_data
+        where status = '0'
+          and dict_type = #{dictType}
+        order by dict_sort asc
+    </select>
+
 
 </mapper>

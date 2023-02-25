@@ -7,6 +7,8 @@ import com.xiaohai.system.pojo.query.DictTypeQuery;
 import com.xiaohai.system.pojo.vo.DictTypeVo;
 import com.xiaohai.system.pojo.dto.DictTypeDto;
 
+import java.util.List;
+
 /**
  *
  * 字典类型表 服务类
@@ -57,4 +59,15 @@ public interface DictTypeService extends IService<DictType> {
     * @return Response
     */
     ReturnPageData<DictTypeDto> findListByPage(DictTypeQuery query);
+
+    /**
+     * 重置字典缓存数据
+     */
+    void refreshDict();
+
+    /**
+     * 获取字典选择框列表
+     * @return
+     */
+    List<DictTypeDto> optionSelect();
 }
