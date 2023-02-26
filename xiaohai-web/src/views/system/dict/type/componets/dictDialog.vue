@@ -60,8 +60,7 @@ export default {
         id: '',
         dictName: '',
         dictType: '',
-        status: '0',
-        remark: ''
+        status: '0'
       }
     },
     // 取消按钮

@@ -89,13 +89,14 @@ export const constantRoutes = [
         path: 'dictType',
         name: 'dictType',
         component: () => import('@/views/system/dict/type/index.vue'),
-        meta: { title: '字典数据', icon: 'el-icon-s-order', noCache: true }
+        meta: { title: '字典管理', icon: 'el-icon-s-order', noCache: true }
       },
       {
         path: 'dictData',
         name: 'dictData',
+        hidden: true,
         component: () => import('@/views/system/dict/data/index.vue'),
-        meta: { title: '字典管理', icon: 'skill', noCache: true }
+        meta: { title: '字典数据', icon: 'skill', noCache: true }
       }
       // {
       //   path: 'role',
