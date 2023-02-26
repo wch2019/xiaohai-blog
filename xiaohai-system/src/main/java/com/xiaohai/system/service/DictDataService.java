@@ -1,11 +1,10 @@
 package com.xiaohai.system.service;
 
-import com.xiaohai.system.pojo.entity.DictData;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.system.pojo.entity.DictData;
 import com.xiaohai.system.pojo.query.DictDataQuery;
 import com.xiaohai.system.pojo.vo.DictDataVo;
-import com.xiaohai.system.pojo.dto.DictDataDto;
 
 /**
  *
@@ -56,5 +55,5 @@ public interface DictDataService extends IService<DictData> {
     * @param query 字典数据表 Query 数据查询对象
     * @return Response
     */
-    ReturnPageData<DictDataDto> findListByPage(DictDataQuery query);
+    ReturnPageData<DictData> findListByPage(DictDataQuery query);
 }

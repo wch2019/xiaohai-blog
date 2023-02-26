@@ -1,23 +1,19 @@
 package com.xiaohai.system.service.impl;
 
-import com.xiaohai.common.daomain.PageData;
-import com.xiaohai.system.pojo.entity.DictData;
-import com.xiaohai.system.dao.DictDataMapper;
-import com.xiaohai.system.service.DictDataService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xiaohai.common.daomain.ReturnPageData;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.xiaohai.common.utils.PageUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.BeanUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.system.dao.DictDataMapper;
+import com.xiaohai.system.pojo.entity.DictData;
 import com.xiaohai.system.pojo.query.DictDataQuery;
 import com.xiaohai.system.pojo.vo.DictDataVo;
-import com.xiaohai.system.pojo.dto.DictDataDto;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.xiaohai.system.service.DictDataService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -54,19 +50,13 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
     }
 
     @Override
-    public ReturnPageData<DictDataDto> findListByPage(DictDataQuery query){
+    public ReturnPageData<DictData> findListByPage(DictDataQuery query){
         DictData dictData=new DictData();
         BeanUtils.copyProperties(query,dictData);
         IPage<DictData> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<DictData> iPage = baseMapper.selectPage(wherePage,Wrappers.query(dictData));
-        List<DictDataDto> list=new ArrayList<>();
-        for(DictData dictDatas:iPage.getRecords()){
-            DictDataDto dictDataDto=new DictDataDto();
-            BeanUtils.copyProperties(dictDatas,dictDataDto);
-            list.add(dictDataDto);
-        }
         PageData pageData=new PageData();
         BeanUtils.copyProperties(iPage,pageData);
-        return ReturnPageData.fillingData(pageData,list);
+        return ReturnPageData.fillingData(pageData,iPage.getRecords());
     }
 }

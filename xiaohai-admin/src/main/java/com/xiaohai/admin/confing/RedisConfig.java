@@ -1,5 +1,7 @@
 package com.xiaohai.admin.confing;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,11 +23,15 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory){
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        //现在需要在中间加一个
+        objectMapper.registerModule(new JavaTimeModule());
 
         //String的序列化方式
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // 使用GenericJackson2JsonRedisSerializer 替换默认序列化(默认采用的是JDK序列化)
-        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
         //key序列化方式采用String类型
         template.setKeySerializer(stringRedisSerializer);
