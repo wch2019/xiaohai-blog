@@ -6,6 +6,8 @@ import com.xiaohai.system.pojo.entity.DictData;
 import com.xiaohai.system.pojo.query.DictDataQuery;
 import com.xiaohai.system.pojo.vo.DictDataVo;
 
+import java.util.List;
+
 /**
  *
  * 字典数据表 服务类
@@ -28,10 +30,10 @@ public interface DictDataService extends IService<DictData> {
     /**
      * 删除字典数据表
      *
-     * @param id 主键
+     * @param ids 主键
      * @return Integer
      */
-    Integer delete(Long id);
+    Integer delete(Long[] ids);
 
     /**
      * 修改字典数据表
@@ -56,4 +58,11 @@ public interface DictDataService extends IService<DictData> {
     * @return Response
     */
     ReturnPageData<DictData> findListByPage(DictDataQuery query);
+
+    /**
+     * 根据字典类型查询字典数据信息
+     * @param dictType
+     * @return
+     */
+    List<com.xiaohai.common.daomain.DictData> dictType(String dictType);
 }
