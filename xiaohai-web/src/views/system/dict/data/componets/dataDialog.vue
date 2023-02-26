@@ -17,9 +17,6 @@
       <!--            >{{ dict.label }}</el-radio>-->
       <!--          </el-radio-group>-->
       <!--        </el-form-item>-->
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -29,7 +26,7 @@
 </template>
 
 <script>
-import { addDictType, updateDictType, getDictType } from '@/api/system/dict'
+import { addDictType, updateDictType } from '@/api/system/dictType'
 
 export default {
   name: 'DictDialog',
@@ -40,11 +37,10 @@ export default {
       // 弹出层标题
       title: '',
       form: {
-        dictId: '',
+        id: '',
         dictName: '',
         dictType: '',
-        status: '0',
-        remark: ''
+        status: '0'
       },
       // 表单校验
       rules: {
@@ -61,7 +57,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        dictId: '',
+        id: '',
         dictName: '',
         dictType: '',
         status: '0',
@@ -77,21 +73,19 @@ export default {
     submitForm() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.dictId !== '') {
+          if (this.form.id !== '') {
             updateDictType(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
-              // this.getList()
+              // 回调父方法
+              this.$emit('closeDialog')
             })
           } else {
             addDictType(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
-              // this.getList()
-              let aaa = {
-                a: '11'
-              }
-              this.$emit('closeDialog', aaa)
+              // 回调父方法
+              this.$emit('closeDialog')
             })
           }
         }

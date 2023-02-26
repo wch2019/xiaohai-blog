@@ -15,10 +15,16 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
-import { parseTime} from "@/utils/index";
+import { parseTime } from '@/utils/index'
 
 // 全局方法挂载
 Vue.prototype.parseTime = parseTime
+
+// 分页组件
+import Pagination from '@/components/Pagination'
+// 全局组件挂载
+Vue.component('Pagination', Pagination)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -27,17 +33,17 @@ Vue.prototype.parseTime = parseTime
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
+// if (process.env.NODE_ENV === 'production') {
+//   const { mockXHR } = require('../mock')
+//   mockXHR()
+// }
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+// Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 

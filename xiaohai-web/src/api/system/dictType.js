@@ -7,7 +7,7 @@ export function listDictType(data) {
   return request({
     url: api,
     method: 'get',
-    data
+    params: data
   })
 }
 
@@ -45,7 +45,7 @@ export function delDictType(data) {
     data
   })
 }
-
+// 刷新字典缓存
 export function refreshDict(data) {
   return request({
     url: api + '/refresh-dict',
@@ -53,7 +53,7 @@ export function refreshDict(data) {
     data
   })
 }
-
+// 获取字典选择框列表
 export function optionSelect() {
   return request({
     url: api + '/option-select',

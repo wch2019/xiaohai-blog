@@ -15,7 +15,6 @@ const service = axios.create({
 // request 请求拦截器
 service.interceptors.request.use(config => {
   // 在发送请求之前执行某些操作
-  console.log(store.getters.token)
   if (store.getters.token) {
     // let each request carry token
     // ['X-Token'] is a custom headers key
@@ -48,6 +47,19 @@ service.interceptors.response.use(
     const res = response.data
     // 如果自定义代码不是 200，则将其判断为错误。
     if (res.code !== 200) {
+      // 登录异常
+      if (res.code === 401) {
+        // to re-login
+        MessageBox.confirm('您已注销，您可以取消以留在此页面，或重新登录', '确认注销', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })
+        })
+      }
       Message({ message: res.msg || 'Error', type: 'error', duration: 5 * 1000 })
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
