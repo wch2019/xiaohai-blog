@@ -40,4 +40,7 @@ public class DictTypeVo implements Serializable {
 
     @Schema(description = "状态（0正常 1停用）")
     private String status;
+
+    @Schema(description = "备注")
+    private String remark;
 }

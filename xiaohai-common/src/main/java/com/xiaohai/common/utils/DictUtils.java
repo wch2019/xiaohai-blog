@@ -1,11 +1,11 @@
 package com.xiaohai.common.utils;
 
-import com.alibaba.fastjson2.JSONArray;
 import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.daomain.DictData;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,11 +36,11 @@ public class DictUtils {
      * @return dictDatas 字典数据列表
      */
     public static List<DictData> getDictCache(String key) {
-        JSONArray arrayCache = SpringUtils.getBean(RedisUtils.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(arrayCache)) {
-            return arrayCache.toList(DictData.class);
+        Object cacheObj = SpringUtils.getBean(RedisUtils.class).getCacheObject(getCacheKey(key));
+        if (StringUtils.isNotNull(cacheObj)) {
+            return (List<DictData>) cacheObj;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**

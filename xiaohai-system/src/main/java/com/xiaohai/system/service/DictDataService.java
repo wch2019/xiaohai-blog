@@ -7,6 +7,7 @@ import com.xiaohai.system.pojo.query.DictDataQuery;
 import com.xiaohai.system.pojo.vo.DictDataVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -65,4 +66,10 @@ public interface DictDataService extends IService<DictData> {
      * @return
      */
     List<com.xiaohai.common.daomain.DictData> dictType(String dictType);
+
+    /**
+     * 获取所有字典数据信息
+     * @return
+     */
+    Map<String, List<com.xiaohai.common.daomain.DictData>> dictAll();
 }

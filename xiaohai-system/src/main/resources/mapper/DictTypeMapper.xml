@@ -12,6 +12,7 @@
         <result column="dict_name" property="dictName" />
         <result column="dict_type" property="dictType" />
         <result column="status" property="status" />
+        <result column="remark" property="remark" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -20,7 +21,7 @@
         created_time,
         updated_by,
         updated_time,
-        id, dict_name, dict_type, status
+        id, dict_name, dict_type, status, remark
     </sql>
 
 </mapper>

@@ -14,6 +14,8 @@
         <result column="dict_label" property="dictLabel" />
         <result column="dict_value" property="dictValue" />
         <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="style" property="style" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -22,7 +24,7 @@
         created_time,
         updated_by,
         updated_time,
-        id, dict_sort, dict_type, dict_label, dict_value, status
+        id, dict_sort, dict_type, dict_label, dict_value, status, style, remark
     </sql>
     <select id="selectDictTypeList" resultType="com.xiaohai.common.daomain.DictData">
         select *

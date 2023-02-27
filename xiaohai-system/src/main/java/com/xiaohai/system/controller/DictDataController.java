@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典数据表Controller
@@ -68,6 +69,11 @@ public class DictDataController {
     @GetMapping(value = "/type/{dictType}")
     public Response<List<com.xiaohai.common.daomain.DictData>> dictType(@PathVariable String dictType) {
         return Response.success("根据字典类型查询字典数据信息成功！", dictDataService.dictType(dictType));
+    }
+    @Operation(summary = "获取所有字典数据信息", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping(value = "/data/dictAll")
+    public Response<Map<String, List<com.xiaohai.common.daomain.DictData>>> dictAll() {
+        return Response.success("获取字典数据信息成功！", dictDataService.dictAll());
     }
 
 }
