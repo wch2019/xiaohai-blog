@@ -99,6 +99,7 @@
           </router-link>
         </template>
       </el-table-column>
+      <el-table-column label="字典备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="状态" align="center" prop="status">
         <!--            <template slot-scope="scope">-->
         <!--              <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />-->
@@ -142,7 +143,7 @@
 
 <script>
 import DictDialog from './componets/dictDialog.vue'
-import { listDictType, delDictType, refreshDict, getDictType } from '@/api/system/dictType'
+import { listDictType, delDictType, refreshDict, getDictType } from '@/api/system/dict/type'
 
 export default {
   name: 'Index',
@@ -200,6 +201,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.$refs.dictDialog.reset()
       this.$refs.dictDialog.open = true
       this.$refs.dictDialog.title = '添加字典类型'
     },

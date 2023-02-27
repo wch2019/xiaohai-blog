@@ -8,6 +8,9 @@
       <el-form-item label="字典类型" prop="dictType">
         <el-input v-model="form.dictType" placeholder="请输入字典类型"/>
       </el-form-item>
+      <el-form-item label="备注">
+        <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+      </el-form-item>
       <!--        <el-form-item label="状态" prop="status">-->
       <!--          <el-radio-group v-model="form.status">-->
       <!--            <el-radio-->
@@ -26,7 +29,7 @@
 </template>
 
 <script>
-import { addDictType, updateDictType } from '@/api/system/dictType'
+import { addDictType, updateDictType } from '@/api/system/dict/type'
 
 export default {
   name: 'DictDialog',
@@ -40,7 +43,8 @@ export default {
         id: '',
         dictName: '',
         dictType: '',
-        status: '0'
+        status: '0',
+        remark: ''
       },
       // 表单校验
       rules: {
@@ -60,7 +64,8 @@ export default {
         id: '',
         dictName: '',
         dictType: '',
-        status: '0'
+        status: '0',
+        remark: ''
       }
     },
     // 取消按钮

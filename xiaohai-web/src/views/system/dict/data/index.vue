@@ -92,9 +92,16 @@
     <el-table v-loading="loading" max-height='300' :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编码" align="center" prop="id" />
+      <el-table-column label="字典标签" align="center" prop="dictLabel">
+        <template slot-scope="scope">
+          <span v-if="scope.row.style === '' || scope.row.style === 'default'">{{scope.row.dictLabel}}</span>
+          <el-tag v-else :type="scope.row.style">{{scope.row.dictLabel}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="字典标签" align="center" prop="dictLabel" :show-overflow-tooltip="true" />
       <el-table-column label="字典键值" align="center" prop="dictValue" />
       <el-table-column label="字典排序" align="center" prop="dictSort" />
+      <el-table-column label="字典备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="状态" align="center" prop="status">
         <!--            <template slot-scope="scope">-->
         <!--              <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />-->
@@ -136,8 +143,8 @@
 
 <script>
 import DictDialog from './componets/dataDialog.vue'
-import { listDictData, delDictData, getDictData } from '@/api/system/dictData'
-import { optionSelect, getDictType } from '@/api/system/dictType'
+import { listDictData, delDictData, getDictData } from '@/api/system/dict/data'
+import { optionSelect, getDictType } from '@/api/system/dict/type'
 
 export default {
   name: 'Index',
@@ -215,6 +222,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       if (this.queryParams.dictType !== null) {
+        this.$refs.dictDialog.reset()
         this.$refs.dictDialog.form.dictType = this.queryParams.dictType
         this.$refs.dictDialog.open = true
         this.$refs.dictDialog.title = '添加字典数据'

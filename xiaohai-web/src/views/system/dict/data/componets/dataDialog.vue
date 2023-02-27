@@ -11,6 +11,16 @@
       <el-form-item label="数据键值" prop="dictValue">
         <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
       </el-form-item>
+      <el-form-item label="回显样式" prop="listClass">
+        <el-select v-model="form.style">
+          <el-option
+            v-for="item in listClassOptions"
+            :key="item.value"
+            :label="item.label + '(' + item.value + ')'"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="显示排序" prop="dictSort">
         <el-input-number v-model="form.dictSort" controls-position="right" :min="0" />
       </el-form-item>
@@ -23,6 +33,9 @@
       <!--            >{{ dict.label }}</el-radio>-->
       <!--          </el-radio-group>-->
       <!--        </el-form-item>-->
+      <el-form-item label="备注">
+        <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -32,7 +45,7 @@
 </template>
 
 <script>
-import { addDictData, updateDictData } from '@/api/system/dictData'
+import { addDictData, updateDictData } from '@/api/system/dict/data'
 
 export default {
   name: 'DictDialog',
@@ -46,8 +59,33 @@ export default {
         id: '',
         dictName: '',
         dictType: '',
-        status: '0'
+        status: '0',
+        style: '',
+        remark: ''
       },
+      // 数据标签回显样式
+      listClassOptions: [
+        {
+          value: 'default',
+          label: '默认'
+        },
+        {
+          value: 'success',
+          label: '成功'
+        },
+        {
+          value: 'info',
+          label: '信息'
+        },
+        {
+          value: 'warning',
+          label: '警告'
+        },
+        {
+          value: 'danger',
+          label: '危险'
+        }
+      ],
       // 表单校验
       rules: {
         dictLabel: [
@@ -71,7 +109,9 @@ export default {
         dictValue: '',
         dictType: '',
         dictSort: 0,
-        status: '0'
+        status: '0',
+        style: '',
+        remark: ''
       }
     },
     // 取消按钮
