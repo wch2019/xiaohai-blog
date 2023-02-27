@@ -60,4 +60,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static boolean isNotEmpty(Collection<?> coll) {
         return !isEmpty(coll);
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T cast(Object obj)
+    {
+        return (T) obj;
+    }
 }
