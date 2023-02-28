@@ -80,6 +80,12 @@ export const constantRoutes = [
     meta: { title: '系统管理', icon: 'el-icon-setting' },
     children: [
       {
+        path: 'role',
+        name: 'role',
+        component: () => import('@/views/system/role/index.vue'),
+        meta: { title: '角色管理', icon: 'peoples', noCache: true }
+      },
+      {
         path: 'menu',
         name: 'menu',
         component: () => import('@/views/system/menu/menu.vue'),

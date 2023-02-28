@@ -69,19 +69,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public ReturnPageData<RoleDto> findListByPage(RoleQuery query) {
+    public ReturnPageData<Role> findListByPage(RoleQuery query) {
         Role role = new Role();
         BeanUtils.copyProperties(query, role);
         IPage<Role> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<Role> iPage = baseMapper.selectPage(wherePage, Wrappers.query(role));
-        List<RoleDto> list = new ArrayList<>();
-        for (Role roles : iPage.getRecords()) {
-            RoleDto roleDto = new RoleDto();
-            BeanUtils.copyProperties(roles, roleDto);
-            list.add(roleDto);
-        }
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
-        return ReturnPageData.fillingData(pageData, list);
+        return ReturnPageData.fillingData(pageData, iPage.getRecords());
     }
 }

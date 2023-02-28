@@ -21,22 +21,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--              <el-form-item label="状态" prop="status">-->
-      <!--                <el-select-->
-      <!--                  v-model="queryParams.status"-->
-      <!--                  placeholder="字典状态"-->
-      <!--                  clearable-->
-      <!--                  size="small"-->
-      <!--                  style="width: 240px"-->
-      <!--                >-->
-      <!--                  <el-option-->
-      <!--                    v-for="dict in dict.type.sys_normal_disable"-->
-      <!--                    :key="dict.value"-->
-      <!--                    :label="dict.label"-->
-      <!--                    :value="dict.value"-->
-      <!--                  />-->
-      <!--                </el-select>-->
-      <!--              </el-form-item>-->
+      <el-form-item label="状态" prop="status">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="状态"
+          clearable
+          @clear="queryParams.status = null"
+          size="small"
+          style="width: 240px"
+        >
+          <el-option
+            v-for="dict in $store.getters.dict.sys_normal_disable"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
@@ -91,7 +92,6 @@
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编码" align="center" prop="id" />
       <el-table-column label="字典标签" align="center" prop="dictLabel">
         <template slot-scope="scope">
           <span v-if="scope.row.style === null || scope.row.style === 'default'">{{ scope.row.dictLabel }}</span>

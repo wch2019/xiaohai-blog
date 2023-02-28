@@ -56,5 +56,5 @@ public interface RoleService extends IService<Role> {
     * @param query 角色表 Query 数据查询对象
     * @return Response
     */
-    ReturnPageData<RoleDto> findListByPage(RoleQuery query);
+    ReturnPageData<Role> findListByPage(RoleQuery query);
 }

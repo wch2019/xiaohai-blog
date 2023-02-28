@@ -60,5 +60,5 @@ public interface UserService extends IService<User> {
     * @param query 用户表 Query 数据查询对象
     * @return Response
     */
-    ReturnPageData<UserDto> findListByPage(UserQuery query);
+    ReturnPageData<User> findListByPage(UserQuery query);
 }

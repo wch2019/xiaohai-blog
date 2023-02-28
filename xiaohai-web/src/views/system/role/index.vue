@@ -1,20 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="字典名称" prop="dictName">
+      <el-form-item label="角色名称" prop="dictName">
         <el-input
-          v-model="queryParams.dictName"
-          placeholder="请输入字典名称"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="字典类型" prop="dictType">
-        <el-input
-          v-model="queryParams.dictType"
-          placeholder="请输入字典类型"
+          v-model="queryParams.name"
+          placeholder="请输入角色名称"
           clearable
           size="small"
           style="width: 240px"
@@ -24,7 +14,7 @@
       <el-form-item label="状态" prop="status">
         <el-select
           v-model="queryParams.status"
-          placeholder="字典状态"
+          placeholder="状态"
           clearable
           @clear="queryParams.status = null"
           size="small"
@@ -77,29 +67,13 @@
         >删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-refresh"
-          size="mini"
-          @click="handleRefreshCache"
-        >刷新缓存
-        </el-button>
-      </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true"/>
-      <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <router-link :to="'/system/dictData?id=' + scope.row.id" class="link-type">
-            <span>{{ scope.row.dictType }}</span>
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="字典备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
+      <el-table-column label="角色编码" align="center" prop="code" :show-overflow-tooltip="true"/>
+      <el-table-column label="角色名称" align="center" prop="name" :show-overflow-tooltip="true"/>
+      <el-table-column label="角色描述" align="center" prop="remarks" :show-overflow-tooltip="true"/>
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status"/>
@@ -135,18 +109,18 @@
       @pagination="getList"
     />
 
-    <DictDialog ref="dictDialog" @closeDialog="closeDialog"/>
+    <RoleDialog ref="dictDialog" @closeDialog="closeDialog"/>
   </div>
 
 </template>
 
 <script>
-import DictDialog from './componets/dictDialog.vue'
-import { listDictType, delDictType, refreshDict, getDictType } from '@/api/system/dict/type'
+import RoleDialog from './componets/roleDialog.vue'
+import { listRole, delRole, getRole } from '@/api/system/role'
 
 export default {
   name: 'Index',
-  components: { DictDialog },
+  components: { RoleDialog },
   data() {
     return {
       // 遮罩层
@@ -159,16 +133,15 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 字典表格数据
-      typeList: [],
+      // 角色表格数据
+      roleList: [],
       // 日期范围
       dateRange: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        dictName: null,
-        dictType: null,
+        name: null,
         status: null
       }
     }
@@ -177,12 +150,11 @@ export default {
     this.getList()
   },
   methods: {
-    /** 查询字典类型列表 */
+    /** 查询角色类型列表 */
     getList() {
-      console.log(this.queryParams)
       this.loading = true
-      listDictType(this.queryParams).then(response => {
-        this.typeList = response.data.records
+      listRole(this.queryParams).then(response => {
+        this.roleList = response.data.records
         this.total = response.data.total
         this.loading = false
       })
@@ -202,7 +174,7 @@ export default {
     handleAdd() {
       this.$refs.dictDialog.reset()
       this.$refs.dictDialog.open = true
-      this.$refs.dictDialog.title = '添加字典类型'
+      this.$refs.dictDialog.title = '添加角色类型'
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -214,33 +186,27 @@ export default {
     handleUpdate(row) {
       const dictId = row.id || this.ids
       console.log(this.ids)
-      getDictType(dictId).then(response => {
+      getRole(dictId).then(response => {
         this.$refs.dictDialog.form = response.data
         this.$refs.dictDialog.open = true
-        this.$refs.dictDialog.title = '修改字典类型'
+        this.$refs.dictDialog.title = '修改角色类型'
       })
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$confirm('是否确认删除字典编号为"' + ids + '"的数据项？', '提示', {
+      this.$confirm('是否确认删除角色编号为"' + ids + '"的数据项？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delDictType(ids).then(response => {
+        delRole(ids).then(response => {
           this.$message.success(response.msg)
         })
         this.getList()
       }).catch(() => {
         this.$message.info('已取消删除')
-      })
-    },
-    /** 刷新缓存按钮操作 */
-    handleRefreshCache() {
-      refreshDict().then(response => {
-        this.$message.success(response.msg)
       })
     },
     /** 回调*/

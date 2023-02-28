@@ -84,15 +84,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public ReturnPageData<UserDto> findListByPage(UserQuery query) {
+    public ReturnPageData<User> findListByPage(UserQuery query) {
         User user = new User();
         BeanUtils.copyProperties(query, user);
         IPage<User> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<User> iPage = baseMapper.selectPage(wherePage, Wrappers.query(user));
-        List<UserDto> list = new ArrayList<>();
+        List<User> list = new ArrayList<>();
         for (User users : iPage.getRecords()) {
-            UserDto userDto = new UserDto();
+            User userDto = new User();
             BeanUtils.copyProperties(users, userDto);
+            userDto.setPassword(null);
             list.add(userDto);
         }
         PageData pageData = new PageData();

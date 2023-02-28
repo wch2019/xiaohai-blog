@@ -65,7 +65,7 @@ public class RoleController {
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
-    public Response<ReturnPageData<RoleDto>> findListByPage(RoleQuery query){
+    public Response<ReturnPageData<Role>> findListByPage(RoleQuery query){
         return Response.success("查询角色表列表成功！", roleService.findListByPage(query));
     }
 
