@@ -1,20 +1,10 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="字典名称" prop="dictType">
-        <el-select v-model="queryParams.dictType" size="small">
-          <el-option
-            v-for="item in typeOptions"
-            :key="item.id"
-            :label="item.dictName"
-            :value="item.dictType"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="字典标签" prop="dictLabel">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="角色名称" prop="dictName">
         <el-input
-          v-model="queryParams.dictLabel"
-          placeholder="请输入字典标签"
+          v-model="queryParams.name"
+          placeholder="请输入角色名称"
           clearable
           size="small"
           style="width: 240px"
@@ -77,37 +67,29 @@
         >删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <router-link :to="'/system/dictType/'" class="link-type">
-          <el-button
-            type="warning"
-            plain
-            icon="el-icon-circle-close"
-            size="mini"
-          >关闭
-          </el-button>
-        </router-link>
-      </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典标签" align="center" prop="dictLabel">
+    <el-table v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
-          <span v-if="scope.row.style === null || scope.row.style === 'default'">{{ scope.row.dictLabel }}</span>
-          <el-tag v-else :type="scope.row.style">{{ scope.row.dictLabel }}</el-tag>
+          <el-avatar shape="square" :size="80" :src="scope.row.avatar"></el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="字典键值" align="center" prop="dictValue" />
-      <el-table-column label="字典排序" align="center" prop="dictSort" />
-      <el-table-column label="字典备注" align="center" prop="remark" :show-overflow-tooltip="true" />
+      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户性别" align="center" prop="gender">
+        <template slot-scope="scope">
+          <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender"/>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
+          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
-      <el-table-column label="更新时间" align="center" prop="updatedTime" width="180" />
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180"/>
+      <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -136,18 +118,18 @@
       @pagination="getList"
     />
 
-    <DictDialog ref="dictDialog" @closeDialog="closeDialog" />
+    <UserDialog ref="userDialog" @closeDialog="closeDialog"/>
   </div>
+
 </template>
 
 <script>
-import DictDialog from './componets/dataDialog.vue'
-import { listDictData, delDictData, getDictData } from '@/api/system/dict/data'
-import { optionSelect, getDictType } from '@/api/system/dict/type'
+import UserDialog from './componets/userDialog.vue'
+import { listUser, delUser, getUser } from '@/api/system/user'
 
 export default {
   name: 'Index',
-  components: { DictDialog },
+  components: { UserDialog },
   data() {
     return {
       // 遮罩层
@@ -160,48 +142,28 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 字典表格数据
-      typeList: [],
-      // 类型数据字典
-      typeOptions: [],
+      // 用户表格数据
+      roleList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        dictType: null,
-        dictLabel: null,
+        name: null,
         status: null
       }
     }
   },
   created() {
-    this.getType()
-    this.getTypeList()
+    this.getList()
   },
   methods: {
-    getType() {
-      if (this.$route.query.id !== undefined && this.$route.query.id !== null && this.$route.query.id !== '') {
-        getDictType(this.$route.query.id).then(response => {
-          this.queryParams.dictType = response.data.dictType
-          this.getList()
-        })
-      } else {
-        this.getList()
-      }
-    },
-    /** 查询字典数据列表 */
+    /** 查询用户类型列表 */
     getList() {
       this.loading = true
-      listDictData(this.queryParams).then(response => {
-        this.typeList = response.data.records
+      listUser(this.queryParams).then(response => {
+        this.roleList = response.data.records
         this.total = response.data.total
         this.loading = false
-      })
-    },
-    /** 查询字典类型列表 */
-    getTypeList() {
-      optionSelect().then(response => {
-        this.typeOptions = response.data
       })
     },
     /** 搜索按钮操作 */
@@ -216,14 +178,9 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      if (this.queryParams.dictType !== null) {
-        this.$refs.dictDialog.reset()
-        this.$refs.dictDialog.form.dictType = this.queryParams.dictType
-        this.$refs.dictDialog.open = true
-        this.$refs.dictDialog.title = '添加字典数据'
-      } else {
-        this.$message.error('请选择字典名称')
-      }
+      this.$refs.userDialog.reset()
+      this.$refs.userDialog.open = true
+      this.$refs.userDialog.title = '添加用户'
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -234,25 +191,26 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const dictId = row.id || this.ids
-      getDictData(dictId).then(response => {
-        if (this.$refs.dictDialog.$refs['form'] !== undefined) {
-          this.$refs.dictDialog.$refs['form'].resetFields()
+      console.log(this.ids)
+      getUser(dictId).then(response => {
+        if (this.$refs.userDialog.$refs['form'] !== undefined) {
+          this.$refs.userDialog.$refs['form'].resetFields()
         }
-        this.$refs.dictDialog.form = response.data
-        this.$refs.dictDialog.open = true
-        this.$refs.dictDialog.title = '修改字典数据'
+        this.$refs.userDialog.form = response.data
+        this.$refs.userDialog.open = true
+        this.$refs.userDialog.title = '修改用户'
       })
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$confirm('是否确认删除字典编码为"' + ids + '"的数据项？', '提示', {
+      this.$confirm('是否确认删除用户编号为"' + ids + '"的数据项？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delDictData(ids).then(response => {
+        delUser(ids).then(response => {
           this.$message.success(response.msg)
         })
         this.getList()

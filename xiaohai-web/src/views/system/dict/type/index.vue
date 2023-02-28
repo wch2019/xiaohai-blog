@@ -161,8 +161,6 @@ export default {
       total: 0,
       // 字典表格数据
       typeList: [],
-      // 日期范围
-      dateRange: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -194,7 +192,6 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery(formName) {
-      this.dateRange = []
       this.$refs[formName].resetFields()
       this.handleQuery()
     },
@@ -215,6 +212,9 @@ export default {
       const dictId = row.id || this.ids
       console.log(this.ids)
       getDictType(dictId).then(response => {
+        if (this.$refs.dictDialog.$refs['form'] !== undefined) {
+          this.$refs.dictDialog.$refs['form'].resetFields()
+        }
         this.$refs.dictDialog.form = response.data
         this.$refs.dictDialog.open = true
         this.$refs.dictDialog.title = '修改字典类型'

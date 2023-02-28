@@ -109,7 +109,7 @@
       @pagination="getList"
     />
 
-    <RoleDialog ref="dictDialog" @closeDialog="closeDialog"/>
+    <RoleDialog ref="userDialog" @closeDialog="closeDialog"/>
   </div>
 
 </template>
@@ -135,8 +135,6 @@ export default {
       total: 0,
       // 角色表格数据
       roleList: [],
-      // 日期范围
-      dateRange: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -166,15 +164,14 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery(formName) {
-      this.dateRange = []
       this.$refs[formName].resetFields()
       this.handleQuery()
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.$refs.dictDialog.reset()
-      this.$refs.dictDialog.open = true
-      this.$refs.dictDialog.title = '添加角色类型'
+      this.$refs.userDialog.reset()
+      this.$refs.userDialog.open = true
+      this.$refs.userDialog.title = '添加角色类型'
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -187,9 +184,12 @@ export default {
       const dictId = row.id || this.ids
       console.log(this.ids)
       getRole(dictId).then(response => {
-        this.$refs.dictDialog.form = response.data
-        this.$refs.dictDialog.open = true
-        this.$refs.dictDialog.title = '修改角色类型'
+        if (this.$refs.userDialog.$refs['form'] !== undefined) {
+          this.$refs.userDialog.$refs['form'].resetFields()
+        }
+        this.$refs.userDialog.form = response.data
+        this.$refs.userDialog.open = true
+        this.$refs.userDialog.title = '修改角色类型'
       })
     },
 

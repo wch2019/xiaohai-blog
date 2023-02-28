@@ -13,14 +13,14 @@
         </el-tooltip>
 
         <el-tooltip content="全屏" effect="dark" placement="bottom">
-        <screenfull id="screen-full" class="right-menu-item hover-effect" />
+        <ScreenFull id="screen-full" class="right-menu-item hover-effect" />
         </el-tooltip>
 
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+          <img :src="$store.getters.avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -40,7 +40,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import Screenfull from '@/components/Screenfull'
+import ScreenFull from '@/components/Screenfull'
 import Search from '@/components/HeaderSearch'
 import Website from '@/components/DotCode/Website'
 
@@ -48,7 +48,7 @@ export default {
   components: {
     Breadcrumb,
     Hamburger,
-    Screenfull,
+    ScreenFull,
     Website,
     Search
   },
@@ -129,7 +129,7 @@ export default {
     }
 
     .avatar-container {
-      margin-right: 30px;
+      margin-right: 20px;
 
       .avatar-wrapper {
         margin-top: 5px;

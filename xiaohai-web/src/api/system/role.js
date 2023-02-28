@@ -45,3 +45,11 @@ export function delRole(data) {
     data
   })
 }
+
+// 获取角色选择框列表
+export function optionSelect() {
+  return request({
+    url: api + '/option-select',
+    method: 'GET'
+  })
+}

@@ -54,7 +54,6 @@ const actions = {
         }
 
         const { nickName, avatar } = data
-        console.log(nickName)
         commit('SET_NAME', nickName)
         commit('SET_AVATAR', avatar)
         resolve(data)
