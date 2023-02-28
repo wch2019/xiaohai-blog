@@ -1,36 +1,59 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+  <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="角色编码" prop="code">
-        <el-input v-model="form.code" placeholder="请输入角色编码"/>
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="form.username" placeholder="请输入用户名" />
       </el-form-item>
-      <el-form-item label="角色名称" prop="name">
-        <el-input v-model="form.name" placeholder="请输入角色名称"/>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
       </el-form-item>
-      <el-form-item label="角色描述">
-        <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容"/>
-      </el-form-item>
-      <el-form-item label="字典名称" prop="dictType">
-        <el-select v-model="form.roleId" size="small">
-          <el-option
-            v-for="item in roleOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.roleId"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-radio-group v-model="form.status">
-          <el-radio
-            v-for="dict in $store.getters.dict.sys_normal_disable"
-            :key="dict.dictValue"
-            :label="dict.dictValue"
-          >{{ dict.dictLabel }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="角色" prop="roleId">
+            <el-select v-model="form.roleId">
+              <el-option
+                v-for="item in roleOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="状态" prop="status">
+            <el-radio-group v-model="form.status">
+              <el-radio
+                v-for="dict in $store.getters.dict.sys_normal_disable"
+                :key="dict.dictValue"
+                :label="dict.dictValue"
+              >{{ dict.dictLabel }}
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="用户昵称" prop="nickName">
+            <el-input v-model="form.nickName" placeholder="请输入用户昵称" maxlength="30" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="用户性别">
+            <el-select v-model="form.gender" placeholder="请选择">
+              <el-option
+                v-for="dict in $store.getters.dict.sys_user_sex"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -46,6 +69,20 @@ import { optionSelect } from '@/api/system/role'
 export default {
   name: 'RoleDialog',
   data() {
+    // 邮箱验证
+    const validateEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请正确填写邮箱'))
+      } else {
+        if (value !== '') {
+          var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+          if (!reg.test(value)) {
+            callback(new Error('请输入有效的邮箱'))
+          }
+        }
+        callback()
+      }
+    }
     return {
       // 是否显示弹出层
       open: false,
@@ -63,12 +100,9 @@ export default {
       roleOptions: [],
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: '角色名称不能为空', trigger: 'blur' }
-        ],
-        code: [
-          { required: true, message: '角色编码不能为空', trigger: 'blur' }
-        ]
+        username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+        email: [{ required: true, validator: validateEmail, trigger: 'blur' }],
+        roleId: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
       }
     }
   },

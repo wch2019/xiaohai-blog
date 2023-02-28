@@ -80,7 +80,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User findById(Long id) {
-        return baseMapper.selectById(id);
+        User user=baseMapper.selectById(id);
+        user.setPassword(null);
+        return baseMapper.selectById(user);
     }
 
     @Override
