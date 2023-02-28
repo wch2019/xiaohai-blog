@@ -72,7 +72,7 @@ public class UserController {
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
-    public Response<ReturnPageData<User>> findListByPage(UserQuery query){
+    public Response<ReturnPageData<UserDto>> findListByPage(UserQuery query){
         return Response.success("查询用户表列表成功！",userService.findListByPage(query));
     }
 

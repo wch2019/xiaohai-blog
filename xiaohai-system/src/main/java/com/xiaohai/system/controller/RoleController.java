@@ -3,6 +3,11 @@ package com.xiaohai.system.controller;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.system.pojo.dto.RoleDto;
+import com.xiaohai.system.pojo.entity.Role;
+import com.xiaohai.system.pojo.query.RoleQuery;
+import com.xiaohai.system.pojo.vo.RoleVo;
+import com.xiaohai.system.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -10,15 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.xiaohai.system.service.RoleService;
-import com.xiaohai.system.pojo.entity.Role;
-import com.xiaohai.system.pojo.query.RoleQuery;
-import com.xiaohai.system.pojo.vo.RoleVo;
-import com.xiaohai.system.pojo.dto.RoleDto;
 
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
+import java.util.List;
 
 /**
 *
@@ -67,6 +65,12 @@ public class RoleController {
     @GetMapping()
     public Response<ReturnPageData<Role>> findListByPage(RoleQuery query){
         return Response.success("查询角色表列表成功！", roleService.findListByPage(query));
+    }
+
+    @Operation(summary = "查询角色选择框列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping("/option-select")
+    public Response<List<RoleDto>> optionSelect() {
+        return Response.success("查询角色选择框列表成功！", roleService.optionSelect());
     }
 
     }

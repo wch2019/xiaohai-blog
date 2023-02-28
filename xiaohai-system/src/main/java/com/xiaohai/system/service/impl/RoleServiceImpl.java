@@ -2,6 +2,7 @@ package com.xiaohai.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.utils.DictUtils;
 import com.xiaohai.system.dao.UserRoleMapper;
 import com.xiaohai.system.pojo.entity.Role;
 import com.xiaohai.system.dao.RoleMapper;
@@ -77,5 +78,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
+    }
+
+    @Override
+    public List<RoleDto> optionSelect() {
+        List<Role> roles=baseMapper.selectList(new QueryWrapper<Role>().eq("status",0));
+        List<RoleDto> list=new ArrayList<>();
+        for(Role role: roles){
+            RoleDto roleDto=new RoleDto();
+            BeanUtils.copyProperties(role,roleDto);
+            list.add(roleDto);
+        }
+        return list;
     }
 }

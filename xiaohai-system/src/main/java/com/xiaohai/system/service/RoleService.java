@@ -7,6 +7,8 @@ import com.xiaohai.system.pojo.query.RoleQuery;
 import com.xiaohai.system.pojo.vo.RoleVo;
 import com.xiaohai.system.pojo.dto.RoleDto;
 
+import java.util.List;
+
 /**
  *
  * 角色表 服务类
@@ -57,4 +59,10 @@ public interface RoleService extends IService<Role> {
     * @return Response
     */
     ReturnPageData<Role> findListByPage(RoleQuery query);
+
+    /**
+     * 查询角色选择框列表
+     * @return
+     */
+    List<RoleDto> optionSelect();
 }

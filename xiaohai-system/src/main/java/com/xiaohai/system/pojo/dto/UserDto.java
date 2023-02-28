@@ -3,6 +3,9 @@ package com.xiaohai.system.pojo.dto;
 import java.io.Serializable;
 import java.io.Serial;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,4 +63,8 @@ public class UserDto implements Serializable {
 
     @Schema(description = "最后登录时间")
     private LocalDateTime loginDate;
+
+    @Schema(description = "创建时间")
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createdTime;
 }
