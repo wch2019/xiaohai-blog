@@ -38,10 +38,10 @@
 
     <h3 class="drawer-title">系统布局配置</h3>
 
-    <div class="drawer-item">
-      <span>开启 Tags-Views</span>
-      <el-switch v-model="tagsView" class="drawer-switch" />
-    </div>
+<!--    <div class="drawer-item">-->
+<!--      <span>开启 Tags-Views</span>-->
+<!--      <el-switch v-model="tagsView" class="drawer-switch" />-->
+<!--    </div>-->
 
     <div class="drawer-item">
       <span>固定 Header</span>

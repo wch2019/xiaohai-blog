@@ -33,6 +33,8 @@ router.beforeEach(async(to, from, next) => {
         try {
           // 获取用户信息
           await store.dispatch('user/getInfo')
+          // 获取字典信息
+          await store.dispatch('dict/setDictAll')
           next()
         } catch (error) {
           // 删除令牌并转到登录页面重新登录

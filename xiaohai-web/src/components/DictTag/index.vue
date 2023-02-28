@@ -1,20 +1,20 @@
 <template>
   <div>
     <template v-for="(item, index) in options">
-      <template v-if="values.includes(item.value)">
+      <template v-if="values.includes(item.dictValue)">
         <span
-          v-if="item.raw.style === 'default' || item.raw.style === ''"
-          :key="item.value"
+          v-if="item.style === 'default' || item.style === null"
+          :key="item.dictValue"
           :index="index"
-        >{{ item.label }}</span>
+        >{{ item.dictLabel }}</span>
         <el-tag
           v-else
-          :key="item.value"
+          :key="item.dictValue"
           :disable-transitions="true"
           :index="index"
-          :type="item.raw.style"
+          :type="item.style"
         >
-          {{ item.label }}
+          {{ item.dictLabel }}
         </el-tag>
       </template>
     </template>
@@ -25,10 +25,7 @@
 export default {
   name: 'DictTag',
   props: {
-    options: {
-      type: Array,
-      default: null
-    },
+    options: {},
     value: [Number, String, Array]
   },
   computed: {
@@ -40,10 +37,11 @@ export default {
       }
     }
   }
+  // created() {
+  //   console.log('这是value啊啊啊啊啊', this.value)
+  //   console.log('这是options啊啊啊啊啊', this.options)
+  // }
 }
 </script>
 <style scoped>
-.el-tag + .el-tag {
-  margin-left: 10px;
-}
 </style>

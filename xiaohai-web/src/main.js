@@ -22,8 +22,11 @@ Vue.prototype.parseTime = parseTime
 
 // 分页组件
 import Pagination from '@/components/Pagination'
+import DictTag from '@/components/DictTag'
+
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
+Vue.component('DictTag', DictTag)
 
 /**
  * If you don't want to use mock-server

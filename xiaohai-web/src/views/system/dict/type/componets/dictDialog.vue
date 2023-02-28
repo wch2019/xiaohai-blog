@@ -11,15 +11,16 @@
       <el-form-item label="备注">
         <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
       </el-form-item>
-      <!--        <el-form-item label="状态" prop="status">-->
-      <!--          <el-radio-group v-model="form.status">-->
-      <!--            <el-radio-->
-      <!--              v-for="dict in dict.type.sys_normal_disable"-->
-      <!--              :key="dict.value"-->
-      <!--              :label="dict.value"-->
-      <!--            >{{ dict.label }}</el-radio>-->
-      <!--          </el-radio-group>-->
-      <!--        </el-form-item>-->
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="form.status">
+          <el-radio
+            v-for="dict in $store.getters.dict.sys_normal_disable"
+            :key="dict.dictValue"
+            :label="dict.dictValue"
+          >{{ dict.dictLabel }}
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm">确 定</el-button>

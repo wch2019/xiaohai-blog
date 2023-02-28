@@ -37,6 +37,22 @@ export function getDictData(data) {
   })
 }
 
+// 获取所有字典数据
+export function dictAll() {
+  return request({
+    url: api + '/data/dictAll',
+    method: 'get'
+  })
+}
+
+// 获取指定字典数据
+export function dictType(dictType) {
+  return request({
+    url: api + '/type/' + dictType,
+    method: 'get'
+  })
+}
+
 // 删除字典数据
 export function delDictData(data) {
   return request({
