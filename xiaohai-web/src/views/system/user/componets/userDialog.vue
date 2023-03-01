@@ -64,7 +64,6 @@
 
 <script>
 import { addUser, updateUser } from '@/api/system/user'
-import { optionSelect } from '@/api/system/role'
 
 export default {
   name: 'RoleDialog',
@@ -107,16 +106,7 @@ export default {
       }
     }
   },
-  created() {
-    this.getRoleList()
-  },
   methods: {
-    /** 获取角色选择框列表 */
-    getRoleList() {
-      optionSelect().then(response => {
-        this.roleOptions = response.data
-      })
-    },
     // 表单重置
     reset() {
       this.form = {

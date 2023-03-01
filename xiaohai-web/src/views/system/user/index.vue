@@ -1,10 +1,20 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="角色名称" prop="dictName">
+      <el-form-item label="用户名称" prop="username">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入角色名称"
+          placeholder="请输入用户名称"
+          clearable
+          size="small"
+          style="width: 240px"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="用户昵称" prop="nickName">
+        <el-input
+          v-model="queryParams.nickName"
+          placeholder="请输入用户昵称"
           clearable
           size="small"
           style="width: 240px"
@@ -165,6 +175,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: null,
+        nickName: null,
         status: null
       }
     }
@@ -202,6 +213,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.$refs.userDialog.reset()
+      this.$refs.userDialog.roleOptions = this.roleOptions
       this.$refs.userDialog.open = true
       this.$refs.userDialog.title = '添加用户'
     },
