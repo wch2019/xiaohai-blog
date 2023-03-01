@@ -94,7 +94,7 @@ export const constantRoutes = [
       {
         path: 'menu',
         name: 'menu',
-        component: () => import('@/views/system/menu/menu.vue'),
+        component: () => import('@/views/system/menu/index.vue'),
         meta: { title: '菜单管理', icon: 'el-icon-menu', noCache: true }
       },
       {
