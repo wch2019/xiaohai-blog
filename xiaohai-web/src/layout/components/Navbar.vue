@@ -20,7 +20,8 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="$store.getters.avatar" class="user-avatar">
+          <el-avatar v-if="$store.getters.avatar" shape="square" :src="$store.getters.avatar" />
+          <el-avatar v-else shape="square"> {{ $store.getters.name }} </el-avatar>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">

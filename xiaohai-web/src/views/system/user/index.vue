@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="角色名称" prop="dictName">
         <el-input
           v-model="queryParams.name"
@@ -16,16 +16,16 @@
           v-model="queryParams.status"
           placeholder="状态"
           clearable
-          @clear="queryParams.status = null"
           size="small"
           style="width: 240px"
+          @clear="queryParams.status = null"
         >
           <el-option
             v-for="dict in $store.getters.dict.sys_normal_disable"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -69,27 +69,41 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+    <el-table v-loading="loading" border style="margin-top: 10px" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
-          <el-avatar shape="square" :size="80" :src="scope.row.avatar"></el-avatar>
+          <el-avatar v-if="scope.row.avatar" shape="square" :src="scope.row.avatar" />
+          <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true"/>
-      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" />
+      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
       <el-table-column label="用户性别" align="center" prop="gender">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender"/>
+          <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender" />
+        </template>
+      </el-table-column>
+      <el-table-column label="角色" align="center" prop="roleIds">
+        <template slot-scope="scope">
+          <template v-for="(item, index) in roleOptions">
+            <el-tag
+              v-if="scope.row.roleIds.includes(item.id)"
+              :key="item.id"
+              :index="index"
+            >
+              {{ item.name }}
+            </el-tag>
+          </template>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180"/>
-      <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180"/>
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
+      <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -117,8 +131,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <UserDialog ref="userDialog" @closeDialog="closeDialog"/>
+    <UserDialog ref="userDialog" @closeDialog="closeDialog" />
   </div>
 
 </template>
@@ -126,6 +139,7 @@
 <script>
 import UserDialog from './componets/userDialog.vue'
 import { listUser, delUser, getUser } from '@/api/system/user'
+import { optionSelect } from '@/api/system/role'
 
 export default {
   name: 'Index',
@@ -142,6 +156,8 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      // 角色选择框列表
+      roleOptions: [],
       // 用户表格数据
       roleList: [],
       // 查询参数
@@ -154,9 +170,16 @@ export default {
     }
   },
   created() {
+    this.getRoleList()
     this.getList()
   },
   methods: {
+    /** 获取角色选择框列表 */
+    getRoleList() {
+      optionSelect().then(response => {
+        this.roleOptions = response.data
+      })
+    },
     /** 查询用户类型列表 */
     getList() {
       this.loading = true
@@ -212,8 +235,8 @@ export default {
       }).then(() => {
         delUser(ids).then(response => {
           this.$message.success(response.msg)
+          this.getList()
         })
-        this.getList()
       }).catch(() => {
         this.$message.info('已取消删除')
       })

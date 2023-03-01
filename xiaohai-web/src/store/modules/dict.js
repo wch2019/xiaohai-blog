@@ -1,4 +1,5 @@
 import { dictType, dictAll } from '@/api/system/dict/data'
+
 const state = {
   dict: []
 }
@@ -14,7 +15,7 @@ const mutations = {
   REMOVE_DICT: (state, key) => {
     try {
       for (let i = 0; i < state.dict.length; i++) {
-        if (state.dict[i].key == key) {
+        if (state.dict[i].key === key) {
           state.dict.splice(i, i)
           return true
         }
@@ -48,9 +49,7 @@ const actions = {
   setDictAll({ commit }) {
     return new Promise((resolve, reject) => {
       dictAll().then(response => {
-        console.log(response.data)
         commit('SET_DICT_ALL', response.data)
-        console.log('stat', state.dict)
         resolve()
       }).catch(error => {
         reject(error)

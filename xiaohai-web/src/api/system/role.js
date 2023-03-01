@@ -40,9 +40,8 @@ export function getRole(data) {
 // 删除角色
 export function delRole(data) {
   return request({
-    url: api,
-    method: 'delete',
-    data
+    url: api + '/' + data,
+    method: 'delete'
   })
 }
 

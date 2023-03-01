@@ -2,6 +2,8 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import message from 'element-ui/packages/message'
+
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
 // 创建axios实例
@@ -60,7 +62,7 @@ service.interceptors.response.use(
           })
         })
       }
-      Message({ message: res.msg || 'Error', type: 'error', duration: 5 * 1000 })
+      message.error(res.msg)
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return res
@@ -70,11 +72,11 @@ service.interceptors.response.use(
     if (error.response) {
       // 业务异常
       if (error.response.data.code === 400) {
-        Message({ message: error.response.data.msg, type: 'error', duration: 5 * 1000 })
+        message.error(error.response.data.msg)
       }
       // 权限异常
       if (error.response.data.code === 403) {
-        Message({ message: error.response.data.msg, type: 'error', duration: 5 * 1000 })
+        message.error(error.response.data.msg)
       }
       // 登录异常
       if (error.response.data.code === 401) {
@@ -89,11 +91,11 @@ service.interceptors.response.use(
           })
         })
       }
-      Message({ message: error.response.data.msg, type: 'error', duration: 5 * 1000 })
+      message.error(error.response.data.msg)
     } else {
       // 设置触发错误的请求时发生某些情况
       console.log('Error', error.message)
-      Message({ message: error.message, type: 'error', duration: 5 * 1000 })
+      message.error(error.response.data.msg)
     }
     return Promise.reject(error)
   }

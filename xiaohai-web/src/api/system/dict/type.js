@@ -40,9 +40,8 @@ export function getDictType(data) {
 // 删除字典类型
 export function delDictType(data) {
   return request({
-    url: api,
+    url: api + '/' + data,
     method: 'delete',
-    data
   })
 }
 // 刷新字典缓存

@@ -90,7 +90,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" border style="margin-top: 10px" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典标签" align="center" prop="dictLabel">
         <template slot-scope="scope">

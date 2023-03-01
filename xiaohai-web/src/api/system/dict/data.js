@@ -56,9 +56,8 @@ export function dictType(dictType) {
 // 删除字典数据
 export function delDictData(data) {
   return request({
-    url: api,
-    method: 'delete',
-    data
+    url: api + '/' + data,
+    method: 'delete'
   })
 }
 

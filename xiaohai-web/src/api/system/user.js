@@ -40,8 +40,7 @@ export function getUser(data) {
 // 删除用户表
 export function delUser(data) {
   return request({
-    url: api,
-    method: 'delete',
-    data
+    url: api + '/' + data,
+    method: 'delete'
   })
 }

@@ -40,8 +40,7 @@ export function getMenu(data) {
 // 删除菜单
 export function delMenu(data) {
   return request({
-    url: api,
-    method: 'delete',
-    data
+    url: api + '/' + data,
+    method: 'delete'
   })
 }

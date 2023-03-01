@@ -10,8 +10,8 @@
       </el-form-item>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="角色" prop="roleId">
-            <el-select v-model="form.roleId">
+          <el-form-item label="角色" prop="roleIds">
+            <el-select v-model="form.roleIds" multiple >
               <el-option
                 v-for="item in roleOptions"
                 :key="item.id"
@@ -90,11 +90,12 @@ export default {
       title: '',
       form: {
         id: '',
-        name: '',
-        code: '',
+        username: '',
+        email: '',
+        roleIds: [],
         status: '0',
-        remark: '',
-        roleId: ''
+        nickName: '',
+        gender: ''
       },
       // 角色选择框列表
       roleOptions: [],
@@ -102,7 +103,7 @@ export default {
       rules: {
         username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
         email: [{ required: true, validator: validateEmail, trigger: 'blur' }],
-        roleId: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
+        roleIds: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -120,10 +121,12 @@ export default {
     reset() {
       this.form = {
         id: '',
-        name: '',
-        code: '',
+        username: '',
+        email: '',
+        roleIds: [],
         status: '0',
-        remark: ''
+        nickName: '',
+        gender: ''
       }
     },
     // 取消按钮
@@ -133,6 +136,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      console.log(this.form)
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== '') {
