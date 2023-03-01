@@ -3,12 +3,15 @@ package com.xiaohai.system.pojo.dto;
 import java.io.Serializable;
 import java.io.Serial;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
 
 /**
 * <p>
@@ -65,6 +68,8 @@ public class UserDto implements Serializable {
     private LocalDateTime loginDate;
 
     @Schema(description = "创建时间")
-    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdTime;
+
+    @Schema(description = "角色组")
+    private List<Long> roleIds;
 }

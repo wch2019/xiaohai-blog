@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
 * <p>
@@ -65,6 +66,6 @@ public class UserVo implements Serializable {
     private String status;
 
     @Schema(description = "角色组")
-    @NotBlank(message = "角色为空")
+    @NotNull(message = "角色为空")
     private Long[] roleIds;
 }

@@ -69,7 +69,7 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateData(DictTypeVo vo) {
         long count = baseMapper.selectCount(new QueryWrapper<DictType>().eq("dict_type", vo.getDictType()).ne("id", vo.getId()));
         Assert.isTrue(count != 1, "更新字典'" + vo.getDictType() + "'失败，字典类型已存在");

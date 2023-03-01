@@ -34,8 +34,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> implements DictDataService {
 
-    private final DictTypeMapper dictTypeMapper;
-
     @Override
     public Integer add(DictDataVo vo) {
         DictData dictData = new DictData();

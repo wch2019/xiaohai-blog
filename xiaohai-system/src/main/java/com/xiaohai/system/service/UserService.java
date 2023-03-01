@@ -33,10 +33,10 @@ public interface UserService extends IService<User> {
     /**
      * 删除用户表
      *
-     * @param id 主键
+     * @param ids 主键
      * @return Integer
      */
-    Integer delete(Long id);
+    Integer delete(Long[] ids);
 
     /**
      * 修改用户表
@@ -52,7 +52,7 @@ public interface UserService extends IService<User> {
      * @param id id
      * @return   Integer
      */
-    User findById(Long id);
+    UserDto findById(Long id);
 
     /**
     * 查询用户表列表数据

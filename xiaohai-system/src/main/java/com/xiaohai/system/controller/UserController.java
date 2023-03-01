@@ -49,9 +49,9 @@ public class UserController {
     }
 
     @Operation(summary = "删除用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @DeleteMapping("{id}")
-    public Response<Integer> delete(@PathVariable("id") Long id){
-        return  Response.success("删除用户表成功！",userService.delete(id));
+    @DeleteMapping("{ids}")
+    public Response<Integer> delete(@PathVariable Long[] ids){
+        return  Response.success("删除用户表成功！",userService.delete(ids));
     }
 
     @Operation(summary = "更新用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -64,7 +64,7 @@ public class UserController {
 
     @Operation(summary = "id查询用户表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
-    public Response<User> findById(@PathVariable Long id){
+    public Response<UserDto> findById(@PathVariable Long id){
         return  Response.success("id查询用户表成功！",userService.findById(id));
     }
 
