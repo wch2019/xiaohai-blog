@@ -52,9 +52,12 @@ export default {
     },
     selectedIcon(name) {
       this.$emit('selected', name)
+      console.log('name',name)
       document.body.click()
     },
     reset() {
+      this.svgIcons = svgIcons
+      this.elementIcons = elementIcons
       this.name = ''
     }
   }

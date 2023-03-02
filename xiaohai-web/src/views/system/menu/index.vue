@@ -47,64 +47,44 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
+          type="info"
           plain
-          icon="el-icon-edit"
+          icon="el-icon-sort"
           size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-        >删除
+          @click="handleExpansion"
+        >展开/关闭
         </el-button>
       </el-col>
     </el-row>
-
-    <el-table v-loading="loading" border style="margin-top: 10px" :data="roleList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="头像" align="center" width="120" prop="avatar">
+    <el-table
+      v-if="refreshTable"
+      v-loading="loading"
+      :data="menuList"
+      style="width: 100%;margin-top: 10px; margin-bottom: 20px;"
+      row-key="id"
+      :default-expand-all="expansion"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+    >
+      <el-table-column prop="menuName" label="菜单名称" align="center" width="130"/>
+      <el-table-column prop="icon" label="菜单图标" align="center" width="90">
         <template slot-scope="scope">
-          <el-avatar v-if="scope.row.avatar" shape="square" :src="scope.row.avatar" />
-          <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
+          <svg-icon
+            v-if="scope.row.icon && scope.row.icon.indexOf('el-icon')== -1"
+            :icon-class="scope.row.icon"
+          />
+          <i v-else-if="scope.row.icon" slot="prefix" :class="scope.row.icon"/>
         </template>
       </el-table-column>
-      <el-table-column label="菜单名" align="center" prop="username" :show-overflow-tooltip="true" />
-      <el-table-column label="菜单昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
-      <el-table-column label="菜单性别" align="center" prop="gender">
-        <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender" />
-        </template>
-      </el-table-column>
-      <el-table-column label="角色" align="center" prop="roleIds">
-        <template slot-scope="scope">
-          <template v-for="(item, index) in roleOptions">
-            <el-tag
-              v-if="scope.row.roleIds.includes(item.id)"
-              :key="item.id"
-              :index="index"
-            >
-              {{ item.name }}
-            </el-tag>
-          </template>
-        </template>
-      </el-table-column>
+      <el-table-column prop="path" label="路由地址" align="center"/>
+      <el-table-column prop="component" label="路径" align="center"/>
+      <el-table-column prop="perms" label="权限标识" align="center"/>
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
+          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" width="180"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
-      <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="创建时间" align="center" prop="createdTime"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -124,14 +104,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-    <MenuDialog ref="menuDialog" @closeDialog="closeDialog" />
+    <MenuDialog ref="menuDialog" @closeDialog="closeDialog"/>
   </div>
 
 </template>
@@ -147,20 +120,14 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 总条数
-      total: 0,
+      // 是否展开
+      expansion: false,
+      // 重新渲染表格状态
+      refreshTable: true,
       // 菜单表格数据
-      roleList: [],
+      menuList: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
         menuName: null,
         status: null
       }
@@ -174,14 +141,12 @@ export default {
     getList() {
       this.loading = true
       listMenu(this.queryParams).then(response => {
-        this.roleList = response.data.records
-        this.total = response.data.total
+        this.menuList = response.data
         this.loading = false
       })
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1
       this.getList()
     },
     /** 重置按钮操作 */
@@ -192,23 +157,26 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.$refs.menuDialog.reset()
+      this.$refs.menuDialog.menuOptions = this.menuList
       this.$refs.menuDialog.open = true
       this.$refs.menuDialog.title = '添加菜单'
     },
-    /** 多选框选中数据 */
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
+    /** 展开关闭 */
+    handleExpansion() {
+      this.refreshTable = false
+      this.expansion = this.expansion !== true
+      this.$nextTick(() => {
+        this.refreshTable = true
+      })
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      const dictId = row.id || this.ids
-      console.log(this.ids)
+      const dictId = row.id
       getMenu(dictId).then(response => {
         if (this.$refs.menuDialog.$refs['form'] !== undefined) {
           this.$refs.menuDialog.$refs['form'].resetFields()
         }
+        this.$refs.menuDialog.menuOptions = this.menuList
         this.$refs.menuDialog.form = response.data
         this.$refs.menuDialog.open = true
         this.$refs.menuDialog.title = '修改菜单'
@@ -217,7 +185,7 @@ export default {
 
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids
+      const ids = row.id
       this.$confirm('是否确认删除菜单编号为"' + ids + '"的数据项？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
