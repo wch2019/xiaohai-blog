@@ -1,6 +1,7 @@
 package com.xiaohai.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.system.pojo.entity.DictData;
 import com.xiaohai.system.pojo.query.DictDataQuery;
@@ -65,11 +66,11 @@ public interface DictDataService extends IService<DictData> {
      * @param dictType
      * @return
      */
-    List<com.xiaohai.common.daomain.DictData> dictType(String dictType);
+    List<DictDataEntity> dictType(String dictType);
 
     /**
      * 获取所有字典数据信息
      * @return
      */
-    Map<String, List<com.xiaohai.common.daomain.DictData>> dictAll();
+    Map<String, List<DictDataEntity>> dictAll();
 }

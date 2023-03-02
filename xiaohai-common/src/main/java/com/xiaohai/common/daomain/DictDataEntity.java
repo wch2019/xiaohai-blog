@@ -2,12 +2,8 @@ package com.xiaohai.common.daomain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,7 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @Schema(name = "DictData", description = "字典数据")
-public class DictData  implements Serializable  {
+public class DictDataEntity implements Serializable  {
     @Serial
     private static final long serialVersionUID = 1L;
 

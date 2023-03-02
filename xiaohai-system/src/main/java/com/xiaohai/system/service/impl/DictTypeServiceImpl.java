@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
@@ -81,8 +82,8 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
         BeanUtils.copyProperties(vo, dictType);
         int row = baseMapper.updateById(dictType);
         if (row > 0) {
-            List<com.xiaohai.common.daomain.DictData> dictDatas = dictDataMapper.selectDictTypeList(vo.getDictType());
-            DictUtils.setDictCache(vo.getDictType(), dictDatas);
+            List<DictDataEntity> dictDataEntities = dictDataMapper.selectDictTypeList(vo.getDictType());
+            DictUtils.setDictCache(vo.getDictType(), dictDataEntities);
         }
         return row;
     }
@@ -138,17 +139,17 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
         //防止多次查询
         Map<String, List<DictData>> sexAndNameListMap = dictData.parallelStream().collect(Collectors.groupingBy(DictData::getDictType));
         for (DictType dictType : dictTypeList) {
-            List<com.xiaohai.common.daomain.DictData> dictDataList = new ArrayList<>();
+            List<DictDataEntity> dictDataEntityList = new ArrayList<>();
             List<DictData> dict = sexAndNameListMap.get(dictType.getDictType());
             if(dict!=null){
                 for (DictData data : dict) {
-                    com.xiaohai.common.daomain.DictData dictData1 = new com.xiaohai.common.daomain.DictData();
-                    BeanUtils.copyProperties(data,dictData1);
-                    dictDataList.add(dictData1);
+                    DictDataEntity dictDataEntity1 = new DictDataEntity();
+                    BeanUtils.copyProperties(data, dictDataEntity1);
+                    dictDataEntityList.add(dictDataEntity1);
                 }
             }
 
-            DictUtils.setDictCache(dictType.getDictType(), dictDataList);
+            DictUtils.setDictCache(dictType.getDictType(), dictDataEntityList);
         }
     }
 

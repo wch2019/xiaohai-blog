@@ -1,6 +1,7 @@
 package com.xiaohai.system.controller;
 
 import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.system.pojo.entity.DictData;
@@ -67,12 +68,12 @@ public class DictDataController {
 
     @Operation(summary = " 根据字典类型查询字典数据信息", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping(value = "/type/{dictType}")
-    public Response<List<com.xiaohai.common.daomain.DictData>> dictType(@PathVariable String dictType) {
+    public Response<List<DictDataEntity>> dictType(@PathVariable String dictType) {
         return Response.success("根据字典类型查询字典数据信息成功！", dictDataService.dictType(dictType));
     }
     @Operation(summary = "获取所有字典数据信息", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping(value = "/data/dictAll")
-    public Response<Map<String, List<com.xiaohai.common.daomain.DictData>>> dictAll() {
+    public Response<Map<String, List<DictDataEntity>>> dictAll() {
         return Response.success("获取字典数据信息成功！", dictDataService.dictAll());
     }
 

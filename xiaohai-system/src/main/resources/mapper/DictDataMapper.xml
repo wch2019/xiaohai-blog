@@ -26,7 +26,7 @@
         updated_time,
         id, dict_sort, dict_type, dict_label, dict_value, status, style, remark
     </sql>
-    <select id="selectDictTypeList" resultType="com.xiaohai.common.daomain.DictData">
+    <select id="selectDictTypeList" resultType="com.xiaohai.common.daomain.DictDataEntity">
         select *
         from sys_dict_data
         where status = '0'

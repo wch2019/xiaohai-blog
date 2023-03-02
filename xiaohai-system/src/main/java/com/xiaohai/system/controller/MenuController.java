@@ -1,6 +1,7 @@
 package com.xiaohai.system.controller;
 
 import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,8 @@ import com.xiaohai.system.pojo.vo.MenuVo;
 import com.xiaohai.system.pojo.dto.MenuDto;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
 *
@@ -58,12 +61,10 @@ public class MenuController {
         return  Response.success("id查询菜单权限表成功！",menuService.findById(id));
     }
 
-    @Operation(summary = "查询菜单权限表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "pageNum", description = "页码", required = true)
-    @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @Operation(summary = "查询菜单权限列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping()
-    public Response<ReturnPageData<MenuDto>> findListByPage(MenuQuery query){
-        return Response.success("查询菜单权限表列表成功！",menuService.findListByPage(query));
+    public Response<List<MenuTree>> findListByPage(MenuQuery query){
+        return Response.success("查询菜单权限列表成功！",menuService.findListByPage(query));
     }
 
     }

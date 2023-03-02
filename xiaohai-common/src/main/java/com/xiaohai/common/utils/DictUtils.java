@@ -1,7 +1,7 @@
 package com.xiaohai.common.utils;
 
 import com.xiaohai.common.constant.RedisConstants;
-import com.xiaohai.common.daomain.DictData;
+import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 
 import java.util.Collection;
@@ -23,10 +23,10 @@ public class DictUtils {
      * 设置字典缓存
      *
      * @param key       参数键
-     * @param dictDatas 字典数据列表
+     * @param dictDataEntities 字典数据列表
      */
-    public static void setDictCache(String key, List<DictData> dictDatas) {
-        SpringUtils.getBean(RedisUtils.class).setCacheObject(getCacheKey(key), dictDatas);
+    public static void setDictCache(String key, List<DictDataEntity> dictDataEntities) {
+        SpringUtils.getBean(RedisUtils.class).setCacheObject(getCacheKey(key), dictDataEntities);
     }
 
     /**
@@ -35,7 +35,7 @@ public class DictUtils {
      * @param key 参数键
      * @return dictDatas 字典数据列表
      */
-    public static List<DictData> getDictCache(String key) {
+    public static List<DictDataEntity> getDictCache(String key) {
         Object cacheObj = SpringUtils.getBean(RedisUtils.class).getCacheObject(getCacheKey(key));
         if (StringUtils.isNotNull(cacheObj)) {
             return StringUtils.cast(cacheObj) ;
@@ -75,11 +75,11 @@ public class DictUtils {
      */
     public static String getDictLabel(String dictType, String dictValue, String separator) {
         StringBuilder propertyString = new StringBuilder();
-        List<DictData> datas = getDictCache(dictType);
+        List<DictDataEntity> datas = getDictCache(dictType);
 
         if (StringUtils.isNotNull(datas)) {
             if (StringUtils.containsAny(separator, dictValue)) {
-                for (DictData dict : datas) {
+                for (DictDataEntity dict : datas) {
                     for (String value : dictValue.split(separator)) {
                         if (value.equals(dict.getDictValue())) {
                             propertyString.append(dict.getDictLabel()).append(separator);
@@ -88,7 +88,7 @@ public class DictUtils {
                     }
                 }
             } else {
-                for (DictData dict : datas) {
+                for (DictDataEntity dict : datas) {
                     if (dictValue.equals(dict.getDictValue())) {
                         return dict.getDictLabel();
                     }
@@ -108,10 +108,10 @@ public class DictUtils {
      */
     public static String getDictValue(String dictType, String dictLabel, String separator) {
         StringBuilder propertyString = new StringBuilder();
-        List<DictData> datas = getDictCache(dictType);
+        List<DictDataEntity> datas = getDictCache(dictType);
 
         if (StringUtils.containsAny(separator, dictLabel) && StringUtils.isNotEmpty(datas)) {
-            for (DictData dict : datas) {
+            for (DictDataEntity dict : datas) {
                 for (String label : dictLabel.split(separator)) {
                     if (label.equals(dict.getDictLabel())) {
                         propertyString.append(dict.getDictValue()).append(separator);
@@ -120,7 +120,7 @@ public class DictUtils {
                 }
             }
         } else {
-            for (DictData dict : datas) {
+            for (DictDataEntity dict : datas) {
                 if (dictLabel.equals(dict.getDictLabel())) {
                     return dict.getDictValue();
                 }

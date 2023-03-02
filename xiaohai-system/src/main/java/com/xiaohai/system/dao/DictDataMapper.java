@@ -1,6 +1,7 @@
 package com.xiaohai.system.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.system.pojo.entity.DictData;
 
 import java.util.List;
@@ -20,6 +21,6 @@ public interface DictDataMapper extends BaseMapper<DictData> {
      * @param dictType 字典类型信息
      * @return 字典类型集合信息
      */
-    List<com.xiaohai.common.daomain.DictData> selectDictTypeList(String dictType);
+    List<DictDataEntity> selectDictTypeList(String dictType);
 
 }

@@ -1,11 +1,14 @@
 package com.xiaohai.system.service;
 
+import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.system.pojo.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.system.pojo.query.MenuQuery;
 import com.xiaohai.system.pojo.vo.MenuVo;
 import com.xiaohai.system.pojo.dto.MenuDto;
+
+import java.util.List;
 
 /**
  *
@@ -56,5 +59,5 @@ public interface MenuService extends IService<Menu> {
     * @param query 菜单权限表 Query 数据查询对象
     * @return Response
     */
-    ReturnPageData<MenuDto> findListByPage(MenuQuery query);
+    List<MenuTree> findListByPage(MenuQuery query);
 }

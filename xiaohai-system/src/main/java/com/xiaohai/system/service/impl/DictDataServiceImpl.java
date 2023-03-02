@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.constant.RedisConstants;
+import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.DictUtils;
@@ -13,7 +14,6 @@ import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.system.dao.DictDataMapper;
-import com.xiaohai.system.dao.DictTypeMapper;
 import com.xiaohai.system.pojo.entity.DictData;
 import com.xiaohai.system.pojo.query.DictDataQuery;
 import com.xiaohai.system.pojo.vo.DictDataVo;
@@ -40,8 +40,8 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
         BeanUtils.copyProperties(vo, dictData);
         int row = baseMapper.insert(dictData);
         if (row > 0) {
-            List<com.xiaohai.common.daomain.DictData> dictDatas = baseMapper.selectDictTypeList(dictData.getDictType());
-            DictUtils.setDictCache(dictData.getDictType(), dictDatas);
+            List<DictDataEntity> dictDataEntities = baseMapper.selectDictTypeList(dictData.getDictType());
+            DictUtils.setDictCache(dictData.getDictType(), dictDataEntities);
         }
         return row;
     }
@@ -51,8 +51,8 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
         for (Long id : ids) {
             DictData dictData = findById(id);
             baseMapper.deleteById(id);
-            List<com.xiaohai.common.daomain.DictData> dictDatas = baseMapper.selectDictTypeList(dictData.getDictType());
-            DictUtils.setDictCache(dictData.getDictType(), dictDatas);
+            List<DictDataEntity> dictDataEntities = baseMapper.selectDictTypeList(dictData.getDictType());
+            DictUtils.setDictCache(dictData.getDictType(), dictDataEntities);
         }
         return ids.length;
     }
@@ -63,8 +63,8 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
         BeanUtils.copyProperties(vo, dictData);
         int row = baseMapper.updateById(dictData);
         if (row > 0) {
-            List<com.xiaohai.common.daomain.DictData> dictDatas = baseMapper.selectDictTypeList(dictData.getDictType());
-            DictUtils.setDictCache(dictData.getDictType(), dictDatas);
+            List<DictDataEntity> dictDataEntities = baseMapper.selectDictTypeList(dictData.getDictType());
+            DictUtils.setDictCache(dictData.getDictType(), dictDataEntities);
         }
         return row;
     }
@@ -86,33 +86,33 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
     }
 
     @Override
-    public List<com.xiaohai.common.daomain.DictData> dictType(String dictType) {
-        List<com.xiaohai.common.daomain.DictData> dictDatas = DictUtils.getDictCache(dictType);
-        if (StringUtils.isNotEmpty(dictDatas)) {
-            return dictDatas;
+    public List<DictDataEntity> dictType(String dictType) {
+        List<DictDataEntity> dictDataEntities = DictUtils.getDictCache(dictType);
+        if (StringUtils.isNotEmpty(dictDataEntities)) {
+            return dictDataEntities;
         }
-        dictDatas = baseMapper.selectDictTypeList(dictType);
-        if (StringUtils.isNotEmpty(dictDatas)) {
-            DictUtils.setDictCache(dictType, dictDatas);
-            return dictDatas;
+        dictDataEntities = baseMapper.selectDictTypeList(dictType);
+        if (StringUtils.isNotEmpty(dictDataEntities)) {
+            DictUtils.setDictCache(dictType, dictDataEntities);
+            return dictDataEntities;
         }
         return Collections.emptyList();
     }
 
     @Override
-    public Map<String, List<com.xiaohai.common.daomain.DictData>> dictAll() {
-        Map<String, List<com.xiaohai.common.daomain.DictData>> map = new HashMap<>();
+    public Map<String, List<DictDataEntity>> dictAll() {
+        Map<String, List<DictDataEntity>> map = new HashMap<>();
         Collection<String> keys = SpringUtils.getBean(RedisUtils.class).keys(RedisConstants.SYS_DICT_KEY + "*");
         for (String key : keys) {
             key=key.replace(RedisConstants.SYS_DICT_KEY,"");
-            List<com.xiaohai.common.daomain.DictData> dictDatas = DictUtils.getDictCache(key);
-            if (StringUtils.isNotEmpty(dictDatas)) {
-                map.put(key, dictDatas);
+            List<DictDataEntity> dictDataEntities = DictUtils.getDictCache(key);
+            if (StringUtils.isNotEmpty(dictDataEntities)) {
+                map.put(key, dictDataEntities);
             } else {
-                dictDatas = baseMapper.selectDictTypeList(key);
-                if (StringUtils.isNotEmpty(dictDatas)) {
-                    DictUtils.setDictCache(key, dictDatas);
-                    map.put(key, dictDatas);
+                dictDataEntities = baseMapper.selectDictTypeList(key);
+                if (StringUtils.isNotEmpty(dictDataEntities)) {
+                    DictUtils.setDictCache(key, dictDataEntities);
+                    map.put(key, dictDataEntities);
                 }
             }
         }

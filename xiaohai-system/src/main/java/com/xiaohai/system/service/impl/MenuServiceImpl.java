@@ -1,6 +1,13 @@
 package com.xiaohai.system.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.utils.ListUtils;
+import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.TreeUtils;
 import com.xiaohai.system.pojo.entity.Menu;
 import com.xiaohai.system.dao.MenuMapper;
 import com.xiaohai.system.service.MenuService;
@@ -53,19 +60,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public ReturnPageData<MenuDto> findListByPage(MenuQuery query) {
-        Menu menu = new Menu();
-        BeanUtils.copyProperties(query, menu);
-        IPage<Menu> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Menu> iPage = baseMapper.selectPage(wherePage, Wrappers.query(menu));
-        List<MenuDto> list = new ArrayList<>();
-        for (Menu menus : iPage.getRecords()) {
-            MenuDto menuDto = new MenuDto();
-            BeanUtils.copyProperties(menus, menuDto);
-            list.add(menuDto);
-        }
-        PageData pageData = new PageData();
-        BeanUtils.copyProperties(iPage, pageData);
-        return ReturnPageData.fillingData(pageData, list);
+    public List<MenuTree> findListByPage(MenuQuery query) {
+        List<Menu> menus = baseMapper.selectList(new QueryWrapper<Menu>()
+                        .eq(StringUtils.isNotBlank(query.getStatus()),"status",query.getStatus())
+                        .like(StringUtils.isNotBlank(query.getMenuName()),"menu_name",query.getMenuName())
+                        .last(" order by menu_sort asc"));
+        List<MenuTree> menuTrees=ListUtils.copyWithCollection(menus,MenuTree.class);
+        return TreeUtils.getTree(menuTrees);
     }
 }

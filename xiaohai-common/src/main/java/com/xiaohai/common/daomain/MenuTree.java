@@ -1,26 +1,28 @@
-package com.xiaohai.system.pojo.dto;
+package com.xiaohai.common.daomain;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
 * <p>
-* 菜单权限表 DTO 数据传输对象
+* 菜单
 * </p>
 *
 * @author xiaohai
-* @since 2023-01-29
+* @since 2023-03-02
 */
 @Getter
 @Setter
-@Schema(name = "MenuDto", description = "菜单权限表 DTO 数据传输对象")
-public class MenuDto implements Serializable {
+@Schema(name = "MenuTree", description = "菜单")
+public class MenuTree implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -53,5 +55,8 @@ public class MenuDto implements Serializable {
 
     @Schema(description = "状态（0正常 1停用）")
     private String status;
-    private List<MenuDto> children;
+
+    @Schema(description = "创建时间")
+    private LocalDateTime createdTime;
+    private List<MenuTree> children;
 }
