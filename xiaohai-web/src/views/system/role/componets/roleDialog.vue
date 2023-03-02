@@ -11,15 +11,14 @@
       <el-form-item label="角色描述">
         <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
       </el-form-item>
-      <el-form-item label="数据权限" >
+      <el-form-item label="菜单权限" prop="menuIds">
         <el-tree
-          ref="dept"
-          class="tree-border"
+          ref="permsTree"
           :data="menuList"
           show-checkbox
           default-expand-all
           node-key="id"
-          empty-text="加载中，请稍候"
+          highlight-current
           :props="defaultProps"
         />
       </el-form-item>
@@ -56,10 +55,6 @@ export default {
       // 菜单表格数据
       menuList: [],
       defaultProps: {
-        // 父级唯一标识
-        parent: 'parentId',
-        // 唯一标识
-        value: 'id',
         // 标签显示
         label: 'menuName',
         // 子级
@@ -71,7 +66,7 @@ export default {
         code: '',
         status: '0',
         menuIds: [],
-        remark: ''
+        remarks: ''
       },
       // 表单校验
       rules: {
@@ -91,8 +86,20 @@ export default {
     /** 查询菜单类型列表 */
     getList() {
       listMenu().then(response => {
-        this.menuList = response.data
+        // 格式化数据源
+        this.menuList = this.formatData(response.data)
       })
+    },
+    // 格式化数据，递归将空的children置为undefined
+    formatData(data) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].children.length < 1) {
+          data[i].children = undefined
+        } else {
+          this.formatData(data[i].children)
+        }
+      }
+      return data
     },
     // 表单重置
     reset() {
@@ -100,8 +107,9 @@ export default {
         id: '',
         name: '',
         code: '',
+        menuIds: [],
         status: '0',
-        remark: ''
+        remarks: ''
       }
     },
     // 取消按钮
@@ -111,25 +119,33 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.form.id !== '') {
-            updateRole(this.form).then(response => {
-              this.$message.success(response.msg)
-              this.open = false
-              // 回调父方法
-              this.$emit('closeDialog')
-            })
-          } else {
-            addRole(this.form).then(response => {
-              this.$message.success(response.msg)
-              this.open = false
-              // 回调父方法
-              this.$emit('closeDialog')
-            })
-          }
-        }
+      // 获取父节点 子节点选中了的父节点
+      const parentArr = this.$refs.permsTree.getHalfCheckedKeys()
+      this.form.menuIds = this.$refs.permsTree.getCheckedKeys()
+      parentArr.forEach(item => {
+        this.form.menuIds.push(item)
       })
+      console.log(this.form.menuIds)
+
+      // this.$refs['form'].validate(valid => {
+      //   if (valid) {
+      //     if (this.form.id !== '') {
+      //       updateRole(this.form).then(response => {
+      //         this.$message.success(response.msg)
+      //         this.open = false
+      //         // 回调父方法
+      //         this.$emit('closeDialog')
+      //       })
+      //     } else {
+      //       addRole(this.form).then(response => {
+      //         this.$message.success(response.msg)
+      //         this.open = false
+      //         // 回调父方法
+      //         this.$emit('closeDialog')
+      //       })
+      //     }
+      //   }
+      // })
     }
   }
 }

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 角色权限关联表 服务实现类
  *
  * @author xiaohai
@@ -30,43 +29,43 @@ import java.util.List;
 public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> implements RoleMenuService {
 
     @Override
-    public Integer add(RoleMenuVo vo){
-        RoleMenu roleMenu=new RoleMenu();
-        BeanUtils.copyProperties(vo,roleMenu);
+    public Integer add(RoleMenuVo vo) {
+        RoleMenu roleMenu = new RoleMenu();
+        BeanUtils.copyProperties(vo, roleMenu);
         return baseMapper.insert(roleMenu);
     }
 
     @Override
-    public Integer delete(Long id){
-        return  baseMapper.deleteById(id);
+    public Integer delete(Long id) {
+        return baseMapper.deleteById(id);
     }
 
     @Override
-    public Integer updateData(RoleMenuVo vo){
-        RoleMenu roleMenu=new RoleMenu();
-        BeanUtils.copyProperties(vo,roleMenu);
-        return  baseMapper.updateById(roleMenu);
+    public Integer updateData(RoleMenuVo vo) {
+        RoleMenu roleMenu = new RoleMenu();
+        BeanUtils.copyProperties(vo, roleMenu);
+        return baseMapper.updateById(roleMenu);
     }
 
     @Override
-    public  RoleMenu findById(Long id){
+    public RoleMenu findById(Long id) {
         return baseMapper.selectById(id);
     }
 
     @Override
-    public ReturnPageData<RoleMenuDto> findListByPage(RoleMenuQuery query){
-        RoleMenu roleMenu=new RoleMenu();
-        BeanUtils.copyProperties(query,roleMenu);
+    public ReturnPageData<RoleMenuDto> findListByPage(RoleMenuQuery query) {
+        RoleMenu roleMenu = new RoleMenu();
+        BeanUtils.copyProperties(query, roleMenu);
         IPage<RoleMenu> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<RoleMenu> iPage = baseMapper.selectPage(wherePage,Wrappers.query(roleMenu));
-        List<RoleMenuDto> list=new ArrayList<>();
-        for(RoleMenu roleMenus:iPage.getRecords()){
-        RoleMenuDto roleMenuDto=new RoleMenuDto();
-        BeanUtils.copyProperties(roleMenus,roleMenuDto);
-        list.add(roleMenuDto);
+        IPage<RoleMenu> iPage = baseMapper.selectPage(wherePage, Wrappers.query(roleMenu));
+        List<RoleMenuDto> list = new ArrayList<>();
+        for (RoleMenu roleMenus : iPage.getRecords()) {
+            RoleMenuDto roleMenuDto = new RoleMenuDto();
+            BeanUtils.copyProperties(roleMenus, roleMenuDto);
+            list.add(roleMenuDto);
         }
-        PageData pageData=new PageData();
-        BeanUtils.copyProperties(iPage,pageData);
-        return ReturnPageData.fillingData(pageData,list);
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, list);
     }
 }
