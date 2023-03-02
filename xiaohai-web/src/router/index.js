@@ -69,7 +69,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard', noCache: true }
     }]
   },
   {
@@ -104,7 +104,7 @@ export const constantRoutes = [
         meta: { title: '字典管理', icon: 'el-icon-s-order', noCache: true }
       },
       {
-        path: 'dictData',
+        path: 'dictData/:id(\\d+)',
         name: 'dictData',
         hidden: true,
         component: () => import('@/views/system/dict/data/index.vue'),

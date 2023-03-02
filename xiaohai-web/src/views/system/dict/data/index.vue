@@ -179,8 +179,9 @@ export default {
   },
   methods: {
     getType() {
-      if (this.$route.query.id !== undefined && this.$route.query.id !== null && this.$route.query.id !== '') {
-        getDictType(this.$route.query.id).then(response => {
+      const id = this.$route.params && this.$route.params.id
+      if (id) {
+        getDictType(id).then(response => {
           this.queryParams.dictType = response.data.dictType
           this.getList()
         })

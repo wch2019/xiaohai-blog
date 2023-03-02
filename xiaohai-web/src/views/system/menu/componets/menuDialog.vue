@@ -1,28 +1,20 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-row>
-        <el-col :span="24">
-          <el-form-item label="上级菜单" prop="parentId">
-            <!--              <treeselect-->
-            <!--                v-model="form.parentId"-->
-            <!--                :options="menuOptions"-->
-            <!--                :normalizer="normalizer"-->
-            <!--                :show-count="true"-->
-            <!--                placeholder="选择上级菜单"-->
-            <!--              />-->
-            <!--            <el-tree :data="menuOptions" :props="defaultProps"  @node-click="handleNodeClick"></el-tree>-->
-            <select-tree v-model="form.parentId" :options="menuOptions" :props="defaultProps" />
-          </el-form-item>
-        </el-col>
         <el-col :span="24">
           <el-form-item label="菜单类型" prop="menuType">
             <el-radio-group v-model="form.menuType">
-              <el-radio label="M">目录</el-radio>
-              <el-radio label="C">菜单</el-radio>
-              <el-radio label="F">按钮</el-radio>
+              <el-radio-button label="M">目录</el-radio-button>
+              <el-radio-button label="C">菜单</el-radio-button>
+              <el-radio-button label="F">按钮</el-radio-button>
             </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="上级菜单" prop="parentId">
+            <select-tree v-model="form.parentId" :options="menuOptions" :props="defaultProps" />
           </el-form-item>
         </el-col>
         <el-col v-if="form.menuType !== 'F'" :span="24">
@@ -45,11 +37,6 @@
         <el-col :span="24">
           <el-form-item label="菜单名称" prop="menuName">
             <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="显示排序" prop="orderNum">
-            <el-input-number v-model="form.menuSort" controls-position="right" :min="0" />
           </el-form-item>
         </el-col>
         <el-col v-if="form.menuType !== 'F'" :span="24">
@@ -88,13 +75,17 @@
             </span>
           </el-form-item>
         </el-col>
-        <el-col v-if="form.menuType !== 'F'" :span="24">
-          <el-form-item prop="status">
+        <el-col :span="12">
+          <el-form-item label="显示排序" prop="orderNum">
+            <el-input-number v-model="form.menuSort" controls-position="right" :min="0" />
+          </el-form-item>
+        </el-col>
+        <el-col v-if="form.menuType !== 'F'" :span="12">
+          <el-form-item prop="status" >
             <span slot="label">
               <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
                 <i class="el-icon-question" />
-              </el-tooltip>
-              菜单状态
+              </el-tooltip>菜单状态
             </span>
             <el-radio-group v-model="form.status">
               <el-radio

@@ -72,13 +72,14 @@ export default {
   .icon-list {
     height: 200px;
     overflow-y: scroll;
+    font-size: 15px;
 
     div {
       height: 30px;
       line-height: 30px;
       margin-bottom: -5px;
       cursor: pointer;
-      width: 33%;
+      width: 50%;
       float: left;
     }
 

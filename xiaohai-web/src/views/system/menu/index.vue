@@ -65,26 +65,26 @@
       :default-expand-all="expansion"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="menuName" label="菜单名称" align="center" width="130"/>
+      <el-table-column prop="menuName" label="菜单名称" align="center" width="130" />
       <el-table-column prop="icon" label="菜单图标" align="center" width="90">
         <template slot-scope="scope">
           <svg-icon
             v-if="scope.row.icon && scope.row.icon.indexOf('el-icon')== -1"
             :icon-class="scope.row.icon"
           />
-          <i v-else-if="scope.row.icon" slot="prefix" :class="scope.row.icon"/>
+          <i v-else-if="scope.row.icon" slot="prefix" :class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="path" label="路由地址" align="center"/>
-      <el-table-column prop="component" label="路径" align="center"/>
-      <el-table-column prop="perms" label="权限标识" align="center"/>
+      <el-table-column prop="path" label="路由地址" align="center" />
+      <el-table-column prop="component" label="路径" align="center" />
+      <el-table-column prop="perms" label="权限标识" align="center" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" width="180"/>
+          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" width="180" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" >
+      <el-table-column label="创建时间" align="center" prop="createdTime" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -92,6 +92,13 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >修改
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleAdd(scope.row)"
+          >新增
           </el-button>
           <el-button
             size="mini"
@@ -104,7 +111,7 @@
       </el-table-column>
     </el-table>
 
-    <MenuDialog ref="menuDialog" @closeDialog="closeDialog"/>
+    <MenuDialog ref="menuDialog" @closeDialog="closeDialog" />
   </div>
 
 </template>
@@ -155,8 +162,18 @@ export default {
       this.handleQuery()
     },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAdd(row) {
       this.$refs.menuDialog.reset()
+      if (row != null && row.id) {
+        this.$refs.menuDialog.form.parentId = row.id
+        if (row.parentId === 0) {
+          this.$refs.menuDialog.form.menuType = 'C'
+        } else {
+          this.$refs.menuDialog.form.menuType = 'F'
+        }
+      } else {
+        this.$refs.menuDialog.form.menuType = 'M'
+      }
       this.$refs.menuDialog.menuOptions = this.menuList
       this.$refs.menuDialog.open = true
       this.$refs.menuDialog.title = '添加菜单'
@@ -171,8 +188,8 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      const dictId = row.id
-      getMenu(dictId).then(response => {
+      const id = row.id
+      getMenu(id).then(response => {
         if (this.$refs.menuDialog.$refs['form'] !== undefined) {
           this.$refs.menuDialog.$refs['form'].resetFields()
         }
