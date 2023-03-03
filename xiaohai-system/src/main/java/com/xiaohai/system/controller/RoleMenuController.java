@@ -33,37 +33,37 @@ public class RoleMenuController {
     private final RoleMenuService roleMenuService;
 
 
-    @Operation(summary = "新增角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @PostMapping()
-    public Response<Integer> add(@RequestBody RoleMenuVo vo){
-        return  Response.success("新增角色权限关联表成功！", roleMenuService.add(vo));
-    }
-
-    @Operation(summary = "删除角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @DeleteMapping("{id}")
-    public Response<Integer> delete(@PathVariable("id") Long id){
-        return  Response.success("删除角色权限关联表成功！", roleMenuService.delete(id));
-    }
-
-    @Operation(summary = "更新角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @PutMapping()
-    public Response<Integer> update(@RequestBody RoleMenuVo vo){
-        return  Response.success("更新角色权限关联表成功！", roleMenuService.updateData(vo));
-    }
-
-
-    @Operation(summary = "id查询角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @GetMapping("{id}")
-    public Response<RoleMenu> findById(@PathVariable Long id){
-        return  Response.success("id查询角色权限关联表成功！", roleMenuService.findById(id));
-    }
-
-    @Operation(summary = "查询角色权限关联表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "pageNum", description = "页码", required = true)
-    @Parameter(name = "pageSize", description = "每页数量", required = true)
-    @GetMapping()
-    public Response<ReturnPageData<RoleMenuDto>> findListByPage(RoleMenuQuery query){
-        return Response.success("查询角色权限关联表列表成功！", roleMenuService.findListByPage(query));
-    }
+//    @Operation(summary = "新增角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+//    @PostMapping()
+//    public Response<Integer> add(@RequestBody RoleMenuVo vo){
+//        return  Response.success("新增角色权限关联表成功！", roleMenuService.add(vo));
+//    }
+//
+//    @Operation(summary = "删除角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+//    @DeleteMapping("{id}")
+//    public Response<Integer> delete(@PathVariable("id") Long id){
+//        return  Response.success("删除角色权限关联表成功！", roleMenuService.delete(id));
+//    }
+//
+//    @Operation(summary = "更新角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+//    @PutMapping()
+//    public Response<Integer> update(@RequestBody RoleMenuVo vo){
+//        return  Response.success("更新角色权限关联表成功！", roleMenuService.updateData(vo));
+//    }
+//
+//
+//    @Operation(summary = "id查询角色权限关联表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+//    @GetMapping("{id}")
+//    public Response<RoleMenu> findById(@PathVariable Long id){
+//        return  Response.success("id查询角色权限关联表成功！", roleMenuService.findById(id));
+//    }
+//
+//    @Operation(summary = "查询角色权限关联表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+//    @Parameter(name = "pageNum", description = "页码", required = true)
+//    @Parameter(name = "pageSize", description = "每页数量", required = true)
+//    @GetMapping()
+//    public Response<ReturnPageData<RoleMenuDto>> findListByPage(RoleMenuQuery query){
+//        return Response.success("查询角色权限关联表列表成功！", roleMenuService.findListByPage(query));
+//    }
 
     }

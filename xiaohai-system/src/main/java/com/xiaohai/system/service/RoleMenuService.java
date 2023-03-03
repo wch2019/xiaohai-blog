@@ -21,18 +21,19 @@ public interface RoleMenuService extends IService<RoleMenu> {
     /**
      * 添加角色权限关联表
      *
-     * @param vo 角色权限关联表 VO（View Object）：显示层对象
+     * @param ids 菜单
+     * @param roleId 角色
      * @return Integer
      */
-    Integer add(RoleMenuVo vo);
+    void add(Long[] ids, Integer roleId);
 
     /**
      * 删除角色权限关联表
      *
-     * @param id 主键
+     * @param  roleId 角色
      * @return Integer
      */
-    Integer delete(Long id);
+    Integer delete(Integer roleId);
 
     /**
      * 修改角色权限关联表
@@ -57,4 +58,11 @@ public interface RoleMenuService extends IService<RoleMenu> {
     * @return Response
     */
     ReturnPageData<RoleMenuDto> findListByPage(RoleMenuQuery query);
+
+    /**
+     * 更新菜单  删除菜单再新增菜单
+     * @param ids 菜单
+     * @param roleId 角色
+     */
+    void rewriteRoleMenu(Long[] ids, Integer roleId);
 }

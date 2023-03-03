@@ -42,5 +42,12 @@
         WHERE u.`id` = ru.`menu_id`
           AND ru.`role_id` = #{roleId};
     </select>
+    <select id="listByMenuIds" resultType="java.lang.Long">
+        SELECT u.id
+        FROM `sys_menu` AS u,
+             `sys_role_menu` ru
+        WHERE u.`id` = ru.`menu_id`
+          AND ru.`role_id` = #{roleId};
+    </select>
 
 </mapper>

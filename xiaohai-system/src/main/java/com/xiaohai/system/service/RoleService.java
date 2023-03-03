@@ -31,10 +31,10 @@ public interface RoleService extends IService<Role> {
     /**
      * 删除角色表
      *
-     * @param id 主键
+     * @param ids 主键
      * @return Integer
      */
-    Integer delete(Long id);
+    Integer delete(Long[] ids);
 
     /**
      * 修改角色表
@@ -50,7 +50,7 @@ public interface RoleService extends IService<Role> {
      * @param id id
      * @return   Integer
      */
-    Role findById(Long id);
+    RoleDto findById(Long id);
 
     /**
     * 查询角色表列表数据

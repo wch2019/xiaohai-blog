@@ -77,13 +77,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     @Override
     public void rewriteUserRole(Long[] ids, Integer userId) {
         //删除角色
-        baseMapper.delete(new QueryWrapper<UserRole>().eq("user_id", userId));
+        delete(userId);
         //重新写入角色
-        for (Long id : ids) {
-            UserRole userRole = new UserRole();
-            userRole.setUserId(userId);
-            userRole.setRoleId(Math.toIntExact(id));
-            baseMapper.insert(userRole);
-        }
+        add(ids, userId);
     }
 }

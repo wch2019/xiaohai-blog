@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
 * <p>
@@ -39,4 +40,9 @@ public class RoleVo implements Serializable {
 
     @Schema(description = "角色状态（0正常 1停用）")
     private String status;
+
+    @Schema(description = "菜单组")
+    @NotNull(message = "菜单为空")
+    private Long[] menuIds;
+
 }

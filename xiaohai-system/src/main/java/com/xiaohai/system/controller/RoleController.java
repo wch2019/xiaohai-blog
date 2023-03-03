@@ -41,9 +41,9 @@ public class RoleController {
     }
 
     @Operation(summary = "删除角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @DeleteMapping("{id}")
-    public Response<Integer> delete(@PathVariable("id") Long id){
-        return  Response.success("删除角色表成功！", roleService.delete(id));
+    @DeleteMapping("{ids}")
+    public Response<Integer> delete(@PathVariable Long[] ids){
+        return  Response.success("删除角色表成功！", roleService.delete(ids));
     }
 
     @Operation(summary = "更新角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -55,7 +55,7 @@ public class RoleController {
 
     @Operation(summary = "id查询角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
-    public Response<Role> findById(@PathVariable Long id){
+    public Response<RoleDto> findById(@PathVariable Long id){
         return  Response.success("id查询角色表成功！", roleService.findById(id));
     }
 

@@ -33,8 +33,8 @@ public class RoleMenu extends BaseEntity  implements Serializable  {
     private Integer id;
 
     @Schema(description = "角色id")
-    private String roleId;
+    private Integer roleId;
 
     @Schema(description = "菜单权限id")
-    private String menuId;
+    private Integer menuId;
 }

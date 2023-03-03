@@ -56,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BeanUtils.copyProperties(vo, user);
         var count = baseMapper.insert(user);
         //新增角色
-        userRoleService.rewriteUserRole(vo.getRoleIds(), user.getId());
+        userRoleService.add(vo.getRoleIds(), user.getId());
         return count;
     }
 
