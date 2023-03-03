@@ -226,11 +226,11 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const dictId = row.id || this.ids
-      console.log(this.ids)
       getUser(dictId).then(response => {
         if (this.$refs.userDialog.$refs['form'] !== undefined) {
           this.$refs.userDialog.$refs['form'].resetFields()
         }
+        this.$refs.userDialog.roleOptions = this.roleOptions
         this.$refs.userDialog.form = response.data
         this.$refs.userDialog.open = true
         this.$refs.userDialog.title = '修改用户'

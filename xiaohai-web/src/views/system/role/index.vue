@@ -190,6 +190,7 @@ export default {
         this.$refs.userDialog.form = response.data
         this.$refs.userDialog.open = true
         this.$refs.userDialog.title = '修改角色类型'
+        this.$refs.userDialog.treeCheck()
       })
     },
 

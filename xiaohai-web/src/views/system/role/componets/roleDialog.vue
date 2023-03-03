@@ -11,14 +11,24 @@
       <el-form-item label="角色描述">
         <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
       </el-form-item>
-      <el-form-item label="菜单权限" prop="menuIds">
+      <el-form-item label="菜单权限" prop="menuIds" style="text-align: right;">
+        <el-button
+          type="primary"
+          circle
+          plain
+          icon="el-icon-sort"
+          size="mini"
+          @click="defaultExpandAll"
+        />
         <el-tree
+          v-if="refreshTable"
           ref="permsTree"
+          class="test-1"
           :data="menuList"
           show-checkbox
-          default-expand-all
+          :default-expand-all="expansion"
           node-key="id"
-          highlight-current
+          :check-strictly="isCheck"
           :props="defaultProps"
         />
       </el-form-item>
@@ -52,6 +62,11 @@ export default {
       open: false,
       // 弹出层标题
       title: '',
+      // 是否展开
+      expansion: false,
+      refreshTable: true,
+      // 循父子不互相关联的做法，默认为 false
+      isCheck: false,
       // 菜单表格数据
       menuList: [],
       defaultProps: {
@@ -83,6 +98,14 @@ export default {
     this.getList()
   },
   methods: {
+    defaultExpandAll() {
+      this.refreshTable = false
+      this.expansion = this.expansion !== true
+      this.$nextTick(() => {
+        this.refreshTable = true
+        this.treeCheck()
+      })
+    },
     /** 查询菜单类型列表 */
     getList() {
       listMenu().then(response => {
@@ -115,42 +138,84 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
-      this.reset()
+      this.close()
     },
     /** 提交按钮 */
     submitForm() {
-      // 获取父节点 子节点选中了的父节点
-      const parentArr = this.$refs.permsTree.getHalfCheckedKeys()
-      this.form.menuIds = this.$refs.permsTree.getCheckedKeys()
-      parentArr.forEach(item => {
-        this.form.menuIds.push(item)
+      this.form.menuIds = this.getMenuAllCheckedKeys()
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (this.form.id !== '') {
+            updateRole(this.form).then(response => {
+              this.$message.success(response.msg)
+              this.open = false
+              this.close()
+              // 回调父方法
+              this.$emit('closeDialog')
+            })
+          } else {
+            addRole(this.form).then(response => {
+              this.$message.success(response.msg)
+              this.open = false
+              this.close()
+              // 回调父方法
+              this.$emit('closeDialog')
+            })
+          }
+        }
       })
-      console.log(this.form.menuIds)
-
-      // this.$refs['form'].validate(valid => {
-      //   if (valid) {
-      //     if (this.form.id !== '') {
-      //       updateRole(this.form).then(response => {
-      //         this.$message.success(response.msg)
-      //         this.open = false
-      //         // 回调父方法
-      //         this.$emit('closeDialog')
-      //       })
-      //     } else {
-      //       addRole(this.form).then(response => {
-      //         this.$message.success(response.msg)
-      //         this.open = false
-      //         // 回调父方法
-      //         this.$emit('closeDialog')
-      //       })
-      //     }
-      //   }
-      // })
+    },
+    // 所有菜单节点数据
+    getMenuAllCheckedKeys() {
+      // 目前被选中的菜单节点
+      const checkedKeys = this.$refs.permsTree.getCheckedKeys()
+      // 半选中的菜单节点
+      const halfCheckedKeys = this.$refs.permsTree.getHalfCheckedKeys()
+      checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
+      return checkedKeys
+    },
+    // 清空树
+    close() {
+      this.reset()
+      this.$refs.permsTree.setCheckedKeys([])
+    },
+    // 回显
+    treeCheck() {
+      // 重点：回显之前一定要设置为true
+      this.isCheck = true
+      this.$nextTick(() => {
+        // 给树节点赋值回显
+        this.$refs.permsTree.setCheckedKeys(this.form.menuIds)
+        // 重点： 赋值完成后 设置为false
+        this.isCheck = false
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+.test-1{
+  height: 200px;
+  overflow-y: scroll;
+}
+.test-1::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
 
+.test-1::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #535353;
+}
+
+.test-1::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background: #ededed;
+}
 </style>
