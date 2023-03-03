@@ -2,12 +2,12 @@ package com.xiaohai.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.system.dao.MenuMapper;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserRoleMapper;
@@ -91,10 +91,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public ReturnPageData<Role> findListByPage(RoleQuery query) {
-        Role role = new Role();
-        BeanUtils.copyProperties(query, role);
         IPage<Role> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Role> iPage = baseMapper.selectPage(wherePage, Wrappers.query(role));
+        IPage<Role> iPage = baseMapper.selectPage(wherePage,new QueryWrapper<Role>()
+                .eq(StringUtils.isNotBlank(query.getStatus()),"status",query.getStatus())
+                .like(StringUtils.isNotBlank(query.getName()),"name",query.getName()));
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());

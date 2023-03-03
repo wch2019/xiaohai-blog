@@ -5,7 +5,6 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.system.pojo.dto.UserDto;
-import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.query.UserQuery;
 import com.xiaohai.system.pojo.vo.UserVo;
 import com.xiaohai.system.service.UserService;
@@ -17,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.Map;
 
 /**
 *
@@ -36,7 +35,7 @@ public class UserController {
 
     @Operation(summary = "获取用户登录信息",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("/info")
-    public Response<User> findByInfo(){
+    public Response<Map<String,Object>> findByInfo(){
         return  Response.success("获取用户登录信息成功！",userService.findByInfo());
     }
 

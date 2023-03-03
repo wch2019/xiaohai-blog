@@ -7,6 +7,8 @@ import com.xiaohai.system.pojo.query.UserQuery;
 import com.xiaohai.system.pojo.vo.UserVo;
 import com.xiaohai.system.pojo.dto.UserDto;
 
+import java.util.Map;
+
 /**
  *
  * 用户表 服务类
@@ -21,7 +23,7 @@ public interface UserService extends IService<User> {
      * 获取用户登录信息
      * @return
      */
-    User findByInfo();
+    Map<String,Object> findByInfo();
     /**
      * 添加用户表
      *

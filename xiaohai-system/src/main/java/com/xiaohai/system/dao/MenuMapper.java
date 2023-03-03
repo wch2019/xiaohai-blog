@@ -28,4 +28,11 @@ public interface MenuMapper extends BaseMapper<Menu> {
      */
     List<Long> listByMenuIds(Long roleId);
 
+    /**
+     * 根据角色id获取当前角色菜单权限列表
+     * @param roleId
+     * @return
+     */
+    List<Menu> listByMenus(Long roleId);
+
 }

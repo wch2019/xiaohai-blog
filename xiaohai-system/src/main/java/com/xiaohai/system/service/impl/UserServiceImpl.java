@@ -7,12 +7,17 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.ListUtils;
 import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.common.utils.TreeUtils;
+import com.xiaohai.system.dao.MenuMapper;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.UserDto;
+import com.xiaohai.system.pojo.entity.Menu;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.query.UserQuery;
 import com.xiaohai.system.pojo.vo.UserVo;
@@ -24,9 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * 用户表 服务实现类
@@ -39,10 +43,28 @@ import java.util.Objects;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     private final RoleMapper roleMapper;
     private final UserRoleService userRoleService;
+    private final MenuMapper menuMapper;
 
     @Override
-    public User findByInfo() {
-        return (User) StpUtil.getSession().get(Constants.CURRENT_USER);
+    public Map<String,Object> findByInfo() {
+        Map<String,Object> map=new HashMap<>(1);
+        // 获取：当前账号所拥有的角色集合
+        map.put("role", StpUtil.getRoleList());
+        // 获取：当前账号所拥有的权限集合
+        map.put("permission",StpUtil.getPermissionList());
+        List<Menu> menus=new ArrayList<>();
+        List<Long> ids=roleMapper.listByRoleIds(StpUtil.getLoginId());
+        for(Long id:ids){
+            menus.addAll(menuMapper.listByMenus(id));
+        }
+        List<MenuTree> menuTrees= ListUtils.copyWithCollection(menus,MenuTree.class);
+        //获取当前用户菜单
+        map.put("menu", TreeUtils.getTree(menuTrees));
+        User user=baseMapper.selectById((Serializable) StpUtil.getLoginId());
+        user.setPassword(null);
+        //获取当前用户信息
+        map.put("info", user);
+        return map;
     }
 
     @Override
@@ -83,7 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //清空邮箱，此处不更新邮箱
         vo.setEmail(null);
         // 当前操作用户
-        User nowUser = (User) StpUtil.getSession().get(Constants.CURRENT_USER);
+        User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
         if (nowUser.getUsername().equals(vo.getUsername()) && nowUser.getId().equals(vo.getId())) {
             User user = new User();
             BeanUtils.copyProperties(vo, user);

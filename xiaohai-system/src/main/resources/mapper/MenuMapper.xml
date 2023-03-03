@@ -28,26 +28,31 @@
         updated_time,
         id, parent_id, icon, menu_sort, menu_name, menu_type, path, component, perms, status
     </sql>
-    <select id="selectByRoleId" resultType="java.lang.String">
-        SELECT m.perms
-        FROM `sys_menu` AS r,
-             `sys_user_role` ur
-        WHERE r.`id` = ur.`role_id`
-          AND ur.`user_id` = #{userId};
-    </select>
     <select id="selectByPerms" resultType="java.lang.String">
-        SELECT r.perms
+        SELECT u.perms
         FROM `sys_menu` AS u,
              `sys_role_menu` ru
         WHERE u.`id` = ru.`menu_id`
-          AND ru.`role_id` = #{roleId};
+          AND ru.`role_id` = #{roleId}
+        AND u.perms!=''
+        AND u.perms is not null
     </select>
     <select id="listByMenuIds" resultType="java.lang.Long">
         SELECT u.id
         FROM `sys_menu` AS u,
              `sys_role_menu` ru
         WHERE u.`id` = ru.`menu_id`
-          AND ru.`role_id` = #{roleId};
+          AND ru.`role_id` = #{roleId}
+          AND u.status=0
+    </select>
+    <select id="listByMenus" resultType="com.xiaohai.system.pojo.entity.Menu">
+        SELECT u.*
+        FROM `sys_menu` AS u,
+             `sys_role_menu` ru
+        WHERE u.`id` = ru.`menu_id`
+          AND ru.`role_id` = #{roleId}
+          AND u.status = 0
+        order by u.menu_sort asc
     </select>
 
 </mapper>

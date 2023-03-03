@@ -7,7 +7,7 @@ export function listUser(data) {
   return request({
     url: api,
     method: 'get',
-    data
+    params: data
   })
 }
 

@@ -6,7 +6,11 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    menu: '',
+    permission: '',
+    role: ''
+
   }
 }
 
@@ -24,6 +28,15 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_MENU: (state, menu) => {
+    state.menu = menu
+  },
+  SET_PERMISSION: (state, permission) => {
+    state.permission = permission
+  },
+  SET_ROLE: (state, role) => {
+    state.role = role
   }
 }
 
@@ -53,9 +66,12 @@ const actions = {
           return reject('验证失败，请重新登录。')
         }
 
-        const { nickName, avatar } = data
+        const { nickName, avatar } = data.info
         commit('SET_NAME', nickName)
         commit('SET_AVATAR', avatar)
+        commit('SET_MENU', data.menu)
+        commit('SET_PERMISSION', data.permission)
+        commit('SET_ROLE', data.role)
         resolve(data)
       }).catch(error => {
         reject(error)

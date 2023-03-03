@@ -7,7 +7,7 @@ export function listRole(data) {
   return request({
     url: api,
     method: 'get',
-    data
+    params: data
   })
 }
 
