@@ -48,7 +48,7 @@ export default {
       return this.$store.state.tagsView.visitedViews
     },
     routes() {
-      return this.$router.options.routes
+      return this.$store.getters.permission_routes
     },
     theme() {
       return this.$store.state.settings.theme

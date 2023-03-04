@@ -71,7 +71,13 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard', noCache: true }
     }]
-  },
+  }
+]
+/**
+ * asyncRoutes  动态加载的路由
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
   {
     path: '/system',
     component: Layout,
@@ -104,24 +110,12 @@ export const constantRoutes = [
         meta: { title: '字典管理', icon: 'el-icon-s-order', noCache: true }
       },
       {
-        path: 'dictData/:id(\\d+)',
+        path: 'dictData/:id',
         name: 'dictData',
         hidden: true,
         component: () => import('@/views/system/dict/data/index.vue'),
         meta: { title: '字典数据', icon: 'skill', noCache: true }
       }
-      // {
-      //   path: 'role',
-      //   name: 'role',
-      //   component: () => import('@/views/system/role'),
-      //   meta: { title: '角色管理', icon: 'role', noCache: true }
-      // }, {
-      //   path: 'user',
-      //   name: 'user',
-      //   component: () => import('@/views/system/user'),
-      //   meta: { title: '用户管理', icon: 'user', noCache: true }
-      // }
-
     ]
   },
   {
@@ -131,8 +125,8 @@ export const constantRoutes = [
     meta: { title: '系统监控', icon: 'el-icon-setting' },
     children: [
       {
-        path: 'menu',
-        name: 'menu',
+        path: 'server',
+        name: 'server',
         component: () => import('@/views/monitor/server/index.vue'),
         meta: { title: '系统服务', icon: 'el-icon-menu', noCache: true }
       }

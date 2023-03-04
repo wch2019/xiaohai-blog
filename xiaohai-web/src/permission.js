@@ -35,7 +35,10 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('user/getInfo')
           // 获取字典信息
           await store.dispatch('dict/setDictAll')
-          next()
+          const accessRoutes = await store.dispatch('permission/generateRoutes')
+          console.log(accessRoutes)
+          router.addRoutes(accessRoutes) // 动态添加可访问路由表
+          next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
         } catch (error) {
           // 删除令牌并转到登录页面重新登录
           await store.dispatch('user/resetToken')
