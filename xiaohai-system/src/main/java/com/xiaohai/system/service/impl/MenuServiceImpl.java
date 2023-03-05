@@ -79,8 +79,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         //获取菜单
         List<MenuTree> menuTrees = ListUtils.copyWithCollection(menus, MenuTree.class);
         List<MenuTree> list = TreeUtils.getTree(menuTrees);
-
-        List<RouterDto> routers = new LinkedList<RouterDto>();
         return buildMenus(list);
     }
 
@@ -98,7 +96,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         for (MenuTree menu : list) {
             RouterDto router = new RouterDto();
             router.setHidden(false);
-            router.setName(menu.getMenuName());
+            router.setName(menu.getPath());
             router.setPath(menu.getPath());
             router.setComponent(StringUtils.isNotBlank(menu.getComponent()) ? menu.getComponent() : "Layout");
             router.setMeta(new MetaDto(menu.getMenuName(), menu.getIcon(), true));
