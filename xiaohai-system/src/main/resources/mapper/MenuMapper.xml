@@ -52,6 +52,7 @@
         WHERE u.`id` = ru.`menu_id`
           AND ru.`role_id` = #{roleId}
           AND u.status = 0
+          AND (u.menu_type = 'M' OR u.menu_type='C')
         order by u.menu_sort asc
     </select>
 

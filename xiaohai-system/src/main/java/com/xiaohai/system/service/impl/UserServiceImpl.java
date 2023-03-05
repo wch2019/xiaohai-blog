@@ -6,21 +6,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xiaohai.common.constant.Constants;
-import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.common.utils.ListUtils;
 import com.xiaohai.common.utils.PageUtils;
-import com.xiaohai.common.utils.TreeUtils;
-import com.xiaohai.system.dao.MenuMapper;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.UserDto;
-import com.xiaohai.system.pojo.entity.Menu;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.query.UserQuery;
 import com.xiaohai.system.pojo.vo.UserVo;
+import com.xiaohai.system.service.MenuService;
 import com.xiaohai.system.service.UserRoleService;
 import com.xiaohai.system.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +38,7 @@ import java.util.*;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     private final RoleMapper roleMapper;
     private final UserRoleService userRoleService;
-    private final MenuMapper menuMapper;
+    private final MenuService menuService;
 
     @Override
     public Map<String,Object> findByInfo() {
@@ -52,14 +47,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         map.put("role", StpUtil.getRoleList());
         // 获取：当前账号所拥有的权限集合
         map.put("permission",StpUtil.getPermissionList());
-        List<Menu> menus=new ArrayList<>();
-        List<Long> ids=roleMapper.listByRoleIds(StpUtil.getLoginId());
-        for(Long id:ids){
-            menus.addAll(menuMapper.listByMenus(id));
-        }
-        List<MenuTree> menuTrees= ListUtils.copyWithCollection(menus,MenuTree.class);
         //获取当前用户菜单
-        map.put("menu", TreeUtils.getTree(menuTrees));
+        map.put("menu", menuService.routers());
         User user=baseMapper.selectById((Serializable) StpUtil.getLoginId());
         user.setPassword(null);
         //获取当前用户信息
