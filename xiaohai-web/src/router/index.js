@@ -141,11 +141,107 @@ export const asyncRoutes = [
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
+export const asyncRoutes1 =
+  [
+    {
+      name: '系统管理',
+      path: '/system',
+      hidden: false,
+      redirect: 'noRedirect',
+      component: Layout,
+      alwaysShow: true,
+      meta: {
+        title: '系统管理',
+        icon: 'el-icon-s-tools',
+        noCache: true
+      },
+      children: [
+        {
+          name: '用户管理',
+          path: 'user',
+          hidden: false,
+          component: () => import('@/views/system/user/index'),
+          meta: {
+            title: '用户管理',
+            icon: 'user',
+            noCache: true
+          }
+        },
+        {
+          'name': '角色管理',
+          'path': 'role',
+          'hidden': false,
+          'component': () => import('@/views/system/role/index'),
+          'meta': {
+            'title': '角色管理',
+            'icon': 'peoples',
+            'noCache': true
+          }
+        },
+        {
+          'name': '菜单管理',
+          'path': 'menu',
+          'hidden': false,
+          'component': () => import('@/views/system/menu/index'),
+          'meta': {
+            'title': '菜单管理',
+            'icon': 'tree-table',
+            'noCache': true
+          }
+        },
+        {
+          'name': '字典管理',
+          'path': 'dictType',
+          'hidden': false,
+          'component': () => import('@/views/system/dict/type/index'),
+          'meta': {
+            'title': '字典管理',
+            'icon': 'el-icon-s-order',
+            'noCache': true
+          }
+        }
+      ]
+    },
+    {
+      'name': '系统监控',
+      'path': '/monitor',
+      'hidden': false,
+      'redirect': 'noRedirect',
+      'component': Layout,
+      'alwaysShow': true,
+      'meta': {
+        'title': '系统监控',
+        'icon': 'el-icon-cpu',
+        'noCache': true
+      },
+      'children': [
+        {
+          'name': '系统服务',
+          'path': 'server',
+          'hidden': false,
+          'component': () => import('@/views/monitor/server/index'),
+          'meta': {
+            'title': '系统服务',
+            'icon': 'el-icon-stopwatch',
+            'noCache': true
+          }
+        },
+        {
+          'name': '在线用户',
+          'path': 'online',
+          'hidden': false,
+          'component': () => import('@/views/monitor/online/index'),
+          'meta': {
+            'title': '在线用户',
+            'icon': 'el-icon-user',
+            'noCache': true
+          }
+        }
+      ]
+    }
+  ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
