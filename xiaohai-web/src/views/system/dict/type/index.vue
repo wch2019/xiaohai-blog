@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="字典名称" prop="dictName">
         <el-input
           v-model="queryParams.dictName"
@@ -26,16 +26,16 @@
           v-model="queryParams.status"
           placeholder="字典状态"
           clearable
-          @clear="queryParams.status = null"
           size="small"
           style="width: 240px"
+          @clear="queryParams.status = null"
         >
           <el-option
             v-for="dict in $store.getters.dict.sys_normal_disable"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -47,6 +47,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:dict:add')"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -57,6 +58,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:dict:update')"
           type="success"
           plain
           icon="el-icon-edit"
@@ -68,6 +70,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:dict:delete')"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -79,6 +82,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:dict:clean')"
           type="danger"
           plain
           icon="el-icon-refresh"
@@ -90,8 +94,8 @@
     </el-row>
 
     <el-table v-loading="loading" border style="margin-top: 10px" :data="typeList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="字典名称" align="center" prop="dictName" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/system/dictData/' + scope.row.id" class="link-type">
@@ -99,17 +103,18 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="字典备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
+      <el-table-column label="字典备注" align="center" prop="remark" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180"/>
-      <el-table-column label="更新时间" align="center" prop="updatedTime" width="180"/>
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
+      <el-table-column label="更新时间" align="center" prop="updatedTime" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="$store.getters.permission.includes('system:dict:update')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -117,6 +122,7 @@
           >修改
           </el-button>
           <el-button
+            v-if="$store.getters.permission.includes('system:dict:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -135,7 +141,7 @@
       @pagination="getList"
     />
 
-    <DictDialog ref="dictDialog" @closeDialog="closeDialog"/>
+    <DictDialog ref="dictDialog" @closeDialog="closeDialog" />
   </div>
 
 </template>

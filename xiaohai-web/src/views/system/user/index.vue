@@ -47,6 +47,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:user:add')"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -57,6 +58,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:user:update')"
           type="success"
           plain
           icon="el-icon-edit"
@@ -68,6 +70,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:user:delete')"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -117,6 +120,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="$store.getters.permission.includes('system:user:update')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -124,6 +128,7 @@
           >修改
           </el-button>
           <el-button
+            v-if="$store.getters.permission.includes('system:user:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"

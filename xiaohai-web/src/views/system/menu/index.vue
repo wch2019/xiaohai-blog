@@ -37,6 +37,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-if="$store.getters.permission.includes('system:menu:add')"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -87,6 +88,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="$store.getters.permission.includes('system:menu:update')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -94,6 +96,7 @@
           >修改
           </el-button>
           <el-button
+            v-if="$store.getters.permission.includes('system:menu:add')"
             size="mini"
             type="text"
             icon="el-icon-plus"
@@ -101,6 +104,7 @@
           >新增
           </el-button>
           <el-button
+            v-if="$store.getters.permission.includes('system:menu:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"

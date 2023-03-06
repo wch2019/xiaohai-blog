@@ -61,7 +61,7 @@
             <el-input v-model="form.component" placeholder="请输入组件路径" />
           </el-form-item>
         </el-col>
-        <el-col v-if="form.menuType !== 'M'" :span="24">
+        <el-col v-if="form.menuType === 'F'" :span="24">
           <el-form-item prop="perms">
             <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
             <span slot="label">
