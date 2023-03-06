@@ -1,5 +1,4 @@
 import Layout from '@/layout/index'
-import { asyncRoutes } from '@/router'
 
 // 遍历后台传来的路由字符串，转换为组件对象
 export function filterAsyncRouter(asyncRouterMap) {
@@ -10,17 +9,14 @@ export function filterAsyncRouter(asyncRouterMap) {
         route.component = Layout
         route.path = '/' + route.path
       } else {
-        if (route.path !== 'dictData/:id') {
-          route.component = loadView(route.component)
+        // 添加字典不展示页面
+        if (route.path === 'dictData/:id') {
+          route.hidden = true
         }
+        route.component = loadView(route.component)
       }
     }
     if (route.children != null && route.children && route.children.length) {
-      // 添加字典
-      if (route.path === '/system') {
-        route.children.push(asyncRoutes)
-        console.log(route.children, ",'asyncRoutes'")
-      }
       route.children = filterAsyncRouter(route.children)
     }
 

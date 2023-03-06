@@ -36,7 +36,6 @@ router.beforeEach(async(to, from, next) => {
           // 获取字典信息
           await store.dispatch('dict/setDictAll')
           const accessRoutes = await store.dispatch('permission/generateRoutes')
-          console.log(accessRoutes)
           router.addRoutes(accessRoutes) // 动态添加可访问路由表
           next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
         } catch (error) {

@@ -77,13 +77,7 @@ export const constantRoutes = [
  * asyncRoutes  动态加载的路由
  * the routes that need to be dynamically loaded based on user roles
  */
-export const asyncRoutes = {
-  path: 'dictData/:id',
-  name: 'dictData',
-  hidden: true,
-  component: () => import('@/views/system/dict/data/index'),
-  meta: { title: '字典数据', icon: 'skill', noCache: true }
-}
+export const asyncRoutes = []
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
