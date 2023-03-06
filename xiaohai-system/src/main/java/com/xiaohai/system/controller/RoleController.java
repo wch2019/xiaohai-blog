@@ -1,5 +1,6 @@
 package com.xiaohai.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -19,13 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
-*
-* 角色表Controller
-*
-* @author xiaohai
-* @since 2023-01-29
-*/
-@Tag(name = "角色表",description = "角色表")
+ * 角色表Controller
+ *
+ * @author xiaohai
+ * @since 2023-01-29
+ */
+@Tag(name = "角色表", description = "角色表")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/system/role")
@@ -34,36 +34,40 @@ public class RoleController {
     private final RoleService roleService;
 
 
-    @Operation(summary = "新增角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "新增角色表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:role:add")
     @PostMapping()
-    public Response<Integer> add(@Validated @RequestBody RoleVo vo){
-        return  Response.success("新增角色表成功！", roleService.add(vo));
+    public Response<Integer> add(@Validated @RequestBody RoleVo vo) {
+        return Response.success("新增角色表成功！", roleService.add(vo));
     }
 
-    @Operation(summary = "删除角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "删除角色表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:role:delete")
     @DeleteMapping("{ids}")
-    public Response<Integer> delete(@PathVariable Long[] ids){
-        return  Response.success("删除角色表成功！", roleService.delete(ids));
+    public Response<Integer> delete(@PathVariable Long[] ids) {
+        return Response.success("删除角色表成功！", roleService.delete(ids));
     }
 
-    @Operation(summary = "更新角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "更新角色表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:role:update")
     @PutMapping()
-    public Response<Integer> update(@Validated @RequestBody RoleVo vo){
-        return  Response.success("更新角色表成功！", roleService.updateData(vo));
+    public Response<Integer> update(@Validated @RequestBody RoleVo vo) {
+        return Response.success("更新角色表成功！", roleService.updateData(vo));
     }
 
 
-    @Operation(summary = "id查询角色表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "id查询角色表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
-    public Response<RoleDto> findById(@PathVariable Long id){
-        return  Response.success("id查询角色表成功！", roleService.findById(id));
+    public Response<RoleDto> findById(@PathVariable Long id) {
+        return Response.success("id查询角色表成功！", roleService.findById(id));
     }
 
-    @Operation(summary = "查询角色表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "查询角色表列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
-    public Response<ReturnPageData<Role>> findListByPage(RoleQuery query){
+    @SaCheckPermission("system:role:list")
+    public Response<ReturnPageData<Role>> findListByPage(RoleQuery query) {
         return Response.success("查询角色表列表成功！", roleService.findListByPage(query));
     }
 
@@ -73,4 +77,4 @@ public class RoleController {
         return Response.success("查询角色选择框列表成功！", roleService.optionSelect());
     }
 
-    }
+}

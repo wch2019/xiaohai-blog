@@ -1,5 +1,6 @@
 package com.xiaohai.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.daomain.Response;
@@ -34,18 +35,21 @@ public class DictDataController {
 
 
     @Operation(summary = "新增字典数据表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("dict:data:add")
     @PostMapping()
     public Response<Integer> add(@RequestBody DictDataVo vo) {
         return Response.success("新增字典数据表成功！", dictDataService.add(vo));
     }
 
     @Operation(summary = "删除字典数据表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("dict:data:delete")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除字典数据表成功！", dictDataService.delete(ids));
     }
 
     @Operation(summary = "更新字典数据表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("dict:data:update")
     @PutMapping()
     public Response<Integer> update(@RequestBody DictDataVo vo) {
         return Response.success("更新字典数据表成功！", dictDataService.updateData(vo));
@@ -61,6 +65,7 @@ public class DictDataController {
     @Operation(summary = "查询字典数据表列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @SaCheckPermission("dict:data:list")
     @GetMapping()
     public Response<ReturnPageData<DictData>> findListByPage(DictDataQuery query) {
         return Response.success("查询字典数据表列表成功！", dictDataService.findListByPage(query));

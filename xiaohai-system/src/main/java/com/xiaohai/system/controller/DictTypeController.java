@@ -1,5 +1,6 @@
 package com.xiaohai.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -34,18 +35,21 @@ public class DictTypeController {
 
 
     @Operation(summary = "新增字典类型", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:dict:add")
     @PostMapping()
     public Response<Integer> add(@Validated @RequestBody DictTypeVo vo) {
         return Response.success("新增字典类型成功！", dictTypeService.add(vo));
     }
 
     @Operation(summary = "删除字典类型", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:dict:delete")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除字典类型成功！", dictTypeService.delete(ids));
     }
 
     @Operation(summary = "更新字典类型", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:dict:update")
     @PutMapping()
     public Response<Integer> update(@RequestBody DictTypeVo vo) {
         return Response.success("更新字典类型成功！", dictTypeService.updateData(vo));
@@ -61,6 +65,7 @@ public class DictTypeController {
     @Operation(summary = "查询字典类型列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @SaCheckPermission("system:dict:list")
     @GetMapping()
     public Response<ReturnPageData<DictType>> findListByPage(DictTypeQuery query) {
         return Response.success("查询字典类型列表成功！", dictTypeService.findListByPage(query));
@@ -70,6 +75,7 @@ public class DictTypeController {
      * 刷新字典缓存
      */
     @Operation(summary = "刷新字典缓存", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:dict:clean")
     @DeleteMapping("/refresh-dict")
     public Response<Object> refreshDict() {
         dictTypeService.refreshDict();
