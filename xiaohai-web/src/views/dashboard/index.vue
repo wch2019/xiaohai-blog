@@ -1,9 +1,34 @@
 <template>
   <div class="dashboard-container">
+    <iframe src="http://192.168.68.207:7576" style="height:1000px;width: 100%;"/>
     <div class="dashboard-text">name: {{ name }}</div>
-    <div class="dashboard-text">name: {{ this.$store.getters.menu }}</div>
-<!--    <component :is="currentRole" />-->
+    <iframe
+      src="http://192.168.68.207:7576?graph=cpu&showPercentage=true&theme=light"
+      style="border-radius: 20px"
+      allowtransparency="true"
+      frameborder="0"
+    />
+    <iframe
+      src="http://192.168.68.207:7576?graph=ram&showPercentage=true&theme=light"
+      style="border-radius: 20px"
+      allowtransparency="true"
+      frameborder="0"
+    />
+    <iframe
+      src="http://192.168.68.207:7576?graph=network&showPercentage=true&theme=light"
+      style="border-radius: 20px"
+      allowtransparency="true"
+      frameborder="0"
+    />
+    <iframe
+      src="http://192.168.68.207:7576?graph=storage&multiView=true&showPercentage=true&theme=light"
+      style="border-radius: 20px"
+      allowtransparency="true"
+      frameborder="0"
+    />
+    <!--    <component :is="currentRole" />-->
   </div>
+
 </template>
 
 <script>
@@ -31,6 +56,7 @@ export default {
   &-container {
     margin: 30px;
   }
+
   &-text {
     font-size: 30px;
     line-height: 46px;
