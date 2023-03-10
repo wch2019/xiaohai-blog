@@ -39,7 +39,6 @@ public class LogOperationAop {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-//        TokenData tokenData =token();
         log.info("【注解：Before】浏览器输入的网址=URL : " + request.getRequestURL().toString());
         log.info("【注解：Before】HTTP_METHOD : " + request.getMethod());
         log.info("【注解：Before】IP : " + request.getRemoteAddr());

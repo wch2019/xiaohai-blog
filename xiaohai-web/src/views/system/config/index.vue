@@ -70,7 +70,6 @@ export default {
       },
       // 表单校验
       rules: {
-        username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }]
       }
     }
   }
