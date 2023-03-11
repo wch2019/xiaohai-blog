@@ -1,5 +1,6 @@
-package com.xiaohai.admin.confing;
+package com.xiaohai.admin.confing.aspectj;
 
+import com.xiaohai.common.annotation.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 /**
+ * Log注解日志操作
+ * 例如：@Log(title = "用户模块", businessType = BusinessType.UPDATE)
  * @author wangchenghai
  * @date 2022/3/20 9:36
  */
@@ -22,20 +25,17 @@ import java.util.Arrays;
 @Order(1)
 public class LogOperationAop {
 
-//    @Autowired
-//    private BlogServiceImpl blogService;
-//
-//    @Autowired
-//    private RedisTemplate redisTemplate;
-
-
-    //定义了一个切入点
-    @Pointcut("execution(* com.xiaohai.*.controller..*.*(..))")
-    public void methodAspect() {
+    /**
+     * 定义了一个切入点
+     * execution(* com.xiaohai.*.controller..*.*(..))
+     * @annotation(controllerLog)
+     */
+    @Pointcut(value = "@annotation(controllerLog)")
+    public void methodAspect(Log controllerLog) {
     }
 
-    @Before("methodAspect()")
-    public void outInfo(JoinPoint joinPoint) {
+    @Before(value = "methodAspect(controllerLog)", argNames = "joinPoint,controllerLog")
+    public void outInfo(JoinPoint joinPoint,Log controllerLog) {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -54,8 +54,8 @@ public class LogOperationAop {
      * @date 2022/3/20 10:26
      */
 
-    @After(value = "methodAspect()")
-    public void after() {
+    @After(value = "methodAspect(controllerLog)", argNames = "controllerLog")
+    public void after(Log controllerLog) {
         log.info("【注解：After】方法最后执行.....");
     }
 
@@ -67,8 +67,8 @@ public class LogOperationAop {
      * @date 2022/3/20 10:23
      */
 
-    @AfterReturning(returning = "ret", value = "methodAspect()")
-    public void afterReturning(Object ret){
+    @AfterReturning(returning = "ret", value = "methodAspect(controllerLog)", argNames = "ret,controllerLog")
+    public void afterReturning(Object ret,Log controllerLog){
         // 处理完请求，返回内容
         log.info("【注解：AfterReturning】这个会在切面最后的最后打印，方法的返回值 : " + ret);
     }
@@ -81,8 +81,8 @@ public class LogOperationAop {
      * @date 2022/3/20 10:25
      */
 
-    @AfterThrowing(value = "methodAspect()", throwing = "e")
-    public void afterThrowing(JoinPoint joinPoint, Exception e) {
+    @AfterThrowing(value = "methodAspect(controllerLog)", throwing = "e", argNames = "joinPoint,controllerLog,e")
+    public void afterThrowing(JoinPoint joinPoint,Log controllerLog, Exception e) {
         log.info("【注解：AfterThrowing】方法异常时执行....."+e.getMessage());
     }
 
@@ -95,8 +95,8 @@ public class LogOperationAop {
      * @date 2022/3/20 10:26
      */
 
-    @Around("methodAspect()")
-    public Object around(ProceedingJoinPoint pjp){
+    @Around(value = "methodAspect(controllerLog)", argNames = "pjp,controllerLog")
+    public Object around(ProceedingJoinPoint pjp,Log controllerLog){
         log.info("【注解：Around . 环绕前】方法环绕start.....");
         Object o=null;
         Throwable ex =null;
@@ -104,17 +104,16 @@ public class LogOperationAop {
             //如果不执行这句，会不执行切面的Before方法及controller的业务方法
              o =  pjp.proceed();
             log.info("【注解：Around. 环绕后】方法环绕proceed，结果是 :" + o);
-
         } catch (Throwable e) {
             ex=e;
         }finally {
-            handleLog(pjp,ex,o);
+            handleLog(pjp,ex,o,controllerLog);
         }
         return o;
     }
 
 
-    protected void handleLog(final JoinPoint joinPoint, final Throwable e, Object jsonResult) {
+    protected void handleLog(final JoinPoint joinPoint, final Throwable e, Object jsonResult,Log controllerLog) {
         try {
             // 接收到请求，记录请求内容
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -149,29 +148,4 @@ public class LogOperationAop {
             exp.printStackTrace();
         }
     }
-
-    /**
-     * 获取token信息
-     *
-     * @return com.yining.com.common.util.TokenData
-     * @author wangchenghai
-     * @date 2022/3/20 10:55
-     */
-
-//    public TokenData token() {
-//        TokenData tokenData = new TokenData();
-//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//        HttpServletRequest request = attributes.getRequest();
-//        //获取头部Token信息
-//        String tokenString = request.getHeader(TokenUtils.AUTH_HEADER_KEY);
-//        if (StrUtil.isNotBlank(tokenString)) {
-//            Map<String, Object> map = (Map<String, Object>) redisTemplate.opsForValue().get(tokenString);
-//            if (map != null) {
-//                tokenData = (TokenData) MapUtils.mapToObject(map, TokenData.class);
-//                MyMetaObjectHandler.createBy = tokenData.getName();
-//                MyMetaObjectHandler.updateBy = tokenData.getName();
-//            }
-//        }
-//        return tokenData;
-//    }
 }
