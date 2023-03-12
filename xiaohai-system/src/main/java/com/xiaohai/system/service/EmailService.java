@@ -5,6 +5,11 @@ package com.xiaohai.system.service;
  */
 public interface EmailService {
     /**
+     * 重新获取邮箱配置
+     */
+    void init();
+
+    /**
      * 发送验证码
      * @param email 邮箱账号
      */

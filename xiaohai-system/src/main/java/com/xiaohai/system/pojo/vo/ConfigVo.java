@@ -1,11 +1,11 @@
 package com.xiaohai.system.pojo.vo;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
 * <p>
@@ -39,4 +39,7 @@ public class ConfigVo implements Serializable {
 
     @Schema(description = "本地文件地址")
     private String filePath;
+
+    @Schema(description = "系统通知")
+    private String content;
 }

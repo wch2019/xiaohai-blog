@@ -34,6 +34,7 @@ public class EmailServiceImpl implements EmailService {
     private  String form = "";
 
     @PostConstruct
+    @Override
     public void init() {
         Config systemConfig = configMapper.selectOne(new QueryWrapper<Config>().last("LIMIT 1"));
         if (systemConfig != null) {
