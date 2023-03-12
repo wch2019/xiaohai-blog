@@ -48,6 +48,11 @@ Vue.use(VueParticles)
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
 
+// mavonEditor  www.mavoneditor.com
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+Vue.use(mavonEditor)
+
 Vue.config.productionTip = false
 
 new Vue({
