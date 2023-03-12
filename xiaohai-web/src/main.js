@@ -53,6 +53,17 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 Vue.use(mavonEditor)
 
+//高亮语法
+import hljs from 'highlight.js'
+import 'highlight.js/styles/atom-one-light.css'
+Vue.directive('highlight', function(el) {
+  hljs.configure({ useBR: true })
+  const blocks = el.querySelectorAll('pre')
+  blocks.forEach((block) => {
+    hljs.highlightBlock(block)
+  })
+})
+
 Vue.config.productionTip = false
 
 new Vue({

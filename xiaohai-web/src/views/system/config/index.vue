@@ -116,8 +116,11 @@
           :model="form"
           label-width="100px"
         >
-          <mavon-editor v-model="form.content" @save="submitForm"/>
+          <mavon-editor v-model="form.content" @save="submitForm" />
         </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="测试展示">
+        <div v-highlight class="markdown-body" v-html="content" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -125,6 +128,8 @@
 
 <script>
 import { getConfig, addConfig, updateConfig } from '@/api/system/config'
+import { marked } from 'marked'
+import 'github-markdown-css'
 
 export default {
   name: 'Index',
@@ -140,10 +145,15 @@ export default {
         content: ''
       }
     }
-  }, created() {
+  },
+  computed: {
+    content() {
+      return marked(this.form.content)
+    }
+  },
+  created() {
     this.getConfig()
   },
-
   methods: {
     /** 查询配置 */
     getConfig() {
