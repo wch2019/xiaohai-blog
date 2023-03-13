@@ -42,8 +42,11 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     @Override
-    public Integer delete(Long id){
-        return baseMapper.deleteById(id);
+    public Integer delete(Long[] ids){
+        for (Long id : ids) {
+            baseMapper.deleteById(id);
+        }
+        return ids.length;
     }
 
     @Override

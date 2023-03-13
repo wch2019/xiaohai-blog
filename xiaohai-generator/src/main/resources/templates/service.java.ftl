@@ -32,10 +32,10 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
      * 删除${table.comment!}
      *
-     * @param id 主键
+     * @param ids 主键
      * @return Integer
      */
-    Integer delete(Long id);
+    Integer delete(Long[] ids);
 
     /**
      * 修改${table.comment!}

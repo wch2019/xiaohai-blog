@@ -56,9 +56,9 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
     }
 
     @Operation(summary = "删除${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @DeleteMapping("{id}")
-    public Response<Integer> delete(@PathVariable("id") Long id){
-        return  Response.success("删除${table.comment!}成功！",${(table.serviceName)?uncap_first}.delete(id));
+    @DeleteMapping("{ids}")
+    public Response<Integer> delete(@PathVariable Long[] ids){
+        return  Response.success("删除${table.comment!}成功！",${(table.serviceName)?uncap_first}.delete(ids));
     }
 
     @Operation(summary = "更新${table.comment!}",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
