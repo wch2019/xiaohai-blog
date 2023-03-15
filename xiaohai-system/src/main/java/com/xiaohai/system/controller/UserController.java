@@ -43,6 +43,7 @@ public class UserController {
 
     @Operation(summary = "新增用户表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:user:add")
+    @Log(title = "用户模块", businessType = BusinessType.INSERT)
     @PostMapping()
     public Response<Integer> add(@Validated @RequestBody UserVo vo) {
         //密码默认
@@ -52,8 +53,8 @@ public class UserController {
 
     @Operation(summary = "删除用户表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:user:delete")
-    @DeleteMapping("{ids}")
     @Log(title = "用户模块", businessType = BusinessType.DELETE)
+    @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除用户表成功！", userService.delete(ids));
     }
