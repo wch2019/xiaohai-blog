@@ -33,6 +33,11 @@
             <groupId>com.xiaohai</groupId>
             <artifactId>xiaohai-system</artifactId>
         </dependency>
+        <!--file 文件模块 -->
+        <dependency>
+            <groupId>com.xiaohai</groupId>
+            <artifactId>xiaohai-file</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

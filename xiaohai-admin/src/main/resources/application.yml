@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8089
   servlet:
     context-path: /api
 spring:
@@ -93,3 +93,6 @@ springdoc:
     - group: '管理页'
       paths-to-match: '/**'
       packages-to-scan: com.xiaohai.system,com.xiaohai.admin
+#==============================系统文件存放配置=======================================
+file:
+  profile: C:/Users/wangchenghai/Pictures

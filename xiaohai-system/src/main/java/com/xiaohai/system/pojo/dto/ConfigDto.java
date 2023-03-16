@@ -4,24 +4,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
-* <p>
-* 系统配置 DTO 数据传输对象
-* </p>
-*
-* @author xiaohai
-* @since 2023-02-01
-*/
+ * <p>
+ * 系统配置 DTO 数据传输对象
+ * </p>
+ *
+ * @author xiaohai
+ * @since 2023-02-01
+ */
 @Getter
 @Setter
 @Schema(name = "ConfigDto", description = "系统配置 DTO 数据传输对象")
-public class ConfigDto implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class ConfigDto{
     @Schema(description = "id")
     private Integer id;
 
@@ -42,4 +36,13 @@ public class ConfigDto implements Serializable {
 
     @Schema(description = "系统通知")
     private String content;
+
+    @Schema(description = "本地文件地址")
+    private String profile;
+
+    @Schema(description = "获取图片上传路径")
+    private String imagePath;
+
+    @Schema(description = "获取头像上传路径")
+    private String avatarPath;
 }

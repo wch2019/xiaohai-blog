@@ -3,9 +3,11 @@ package com.xiaohai.admin.confing;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.admin.confing.intercept.PageableInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
@@ -16,6 +18,8 @@ import javax.annotation.Resource;
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    @Value("${file.profile}")
+    private String profile;
     @Resource
     private CorsInterceptor corsInterceptor;
     @Override
@@ -27,8 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 //swagger
                 .excludePathPatterns("/favicon.ico", "/webjars/**", "/img.icons/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger-ui/**", "/doc.html", "/swagger-ui.html")
-                //登录、验证码、注册
-                .excludePathPatterns("/login","/sendEmailCode","/register");
+                //登录、验证码、注册、文件
+                .excludePathPatterns("/login","/sendEmailCode","/register","/file/**");
         //分页拦截器
         registry.addInterceptor(new PageableInterceptor());
     }
@@ -49,5 +53,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 // 跨域允许时间
                 .maxAge(3600);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //匹配到resourceHandler,将URL映射至location,也就是本地文件夹
+        registry.addResourceHandler("/file/**").addResourceLocations("file:" + profile);
     }
 }

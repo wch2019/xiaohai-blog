@@ -2,7 +2,9 @@ package com.xiaohai.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.system.dao.ConfigMapper;
+import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.entity.Config;
 import com.xiaohai.system.pojo.vo.ConfigVo;
 import com.xiaohai.system.service.ConfigService;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements ConfigService {
     private final EmailService emailService;
+
+    private final FileConfig fileConfig;
 
     @Override
     public Integer add(ConfigVo vo) {
@@ -43,7 +47,12 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
     }
 
     @Override
-    public Config findByOne() {
-        return baseMapper.selectOne(new QueryWrapper<Config>().last("LIMIT 1"));
+    public ConfigDto findByOne() {
+        ConfigDto configDto=new ConfigDto();
+        Config config=baseMapper.selectOne(new QueryWrapper<Config>().last("LIMIT 1"));
+        BeanUtils.copyProperties(config,configDto);
+        BeanUtils.copyProperties(fileConfig,configDto);
+
+        return configDto;
     }
 }

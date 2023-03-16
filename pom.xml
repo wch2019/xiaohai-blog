@@ -23,6 +23,7 @@
         <module>xiaohai-common</module>
         <module>xiaohai-generator</module>
         <module>xiaohai-system</module>
+        <module>xiaohai-file</module>
     </modules>
 
     <properties>
@@ -122,6 +123,12 @@
             <dependency>
                 <groupId>com.xiaohai</groupId>
                 <artifactId>xiaohai-system</artifactId>
+                <version>${xiaohai.version}</version>
+            </dependency>
+            <!--file 文件模块 -->
+            <dependency>
+                <groupId>com.xiaohai</groupId>
+                <artifactId>xiaohai-file</artifactId>
                 <version>${xiaohai.version}</version>
             </dependency>
         </dependencies>

@@ -2,7 +2,7 @@ package com.xiaohai.system.controller;
 
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
-import com.xiaohai.system.pojo.entity.Config;
+import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.vo.ConfigVo;
 import com.xiaohai.system.service.ConfigService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +41,7 @@ public class ConfigController {
 
     @Operation(summary = "查询系统配置", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping()
-    public Response<Config> findByOne() {
+    public Response<ConfigDto> findByOne() {
         return Response.success("查询系统配置成功！", configService.findByOne());
     }
 

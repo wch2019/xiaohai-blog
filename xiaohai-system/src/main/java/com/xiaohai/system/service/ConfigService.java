@@ -1,6 +1,7 @@
 package com.xiaohai.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.entity.Config;
 import com.xiaohai.system.pojo.vo.ConfigVo;
 
@@ -36,5 +37,5 @@ public interface ConfigService extends IService<Config> {
      *
      * @return   Integer
      */
-    Config findByOne();
+    ConfigDto findByOne();
 }
