@@ -78,7 +78,7 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping()
-    public Response<ReturnPageData<${entity}Dto>> findListByPage(${entity}Query query){
+    public Response<ReturnPageData<${entity}Dto>> findListByPage(@ParameterObject ${entity}Query query){
         return Response.success("查询${table.comment!}列表成功！",${(table.serviceName)?uncap_first}.findListByPage(query));
     }
 
