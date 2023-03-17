@@ -181,7 +181,7 @@ public class EmailServiceImpl implements EmailService {
             // 设置邮件主题
             mineHelper.setSubject(subject);
             // 设置邮件发送者
-            mineHelper.setFrom(new InternetAddress("DotCode小站<"+form+">"));
+            mineHelper.setFrom("DotCode小站<"+form+">");
 //            mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
             // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
             mineHelper.setTo(email);
