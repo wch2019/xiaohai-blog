@@ -5,8 +5,6 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
 /**
  * @author wangchenghai
  * @date 2023/03/16 13:56:07
@@ -26,10 +24,10 @@ public class FileConfig {
     private String avatarPath;
 
     public String getImagePath() {
-        return this.profile+"/image";
+        return this.profile+"image/";
     }
 
     public String getAvatarPath() {
-        return this.profile+"/avatar";
+        return this.profile+"avatar/";
     }
 }

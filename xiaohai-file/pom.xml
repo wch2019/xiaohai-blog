@@ -21,6 +21,18 @@
 			<groupId>com.xiaohai</groupId>
 			<artifactId>xiaohai-common</artifactId>
 		</dependency>
+		<!--smb协议获取共享文件夹内容-->
+		<dependency>
+			<groupId>jcifs</groupId>
+			<artifactId>jcifs</artifactId>
+			<version>1.3.17</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 
 </project>

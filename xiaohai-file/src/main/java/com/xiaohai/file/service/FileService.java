@@ -1,6 +1,9 @@
 package com.xiaohai.file.service;
 
+import com.xiaohai.file.pojo.dto.FileDto;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author wangchenghai
@@ -14,4 +17,11 @@ public interface FileService {
      * @return
      */
     String upload(MultipartFile file, Integer type);
+
+    /**
+     * 文件列表
+     * @param path
+     * @return
+     */
+    List<FileDto> getPathList(String path);
 }

@@ -60,7 +60,7 @@ sa-token:
   # token风格
   token-style: uuid
   # 是否输出操作日志
-  is-log: false
+  is-log: true
   #是否尝试从 cookie 里读取 Token
   is-read-cookie: false
 
@@ -92,7 +92,7 @@ springdoc:
       packages-to-scan: com.xiaohai.admin
     - group: '管理页'
       paths-to-match: '/**'
-      packages-to-scan: com.xiaohai.system,com.xiaohai.admin
+      packages-to-scan: com.xiaohai.system,com.xiaohai.admin,com.xiaohai.file
 #==============================系统文件存放配置=======================================
 file:
-  profile: C:/Users/wangchenghai/Pictures
+  profile: C:/Users/Code01/Pictures/

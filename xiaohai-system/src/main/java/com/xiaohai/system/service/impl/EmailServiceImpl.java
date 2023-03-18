@@ -1,11 +1,11 @@
 package com.xiaohai.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.system.dao.ConfigMapper;
-import com.xiaohai.system.pojo.entity.Config;
+import com.xiaohai.system.pojo.dto.ConfigDto;
+import com.xiaohai.system.service.ConfigService;
 import com.xiaohai.system.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Objects;
@@ -31,12 +30,14 @@ public class EmailServiceImpl implements EmailService {
     private final ConfigMapper configMapper;
 
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+    private  final ConfigService configService;
     private  String form = "";
+
 
     @PostConstruct
     @Override
     public void init() {
-        Config systemConfig = configMapper.selectOne(new QueryWrapper<Config>().last("LIMIT 1"));
+        ConfigDto systemConfig = configService.findByOne();
         if (systemConfig != null) {
             form=systemConfig.getEmailUsername();
             javaMailSender.setHost(systemConfig.getEmailHost());
