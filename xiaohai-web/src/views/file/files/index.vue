@@ -9,29 +9,22 @@
             <el-radio-button label="/avatar/">头像</el-radio-button>
           </el-radio-group>
         </div>
-        <span>
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-            <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-          </el-breadcrumb>
-        </span>
+        <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />
       </div>
       <el-table :data="fileList" style="width: 100%" @row-dblclick="handle">
         <el-table-column prop="name" label="名称">
           <template slot-scope="scope">
-            <i v-if="!scope.row.nameSuffix" class="el-icon-folder-opened"/>
-            <i v-else-if="picture(scope.row.nameSuffix)" class="el-icon-picture"/>
-            <i v-else class="el-icon-document"/>
+            <i v-if="!scope.row.nameSuffix" class="el-icon-folder-opened" />
+            <i v-else-if="picture(scope.row.nameSuffix)" class="el-icon-picture" />
+            <i v-else class="el-icon-document" />
 
             {{ scope.row.name }}
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" align="center" width="180"/>
-        <el-table-column prop="updateTime" label="更新时间" align="center" width="180"/>
-        <el-table-column prop="nameSuffix" label="类型" align="center" width="100"/>
-        <el-table-column prop="size" label="文件大小" align="center" width="100"/>
+        <el-table-column prop="createTime" label="创建时间" align="center" width="180" />
+        <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
+        <el-table-column prop="nameSuffix" label="类型" align="center" width="100" />
+        <el-table-column prop="size" label="文件大小" align="center" width="100" />
       </el-table>
       <!--      <div v-if="fileList.length==0">-->
       <!--        空屏展示-->
@@ -99,6 +92,7 @@ export default {
       }
       return true
     },
+    // 双击行
     handle(row, column, event, cell) {
       if (!row.nameSuffix) {
         this.getList(row.path)
@@ -106,6 +100,20 @@ export default {
       if (this.picture(row.nameSuffix)) {
         return 'http://192.168.32.1:8089/api/file/' + row.path
       }
+    },
+    goBack() {
+      const key = this.form.path
+      console.log(key)
+      const pathArray = key.split('/') // 将路径按照斜杠分割成数组
+      pathArray.pop() // 删除数组最后一个元素（即最后一个斜杠）
+      let path = '/'
+      for (let i = 0; i < pathArray.length; i++) {
+        if (pathArray[i]) {
+          path += pathArray[i] + '/'
+        }
+      }
+      console.log(path.substring(0, path.length - 1))
+      this.getList(path.substring(0, path.length - 1))
     }
   }
 }

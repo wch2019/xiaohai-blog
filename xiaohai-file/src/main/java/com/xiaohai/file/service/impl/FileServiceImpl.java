@@ -1,5 +1,6 @@
 package com.xiaohai.file.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.DateUtils;
@@ -33,6 +34,15 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String upload(MultipartFile file, Integer type) {
+        String path=fileConfig.getProfile();
+        if(type==1){
+            path= fileConfig.getImagePath();
+        }
+        if(type==2){
+            path= fileConfig.getAvatarPath();
+        }
+        //根据用户区分文件夹
+        path=path+ StpUtil.getLoginId();
         //文件地址初始化
         String filePath = "";
         //首先判断不是空的文件
@@ -52,10 +62,10 @@ public class FileServiceImpl implements FileService {
             String folder = LocalDateTime.now().getYear() + "/" + LocalDateTime.now().getMonth() + "/";
             //为了不重复，时间戳作为图片名称
             String fileNameString = System.currentTimeMillis() + a;
-            File savedFile = new File(fileConfig.getAvatarPath() + folder, fileNameString);
+            File savedFile = new File(path + folder, fileNameString);
             try {
                 //去掉前缀
-                filePath = savedFile.getPath().replace(fileConfig.getProfile(), "")+ "/";
+                filePath = savedFile.getPath().replaceAll("\\\\","/").replace(fileConfig.getProfile(), "")+ "/";
                 log.info("保存图片--------->" + filePath);
                 FileUtils.copyInputStreamToFile(file.getInputStream(), savedFile);
             } catch (IOException e) {
@@ -78,9 +88,8 @@ public class FileServiceImpl implements FileService {
             for (File file : files) {
                 FileDto fileDto = new FileDto();
                 fileDto.setNameSuffix("");
-                fileDto.setPath(file.getName());
+                fileDto.setPath(file.getPath().replaceAll("\\\\","/").replace(fileConfig.getProfile(), ""));
                 if (!file.isDirectory()) {
-                    fileDto.setPath(file.getPath().replaceAll("\\\\","/").replace(fileConfig.getProfile(), ""));
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));
                     fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
