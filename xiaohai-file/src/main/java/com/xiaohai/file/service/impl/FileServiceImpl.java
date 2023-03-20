@@ -7,10 +7,12 @@ import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.file.pojo.dto.FileDto;
+import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -33,16 +35,17 @@ public class FileServiceImpl implements FileService {
     private final FileConfig fileConfig;
 
     @Override
-    public String upload(MultipartFile file, Integer type) {
-        String path=fileConfig.getProfile();
-        if(type==1){
-            path= fileConfig.getImagePath();
+    public String upload(UploadVo vo) {
+        MultipartFile file = vo.getFile();
+        String path = fileConfig.getProfile();
+        if (vo.getType() == 1) {
+            path = fileConfig.getImagePath();
         }
-        if(type==2){
-            path= fileConfig.getAvatarPath();
+        if (vo.getType() == 2) {
+            path = fileConfig.getAvatarPath();
         }
         //根据用户区分文件夹
-        path=path+ StpUtil.getLoginId();
+        path = path + StpUtil.getLoginId();
         //文件地址初始化
         String filePath = "";
         //首先判断不是空的文件
@@ -65,7 +68,7 @@ public class FileServiceImpl implements FileService {
             File savedFile = new File(path + folder, fileNameString);
             try {
                 //去掉前缀
-                filePath = savedFile.getPath().replaceAll("\\\\","/").replace(fileConfig.getProfile(), "")+ "/";
+                filePath = savedFile.getPath().replaceAll("\\\\", "/").replace(fileConfig.getProfile(), "") + "/";
                 log.info("保存图片--------->" + filePath);
                 FileUtils.copyInputStreamToFile(file.getInputStream(), savedFile);
             } catch (IOException e) {
@@ -88,7 +91,7 @@ public class FileServiceImpl implements FileService {
             for (File file : files) {
                 FileDto fileDto = new FileDto();
                 fileDto.setNameSuffix("");
-                fileDto.setPath(file.getPath().replaceAll("\\\\","/").replace(fileConfig.getProfile(), ""));
+                fileDto.setPath(file.getPath().replaceAll("\\\\", "/").replace(fileConfig.getProfile(), ""));
                 if (!file.isDirectory()) {
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));
@@ -101,5 +104,13 @@ public class FileServiceImpl implements FileService {
         }
 
         return list.stream().sorted(Comparator.comparing(FileDto::getNameSuffix)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer deletePath(String path) {
+        path = fileConfig.getProfile() + path;
+        boolean isTrue=FileUtils.deleteFile(path);
+        Assert.isTrue(isTrue, "当前路径:"+path+",删除失败");
+        return 1;
     }
 }

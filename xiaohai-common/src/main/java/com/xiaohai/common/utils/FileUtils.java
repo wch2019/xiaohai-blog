@@ -16,9 +16,10 @@ import java.util.Date;
  * @author: xiaohai
  * @date: 2023-03-18 09:39
  **/
-public class FileUtils extends org.apache.commons.io.FileUtils{
+public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获取文件创建时间的方法
+     *
      * @param filePath
      * @return
      */
@@ -36,6 +37,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils{
 
     /**
      * 获取文件大小并转换为KB、MB、GB等格式
+     *
      * @param fileSize
      * @return
      */
@@ -56,6 +58,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils{
 
     /**
      * 获取文件后缀
+     *
      * @param fileName
      * @return
      */
@@ -67,6 +70,27 @@ public class FileUtils extends org.apache.commons.io.FileUtils{
         }
         return extension;
     }
+
+    /**
+     * 刪除文件
+     *
+     * @param fileName
+     * @return
+     */
+    public static boolean deleteFile(String fileName) {
+        try {
+            File file = new File(fileName);
+            if (file.delete()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void main(String[] args) throws Exception {
         String filePath = "C:\\Users\\Code01\\Pictures\\图层 1.png";
         File file = new File(filePath);

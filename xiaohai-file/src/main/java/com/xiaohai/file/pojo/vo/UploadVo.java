@@ -15,9 +15,13 @@ import javax.validation.constraints.NotNull;
 @Schema(name = "UploadVo", description = "上传配置参数")
 public class UploadVo {
     @Schema(description = "上传文件")
+    @NotNull
     private MultipartFile file;
 
-    @Schema(description = "上传类型 1图片，2头像")
+    @Schema(description = "上传类型 1md图片，2头像")
     @NotNull
     private Integer type;
+
+    @Schema(description = "上传路径")
+    private String path;
 }
