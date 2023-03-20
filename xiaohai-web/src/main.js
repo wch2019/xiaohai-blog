@@ -53,7 +53,7 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 Vue.use(mavonEditor)
 
-//高亮语法
+// 高亮语法
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-light.css'
 Vue.directive('highlight', function(el) {
@@ -63,6 +63,11 @@ Vue.directive('highlight', function(el) {
     hljs.highlightBlock(block)
   })
 })
+
+// 图片查看组件
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+Vue.use(Viewer)
 
 Vue.config.productionTip = false
 

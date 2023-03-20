@@ -17,7 +17,6 @@
             <i v-if="!scope.row.nameSuffix" class="el-icon-folder-opened" />
             <i v-else-if="picture(scope.row.nameSuffix)" class="el-icon-picture" />
             <i v-else class="el-icon-document" />
-
             {{ scope.row.name }}
           </template>
         </el-table-column>
@@ -60,7 +59,9 @@ export default {
       form: {
         path: '/'
       },
-      fileList: []
+      fileList: [],
+      // 预览图片列表
+      srcList: []
     }
   },
   created() {
@@ -70,6 +71,13 @@ export default {
     getList(path) {
       this.form.path = path
       getFile(this.form).then(response => {
+        this.srcList = []
+        for (let i = 0; i < response.data.length; i++) {
+          if (this.picture(response.data[i].nameSuffix)) {
+            response.data[i].path = 'http://localhost:8089/api/file/' + response.data[i].path
+            this.srcList.push(response.data[i].path)
+          }
+        }
         this.fileList = response.data
       })
     },
@@ -94,13 +102,16 @@ export default {
     },
     // 双击行
     handle(row, column, event, cell) {
+      // 进入目录
       if (!row.nameSuffix) {
         this.getList(row.path)
       }
+      // 查看照片
       if (this.picture(row.nameSuffix)) {
-        return 'http://192.168.32.1:8089/api/file/' + row.path
+        this.show(row.path)
       }
     },
+    // 返回上一级
     goBack() {
       const key = this.form.path
       console.log(key)
@@ -112,8 +123,18 @@ export default {
           path += pathArray[i] + '/'
         }
       }
-      console.log(path.substring(0, path.length - 1))
       this.getList(path.substring(0, path.length - 1))
+    },
+    // 图片预览
+    show(path) {
+      const index = this.srcList.indexOf(path)
+      this.$viewerApi({
+        images: this.srcList,
+        options: {
+          toolbar: true,
+          initialViewIndex: index
+        }
+      })
     }
   }
 }
