@@ -12,9 +12,9 @@
     <el-form-item label="性别">
       <el-radio-group v-model="user.gender">
         <el-radio
-          size="mini"
           v-for="dict in $store.getters.dict.sys_user_sex"
           :key="dict.dictValue"
+          size="mini"
           border
           :label="dict.dictValue"
           :value="dict.dictValue"
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { updateUserProfile } from '@/api/system/user'
+import { updateUser } from '@/api/system/user'
 
 export default {
   props: {
@@ -50,7 +50,7 @@ export default {
           { required: true, message: '邮箱地址不能为空', trigger: 'blur' },
           {
             type: 'email',
-            message: "'请输入正确的邮箱地址",
+            message: '请输入正确的邮箱地址',
             trigger: ['blur', 'change']
           }
         ],
@@ -69,8 +69,8 @@ export default {
     submit() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          updateUserProfile(this.user).then(response => {
-            this.$modal.msgSuccess('修改成功')
+          updateUser(this.user).then(response => {
+            this.$message.success(response.msg)
           })
         }
       })

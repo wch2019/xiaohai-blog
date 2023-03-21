@@ -40,21 +40,21 @@
           <el-upload action="#" :http-request="requestUpload" :show-file-list="false" :before-upload="beforeUpload">
             <el-button size="small">
               选择
-              <i class="el-icon-upload el-icon--right"/>
+              <i class="el-icon-upload el-icon--right" />
             </el-button>
           </el-upload>
         </el-col>
         <el-col :lg="{span: 1, offset: 2}" :md="2">
-          <el-button icon="el-icon-plus" size="small" @click="changeScale(1)"/>
+          <el-button icon="el-icon-plus" size="small" @click="changeScale(1)" />
         </el-col>
         <el-col :lg="{span: 1, offset: 1}" :md="2">
-          <el-button icon="el-icon-minus" size="small" @click="changeScale(-1)"/>
+          <el-button icon="el-icon-minus" size="small" @click="changeScale(-1)" />
         </el-col>
         <el-col :lg="{span: 1, offset: 1}" :md="2">
-          <el-button icon="el-icon-refresh-left" size="small" @click="rotateLeft()"/>
+          <el-button icon="el-icon-refresh-left" size="small" @click="rotateLeft()" />
         </el-col>
         <el-col :lg="{span: 1, offset: 1}" :md="2">
-          <el-button icon="el-icon-refresh-right" size="small" @click="rotateRight()"/>
+          <el-button icon="el-icon-refresh-right" size="small" @click="rotateRight()" />
         </el-col>
         <el-col :lg="{span: 2, offset: 6}" :md="2">
           <el-button type="primary" size="small" @click="uploadImg()">提 交</el-button>
@@ -72,11 +72,11 @@ import message from 'element-ui/packages/message'
 
 export default {
   components: { VueCropper },
-  props: {
-    user: {
-      type: Object
-    }
-  },
+  // props: {
+  //   user: {
+  //     type: Object
+  //   }
+  // },
   data() {
     return {
       // 是否显示弹出层
@@ -123,7 +123,7 @@ export default {
     // 上传预处理
     beforeUpload(file) {
       if (file.type.indexOf('image/') === -1) {
-        message.error('文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。')
+        this.$message.error('文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。')
       } else {
         const reader = new FileReader()
         reader.readAsDataURL(file)
