@@ -7,9 +7,9 @@
             <span>个人信息</span>
           </div>
           <div>
-            <!--            <div class="text-center">-->
-            <!--              <userAvatar :user="user"/>-->
-            <!--            </div>-->
+            <div class="text-center">
+              <userAvatar :user="user"/>
+            </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
                 <svg-icon icon-class="user"/>
@@ -17,7 +17,7 @@
                 <div class="pull-right">{{ user.nickName }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="phone"/>
+                <svg-icon icon-class="gender-0" />
                 性别
                 <template v-for="(item) in $store.getters.dict.sys_user_sex">
                   <div v-if="user.gender==item.dictValue" :key="item.id" class="pull-right">{{ item.dictLabel }}</div>
@@ -28,36 +28,19 @@
                 用户邮箱
                 <div class="pull-right">{{ user.email }}</div>
               </li>
-              <li class="list-group-item" v-if="user.weChat">
-                <svg-icon icon-class="phone" />
+              <li class="list-group-item" >
+                <svg-icon icon-class="wechat" />
                 微信
                 <div class="pull-right">{{ user.weChat }}</div>
               </li>
-              <li class="list-group-item" v-if="user.qqNumber">
-                <svg-icon icon-class="phone"/>
+              <li class="list-group-item" >
+                <svg-icon icon-class="qq"/>
                 QQ
                 <div class="pull-right">{{ user.qqNumber }}</div>
               </li>
               <li class="list-group-item" v-if="user.summary">
                 {{ user.summary }}
               </li>
-              <!--              <li class="list-group-item">-->
-              <!--                <svg-icon icon-class="peoples"/>-->
-              <!--                所属角色-->
-              <!--                <template v-for="(item, index) in roleOptions">-->
-              <!--                  <div-->
-              <!--                    v-if="user.roleIds.includes(item.id)"-->
-              <!--                    :key="item.id"-->
-              <!--                    class="pull-right"-->
-              <!--                    :index="index"-->
-              <!--                  >{{ item.name }}-->
-              <!--                  </div>-->
-              <!--                </template>-->
-              <!--              </li>-->
-              <!--              <li class="list-group-item">-->
-              <!--                创建日期-->
-              <!--                <div class="pull-right">{{ user.createdTime }}</div>-->
-              <!--              </li>-->
             </ul>
           </div>
         </el-card>

@@ -1,10 +1,18 @@
 <template>
   <div>
-    <div class="user-info-head" @click="editCropper()"><img :src="options.img" title="点击上传头像"
-                                                            class="img-circle img-lg"
-    ></div>
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body @opened="modalOpened"
-               @close="closeDialog()"
+    <div class="user-info-head" @click="editCropper()">
+      <img
+        :src="options.img"
+        title="点击上传头像"
+        class="img-circle img-lg"
+      ></div>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="800px"
+      append-to-body
+      @opened="modalOpened"
+      @close="closeDialog()"
     >
       <el-row>
         <el-col :xs="24" :md="12" :style="{height: '350px'}">
@@ -59,7 +67,8 @@
 <script>
 import store from '@/store'
 import { VueCropper } from 'vue-cropper'
-import { uploadAvatar } from '@/api/system/user'
+import { updateUser } from '@/api/system/user'
+import message from 'element-ui/packages/message'
 
 export default {
   components: { VueCropper },
@@ -113,8 +122,8 @@ export default {
     },
     // 上传预处理
     beforeUpload(file) {
-      if (file.type.indexOf('image/') == -1) {
-        this.$modal.msgError('文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。')
+      if (file.type.indexOf('image/') === -1) {
+        message.error('文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。')
       } else {
         const reader = new FileReader()
         reader.readAsDataURL(file)
@@ -126,13 +135,15 @@ export default {
     // 上传图片
     uploadImg() {
       this.$refs.cropper.getCropBlob(data => {
+        console.log(this.user)
+        console.log(data)
         const formData = new FormData()
         formData.append('avatarfile', data)
-        uploadAvatar(formData).then(response => {
+        updateUser(formData).then(response => {
           this.open = false
-          this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl
+          this.options.img = process.env.VUE_APP_BASE_API_FILE + response.imgUrl
           store.commit('SET_AVATAR', this.options.img)
-          this.$modal.msgSuccess('修改成功')
+          message.error('修改成功')
           this.visible = false
         })
       })
@@ -172,5 +183,15 @@ export default {
   cursor: pointer;
   line-height: 110px;
   border-radius: 50%;
+}
+
+/* image */
+.img-circle {
+  border-radius: 50%;
+}
+
+.img-lg {
+  width: 120px;
+  height: 120px;
 }
 </style>

@@ -74,7 +74,7 @@ export default {
         this.srcList = []
         for (let i = 0; i < response.data.length; i++) {
           if (this.picture(response.data[i].nameSuffix)) {
-            response.data[i].path = 'http://localhost:8089/api/file/' + response.data[i].path
+            response.data[i].path = process.env.VUE_APP_BASE_API_FILE + response.data[i].path
             this.srcList.push(response.data[i].path)
           }
         }
@@ -82,7 +82,7 @@ export default {
       })
     },
     trimmedValue(inputValue) {
-      return 'http://192.168.32.1:8089/api/file/' + inputValue
+      return  process.env.VUE_APP_BASE_API_FILE + inputValue
     },
     // 内容过长隐藏展示
     stateFormat(name) {
