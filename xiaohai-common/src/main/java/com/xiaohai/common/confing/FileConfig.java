@@ -23,11 +23,17 @@ public class FileConfig {
     @Schema(description = "获取头像上传路径")
     private String avatarPath;
 
+    @Schema(description = "获取文件上传路径")
+    private String filePath;
+
     public String getImagePath() {
         return this.profile+"image/";
     }
 
     public String getAvatarPath() {
         return this.profile+"avatar/";
+    }
+    public String getFilePath() {
+        return this.profile+"files/";
     }
 }

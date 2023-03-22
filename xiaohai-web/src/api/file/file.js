@@ -10,3 +10,10 @@ export function getFile(data) {
     params: data
   })
 }
+export function uploadAvatar(data) {
+  return request({
+    url: api + '/avatar',
+    method: 'post',
+    data
+  })
+}

@@ -12,6 +12,25 @@ import java.util.List;
  */
 public interface FileService {
     /**
+     * 头像上传
+     * @param file
+     * @return
+     */
+    String uploadAvatar(MultipartFile file);
+    /**
+     * markdown图片上传
+     * @param file
+     * @return
+     */
+    String uploadImage(MultipartFile file);
+
+    /**
+     * markdown图片删除
+     * @param path
+     * @return
+     */
+    Integer deleteImage(String path);
+    /**
      * 上传文件
      * @param vo
      * @return

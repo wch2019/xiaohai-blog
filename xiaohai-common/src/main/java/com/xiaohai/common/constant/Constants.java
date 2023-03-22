@@ -33,4 +33,9 @@ public class Constants {
      *系统默认密码
      */
     public static final String SYSTEM_PASSWORD = "123456";
+
+    /**
+     * 图片后缀
+     */
+    public static final String[] IMAGE_EXTENSION = { "bmp", "gif", "jpg", "jpeg", "png" };
 }

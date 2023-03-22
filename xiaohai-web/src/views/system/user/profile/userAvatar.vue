@@ -72,11 +72,11 @@ import message from 'element-ui/packages/message'
 
 export default {
   components: { VueCropper },
-  // props: {
-  //   user: {
-  //     type: Object
-  //   }
-  // },
+  props: {
+    user: {
+      type: Object
+    }
+  },
   data() {
     return {
       // 是否显示弹出层
@@ -141,7 +141,7 @@ export default {
         formData.append('avatarfile', data)
         updateUser(formData).then(response => {
           this.open = false
-          this.options.img = process.env.VUE_APP_BASE_API_FILE + response.imgUrl
+          this.options.img = process.env.VUE_APP_BASE_API_FILE + response.data
           store.commit('SET_AVATAR', this.options.img)
           message.error('修改成功')
           this.visible = false

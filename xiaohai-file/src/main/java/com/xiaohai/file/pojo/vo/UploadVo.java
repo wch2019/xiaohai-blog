@@ -18,10 +18,7 @@ public class UploadVo {
     @NotNull
     private MultipartFile file;
 
-    @Schema(description = "上传类型 1md图片，2头像")
-    @NotNull
-    private Integer type;
-
     @Schema(description = "上传路径")
+    @NotNull
     private String path;
 }

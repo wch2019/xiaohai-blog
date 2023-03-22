@@ -72,7 +72,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     /**
-     * 刪除文件
+     * 删除文件或者目录
      *
      * @param fileName
      * @return
@@ -80,10 +80,42 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     public static boolean deleteFile(String fileName) {
         try {
             File file = new File(fileName);
-            if (file.delete()) {
-                return true;
-            } else {
-                return false;
+            //判断当前文件夹或文件是否存在
+            if (file.exists()) {
+                return file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 创建目录
+     *
+     * @param dir
+     * @return
+     */
+    public static boolean directory(String dir) {
+        File file = new File(dir);
+        //判断当前文件夹或文件是否存在
+        if (!file.exists()) {
+            return file.mkdir();
+        }
+        return false;
+    }
+
+    /**
+     * 创建文件
+     * @param filePath
+     * @return
+     */
+    public static boolean createNewFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            //判断当前文件夹或文件是否存在
+            if (!file.exists()) {
+                return file.createNewFile();
             }
         } catch (Exception e) {
             e.printStackTrace();

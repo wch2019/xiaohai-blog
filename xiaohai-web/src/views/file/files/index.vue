@@ -82,7 +82,7 @@ export default {
       })
     },
     trimmedValue(inputValue) {
-      return  process.env.VUE_APP_BASE_API_FILE + inputValue
+      return process.env.VUE_APP_BASE_API_FILE + inputValue
     },
     // 内容过长隐藏展示
     stateFormat(name) {

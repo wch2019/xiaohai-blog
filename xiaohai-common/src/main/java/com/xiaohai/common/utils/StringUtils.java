@@ -10,7 +10,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     /**
      * 判断字符串是否为空
      *
-     * @param str
+     * @param str  字符串
      * @return boolean
      * @author sc
      * @date 2021/12/21 10:21
