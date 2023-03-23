@@ -1,11 +1,9 @@
 <template>
   <div>
     <div class="user-info-head" @click="editCropper()">
-      <img
-        :src="options.img"
-        title="点击上传头像"
-        class="img-circle img-lg"
-      ></div>
+      <el-avatar v-if="options.img" shape="circle" :size="120" :src="options.img" />
+      <el-avatar v-else shape="circle" :size="120"> {{ $store.getters.name }} </el-avatar>
+    </div>
     <el-dialog
       :title="title"
       :visible.sync="open"
@@ -68,7 +66,7 @@
 import store from '@/store'
 import { VueCropper } from 'vue-cropper'
 import { updateUser } from '@/api/system/user'
-import message from 'element-ui/packages/message'
+import { uploadAvatar } from '@/api/file/file'
 
 export default {
   components: { VueCropper },
@@ -122,6 +120,10 @@ export default {
     },
     // 上传预处理
     beforeUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 4
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 4MB!')
+      }
       if (file.type.indexOf('image/') === -1) {
         this.$message.error('文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。')
       } else {
@@ -143,13 +145,14 @@ export default {
           this.open = false
           this.options.img = process.env.VUE_APP_BASE_API_FILE + response.data
           store.commit('SET_AVATAR', this.options.img)
-          message.error('修改成功')
+          this.$message.success(response.msg)
           this.visible = false
         })
       })
     },
     // 实时预览
     realTime(data) {
+      console.log('imagew', data)
       this.previews = data
     },
     // 关闭窗口
@@ -181,17 +184,29 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: pointer;
-  line-height: 110px;
+  line-height: 120px;
   border-radius: 50%;
 }
 
 /* image */
 .img-circle {
+  text-align: center;
   border-radius: 50%;
 }
 
 .img-lg {
   width: 120px;
   height: 120px;
+}
+.avatar-upload-preview {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #ccc;
+  overflow: hidden;
 }
 </style>
