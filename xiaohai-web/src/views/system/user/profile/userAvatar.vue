@@ -14,16 +14,18 @@
     >
       <el-row>
         <el-col :xs="24" :md="12" :style="{height: '350px'}">
-          <vue-cropper
+          <VueCropper
             v-if="visible"
             ref="cropper"
             :img="options.img"
-            :info="true"
+            :info="options.info"
+            :output-size="options.outputSize"
+            :output-type="options.outputType"
             :auto-crop="options.autoCrop"
             :auto-crop-width="options.autoCropWidth"
             :auto-crop-height="options.autoCropHeight"
             :fixed-box="options.fixedBox"
-            @realTime="realTime"
+            @real-time="realTime"
           />
         </el-col>
         <el-col :xs="24" :md="12" :style="{height: '350px'}">
@@ -63,7 +65,6 @@
 </template>
 
 <script>
-import store from '@/store'
 import { VueCropper } from 'vue-cropper'
 import { updateUser } from '@/api/system/user'
 import { uploadAvatar } from '@/api/file/file'
@@ -84,7 +85,10 @@ export default {
       // 弹出层标题
       title: '修改头像',
       options: {
-        img: store.getters.avatar, // 裁剪图片的地址
+        img: this.$store.getters.avatar, // 裁剪图片的地址
+        info: true, // 裁剪框的大小信息
+        outputSize: 1, // 裁剪生成图片的质量 0.1 - 1
+        outputType: 'png', //	裁剪生成图片的格式 jpeg || png || webp
         autoCrop: true, // 是否默认生成截图框
         autoCropWidth: 200, // 默认生成截图框宽度
         autoCropHeight: 200, // 默认生成截图框高度
@@ -137,27 +141,28 @@ export default {
     // 上传图片
     uploadImg() {
       this.$refs.cropper.getCropBlob(data => {
-        console.log(this.user)
-        console.log(data)
         const formData = new FormData()
-        formData.append('avatarfile', data)
-        updateUser(formData).then(response => {
-          this.open = false
+        formData.append('avatarFile', data, 'a.png')
+        uploadAvatar(formData).then(response => {
+          this.user.avatar = response.data
           this.options.img = process.env.VUE_APP_BASE_API_FILE + response.data
-          store.commit('SET_AVATAR', this.options.img)
-          this.$message.success(response.msg)
-          this.visible = false
+          console.log(this.options.img)
+          updateUser(this.user).then(response => {
+            this.open = false
+            this.$store.commit('user/SET_AVATAR', this.options.img)
+            this.$message.success(response.msg)
+            this.visible = false
+          })
         })
       })
     },
     // 实时预览
     realTime(data) {
-      console.log('imagew', data)
       this.previews = data
     },
     // 关闭窗口
     closeDialog() {
-      this.options.img = store.getters.avatar
+      this.options.img = this.$store.getters.avatar
       this.visible = false
     }
   }
