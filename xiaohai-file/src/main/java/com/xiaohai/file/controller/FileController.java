@@ -30,8 +30,8 @@ public class FileController {
     private final FileService fileService;
     @Operation(summary = "头像上传", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Response<String> uploadAvatar(MultipartFile file) {
-        return Response.success("头像上传成功！", fileService.uploadAvatar(file));
+    public Response<String> uploadAvatar(MultipartFile avatarFile) {
+        return Response.success("头像上传成功！", fileService.uploadAvatar(avatarFile));
     }
     @Operation(summary = "markdown图片上传", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

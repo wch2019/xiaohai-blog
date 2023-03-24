@@ -74,7 +74,7 @@ public class FileServiceImpl implements FileService {
         //获得文件后缀名
         String a = filename.substring(begin + 1, last);
         //判断指定文件后缀类型
-        if (Arrays.stream(Constants.IMAGE_EXTENSION).toList().contains(a)) {
+        if (Arrays.stream(Constants.IMAGE_EXTENSION).toList().contains(a.toLowerCase())) {
             //为了不重复，时间戳作为图片名称
             String fileNameString = System.currentTimeMillis() + "." + a;
             File savedFile = new File(path, fileNameString);
