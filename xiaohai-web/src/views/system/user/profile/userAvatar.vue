@@ -72,9 +72,7 @@ import { uploadAvatar } from '@/api/file/file'
 export default {
   components: { VueCropper },
   props: {
-    user: {
-      type: Object
-    }
+    user: {}
   },
   data() {
     return {
@@ -94,6 +92,7 @@ export default {
         autoCropHeight: 200, // 默认生成截图框高度
         fixedBox: true // 固定截图框大小 不允许改变
       },
+      // 图片预览
       previews: {}
     }
   },
@@ -146,7 +145,6 @@ export default {
         uploadAvatar(formData).then(response => {
           this.user.avatar = response.data
           this.options.img = process.env.VUE_APP_BASE_API_FILE + response.data
-          console.log(this.options.img)
           updateUser(this.user).then(response => {
             this.open = false
             this.$store.commit('user/SET_AVATAR', this.options.img)

@@ -35,9 +35,7 @@ import { updateUser } from '@/api/system/user'
 
 export default {
   props: {
-    user: {
-      type: Object
-    }
+    user: {}
   },
   data() {
     return {
