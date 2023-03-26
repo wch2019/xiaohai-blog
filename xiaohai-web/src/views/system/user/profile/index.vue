@@ -9,11 +9,12 @@
           <div>
             <div class="text-center">
               <userAvatar :user="user"/>
+              {{ user.username }}
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
                 <svg-icon icon-class="user"/>
-                用户名称
+                昵称
                 <div class="pull-right">{{ user.nickName }}</div>
               </li>
               <li class="list-group-item">
@@ -25,8 +26,13 @@
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="email"/>
-                用户邮箱
+                邮箱
                 <div class="pull-right">{{ user.email }}</div>
+              </li>
+              <li class="list-group-item" >
+                <i class="el-icon-phone" />
+                手机
+                <div class="pull-right">{{ user.mobile }}</div>
               </li>
               <li class="list-group-item" >
                 <svg-icon icon-class="wechat" />
@@ -54,6 +60,9 @@
             <el-tab-pane label="基本资料" name="userinfo">
               <userInfo :user="user"/>
             </el-tab-pane>
+            <el-tab-pane label="修改邮箱" name="resetEmail">
+              <resetEmail :user="user"/>
+            </el-tab-pane>
             <el-tab-pane label="修改密码" name="resetPwd">
               <resetPwd :user="user"/>
             </el-tab-pane>
@@ -68,12 +77,13 @@
 import userAvatar from './userAvatar'
 import userInfo from './userInfo'
 import resetPwd from './resetPwd'
+import resetEmail from './resetEmail'
 import { getUser } from '@/api/system/user'
 import { optionSelect } from '@/api/system/role'
 
 export default {
   name: 'Profile',
-  components: { userAvatar, userInfo, resetPwd },
+  components: { userAvatar, userInfo, resetPwd, resetEmail },
   data() {
     return {
       // 角色选择框列表

@@ -30,9 +30,9 @@ export default {
     return {
       test: '1test',
       user: {
-        oldPassword: undefined,
-        newPassword: undefined,
-        confirmPassword: undefined
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
       },
       // 表单校验
       rules: {
@@ -56,7 +56,7 @@ export default {
         if (valid) {
           updateUserPwd(this.user.oldPassword, this.user.newPassword).then(
             response => {
-              this.$modal.msgSuccess('修改成功')
+              this.$message.success(response.msg)
             }
           )
         }
