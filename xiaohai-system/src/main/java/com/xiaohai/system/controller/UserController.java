@@ -83,4 +83,20 @@ public class UserController {
         return Response.success("查询用户表列表成功！", userService.findListByPage(query));
     }
 
+    @Operation(summary = "修改密码", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Parameter(name = "oldPassword", description = "旧密码", required = true)
+    @Parameter(name = "newPassword", description = "新密码", required = true)
+    @Log(title = "用户模块", businessType = BusinessType.UPDATE)
+    @PutMapping("/password")
+    public Response<Integer> updatePwd(String oldPassword,String newPassword) {
+        return Response.success("修改密码成功！", userService.updatePwd(oldPassword,newPassword));
+    }
+    @Operation(summary = "修改邮箱", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Parameter(name = "newEmail", description = "新邮箱", required = true)
+    @Parameter(name = "code", description = "验证码", required = true)
+    @Log(title = "用户模块", businessType = BusinessType.UPDATE)
+    @PutMapping("/email")
+    public Response<Integer> updateEmail(String newEmail,String code) {
+        return Response.success("修改邮箱成功！", userService.updateEmail(newEmail,code));
+    }
 }

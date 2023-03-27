@@ -6,9 +6,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.common.utils.RedisUtils;
+import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.UserDto;
@@ -138,5 +142,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, list);
+    }
+
+    @Override
+    public Integer updatePwd(String oldPassword, String newPassword) {
+        // 当前操作用户
+        User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
+        Assert.isTrue(!EncryptUtils.validate(oldPassword,nowUser.getPassword()), "旧密码不对，请重新输入");
+        nowUser.setPassword(EncryptUtils.aesEncrypt(newPassword));
+        return baseMapper.updateById(nowUser);
+    }
+
+    @Override
+    public Integer updateEmail(String newEmail, String code) {
+        String codeNumber = SpringUtils.getBean(RedisUtils.class).getCacheObject(RedisConstants.EMAIL_CODE + newEmail);
+        Assert.isTrue(code.equals(codeNumber), "验证码不正确!");
+        // 当前操作用户
+        User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
+        nowUser.setEmail(newEmail);
+        return baseMapper.updateById(nowUser);
     }
 }

@@ -12,7 +12,7 @@ public class EncryptUtils {
     static final String KEY = "xiaohai2023";
 
     /**
-     * 校验内容是否一直
+     * 校验内容是否一致
      */
     public static boolean validate(String target, String target1) {
         return target.equalsIgnoreCase(aesEncrypt(target1));

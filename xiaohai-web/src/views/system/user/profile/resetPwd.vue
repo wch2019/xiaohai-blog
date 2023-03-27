@@ -28,7 +28,6 @@ export default {
       }
     }
     return {
-      test: '1test',
       user: {
         oldPassword: '',
         newPassword: '',
@@ -61,10 +60,6 @@ export default {
           )
         }
       })
-    },
-    close() {
-      this.$store.dispatch('tagsView/delView', this.$route)
-      this.$router.push({ path: '/index' })
     }
   }
 }

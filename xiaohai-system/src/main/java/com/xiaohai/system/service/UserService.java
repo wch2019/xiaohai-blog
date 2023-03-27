@@ -63,4 +63,20 @@ public interface UserService extends IService<User> {
     * @return Response
     */
     ReturnPageData<UserDto> findListByPage(UserQuery query);
+
+    /**
+     * 修改密码
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @return
+     */
+    Integer updatePwd(String oldPassword,String newPassword);
+
+    /**
+     * 修改邮箱
+     * @param newEmail
+     * @param code
+     * @return
+     */
+    Integer updateEmail(String newEmail,String code);
 }
