@@ -44,3 +44,21 @@ export function delUser(data) {
     method: 'delete'
   })
 }
+
+// 修改密码
+export function updatePwd(data) {
+  return request({
+    url: api + '/password',
+    method: 'put',
+    data
+  })
+}
+
+// 修改邮箱
+export function updateEmail(data) {
+  return request({
+    url: api + '/email',
+    method: 'put',
+    data
+  })
+}

@@ -1,13 +1,13 @@
 <template>
   <el-form ref="form" :model="user" :rules="rules" label-width="80px">
     <el-form-item label="新邮箱" prop="newEmail">
-      <el-input v-model="user.newEmail" placeholder="请输入新邮箱" >
-        <el-link v-if="captchaEnabled" slot="suffix" type="primary" @click="getCode">发送验证码</el-link>
+      <el-input v-model="user.newEmail" placeholder="请输入新邮箱">
+        <el-link v-if="captchaEnabled" :underline="false" slot="suffix" type="primary" @click="getCode">发送验证码</el-link>
         <span v-else slot="suffix">{{ count }}s后重新获取</span>
       </el-input>
     </el-form-item>
     <el-form-item label="验证码" prop="code">
-      <el-input v-model="user.code" placeholder="请输入邮箱验证码" />
+      <el-input v-model="user.code" placeholder="请输入邮箱验证码"/>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" size="mini" @click="submit">保存</el-button>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { updateUserPwd } from '@/api/system/user'
+import { updateEmail } from '@/api/system/user'
 import { sendEmailCode } from '@/api/login'
 import { Message } from 'element-ui'
 
@@ -55,7 +55,7 @@ export default {
     submit() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          updateUserPwd(this.user.newEmail, this.user.code).then(
+          updateEmail(this.user).then(
             response => {
               this.$message.success(response.msg)
             }

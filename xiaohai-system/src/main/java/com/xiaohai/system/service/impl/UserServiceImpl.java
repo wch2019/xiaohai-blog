@@ -18,6 +18,8 @@ import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.UserDto;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.query.UserQuery;
+import com.xiaohai.system.pojo.vo.EmailVo;
+import com.xiaohai.system.pojo.vo.PasswordVo;
 import com.xiaohai.system.pojo.vo.UserVo;
 import com.xiaohai.system.service.MenuService;
 import com.xiaohai.system.service.UserRoleService;
@@ -145,21 +147,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Integer updatePwd(String oldPassword, String newPassword) {
+    public Integer updatePwd(PasswordVo vo) {
         // 当前操作用户
         User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
-        Assert.isTrue(!EncryptUtils.validate(oldPassword,nowUser.getPassword()), "旧密码不对，请重新输入");
-        nowUser.setPassword(EncryptUtils.aesEncrypt(newPassword));
+        Assert.isTrue(!EncryptUtils.validate(vo.getOldPassword(),nowUser.getPassword()), "旧密码不对，请重新输入");
+        nowUser.setPassword(EncryptUtils.aesEncrypt(vo.getNewPassword()));
         return baseMapper.updateById(nowUser);
     }
 
     @Override
-    public Integer updateEmail(String newEmail, String code) {
-        String codeNumber = SpringUtils.getBean(RedisUtils.class).getCacheObject(RedisConstants.EMAIL_CODE + newEmail);
-        Assert.isTrue(code.equals(codeNumber), "验证码不正确!");
+    public Integer updateEmail(EmailVo vo) {
+        String codeNumber = SpringUtils.getBean(RedisUtils.class).getCacheObject(RedisConstants.EMAIL_CODE + vo.getNewEmail());
+        Assert.isTrue(vo.getCode().equals(codeNumber), "验证码不正确!");
         // 当前操作用户
         User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
-        nowUser.setEmail(newEmail);
+        nowUser.setEmail(vo.getNewEmail());
         return baseMapper.updateById(nowUser);
     }
 }

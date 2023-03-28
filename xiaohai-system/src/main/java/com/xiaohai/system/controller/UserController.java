@@ -9,6 +9,8 @@ import com.xiaohai.common.enums.BusinessType;
 import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.system.pojo.dto.UserDto;
 import com.xiaohai.system.pojo.query.UserQuery;
+import com.xiaohai.system.pojo.vo.EmailVo;
+import com.xiaohai.system.pojo.vo.PasswordVo;
 import com.xiaohai.system.pojo.vo.UserVo;
 import com.xiaohai.system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -84,19 +86,15 @@ public class UserController {
     }
 
     @Operation(summary = "修改密码", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "oldPassword", description = "旧密码", required = true)
-    @Parameter(name = "newPassword", description = "新密码", required = true)
     @Log(title = "用户模块", businessType = BusinessType.UPDATE)
     @PutMapping("/password")
-    public Response<Integer> updatePwd(String oldPassword,String newPassword) {
-        return Response.success("修改密码成功！", userService.updatePwd(oldPassword,newPassword));
+    public Response<Integer> updatePwd(@RequestBody PasswordVo vo) {
+        return Response.success("修改密码成功！", userService.updatePwd(vo));
     }
     @Operation(summary = "修改邮箱", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "newEmail", description = "新邮箱", required = true)
-    @Parameter(name = "code", description = "验证码", required = true)
     @Log(title = "用户模块", businessType = BusinessType.UPDATE)
     @PutMapping("/email")
-    public Response<Integer> updateEmail(String newEmail,String code) {
-        return Response.success("修改邮箱成功！", userService.updateEmail(newEmail,code));
+    public Response<Integer> updateEmail(@RequestBody EmailVo vo) {
+        return Response.success("修改邮箱成功！", userService.updateEmail(vo));
     }
 }

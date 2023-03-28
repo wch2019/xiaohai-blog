@@ -4,6 +4,8 @@ import com.xiaohai.system.pojo.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.system.pojo.query.UserQuery;
+import com.xiaohai.system.pojo.vo.EmailVo;
+import com.xiaohai.system.pojo.vo.PasswordVo;
 import com.xiaohai.system.pojo.vo.UserVo;
 import com.xiaohai.system.pojo.dto.UserDto;
 
@@ -66,17 +68,15 @@ public interface UserService extends IService<User> {
 
     /**
      * 修改密码
-     * @param oldPassword 旧密码
-     * @param newPassword 新密码
+     * @param vo
      * @return
      */
-    Integer updatePwd(String oldPassword,String newPassword);
+    Integer updatePwd(PasswordVo vo);
 
     /**
      * 修改邮箱
-     * @param newEmail
-     * @param code
+     * @param vo
      * @return
      */
-    Integer updateEmail(String newEmail,String code);
+    Integer updateEmail(EmailVo vo);
 }
