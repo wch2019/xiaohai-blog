@@ -37,7 +37,7 @@
             <template #prefix>
               <svg-icon icon-class="email" />
             </template>
-            <el-link v-if="captchaEnabled" slot="suffix" type="warning" @click="getCode">发送验证码</el-link>
+            <el-link v-if="captchaEnabled" slot="suffix"  :underline="false" type="warning" @click="getCode">发送验证码</el-link>
             <span v-else slot="suffix">{{ count }}s后重新获取</span>
           </el-input>
         </el-form-item>

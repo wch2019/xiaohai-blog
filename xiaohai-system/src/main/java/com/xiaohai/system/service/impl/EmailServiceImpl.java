@@ -129,7 +129,7 @@ public class EmailServiceImpl implements EmailService {
                 "          <tbody>\n" +
                 "            <tr style=\"background-color: #f8f8f8;\">\n" +
                 "              <td>\n" +
-                "                <img style=\"padding: 15px 0 15px 30px;width:50px\" src=\"http://img.shiyit.com/FjzfvfWYZVED7eXMS4EL8KNR949K\">" +
+                "                <img style=\"padding: 15px 0 15px 30px;width:50px\" src=\"https://mail.qq.com/cgi-bin/getqqicon?sid=m0HR_-K6C8HjQBF1&uin=-822819010&mode=newaddr&mailaddr=1372195290%40qq.com\">" +
                 "                <span>DotCode. </span>\n" +
                 "              </td>\n" +
                 "            </tr>\n" +
