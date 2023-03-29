@@ -10,10 +10,30 @@ export function getFile(data) {
     params: data
   })
 }
+
+// 头像上传
 export function uploadAvatar(data) {
   return request({
     url: api + '/avatar',
     method: 'post',
     data
+  })
+}
+
+// markdown图片上传
+export function uploadImage(data) {
+  return request({
+    url: api + '/image',
+    method: 'post',
+    data
+  })
+}
+
+// markdown图片上传
+export function delImage(data) {
+  return request({
+    url: api + '/image',
+    method: 'delete',
+    params: { path: data }
   })
 }

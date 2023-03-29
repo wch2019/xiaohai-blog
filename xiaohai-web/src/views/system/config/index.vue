@@ -100,18 +100,18 @@
             </el-col>
           </el-row>
           <el-row>
-          <el-col :span="6">
-            <el-form-item label="获取图片位置">
-              <el-input v-model="form.imagePath" :disabled="true"/>
-            </el-form-item>
-          </el-col>
+            <el-col :span="6">
+              <el-form-item label="获取图片位置">
+                <el-input v-model="form.imagePath" :disabled="true"/>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row>
-          <el-col :span="6">
-            <el-form-item label="获取头像位置">
-              <el-input v-model="form.avatarPath" :disabled="true"/>
-            </el-form-item>
-          </el-col>
+            <el-col :span="6">
+              <el-form-item label="获取头像位置">
+                <el-input v-model="form.avatarPath" :disabled="true"/>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-form>
       </el-tab-pane>
@@ -129,7 +129,14 @@
           :model="form"
           label-width="100px"
         >
-          <mavon-editor v-model="form.content" @save="submitForm"/>
+          <mavon-editor
+            ref="md"
+            fontSize="18px"
+            v-model="form.content"
+            @save="submitForm"
+            @imgAdd="imgAdd"
+            @imgDel="imgDel"
+          />
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="测试展示">
@@ -140,8 +147,9 @@
 </template>
 
 <script>
-import {getConfig, addConfig, updateConfig} from '@/api/system/config'
-import {marked} from 'marked'
+import { getConfig, addConfig, updateConfig } from '@/api/system/config'
+import { uploadImage, delImage } from '@/api/file/file'
+import { marked } from 'marked'
 import 'github-markdown-css'
 
 export default {
@@ -171,10 +179,35 @@ export default {
     getConfig() {
       getConfig().then(response => {
         this.form = response.data
+        this.form.content = this.form.content.replaceAll('../image', process.env.VUE_APP_BASE_API_FILE + '/image')
+      })
+    },
+    // 绑定@imgAdd event
+    imgAdd(pos, $file) {
+      // 第一步.将图片上传到服务器.
+      var data = new FormData()
+      data.append('file', $file)
+      uploadImage(data).then(response => {
+        this.$message.success(response.msg)
+        /**
+         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+         */
+        this.$refs.md.$img2Url(pos, process.env.VUE_APP_BASE_API_FILE + response.data)
+      })
+    },
+    // 删除图片
+    imgDel(filename) {
+      const name = filename[0].split('/')
+      console.log(name[name.length - 1])
+      delImage(name[name.length - 1]).then(response => {
+        this.$message.success(response.msg)
       })
     },
     /** 提交按钮 */
     submitForm() {
+      this.form.content = this.form.content.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== '') {
@@ -188,6 +221,7 @@ export default {
           }
         }
       })
+      this.form.content = this.form.content.replaceAll('../image', process.env.VUE_APP_BASE_API_FILE + '/image')
     }
   }
 }

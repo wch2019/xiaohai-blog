@@ -32,7 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 //swagger
                 .excludePathPatterns("/favicon.ico", "/webjars/**", "/img.icons/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger-ui/**", "/doc.html", "/swagger-ui.html")
                 //登录、验证码、注册、文件
-                .excludePathPatterns("/login","/sendEmailCode","/register","/document/download/**");
+                .excludePathPatterns("/login","/sendEmailCode","/register","/document/upload/**");
         //分页拦截器
         registry.addInterceptor(new PageableInterceptor());
     }
@@ -58,6 +58,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //匹配到resourceHandler,将URL映射至location,也就是本地文件夹
-        registry.addResourceHandler("/document/download/**").addResourceLocations("file:" + profile);
+        registry.addResourceHandler("/document/upload/**").addResourceLocations("file:" + profile);
     }
 }
