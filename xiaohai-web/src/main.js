@@ -68,6 +68,9 @@ Vue.directive('highlight', function(el) {
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 Vue.use(Viewer)
+// json展示插件
+import JsonViewer from 'vue-json-viewer'
+Vue.use(JsonViewer)
 
 Vue.config.productionTip = false
 

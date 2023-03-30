@@ -68,6 +68,10 @@ export default {
       listClassOptions: [
         {
           value: 'default',
+          label: '空'
+        },
+        {
+          value: '',
           label: '默认'
         },
         {
