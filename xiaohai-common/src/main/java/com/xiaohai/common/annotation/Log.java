@@ -1,7 +1,5 @@
 package com.xiaohai.common.annotation;
 
-import com.xiaohai.common.enums.BusinessType;
-
 import java.lang.annotation.*;
 
 /**
@@ -14,12 +12,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface Log {
     /**
-     * 模块
+     * 接口名称
      */
     public String title() default "";
 
-    /**
-     * 功能
-     */
-    public BusinessType businessType() default BusinessType.OTHER;
 }

@@ -1,6 +1,7 @@
 package com.xiaohai.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.daomain.Response;
@@ -36,6 +37,7 @@ public class DictDataController {
 
     @Operation(summary = "新增字典数据表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("dict:data:add")
+    @Log(title = "新增字典数据")
     @PostMapping()
     public Response<Integer> add(@RequestBody DictDataVo vo) {
         return Response.success("新增字典数据表成功！", dictDataService.add(vo));
@@ -43,6 +45,7 @@ public class DictDataController {
 
     @Operation(summary = "删除字典数据表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("dict:data:delete")
+    @Log(title = "删除字典数据")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除字典数据表成功！", dictDataService.delete(ids));
@@ -50,6 +53,7 @@ public class DictDataController {
 
     @Operation(summary = "更新字典数据表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("dict:data:update")
+    @Log(title = "更新字典数据")
     @PutMapping()
     public Response<Integer> update(@RequestBody DictDataVo vo) {
         return Response.success("更新字典数据表成功！", dictDataService.updateData(vo));

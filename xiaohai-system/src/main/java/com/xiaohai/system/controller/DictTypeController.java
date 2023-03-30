@@ -1,6 +1,7 @@
 package com.xiaohai.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -36,6 +37,7 @@ public class DictTypeController {
 
     @Operation(summary = "新增字典类型", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:dict:add")
+    @Log(title = "新增字典类型")
     @PostMapping()
     public Response<Integer> add(@Validated @RequestBody DictTypeVo vo) {
         return Response.success("新增字典类型成功！", dictTypeService.add(vo));
@@ -43,6 +45,7 @@ public class DictTypeController {
 
     @Operation(summary = "删除字典类型", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:dict:delete")
+    @Log(title = "删除字典类型")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除字典类型成功！", dictTypeService.delete(ids));
@@ -50,6 +53,7 @@ public class DictTypeController {
 
     @Operation(summary = "更新字典类型", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:dict:update")
+    @Log(title = "更新字典类型")
     @PutMapping()
     public Response<Integer> update(@RequestBody DictTypeVo vo) {
         return Response.success("更新字典类型成功！", dictTypeService.updateData(vo));
@@ -76,6 +80,7 @@ public class DictTypeController {
      */
     @Operation(summary = "刷新字典缓存", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:dict:clean")
+    @Log(title = "刷新字典缓存")
     @DeleteMapping("/refresh-dict")
     public Response<Object> refreshDict() {
         dictTypeService.refreshDict();

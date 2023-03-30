@@ -1,6 +1,7 @@
 package com.xiaohai.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.common.daomain.Response;
@@ -38,6 +39,7 @@ public class MenuController {
 
     @Operation(summary = "新增菜单权限表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:menu:add")
+    @Log(title = "新增菜单权限")
     @PostMapping()
     public Response<Integer> add(@RequestBody MenuVo vo) {
         return Response.success("新增菜单权限表成功！", menuService.add(vo));
@@ -45,6 +47,7 @@ public class MenuController {
 
     @Operation(summary = "删除菜单权限表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:menu:delete")
+    @Log(title = "删除菜单权限")
     @DeleteMapping("{id}")
     public Response<Integer> delete(@PathVariable("id") Long id) {
         return Response.success("删除菜单权限表成功！", menuService.delete(id));
@@ -52,6 +55,7 @@ public class MenuController {
 
     @Operation(summary = "更新菜单权限表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:menu:update")
+    @Log(title = "更新菜单权限")
     @PutMapping()
     public Response<Integer> update(@RequestBody MenuVo vo) {
         return Response.success("更新菜单权限表成功！", menuService.updateData(vo));

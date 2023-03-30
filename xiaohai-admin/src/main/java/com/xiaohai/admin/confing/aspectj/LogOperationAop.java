@@ -1,7 +1,16 @@
 package com.xiaohai.admin.confing.aspectj;
 
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.xiaohai.common.annotation.Log;
+import com.xiaohai.common.utils.ip.IpUtils;
+import com.xiaohai.system.pojo.entity.User;
+import com.xiaohai.system.pojo.vo.LogVo;
+import com.xiaohai.system.service.LogService;
+import com.xiaohai.system.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -10,12 +19,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 /**
  * Log注解日志操作
- * 例如：@Log(title = "用户模块", businessType = BusinessType.UPDATE)
+ * 例如：@Log(title = "用户模块")
  * @author wangchenghai
  * @date 2022/3/20 9:36
  */
@@ -24,6 +36,11 @@ import java.util.Arrays;
 @Slf4j
 @Order(1)
 public class LogOperationAop {
+
+    @Resource
+    private LogService logService;
+    @Resource
+    private UserService userService;
 
     /**
      * 定义了一个切入点
@@ -118,29 +135,30 @@ public class LogOperationAop {
             // 接收到请求，记录请求内容
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
-//            TokenData tokenData=token();
-//            // 记录下请求内容
-//            Blog blog = new Blog();
-//            blog.setMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-//            blog.setOperUrl(request.getRequestURL().toString());
-//            blog.setOperIp(request.getRemoteAddr());
-//            blog.setRequestMethod(request.getMethod());
-//            blog.setOperParam(new JSONArray(joinPoint.getArgs()).toString());
-//            //异常
-//            if (e != null) {
-//                blog.setStatus(1);
-//                blog.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
-//            }else{
-//                blog.setStatus(0);
-//            }
-//            //返回参数
-//            if (jsonResult != null) {
-//                blog.setJsonResult(StringUtils.substring(new JSONObject(jsonResult).toString(), 0, 2000));
-//            }
-//            blog.setDelFlag(0);
-//            blog.setCreateBy(tokenData.getName());
-//            blog.setCreateTime(new Date());
-//            blogService.add(blog);
+            // 记录下请求内容
+            LogVo log = new LogVo();
+            log.setTitle(controllerLog.title());
+            log.setMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+            log.setRequestMethod(request.getMethod());
+            log.setOperUrl(request.getRequestURL().toString());
+            log.setOperIp(IpUtils.getIpAddr(request));
+            log.setOperParam(new JSONArray(joinPoint.getArgs()).toString());
+            //异常
+            if (e != null) {
+                log.setStatus("1");
+                log.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
+            }else{
+                log.setStatus("0");
+            }
+            //返回参数
+            if (jsonResult != null) {
+                log.setJsonResult(StringUtils.substring(new JSONObject(jsonResult).toString(), 0, 2000));
+            }
+            // 当前操作用户
+            User nowUser =  userService.getById((Serializable) StpUtil.getLoginId());
+            log.setCreatedBy(nowUser.getUsername());
+            log.setCreatedTime(LocalDateTime.now());
+            logService.add(log);
         } catch (Exception exp) {
             // 记录本地异常日志
             log.error("==前置通知异常==");

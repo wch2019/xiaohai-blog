@@ -5,7 +5,6 @@ import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.common.enums.BusinessType;
 import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.system.pojo.dto.UserDto;
 import com.xiaohai.system.pojo.query.UserQuery;
@@ -45,7 +44,7 @@ public class UserController {
 
     @Operation(summary = "新增用户表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:user:add")
-    @Log(title = "用户模块", businessType = BusinessType.INSERT)
+    @Log(title = "新增用户")
     @PostMapping()
     public Response<Integer> add(@Validated @RequestBody UserVo vo) {
         //密码默认
@@ -55,7 +54,7 @@ public class UserController {
 
     @Operation(summary = "删除用户表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:user:delete")
-    @Log(title = "用户模块", businessType = BusinessType.DELETE)
+    @Log(title = "删除用户")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除用户表成功！", userService.delete(ids));
@@ -63,7 +62,7 @@ public class UserController {
 
     @Operation(summary = "更新用户表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:user:update")
-    @Log(title = "用户模块", businessType = BusinessType.UPDATE)
+    @Log(title = "更新用户")
     @PutMapping()
     public Response<Integer> update(@Validated @RequestBody UserVo vo) {
         return Response.success("更新用户表成功！", userService.updateData(vo));
@@ -86,13 +85,13 @@ public class UserController {
     }
 
     @Operation(summary = "修改密码", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Log(title = "用户模块", businessType = BusinessType.UPDATE)
+    @Log(title = "修改密码")
     @PutMapping("/password")
     public Response<Integer> updatePwd(@RequestBody PasswordVo vo) {
         return Response.success("修改密码成功！", userService.updatePwd(vo));
     }
     @Operation(summary = "修改邮箱", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Log(title = "用户模块", businessType = BusinessType.UPDATE)
+    @Log(title = "修改邮箱")
     @PutMapping("/email")
     public Response<Integer> updateEmail(@RequestBody EmailVo vo) {
         return Response.success("修改邮箱成功！", userService.updateEmail(vo));

@@ -37,8 +37,8 @@ public class ConfigVo implements Serializable {
     @Schema(description = "邮箱发送端口")
     private Integer emailPort;
 
-    @Schema(description = "本地文件地址")
-    private String filePath;
+//    @Schema(description = "本地文件地址")
+//    private String filePath;
 
     @Schema(description = "系统通知")
     private String content;
