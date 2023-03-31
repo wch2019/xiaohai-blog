@@ -2,6 +2,7 @@ package com.xiaohai.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.system.pojo.vo.LoginVo;
@@ -29,18 +30,21 @@ public class LoginController {
     private final LoginService loginService;
 
     @Operation(summary = "登录")
+    @Log(title = "登录")
     @PostMapping("login")
     public Response<String> login(@Validated @RequestBody LoginVo vo){
         return  Response.success("登录成功！", loginService.login(vo));
     }
 
-    @GetMapping( "/sendEmailCode")
     @Operation(summary = "发送邮箱验证码")
+    @Log(title = "发送邮箱验证码")
+    @GetMapping( "/sendEmailCode")
     public Response<String> sendEmailCode(String email){
         return Response.success(loginService.sendEmailCode(email));
     }
 
     @Operation(summary = "用户信息注册")
+    @Log(title = "用户信息注册")
     @PostMapping("register")
     public Response<Integer> register(@Validated @RequestBody RegisterVo vo){
         return  Response.success("注册成功！",loginService.register(vo));

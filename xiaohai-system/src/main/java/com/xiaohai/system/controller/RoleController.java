@@ -1,6 +1,7 @@
 package com.xiaohai.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -34,22 +35,25 @@ public class RoleController {
     private final RoleService roleService;
 
 
-    @Operation(summary = "新增角色表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "新增角色", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:role:add")
+    @Log(title = "新增角色")
     @PostMapping()
     public Response<Integer> add(@Validated @RequestBody RoleVo vo) {
         return Response.success("新增角色表成功！", roleService.add(vo));
     }
 
-    @Operation(summary = "删除角色表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "删除角色", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:role:delete")
+    @Log(title = "删除角色")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除角色表成功！", roleService.delete(ids));
     }
 
-    @Operation(summary = "更新角色表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "更新角色", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:role:update")
+    @Log(title = "更新角色")
     @PutMapping()
     public Response<Integer> update(@Validated @RequestBody RoleVo vo) {
         return Response.success("更新角色表成功！", roleService.updateData(vo));

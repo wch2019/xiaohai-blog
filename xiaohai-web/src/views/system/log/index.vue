@@ -11,6 +11,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="请求方式" prop="requestMethod">
+        <el-select
+          v-model="queryParams.requestMethod"
+          placeholder="状态"
+          clearable
+          size="small"
+          style="width: 240px"
+          @clear="queryParams.requestMethod = null"
+        >
+          <el-option
+            v-for="dict in $store.getters.dict.sys_request_method"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select
           v-model="queryParams.status"
@@ -51,10 +68,11 @@
         <el-button
           v-if="$store.getters.permission.includes('system:log:clean')"
           type="danger"
+          plain
           icon="el-icon-edit"
           size="mini"
-          @click="handleUpdate"
-        >清空
+          @click="handleDeleteAll"
+        >清空全部
         </el-button>
       </el-col>
     </el-row>
@@ -118,7 +136,7 @@
 
 <script>
 import RoleDialog from './componets/logDialog.vue'
-import { listLog, delLog, getLog } from '@/api/system/log'
+import { listLog, delLog, getLog, delLogAll} from '@/api/system/log'
 
 export default {
   name: 'Index',
@@ -140,7 +158,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         title: null,
-        status: null
+        status: null,
+        requestMethod: null
       },
       // 状态
       states: [
@@ -203,6 +222,21 @@ export default {
         type: 'warning'
       }).then(() => {
         delLog(ids).then(response => {
+          this.$message.success(response.msg)
+        })
+        this.getList()
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
+    /** 删除全部按钮操作 */
+    handleDeleteAll() {
+      this.$confirm('是否确认清空全部的数据项？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delLogAll().then(response => {
           this.$message.success(response.msg)
         })
         this.getList()

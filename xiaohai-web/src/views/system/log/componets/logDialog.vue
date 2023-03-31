@@ -21,10 +21,15 @@
             v-if="form.operParam"
             :value="JSON.parse(form.operParam)"
             :expand-depth="1"
-            :copyable="true"
+            copyable
             boxed
             sort
-          />
+          >
+            <template slot="copy" slot-scope="scope">
+              <el-button v-if="!scope.copied" type="text">复制</el-button>
+              <el-button v-else type="text" disabled>复制成功</el-button>
+            </template>
+          </json-viewer>
         </el-descriptions-item>
         <el-descriptions-item label="返回参数">
           <json-viewer
@@ -34,7 +39,12 @@
             copyable
             boxed
             sort
-          />
+          >
+            <template slot="copy" slot-scope="scope">
+              <el-button v-if="!scope.copied" type="text">复制</el-button>
+              <el-button v-else type="text" disabled>复制成功</el-button>
+            </template>
+          </json-viewer>
         </el-descriptions-item>
         <el-descriptions-item label="错误消息">{{ form.errorMsg }}</el-descriptions-item>
       </el-descriptions>

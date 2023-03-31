@@ -86,7 +86,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
-          <el-avatar v-if="scope.row.avatar" shape="square" :src="scope.row.avatar" />
+          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)" />
           <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
         </template>
       </el-table-column>
@@ -257,6 +257,10 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
+    },
+    // 头像展示
+    image(row) {
+      return process.env.VUE_APP_BASE_API_FILE + row.avatar
     },
     /** 回调*/
     closeDialog() {

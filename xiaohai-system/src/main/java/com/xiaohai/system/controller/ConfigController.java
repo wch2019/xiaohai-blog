@@ -1,5 +1,7 @@
 package com.xiaohai.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.system.pojo.dto.ConfigDto;
@@ -27,12 +29,16 @@ public class ConfigController {
 
 
     @Operation(summary = "新增系统配置", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:config:save")
+    @Log(title = "新增系统配置")
     @PostMapping()
     public Response<Integer> add(@RequestBody ConfigVo vo) {
         return Response.success("新增系统配置成功！", configService.add(vo));
     }
 
     @Operation(summary = "更新系统配置", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:config:save")
+    @Log(title = "更新系统配置")
     @PutMapping()
     public Response<Integer> update(@RequestBody ConfigVo vo) {
         return Response.success("更新系统配置成功！", configService.updateData(vo));
@@ -40,6 +46,7 @@ public class ConfigController {
 
 
     @Operation(summary = "查询系统配置", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:config:select")
     @GetMapping()
     public Response<ConfigDto> findByOne() {
         return Response.success("查询系统配置成功！", configService.findByOne());

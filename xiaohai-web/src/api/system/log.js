@@ -26,4 +26,11 @@ export function delLog(data) {
     method: 'delete'
   })
 }
+// 删除全部日志
+export function delLogAll() {
+  return request({
+    url: api + '/all',
+    method: 'delete'
+  })
+}
 

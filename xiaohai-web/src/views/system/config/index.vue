@@ -26,7 +26,7 @@
             </el-col>
           </el-row>
           <el-form-item>
-            <el-button type="primary" @click="submitForm">保存</el-button>
+            <el-button  v-if="$store.getters.permission.includes('system:config:save')" type="primary" @click="submitForm">保存</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -74,7 +74,7 @@
             </el-col>
           </el-row>
           <el-form-item>
-            <el-button type="primary" @click="submitForm">保存</el-button>
+            <el-button type="primary" v-if="$store.getters.permission.includes('system:config:save')" @click="submitForm">保存</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
