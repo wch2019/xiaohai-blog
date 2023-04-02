@@ -1,5 +1,7 @@
 package com.xiaohai.note.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -34,7 +36,9 @@ public class TagsController {
     private final TagsService tagsService;
 
 
-    @Operation(summary = "新增标签表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "新增标签",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:tags:add")
+    @Log(title = "新增标签")
     @PostMapping()
     public Response<Integer> add(@RequestBody TagsVo vo){
         return  Response.success("新增标签表成功！", tagsService.add(vo));
