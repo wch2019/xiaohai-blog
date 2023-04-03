@@ -96,7 +96,7 @@ springdoc:
       packages-to-scan: com.xiaohai.admin
     - group: '管理页'
       paths-to-match: '/**'
-      packages-to-scan: com.xiaohai.system,com.xiaohai.admin,com.xiaohai.file
+      packages-to-scan: com.xiaohai.system,com.xiaohai.admin,com.xiaohai.file,com.xiaohai.note
 #==============================系统文件存放配置=======================================
 file:
-  profile: C:/Users/Code01/Pictures/
+  profile: C:/Users/wangchenghai/Pictures/

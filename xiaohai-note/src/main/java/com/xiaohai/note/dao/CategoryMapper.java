@@ -1,6 +1,6 @@
 package com.xiaohai.note.dao;
 
-import com.xiaohai.note.pojo.entity.Class;
+import com.xiaohai.note.pojo.entity.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author xiaohai
- * @since 2023-03-31
+ * @since 2023-04-03
  */
-public interface ClassMapper extends BaseMapper<Class> {
+public interface CategoryMapper extends BaseMapper<Category> {
 
 }

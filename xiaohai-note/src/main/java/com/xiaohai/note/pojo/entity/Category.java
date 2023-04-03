@@ -17,14 +17,14 @@ import lombok.Setter;
  * </p>
  *
  * @author xiaohai
- * @since 2023-03-31
+ * @since 2023-04-03
  */
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@TableName("b_class")
-@Schema(name = "Class", description = "分类表")
-public class Class extends BaseEntity  implements Serializable  {
+@TableName("b_category")
+@Schema(name = "Category", description = "分类表")
+public class Category extends BaseEntity  implements Serializable  {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -40,4 +40,7 @@ public class Class extends BaseEntity  implements Serializable  {
 
     @Schema(description = "排序")
     private Integer sort;
+
+    @Schema(description = "状态（0正常 1停用）")
+    private String status;
 }

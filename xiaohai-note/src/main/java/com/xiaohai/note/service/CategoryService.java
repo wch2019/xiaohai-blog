@@ -1,11 +1,11 @@
 package com.xiaohai.note.service;
 
-import com.xiaohai.note.pojo.entity.Class;
+import com.xiaohai.note.pojo.entity.Category;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.note.pojo.query.ClassQuery;
-import com.xiaohai.note.pojo.vo.ClassVo;
-import com.xiaohai.note.pojo.dto.ClassDto;
+import com.xiaohai.note.pojo.query.CategoryQuery;
+import com.xiaohai.note.pojo.vo.CategoryVo;
+import com.xiaohai.note.pojo.dto.CategoryDto;
 
 /**
  *
@@ -13,9 +13,9 @@ import com.xiaohai.note.pojo.dto.ClassDto;
  *
  *
  * @author xiaohai
- * @since 2023-03-31
+ * @since 2023-04-03
  */
-public interface ClassService extends IService<Class> {
+public interface CategoryService extends IService<Category> {
 
 
     /**
@@ -24,7 +24,7 @@ public interface ClassService extends IService<Class> {
      * @param vo 分类表 VO（View Object）：显示层对象
      * @return Integer
      */
-    Integer add(ClassVo vo);
+    Integer add(CategoryVo vo);
 
     /**
      * 删除分类表
@@ -40,15 +40,15 @@ public interface ClassService extends IService<Class> {
      * @param vo 分类表 VO（View Object）：显示层对象
      * @return Integer
      */
-    Integer updateData(ClassVo vo);
+    Integer updateData(CategoryVo vo);
 
     /**
      * id查询数据
      *
      * @param id id
-     * @return   Class
+     * @return   Category
 */
-    Class findById(Long id);
+    Category findById(Long id);
 
     /**
     * 查询分类表列表数据
@@ -56,5 +56,5 @@ public interface ClassService extends IService<Class> {
     * @param query 分类表 Query 数据查询对象
     * @return Response
     */
-    ReturnPageData<ClassDto> findListByPage(ClassQuery query);
+    ReturnPageData<CategoryDto> findListByPage(CategoryQuery query);
 }

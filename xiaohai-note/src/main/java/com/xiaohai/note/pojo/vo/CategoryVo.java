@@ -13,12 +13,12 @@ import lombok.Setter;
 * </p>
 *
 * @author xiaohai
-* @since 2023-03-31
+* @since 2023-04-03
 */
 @Getter
 @Setter
-@Schema(name = "ClassVo", description = "分类表 VO（View Object）：显示层对象")
-public class ClassVo implements Serializable {
+@Schema(name = "CategoryVo", description = "分类表 VO（View Object）：显示层对象")
+public class CategoryVo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -28,9 +28,9 @@ public class ClassVo implements Serializable {
     @Schema(description = "分类名称")
     private String name;
 
-    @Schema(description = "点击次数")
-    private Integer click;
-
     @Schema(description = "排序")
     private Integer sort;
+
+    @Schema(description = "状态（0正常 1停用）")
+    private String status;
 }

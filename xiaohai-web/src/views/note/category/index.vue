@@ -1,20 +1,10 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="字典名称" prop="dictType">
-        <el-select v-model="queryParams.dictType" size="small">
-          <el-option
-            v-for="item in typeOptions"
-            :key="item.id"
-            :label="item.dictName"
-            :value="item.dictType"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="字典标签" prop="dictLabel">
+      <el-form-item label="分类名称" prop="name">
         <el-input
-          v-model="queryParams.dictLabel"
-          placeholder="请输入字典标签"
+          v-model="queryParams.name"
+          placeholder="请输入分类名称"
           clearable
           size="small"
           style="width: 240px"
@@ -26,16 +16,16 @@
           v-model="queryParams.status"
           placeholder="状态"
           clearable
-          @clear="queryParams.status = null"
           size="small"
           style="width: 240px"
+          @clear="queryParams.status = null"
         >
           <el-option
             v-for="dict in $store.getters.dict.sys_normal_disable"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -47,7 +37,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('dict:data:add')"
+          v-if="$store.getters.permission.includes('note:category:add')"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -58,7 +48,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('dict:data:update')"
+          v-if="$store.getters.permission.includes('note:category:update')"
           type="success"
           plain
           icon="el-icon-edit"
@@ -70,7 +60,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('dict:data:delete')"
+          v-if="$store.getters.permission.includes('note:category:delete')"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -80,40 +70,31 @@
         >删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <router-link :to="'/system/dictType/'" class="link-type">
-          <el-button
-            type="warning"
-            plain
-            icon="el-icon-back"
-            size="mini"
-          >后退
-          </el-button>
-        </router-link>
-      </el-col>
     </el-row>
 
-    <el-table v-loading="loading" border style="margin-top: 10px" :data="typeList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      border
+      style="margin-top: 10px"
+      :data="categoryList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典标签" align="center" prop="dictLabel">
+      <el-table-column label="分类名称" align="center" prop="name" />
+      <el-table-column label="点击次数" align="center" prop="click">
         <template slot-scope="scope">
-          <span v-if="scope.row.style === null || scope.row.style === 'default'">{{ scope.row.dictLabel }}</span>
-          <el-tag v-else :type="scope.row.style">{{ scope.row.dictLabel }}</el-tag>
+          <el-tag type="warning"> {{ scope.row.click }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="字典键值" align="center" prop="dictValue" />
-      <el-table-column label="字典备注" align="center" prop="remark" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
-      <el-table-column label="更新时间" align="center" prop="updatedTime" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            v-if="$store.getters.permission.includes('dict:data:update')"
+            v-if="$store.getters.permission.includes('note:category:update')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -121,7 +102,7 @@
           >修改
           </el-button>
           <el-button
-            v-if="$store.getters.permission.includes('dict:data:delete')"
+            v-if="$store.getters.permission.includes('note:category:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -140,18 +121,17 @@
       @pagination="getList"
     />
 
-    <DictDialog ref="dictDialog" @closeDialog="closeDialog" />
+    <CategoryDialog ref="categoryDialog" @closeDialog="closeDialog" />
   </div>
 </template>
 
 <script>
-import DictDialog from './componets/dataDialog.vue'
-import { listDictData, delDictData, getDictData } from '@/api/system/dict/data'
-import { optionSelect, getDictType } from '@/api/system/dict/type'
+import CategoryDialog from './componets/categoryDialog.vue'
+import { listCategory, delCategory, getCategory } from '@/api/note/category'
 
 export default {
   name: 'Index',
-  components: { DictDialog },
+  components: { CategoryDialog },
   data() {
     return {
       // 遮罩层
@@ -164,49 +144,28 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 字典表格数据
-      typeList: [],
-      // 类型数据字典
-      typeOptions: [],
+      // 分类表格数据
+      categoryList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        dictType: null,
-        dictLabel: null,
+        name: null,
         status: null
       }
     }
   },
   created() {
-    this.getType()
-    this.getTypeList()
+    this.getList()
   },
   methods: {
-    getType() {
-      const id = this.$route.params && this.$route.params.id
-      if (id) {
-        getDictType(id).then(response => {
-          this.queryParams.dictType = response.data.dictType
-          this.getList()
-        })
-      } else {
-        this.getList()
-      }
-    },
-    /** 查询字典数据列表 */
+    /** 查询分类数据列表 */
     getList() {
       this.loading = true
-      listDictData(this.queryParams).then(response => {
-        this.typeList = response.data.records
+      listCategory(this.queryParams).then(response => {
+        this.categoryList = response.data.records
         this.total = response.data.total
         this.loading = false
-      })
-    },
-    /** 查询字典类型列表 */
-    getTypeList() {
-      optionSelect().then(response => {
-        this.typeOptions = response.data
       })
     },
     /** 搜索按钮操作 */
@@ -222,12 +181,12 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       if (this.queryParams.dictType !== null) {
-        this.$refs.dictDialog.reset()
-        this.$refs.dictDialog.form.dictType = this.queryParams.dictType
-        this.$refs.dictDialog.open = true
-        this.$refs.dictDialog.title = '添加字典数据'
+        this.$refs.categoryDialog.reset()
+        this.$refs.categoryDialog.form.dictType = this.queryParams.dictType
+        this.$refs.categoryDialog.open = true
+        this.$refs.categoryDialog.title = '添加分类数据'
       } else {
-        this.$message.error('请选择字典名称')
+        this.$message.error('请选择分类名称')
       }
     },
     /** 多选框选中数据 */
@@ -239,25 +198,25 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const dictId = row.id || this.ids
-      getDictData(dictId).then(response => {
-        if (this.$refs.dictDialog.$refs['form'] !== undefined) {
-          this.$refs.dictDialog.$refs['form'].resetFields()
+      getCategory(dictId).then(response => {
+        if (this.$refs.categoryDialog.$refs['form'] !== undefined) {
+          this.$refs.categoryDialog.$refs['form'].resetFields()
         }
-        this.$refs.dictDialog.form = response.data
-        this.$refs.dictDialog.open = true
-        this.$refs.dictDialog.title = '修改字典数据'
+        this.$refs.categoryDialog.form = response.data
+        this.$refs.categoryDialog.open = true
+        this.$refs.categoryDialog.title = '修改分类数据'
       })
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$confirm('是否确认删除字典编码为"' + ids + '"的数据项？', '提示', {
+      this.$confirm('是否确认删除分类编码为"' + ids + '"的数据项？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delDictData(ids).then(response => {
+        delCategory(ids).then(response => {
           this.$message.success(response.msg)
         })
         this.getList()

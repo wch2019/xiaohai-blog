@@ -36,4 +36,7 @@ public class TagsQuery implements Serializable {
 
     @Parameter(description = "排序")
     private Integer sort;
+
+    @Schema(description = "状态（0正常 1停用）")
+    private String status;
 }

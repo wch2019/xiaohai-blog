@@ -12,6 +12,7 @@
         <result column="name" property="name" />
         <result column="click" property="click" />
         <result column="sort" property="sort" />
+        <result column="status" property="status" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -20,7 +21,7 @@
         created_time,
         updated_by,
         updated_time,
-        id, name, click, sort
+        id, name, click, sort, status
     </sql>
 
 </mapper>

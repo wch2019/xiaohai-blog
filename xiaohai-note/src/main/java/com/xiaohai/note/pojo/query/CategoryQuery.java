@@ -15,13 +15,13 @@ import lombok.Setter;
 * </p>
 *
 * @author xiaohai
-* @since 2023-03-31
+* @since 2023-04-03
 */
 @Getter
 @Setter
-@Schema(name = "ClassQuery", description = "分类表 Query 数据查询对象")
+@Schema(name = "CategoryQuery", description = "分类表 Query 数据查询对象")
 @ParameterObject
-public class ClassQuery implements Serializable {
+public class CategoryQuery implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -36,4 +36,7 @@ public class ClassQuery implements Serializable {
 
     @Parameter(description = "排序")
     private Integer sort;
+
+    @Schema(description = "状态（0正常 1停用）")
+    private String status;
 }

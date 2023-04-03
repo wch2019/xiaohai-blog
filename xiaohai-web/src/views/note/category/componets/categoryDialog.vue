@@ -2,27 +2,11 @@
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="字典类型">
-        <el-input v-model="form.dictType" :disabled="true"/>
+      <el-form-item label="分类名称" prop="name">
+        <el-input v-model="form.name" placeholder="请输入分类名称" />
       </el-form-item>
-      <el-form-item label="数据标签" prop="dictLabel">
-        <el-input v-model="form.dictLabel" placeholder="请输入数据标签"/>
-      </el-form-item>
-      <el-form-item label="数据键值" prop="dictValue">
-        <el-input v-model="form.dictValue" placeholder="请输入数据键值"/>
-      </el-form-item>
-      <el-form-item label="回显样式" prop="listClass">
-        <el-select v-model="form.style">
-          <el-option
-            v-for="item in listClassOptions"
-            :key="item.value"
-            :label="item.label + '(' + item.value + ')'"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="显示排序" prop="dictSort">
-        <el-input-number v-model="form.dictSort" controls-position="right" :min="0"/>
+      <el-form-item label="排序" prop="sort">
+        <el-input-number v-model="form.sort" controls-position="right" :min="0" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-radio-group v-model="form.status">
@@ -34,9 +18,6 @@
           </el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="备注">
-        <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -46,10 +27,10 @@
 </template>
 
 <script>
-import { addDictData, updateDictData } from '@/api/system/dict/data'
+import { addCategory, updateCategory } from '@/api/note/category'
 
 export default {
-  name: 'DictDialog',
+  name: 'CategoryDialog',
   data() {
     return {
       // 是否显示弹出层
@@ -58,39 +39,10 @@ export default {
       title: '',
       form: {
         id: '',
-        dictName: '',
-        dictType: '',
-        status: '0',
-        style: '',
-        remark: ''
+        name: '',
+        sort: '0',
+        status: '0'
       },
-      // 数据标签回显样式
-      listClassOptions: [
-        {
-          value: 'default',
-          label: '空'
-        },
-        {
-          value: '',
-          label: '默认'
-        },
-        {
-          value: 'success',
-          label: '成功'
-        },
-        {
-          value: 'info',
-          label: '信息'
-        },
-        {
-          value: 'warning',
-          label: '警告'
-        },
-        {
-          value: 'danger',
-          label: '危险'
-        }
-      ],
       // 表单校验
       rules: {
         dictLabel: [
@@ -110,13 +62,9 @@ export default {
     reset() {
       this.form = {
         id: '',
-        dictLabel: '',
-        dictValue: '',
-        dictType: '',
-        dictSort: 0,
-        status: '0',
-        style: '',
-        remark: ''
+        name: '',
+        sort: '0',
+        status: '0'
       }
     },
     // 取消按钮
@@ -129,14 +77,14 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== '') {
-            updateDictData(this.form).then(response => {
+            updateCategory(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
               // 回调父方法
               this.$emit('closeDialog')
             })
           } else {
-            addDictData(this.form).then(response => {
+            addCategory(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
               // 回调父方法

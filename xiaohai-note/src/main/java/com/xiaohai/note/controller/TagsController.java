@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
 *
-* 标签表Controller
+* 标签Controller
 *
 * @author xiaohai
 * @since 2023-03-31
 */
-@Tag(name = "标签表",description = "标签表")
+@Tag(name = "标签",description = "标签")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/note/tags")
@@ -41,34 +41,39 @@ public class TagsController {
     @Log(title = "新增标签")
     @PostMapping()
     public Response<Integer> add(@RequestBody TagsVo vo){
-        return  Response.success("新增标签表成功！", tagsService.add(vo));
+        return  Response.success("新增标签成功！", tagsService.add(vo));
     }
 
-    @Operation(summary = "删除标签表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "删除标签",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:tags:delete")
+    @Log(title = "删除标签")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids){
-        return  Response.success("删除标签表成功！",tagsService.delete(ids));
+        return  Response.success("删除标签成功！",tagsService.delete(ids));
     }
 
-    @Operation(summary = "更新标签表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "更新标签",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:tags:update")
+    @Log(title = "更新标签")
     @PutMapping()
     public Response<Integer> update(@RequestBody TagsVo vo){
-        return  Response.success("更新标签表成功！",tagsService.updateData(vo));
+        return  Response.success("更新标签成功！",tagsService.updateData(vo));
     }
 
 
-    @Operation(summary = "id查询标签表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "id查询标签",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
     public Response<Tags> findById(@PathVariable Long id){
-        return  Response.success("id查询标签表成功！",tagsService.findById(id));
+        return  Response.success("id查询标签成功！",tagsService.findById(id));
     }
 
-    @Operation(summary = "查询标签表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "查询标签列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @SaCheckPermission("note:tags:list")
     @GetMapping()
     public Response<ReturnPageData<TagsDto>> findListByPage(@ParameterObject TagsQuery query){
-        return Response.success("查询标签表列表成功！",tagsService.findListByPage(query));
+        return Response.success("查询标签列表成功！",tagsService.findListByPage(query));
     }
 
     }

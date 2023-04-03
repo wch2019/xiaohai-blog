@@ -13,12 +13,12 @@ import lombok.Setter;
 * </p>
 *
 * @author xiaohai
-* @since 2023-03-31
+* @since 2023-04-03
 */
 @Getter
 @Setter
-@Schema(name = "ClassDto", description = "分类表 DTO 数据传输对象")
-public class ClassDto implements Serializable {
+@Schema(name = "CategoryDto", description = "分类表 DTO 数据传输对象")
+public class CategoryDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -33,4 +33,7 @@ public class ClassDto implements Serializable {
 
     @Schema(description = "排序")
     private Integer sort;
+
+    @Schema(description = "状态（0正常 1停用）")
+    private String status;
 }
