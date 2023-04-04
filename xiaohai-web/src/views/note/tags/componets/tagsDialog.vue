@@ -2,8 +2,8 @@
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="分类名称" prop="name">
-        <el-input v-model="form.name" placeholder="请输入分类名称" />
+      <el-form-item label="标签名称" prop="name">
+        <el-input v-model="form.name" placeholder="请输入标签名称" />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input-number v-model="form.sort" controls-position="right" :min="0" />
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { addCategory, updateCategory } from '@/api/note/category'
+import { addTags, updateTags } from '@/api/note/tags'
 
 export default {
   name: 'CategoryDialog',
@@ -77,14 +77,14 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== '') {
-            updateCategory(this.form).then(response => {
+            updateTags(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
               // 回调父方法
               this.$emit('closeDialog')
             })
           } else {
-            addCategory(this.form).then(response => {
+            addTags(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
               // 回调父方法

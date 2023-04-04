@@ -61,7 +61,7 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
         Tags tags=new Tags();
         BeanUtils.copyProperties(query,tags);
         IPage<Tags> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Tags> iPage = baseMapper.selectPage(wherePage,Wrappers.query(tags));
+        IPage<Tags> iPage = baseMapper.selectPage(wherePage,Wrappers.query(tags).orderByAsc("sort"));
         List<TagsDto> list=new ArrayList<>();
         for(Tags tagss:iPage.getRecords()){
             TagsDto tagsDto=new TagsDto();

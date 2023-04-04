@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="分类名称" prop="name">
+      <el-form-item label="标签名称" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入分类名称"
+          placeholder="请输入标签名称"
           clearable
           size="small"
           style="width: 240px"
@@ -37,7 +37,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:category:add')"
+          v-if="$store.getters.permission.includes('note:tags:add')"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -48,7 +48,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:category:update')"
+          v-if="$store.getters.permission.includes('note:tags:update')"
           type="success"
           plain
           icon="el-icon-edit"
@@ -60,7 +60,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:category:delete')"
+          v-if="$store.getters.permission.includes('note:tags:delete')"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -76,11 +76,11 @@
       v-loading="loading"
       border
       style="margin-top: 10px"
-      :data="categoryList"
+      :data="tagsList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="分类名称" align="center" prop="name" />
+      <el-table-column label="标签名称" align="center" prop="name" />
       <el-table-column label="点击次数" align="center" prop="click">
         <template slot-scope="scope">
           <el-tag type="warning"> {{ scope.row.click }}</el-tag>
@@ -94,7 +94,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            v-if="$store.getters.permission.includes('note:category:update')"
+            v-if="$store.getters.permission.includes('note:tags:update')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -102,7 +102,7 @@
           >修改
           </el-button>
           <el-button
-            v-if="$store.getters.permission.includes('note:category:delete')"
+            v-if="$store.getters.permission.includes('note:tags:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -121,17 +121,17 @@
       @pagination="getList"
     />
 
-    <CategoryDialog ref="categoryDialog" @closeDialog="closeDialog" />
+    <TagsDialog ref="tagsDialog" @closeDialog="closeDialog" />
   </div>
 </template>
 
 <script>
-import CategoryDialog from './componets/categoryDialog.vue'
-import { listCategory, delCategory, getCategory } from '@/api/note/category'
+import TagsDialog from './componets/tagsDialog.vue'
+import { listTags, delTags, getTags } from '@/api/note/tags'
 
 export default {
   name: 'Index',
-  components: { CategoryDialog },
+  components: { TagsDialog },
   data() {
     return {
       // 遮罩层
@@ -144,8 +144,8 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 分类表格数据
-      categoryList: [],
+      // 标签表格数据
+      tagsList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -159,11 +159,11 @@ export default {
     this.getList()
   },
   methods: {
-    /** 查询分类数据列表 */
+    /** 查询标签数据列表 */
     getList() {
       this.loading = true
-      listCategory(this.queryParams).then(response => {
-        this.categoryList = response.data.records
+      listTags(this.queryParams).then(response => {
+        this.tagsList = response.data.records
         this.total = response.data.total
         this.loading = false
       })
@@ -181,12 +181,12 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       if (this.queryParams.dictType !== null) {
-        this.$refs.categoryDialog.reset()
-        this.$refs.categoryDialog.form.dictType = this.queryParams.dictType
-        this.$refs.categoryDialog.open = true
-        this.$refs.categoryDialog.title = '添加分类数据'
+        this.$refs.tagsDialog.reset()
+        this.$refs.tagsDialog.form.dictType = this.queryParams.dictType
+        this.$refs.tagsDialog.open = true
+        this.$refs.tagsDialog.title = '添加标签数据'
       } else {
-        this.$message.error('请选择分类名称')
+        this.$message.error('请选择标签名称')
       }
     },
     /** 多选框选中数据 */
@@ -198,25 +198,25 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const dictId = row.id || this.ids
-      getCategory(dictId).then(response => {
-        if (this.$refs.categoryDialog.$refs['form'] !== undefined) {
-          this.$refs.categoryDialog.$refs['form'].resetFields()
+      getTags(dictId).then(response => {
+        if (this.$refs.tagsDialog.$refs['form'] !== undefined) {
+          this.$refs.tagsDialog.$refs['form'].resetFields()
         }
-        this.$refs.categoryDialog.form = response.data
-        this.$refs.categoryDialog.open = true
-        this.$refs.categoryDialog.title = '修改分类数据'
+        this.$refs.tagsDialog.form = response.data
+        this.$refs.tagsDialog.open = true
+        this.$refs.tagsDialog.title = '修改标签数据'
       })
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$confirm('是否确认删除分类编码为"' + ids + '"的数据项？', '提示', {
+      this.$confirm('是否确认删除标签编码为"' + ids + '"的数据项？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delCategory(ids).then(response => {
+        delTags(ids).then(response => {
           this.$message.success(response.msg)
         })
         this.getList()
