@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaohai.note.dao.ArticleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xiaohai.note.pojo.entity.Article">
+        <id column="id" property="id" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="user_id" property="userId" />
+        <result column="category_id" property="categoryId" />
+        <result column="title" property="title" />
+        <result column="cover" property="cover" />
+        <result column="text" property="text" />
+        <result column="is_push" property="isPush" />
+        <result column="is_top" property="isTop" />
+        <result column="top_time" property="topTime" />
+        <result column="is_original" property="isOriginal" />
+        <result column="original_url" property="originalUrl" />
+        <result column="page_view" property="pageView" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_time,
+        updated_time,
+        id, user_id, category_id, title, cover, text, is_push, is_top, top_time, is_original, original_url, page_view
+    </sql>
+
+</mapper>

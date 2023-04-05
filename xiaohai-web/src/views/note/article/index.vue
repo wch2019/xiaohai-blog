@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import TagsDialog from './componets/tagsDialog.vue'
+import TagsDialog from './componets/articleDialog.vue'
 import { listTags, delTags, getTags } from '@/api/note/tags'
 
 export default {
@@ -182,7 +182,7 @@ export default {
     handleAdd() {
       this.$refs.tagsDialog.reset()
       this.$refs.tagsDialog.open = true
-      this.$refs.tagsDialog.title = '添加标签数据'
+      this.$refs.tagsDialog.title = '添加文章'
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -199,7 +199,7 @@ export default {
         }
         this.$refs.tagsDialog.form = response.data
         this.$refs.tagsDialog.open = true
-        this.$refs.tagsDialog.title = '修改标签数据'
+        this.$refs.tagsDialog.title = '修改文章'
       })
     },
 

@@ -180,14 +180,9 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      if (this.queryParams.dictType !== null) {
-        this.$refs.categoryDialog.reset()
-        this.$refs.categoryDialog.form.dictType = this.queryParams.dictType
-        this.$refs.categoryDialog.open = true
-        this.$refs.categoryDialog.title = '添加分类数据'
-      } else {
-        this.$message.error('请选择分类名称')
-      }
+      this.$refs.categoryDialog.reset()
+      this.$refs.categoryDialog.open = true
+      this.$refs.categoryDialog.title = '添加分类数据'
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
