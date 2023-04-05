@@ -9,7 +9,7 @@
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row>
-        <el-col :span="18">
+        <el-col :span="16">
           <el-form-item label="标题" prop="title">
             <el-input v-model="form.title" placeholder="请输入标签名称"/>
           </el-form-item>
@@ -61,7 +61,7 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="封面" prop="imageUrl">
             <el-popover
               placement="bottom"
@@ -140,8 +140,8 @@ export default {
       imageUrl: '',
       // 表单校验
       rules: {
-        dictLabel: [
-          { required: true, message: '数据标签不能为空', trigger: 'blur' }
+        title: [
+          { required: true, message: '标题不能为空', trigger: 'blur' }
         ],
         dictValue: [
           { required: true, message: '数据键值不能为空', trigger: 'blur' }
@@ -164,7 +164,7 @@ export default {
         tags: [],
         isPush: '0',
         isTop: '0',
-        isOriginal: '0',
+        isOriginal: '1',
         originalUrl: ''
       }
     },
