@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import message from 'element-ui/packages/message'
+import qs from 'qs'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
@@ -22,6 +23,17 @@ service.interceptors.request.use(config => {
     // ['X-Token'] is a custom headers key
     // please modify it according to the actual situation
     config.headers['authorization'] = getToken()
+  }
+
+  if (config.method === 'get') {
+    config.paramsSerializer = function(params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] === null) {
+          delete params[key]
+        }
+      })
+      return qs.stringify(params, { arrayFormat: 'repeat' })
+    }
   }
   return config
 },

@@ -1,30 +1,48 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="标签名称" prop="name">
+      <el-form-item label="文章名称" prop="title">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入标签名称"
+          placeholder="请输入文章名称"
           clearable
           size="small"
-          style="width: 240px"
+          style="width: 140px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="分类" prop="categoryId">
         <el-select
-          v-model="queryParams.status"
-          placeholder="状态"
+          v-model="queryParams.categoryId"
+          placeholder="分类"
           clearable
           size="small"
-          style="width: 240px"
-          @clear="queryParams.status = null"
+          style="width: 100px"
+          @clear="queryParams.categoryId = null"
         >
           <el-option
-            v-for="dict in $store.getters.dict.sys_normal_disable"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+            v-for="tags in CategoryList"
+            :key="tags.id"
+            :label="tags.name"
+            :value="tags.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="标签" prop="tags">
+        <el-select
+          v-model="queryParams.tags"
+          placeholder="标签"
+          clearable
+          size="small"
+          multiple
+          style="width: 100px"
+          @clear="queryParams.tags = []"
+        >
+          <el-option
+            v-for="tag in TagsList"
+            :key="tag.id"
+            :label="tag.name"
+            :value="tag.id"
           />
         </el-select>
       </el-form-item>
@@ -37,7 +55,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:tags:add')"
+          v-if="$store.getters.permission.includes('note:article:add')"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -48,7 +66,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:tags:update')"
+          v-if="$store.getters.permission.includes('note:article:update')"
           type="success"
           plain
           icon="el-icon-edit"
@@ -60,7 +78,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:tags:delete')"
+          v-if="$store.getters.permission.includes('note:article:delete')"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -76,25 +94,35 @@
       v-loading="loading"
       border
       style="margin-top: 10px"
-      :data="tagsList"
+      :data="articleList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标签名称" align="center" prop="name" />
-      <el-table-column label="点击次数" align="center" prop="click">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="封面" align="center" prop="cover"/>
+      <el-table-column label="文章标题" align="center" prop="title"/>
+      <el-table-column label="分类" align="center" prop="categoryId">
         <template slot-scope="scope">
-          <el-tag type="warning"> {{ scope.row.click }}</el-tag>
+          <el-tag type="warning"> {{ scope.row.categoryId }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column label="标签" align="center" prop="tags">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
+          <el-tag type="warning"> {{ scope.row.tags }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="发布" align="center" prop="isPush"/>
+      <el-table-column label="顶置" align="center" prop="isTop"/>
+      <el-table-column label="原创" align="center" prop="isOriginal"/>
+      <el-table-column label="浏览量" align="center" prop="pageView">
+        <template slot-scope="scope">
+          <el-tag type="warning"> {{ scope.row.pageView }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" prop="createdTime"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            v-if="$store.getters.permission.includes('note:tags:update')"
+            v-if="$store.getters.permission.includes('note:article:update')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -102,7 +130,7 @@
           >修改
           </el-button>
           <el-button
-            v-if="$store.getters.permission.includes('note:tags:delete')"
+            v-if="$store.getters.permission.includes('note:article:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -121,17 +149,19 @@
       @pagination="getList"
     />
 
-    <TagsDialog ref="tagsDialog" @closeDialog="closeDialog" />
+    <ArticleDialog ref="articleDialog" @closeDialog="closeDialog"/>
   </div>
 </template>
 
 <script>
-import TagsDialog from './componets/articleDialog.vue'
-import { listTags, delTags, getTags } from '@/api/note/tags'
+import ArticleDialog from './componets/articleDialog.vue'
+import { listArticle, delArticle, getArticle } from '@/api/note/article'
+import { optionSelectCategory } from '@/api/note/category'
+import { optionSelectTags } from '@/api/note/tags'
 
 export default {
   name: 'Index',
-  components: { TagsDialog },
+  components: { ArticleDialog },
   data() {
     return {
       // 遮罩层
@@ -145,25 +175,48 @@ export default {
       // 总条数
       total: 0,
       // 标签表格数据
-      tagsList: [],
+      articleList: [],
+      // 标签下拉选
+      TagsList: [],
+      // 分类下拉选
+      CategoryList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
-        status: null
+        title: null,
+        categoryId: null,
+        tags: []
       }
     }
   },
   created() {
+    this.getCategory()
+    this.getTags()
     this.getList()
   },
   methods: {
+    /**
+     * 查询分类下拉选
+     */
+    getCategory() {
+      optionSelectCategory().then(response => {
+        this.CategoryList = response.data
+      })
+    },
+    /**
+     * 获取标签选择列表
+     */
+    getTags() {
+      optionSelectTags().then(response => {
+        this.TagsList = response.data
+      })
+    },
     /** 查询标签数据列表 */
     getList() {
       this.loading = true
-      listTags(this.queryParams).then(response => {
-        this.tagsList = response.data.records
+      listArticle(this.queryParams).then(response => {
+        this.articleList = response.data.records
         this.total = response.data.total
         this.loading = false
       })
@@ -180,9 +233,11 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.$refs.tagsDialog.reset()
-      this.$refs.tagsDialog.open = true
-      this.$refs.tagsDialog.title = '添加文章'
+      this.$refs.articleDialog.reset()
+      this.$refs.articleDialog.open = true
+      this.$refs.articleDialog.TagsList = this.TagsList
+      this.$refs.articleDialog.CategoryList = this.CategoryList
+      this.$refs.articleDialog.title = '添加文章'
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -193,13 +248,15 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const dictId = row.id || this.ids
-      getTags(dictId).then(response => {
-        if (this.$refs.tagsDialog.$refs['form'] !== undefined) {
-          this.$refs.tagsDialog.$refs['form'].resetFields()
+      getArticle(dictId).then(response => {
+        if (this.$refs.articleDialog.$refs['form'] !== undefined) {
+          this.$refs.articleDialog.$refs['form'].resetFields()
         }
-        this.$refs.tagsDialog.form = response.data
-        this.$refs.tagsDialog.open = true
-        this.$refs.tagsDialog.title = '修改文章'
+        this.$refs.articleDialog.form = response.data
+        this.$refs.articleDialog.open = true
+        this.$refs.articleDialog.TagsList = this.TagsList
+        this.$refs.articleDialog.CategoryList = this.CategoryList
+        this.$refs.articleDialog.title = '修改文章'
       })
     },
 
@@ -211,7 +268,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delTags(ids).then(response => {
+        delArticle(ids).then(response => {
           this.$message.success(response.msg)
         })
         this.getList()

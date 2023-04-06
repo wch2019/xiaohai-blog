@@ -28,20 +28,14 @@ public class ArticleQuery implements Serializable {
     @Parameter(description = "id")
     private Integer id;
 
-    @Parameter(description = "用户id")
-    private Integer userId;
+    @Parameter(description = "文章标题")
+    private String title;
 
     @Parameter(description = "分类id")
     private Integer categoryId;
 
-    @Parameter(description = "文章标题")
-    private String title;
-
-    @Parameter(description = "封面")
-    private String cover;
-
-    @Parameter(description = "内容")
-    private String text;
+    @Schema(description = "标签列表")
+    private Long[] tags;
 
     @Parameter(description = "是否发布(0否，1是)")
     private Integer isPush;
@@ -49,15 +43,6 @@ public class ArticleQuery implements Serializable {
     @Parameter(description = "是否顶置(0否，1是)")
     private Integer isTop;
 
-    @Parameter(description = "顶置时间")
-    private LocalDateTime topTime;
-
     @Parameter(description = "是否原创 (0转载，1原创)")
     private Integer isOriginal;
-
-    @Parameter(description = "转载地址")
-    private String originalUrl;
-
-    @Parameter(description = "浏览量")
-    private Integer pageView;
 }

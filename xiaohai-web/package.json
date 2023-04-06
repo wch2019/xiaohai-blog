@@ -26,11 +26,13 @@
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
+    "qs": "^6.11.1",
     "screenfull": "5.0.2",
     "v-viewer": "^1.6.4",
     "vue": "2.6.10",
     "vue-cropper": "^0.5.10",
     "vue-json-viewer": "^2.2.22",
+    "vue-jsonp": "^2.0.0",
     "vue-router": "3.0.6",
     "vuex": "3.1.0"
   },

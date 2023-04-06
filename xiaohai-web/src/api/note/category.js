@@ -44,3 +44,10 @@ export function delCategory(data) {
     method: 'delete'
   })
 }
+// 获取分类选择列表
+export function optionSelectCategory() {
+  return request({
+    url: api + '/option-select',
+    method: 'GET'
+  })
+}

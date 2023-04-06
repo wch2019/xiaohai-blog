@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
 * <p>
 * 文章表 DTO 数据传输对象
@@ -24,15 +26,17 @@ public class ArticleDto implements Serializable {
 
     @Schema(description = "id")
     private Integer id;
-
-    @Schema(description = "分类id")
-    private Integer categoryId;
+    @Schema(description = "封面")
+    private String cover;
 
     @Schema(description = "文章标题")
     private String title;
 
-    @Schema(description = "封面")
-    private String cover;
+    @Schema(description = "分类id")
+    private Integer categoryId;
+
+    @Schema(description = "标签列表")
+    private Long[] tags;
 
     @Schema(description = "是否发布(0否，1是)")
     private Integer isPush;
@@ -40,14 +44,8 @@ public class ArticleDto implements Serializable {
     @Schema(description = "是否顶置(0否，1是)")
     private Integer isTop;
 
-    @Schema(description = "顶置时间")
-    private LocalDateTime topTime;
-
     @Schema(description = "是否原创 (0转载，1原创)")
     private Integer isOriginal;
-
-    @Schema(description = "转载地址")
-    private String originalUrl;
 
     @Schema(description = "浏览量")
     private Integer pageView;

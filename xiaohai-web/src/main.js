@@ -71,6 +71,9 @@ Vue.use(Viewer)
 // json展示插件
 import JsonViewer from 'vue-json-viewer'
 Vue.use(JsonViewer)
+// Jsonp
+import { VueJsonp } from 'vue-jsonp'
+Vue.use(VueJsonp)
 
 Vue.config.productionTip = false
 

@@ -80,7 +80,7 @@ public class ArticleController {
     @Log(title = "获取随机图片(必应)")
     @GetMapping("/bing-wallpaper")
     public Response<String> wallpaper() {
-        return Response.success("获取随机图片必应成功！", articleService.wallpaper());
+        return Response.success("获取随机图片成功！", articleService.wallpaper());
     }
 
 }
