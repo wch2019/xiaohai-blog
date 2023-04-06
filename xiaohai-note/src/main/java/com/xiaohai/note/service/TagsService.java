@@ -7,6 +7,8 @@ import com.xiaohai.note.pojo.query.TagsQuery;
 import com.xiaohai.note.pojo.vo.TagsVo;
 import com.xiaohai.note.pojo.dto.TagsDto;
 
+import java.util.List;
+
 /**
  *
  * 标签表 服务类
@@ -57,4 +59,10 @@ public interface TagsService extends IService<Tags> {
     * @return Response
     */
     ReturnPageData<TagsDto> findListByPage(TagsQuery query);
+
+    /**
+     * 查询标签选择列表
+     * @return
+     */
+    List<TagsDto> optionSelect();
 }

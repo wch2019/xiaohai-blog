@@ -7,6 +7,8 @@ import com.xiaohai.note.pojo.query.CategoryQuery;
 import com.xiaohai.note.pojo.vo.CategoryVo;
 import com.xiaohai.note.pojo.dto.CategoryDto;
 
+import java.util.List;
+
 /**
  *
  * 分类表 服务类
@@ -57,4 +59,10 @@ public interface CategoryService extends IService<Category> {
     * @return Response
     */
     ReturnPageData<CategoryDto> findListByPage(CategoryQuery query);
+
+    /**
+     * 查询分类选择列表
+     * @return
+     */
+    List<CategoryDto> optionSelect();
 }
