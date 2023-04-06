@@ -57,4 +57,10 @@ public interface ArticleService extends IService<Article> {
     * @return Response
     */
     ReturnPageData<ArticleDto> findListByPage(ArticleQuery query);
+
+    /**
+     * 获取随机图片必应
+     * @return
+     */
+    String wallpaper();
 }

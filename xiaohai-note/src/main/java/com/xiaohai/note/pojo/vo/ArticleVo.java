@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
 * <p>
 * 文章表 VO（View Object）：显示层对象
@@ -24,37 +26,39 @@ public class ArticleVo implements Serializable {
 
     @Schema(description = "id")
     private Integer id;
-
-    @Schema(description = "用户id")
-    private Integer userId;
-
-    @Schema(description = "分类id")
-    private Integer categoryId;
-
     @Schema(description = "文章标题")
+    @NotNull(message = "文章标题为空")
     private String title;
 
+    @Schema(description = "分类id")
+    @NotNull(message = "分类为空")
+    private Integer categoryId;
+
+    @Schema(description = "标签列表")
+    @NotNull(message = "标签为空")
+    private Long[] tags;
+
     @Schema(description = "封面")
+    @NotNull(message = "封面为空")
     private String cover;
 
-    @Schema(description = "内容")
-    private String text;
-
-    @Schema(description = "是否发布(0否，1是)")
-    private Integer isPush;
-
     @Schema(description = "是否顶置(0否，1是)")
+    @NotNull(message = "是否顶置为空")
     private Integer isTop;
 
-    @Schema(description = "顶置时间")
-    private LocalDateTime topTime;
+    @Schema(description = "是否发布(0否，1是)")
+    @NotNull(message = "是否发布为空")
+    private Integer isPush;
 
     @Schema(description = "是否原创 (0转载，1原创)")
+    @NotNull(message = "是否原创为空")
     private Integer isOriginal;
 
     @Schema(description = "转载地址")
     private String originalUrl;
 
-    @Schema(description = "浏览量")
-    private Integer pageView;
+    @Schema(description = "内容")
+    @NotNull(message = "内容为空")
+    private String text;
+
 }

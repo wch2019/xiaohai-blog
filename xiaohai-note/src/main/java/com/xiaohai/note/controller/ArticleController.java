@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.xiaohai.note.service.ArticleService;
 import com.xiaohai.note.pojo.entity.Article;
@@ -21,13 +22,12 @@ import com.xiaohai.note.pojo.dto.ArticleDto;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
-*
-* 文章表Controller
-*
-* @author xiaohai
-* @since 2023-04-04
-*/
-@Tag(name = "文章",description = "文章")
+ * 文章表Controller
+ *
+ * @author xiaohai
+ * @since 2023-04-04
+ */
+@Tag(name = "文章", description = "文章")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/note/article")
@@ -36,44 +36,51 @@ public class ArticleController {
     private final ArticleService articleService;
 
 
-    @Operation(summary = "新增文章",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "新增文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:add")
     @Log(title = "新增文章")
     @PostMapping()
-    public Response<Integer> add(@RequestBody ArticleVo vo){
-        return  Response.success("新增文章表成功！", articleService.add(vo));
+    public Response<Integer> add(@Validated  @RequestBody ArticleVo vo) {
+        return Response.success("新增文章表成功！", articleService.add(vo));
     }
 
-    @Operation(summary = "删除文章",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "删除文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:delete")
     @Log(title = "删除文章")
     @DeleteMapping("{ids}")
-    public Response<Integer> delete(@PathVariable Long[] ids){
-        return  Response.success("删除文章表成功！",articleService.delete(ids));
+    public Response<Integer> delete(@PathVariable Long[] ids) {
+        return Response.success("删除文章表成功！", articleService.delete(ids));
     }
 
-    @Operation(summary = "更新文章",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "更新文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:update")
     @Log(title = "更新文章")
     @PutMapping()
-    public Response<Integer> update(@RequestBody ArticleVo vo){
-        return  Response.success("更新文章表成功！",articleService.updateData(vo));
+    public Response<Integer> update(@Validated @RequestBody ArticleVo vo) {
+        return Response.success("更新文章表成功！", articleService.updateData(vo));
     }
 
 
-    @Operation(summary = "id查询文章表",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "id查询文章表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
-    public Response<Article> findById(@PathVariable Long id){
-        return  Response.success("id查询文章表成功！",articleService.findById(id));
+    public Response<Article> findById(@PathVariable Long id) {
+        return Response.success("id查询文章表成功！", articleService.findById(id));
     }
 
-    @Operation(summary = "查询文章表列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "查询文章表列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @SaCheckPermission("note:article:list")
     @GetMapping()
-    public Response<ReturnPageData<ArticleDto>> findListByPage(@ParameterObject ArticleQuery query){
-        return Response.success("查询文章表列表成功！",articleService.findListByPage(query));
+    public Response<ReturnPageData<ArticleDto>> findListByPage(@ParameterObject ArticleQuery query) {
+        return Response.success("查询文章表列表成功！", articleService.findListByPage(query));
     }
 
+    @Operation(summary = "获取随机图片必应", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Log(title = "获取随机图片(必应)")
+    @GetMapping("/bing-wallpaper")
+    public Response<String> wallpaper() {
+        return Response.success("获取随机图片必应成功！", articleService.wallpaper());
     }
+
+}

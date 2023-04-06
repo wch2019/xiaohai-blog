@@ -1,5 +1,6 @@
 package com.xiaohai.note.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.note.pojo.entity.ArticleTag;
 import com.xiaohai.note.dao.ArticleTagMapper;
@@ -10,6 +11,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xiaohai.common.utils.PageUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 import com.xiaohai.note.pojo.query.ArticleTagQuery;
@@ -27,21 +30,24 @@ import java.util.List;
  * @since 2023-04-04
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, ArticleTag> implements ArticleTagService {
 
     @Override
-    public Integer add(ArticleTagVo vo){
-        ArticleTag articleTag=new ArticleTag();
-        BeanUtils.copyProperties(vo,articleTag);
-        return baseMapper.insert(articleTag);
+    public void add(Long[] ids, Integer articleId){
+        //写入标签
+        for (Long id : ids) {
+            ArticleTag articleTag=new ArticleTag();
+            articleTag.setArticleId(articleId);
+            articleTag.setTagId(Math.toIntExact(id));
+            baseMapper.insert(articleTag);
+        }
     }
 
     @Override
-    public Integer delete(Long[] ids){
-        for (Long id : ids) {
-            baseMapper.deleteById(id);
-        }
-        return ids.length;
+    public Integer delete(Integer articleId){
+        return baseMapper.delete(new QueryWrapper<ArticleTag>().eq("articleId", articleId));
     }
 
     @Override
@@ -71,5 +77,13 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, Article
         PageData pageData=new PageData();
         BeanUtils.copyProperties(iPage,pageData);
         return ReturnPageData.fillingData(pageData,list);
+    }
+
+    @Override
+    public void rewriteArticleTag(Long[] ids, Integer articleId) {
+        //删除关联
+        delete(articleId);
+        //重新写入关联
+        add(ids, articleId);
     }
 }

@@ -21,18 +21,18 @@ public interface ArticleTagService extends IService<ArticleTag> {
     /**
      * 添加文章标签关联
      *
-     * @param vo 文章标签关联 VO（View Object）：显示层对象
-     * @return Integer
+     * @param ids 标签
+     * @param articleId 文章id
      */
-    Integer add(ArticleTagVo vo);
+    void add(Long[] ids, Integer articleId);
 
     /**
      * 删除文章标签关联
      *
-     * @param ids 主键
+     * @param articleId 文章id
      * @return Integer
      */
-    Integer delete(Long[] ids);
+    Integer delete(Integer articleId);
 
     /**
      * 修改文章标签关联
@@ -57,4 +57,12 @@ public interface ArticleTagService extends IService<ArticleTag> {
     * @return Response
     */
     ReturnPageData<ArticleTagDto> findListByPage(ArticleTagQuery query);
+
+    /**
+     * 更新文章标签关联 删除关联重新添加
+     *
+     * @param ids 标签
+     * @param articleId 文章id
+     */
+    void rewriteArticleTag(Long[] ids, Integer articleId);
 }
