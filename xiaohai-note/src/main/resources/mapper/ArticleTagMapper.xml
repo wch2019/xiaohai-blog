@@ -13,5 +13,8 @@
     <sql id="Base_Column_List">
         id, article_id, tag_id
     </sql>
+    <select id="searchAllByArticleId" resultType="java.lang.Long">
+        select tag_id as tagId from b_article_tag where article_id=#{articleId}
+    </select>
 
 </mapper>

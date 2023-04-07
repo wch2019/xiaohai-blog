@@ -97,9 +97,9 @@
       :data="articleList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="封面" align="center" prop="cover"/>
-      <el-table-column label="文章标题" align="center" prop="title"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="封面" align="center" prop="cover" />
+      <el-table-column label="文章标题" align="center" prop="title" />
       <el-table-column label="分类" align="center" prop="categoryId">
         <template slot-scope="scope">
           <el-tag type="warning"> {{ scope.row.categoryId }}</el-tag>
@@ -110,15 +110,15 @@
           <el-tag type="warning"> {{ scope.row.tags }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="发布" align="center" prop="isPush"/>
-      <el-table-column label="顶置" align="center" prop="isTop"/>
-      <el-table-column label="原创" align="center" prop="isOriginal"/>
+      <el-table-column label="发布" align="center" prop="isPush" />
+      <el-table-column label="顶置" align="center" prop="isTop" />
+      <el-table-column label="原创" align="center" prop="isOriginal" />
       <el-table-column label="浏览量" align="center" prop="pageView">
         <template slot-scope="scope">
           <el-tag type="warning"> {{ scope.row.pageView }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime"/>
+      <el-table-column label="创建时间" align="center" prop="createdTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -149,19 +149,16 @@
       @pagination="getList"
     />
 
-    <ArticleDialog ref="articleDialog" @closeDialog="closeDialog"/>
   </div>
 </template>
 
 <script>
-import ArticleDialog from './componets/articleDialog.vue'
-import { listArticle, delArticle, getArticle } from '@/api/note/article'
+import { listArticle, delArticle } from '@/api/note/article'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 
 export default {
   name: 'Index',
-  components: { ArticleDialog },
   data() {
     return {
       // 遮罩层
@@ -233,11 +230,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.$refs.articleDialog.reset()
-      this.$refs.articleDialog.open = true
-      this.$refs.articleDialog.TagsList = this.TagsList
-      this.$refs.articleDialog.CategoryList = this.CategoryList
-      this.$refs.articleDialog.title = '添加文章'
+      this.$router.push('/note/edit')
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -247,17 +240,8 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      const dictId = row.id || this.ids
-      getArticle(dictId).then(response => {
-        if (this.$refs.articleDialog.$refs['form'] !== undefined) {
-          this.$refs.articleDialog.$refs['form'].resetFields()
-        }
-        this.$refs.articleDialog.form = response.data
-        this.$refs.articleDialog.open = true
-        this.$refs.articleDialog.TagsList = this.TagsList
-        this.$refs.articleDialog.CategoryList = this.CategoryList
-        this.$refs.articleDialog.title = '修改文章'
-      })
+      const id = row.id || this.ids
+      this.$router.push({ path: '/note/edit', query: { id: id }})
     },
 
     /** 删除按钮操作 */
@@ -275,10 +259,6 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
-    },
-    /** 回调*/
-    closeDialog() {
-      this.getList()
     }
   }
 }

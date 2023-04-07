@@ -50,7 +50,7 @@ public class ArticleVo implements Serializable {
     @NotNull(message = "是否发布为空")
     private Integer isPush;
 
-    @Schema(description = "是否原创 (0转载，1原创)")
+    @Schema(description = "是否原创 (0原创，1转载)")
     @NotNull(message = "是否原创为空")
     private Integer isOriginal;
 

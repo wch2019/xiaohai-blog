@@ -1,5 +1,6 @@
 package com.xiaohai.note.service;
 
+import com.xiaohai.note.pojo.dto.ArticleDtoAll;
 import com.xiaohai.note.pojo.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -48,7 +49,7 @@ public interface ArticleService extends IService<Article> {
      * @param id id
      * @return   Article
 */
-    Article findById(Long id);
+    ArticleDtoAll findById(Long id);
 
     /**
     * 查询文章表列表数据

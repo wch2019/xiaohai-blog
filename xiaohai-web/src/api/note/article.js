@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const api = '/note/article'
 
-// 查询分类列表数据
+// 查询文章列表数据
 export function listArticle(data) {
   return request({
     url: api,
@@ -11,7 +11,7 @@ export function listArticle(data) {
   })
 }
 
-// 新增分类
+// 新增文章
 export function addArticle(data) {
   return request({
     url: api,
@@ -20,7 +20,7 @@ export function addArticle(data) {
   })
 }
 
-// 更新分类
+// 更新文章
 export function updateArticle(data) {
   return request({
     url: api,
@@ -29,7 +29,7 @@ export function updateArticle(data) {
   })
 }
 
-// id查询分类
+// id查询文章
 export function getArticle(data) {
   return request({
     url: api + '/' + data,
@@ -37,7 +37,7 @@ export function getArticle(data) {
   })
 }
 
-// 删除分类
+// 删除文章
 export function delArticle(data) {
   return request({
     url: api + '/' + data,

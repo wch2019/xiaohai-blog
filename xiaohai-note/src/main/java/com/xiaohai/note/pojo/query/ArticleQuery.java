@@ -43,6 +43,6 @@ public class ArticleQuery implements Serializable {
     @Parameter(description = "是否顶置(0否，1是)")
     private Integer isTop;
 
-    @Parameter(description = "是否原创 (0转载，1原创)")
+    @Parameter(description = "是否原创 (0原创，1转载)")
     private Integer isOriginal;
 }

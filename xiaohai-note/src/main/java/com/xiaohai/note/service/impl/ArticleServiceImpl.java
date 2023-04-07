@@ -8,6 +8,7 @@ import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.note.dao.ArticleTagMapper;
+import com.xiaohai.note.pojo.dto.ArticleDtoAll;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.service.ArticleService;
@@ -55,6 +56,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final FileConfig fileConfig;
 
     private final ArticleTagService articleTagService;
+    private final ArticleTagMapper articleTagMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -62,12 +64,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Article article = new Article();
         BeanUtils.copyProperties(vo, article);
         //写入作者
-        article.setUserId((Integer) StpUtil.getLoginId());
+        article.setUserId(Integer.valueOf((String)StpUtil.getLoginId()));
         //顶置写入时间
         if(article.getIsTop()==1){
             article.setTopTime(LocalDateTime.now());
         }
-       var count=baseMapper.insert(article);
+        article.setCreatedTime(LocalDateTime.now());
+        article.setUpdatedTime(LocalDateTime.now());
+        var count=baseMapper.insert(article);
         //新增标签
         articleTagService.add(vo.getTags(),article.getId());
         return count;
@@ -85,6 +89,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateData(ArticleVo vo) {
         Article article = new Article();
         BeanUtils.copyProperties(vo, article);
@@ -96,12 +101,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         //更新标签
         articleTagService.rewriteArticleTag(vo.getTags(),article.getId());
+        article.setUpdatedTime(LocalDateTime.now());
         return baseMapper.updateById(article);
     }
 
     @Override
-    public Article findById(Long id) {
-        return baseMapper.selectById(id);
+    public ArticleDtoAll findById(Long id) {
+        ArticleDtoAll articleDtoAll=new ArticleDtoAll();
+        Article article=baseMapper.selectById(id);
+        BeanUtils.copyProperties(article,articleDtoAll);
+        articleDtoAll.setTags(articleTagMapper.searchAllByArticleId(id));
+        return articleDtoAll;
     }
 
     @Override

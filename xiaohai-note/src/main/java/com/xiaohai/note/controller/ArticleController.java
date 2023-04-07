@@ -5,6 +5,7 @@ import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.note.pojo.dto.ArticleDtoAll;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,7 +42,7 @@ public class ArticleController {
     @Log(title = "新增文章")
     @PostMapping()
     public Response<Integer> add(@Validated  @RequestBody ArticleVo vo) {
-        return Response.success("新增文章表成功！", articleService.add(vo));
+        return Response.success("新增文章成功！", articleService.add(vo));
     }
 
     @Operation(summary = "删除文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -49,7 +50,7 @@ public class ArticleController {
     @Log(title = "删除文章")
     @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
-        return Response.success("删除文章表成功！", articleService.delete(ids));
+        return Response.success("删除文章成功！", articleService.delete(ids));
     }
 
     @Operation(summary = "更新文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -57,14 +58,14 @@ public class ArticleController {
     @Log(title = "更新文章")
     @PutMapping()
     public Response<Integer> update(@Validated @RequestBody ArticleVo vo) {
-        return Response.success("更新文章表成功！", articleService.updateData(vo));
+        return Response.success("更新文章成功！", articleService.updateData(vo));
     }
 
 
     @Operation(summary = "id查询文章表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
-    public Response<Article> findById(@PathVariable Long id) {
-        return Response.success("id查询文章表成功！", articleService.findById(id));
+    public Response<ArticleDtoAll> findById(@PathVariable Long id) {
+        return Response.success("id查询文章成功！", articleService.findById(id));
     }
 
     @Operation(summary = "查询文章表列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -73,7 +74,7 @@ public class ArticleController {
     @SaCheckPermission("note:article:list")
     @GetMapping()
     public Response<ReturnPageData<ArticleDto>> findListByPage(@ParameterObject ArticleQuery query) {
-        return Response.success("查询文章表列表成功！", articleService.findListByPage(query));
+        return Response.success("查询文章列表成功！", articleService.findListByPage(query));
     }
 
     @Operation(summary = "获取随机图片必应", security = {@SecurityRequirement(name = Constants.SESSION_ID)})

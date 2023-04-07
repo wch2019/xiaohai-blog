@@ -54,9 +54,13 @@ public class Article  implements Serializable  {
     private Integer isTop;
 
     @Schema(description = "顶置时间")
+    /**
+     *  设置策略为IGNORED，忽略null值的判断
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime topTime;
 
-    @Schema(description = "是否原创 (0转载，1原创)")
+    @Schema(description = "是否原创 (0原创，1转载)")
     private Integer isOriginal;
 
     @Schema(description = "转载地址")

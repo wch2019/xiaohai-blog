@@ -1,31 +1,35 @@
 package com.xiaohai.note.pojo.dto;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
 * <p>
-* 文章表 DTO 数据传输对象
+* 文章详情
 * </p>
 *
 * @author xiaohai
-* @since 2023-04-04
+* @since 2023-04-07
 */
 @Getter
 @Setter
-@Schema(name = "ArticleDto", description = "文章表 DTO 数据传输对象")
-public class ArticleDto implements Serializable {
+@Schema(name = "ArticleDtoAll", description = "文章详情")
+public class ArticleDtoAll implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "id")
     private Integer id;
+
+    @Schema(description = "用户id")
+    private Integer userId;
+
     @Schema(description = "封面")
     private String cover;
 
@@ -36,7 +40,10 @@ public class ArticleDto implements Serializable {
     private Integer categoryId;
 
     @Schema(description = "标签列表")
-    private Long[] tags;
+    private List<Long> tags;
+
+    @Schema(description = "内容")
+    private String text;
 
     @Schema(description = "是否发布(0否，1是)")
     private Integer isPush;
@@ -46,6 +53,9 @@ public class ArticleDto implements Serializable {
 
     @Schema(description = "是否原创 (0原创，1转载)")
     private Integer isOriginal;
+
+    @Schema(description = "转载地址")
+    private String originalUrl;
 
     @Schema(description = "浏览量")
     private Integer pageView;

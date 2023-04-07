@@ -123,6 +123,7 @@ public class LogOperationAop {
             log.info("【注解：Around. 环绕后】方法环绕proceed，结果是 :" + o);
         } catch (Throwable e) {
             ex=e;
+            throw new RuntimeException(e);
         }finally {
             handleLog(pjp,ex,o,controllerLog);
         }

@@ -47,7 +47,7 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, Article
 
     @Override
     public Integer delete(Integer articleId){
-        return baseMapper.delete(new QueryWrapper<ArticleTag>().eq("articleId", articleId));
+        return baseMapper.delete(new QueryWrapper<ArticleTag>().eq("article_id", articleId));
     }
 
     @Override
