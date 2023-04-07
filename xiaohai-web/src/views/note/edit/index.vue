@@ -173,9 +173,9 @@ export default {
         text: '',
         categoryId: '',
         tags: [],
-        isPush: '0',
-        isTop: '0',
-        isOriginal: '1',
+        isPush: '',
+        isTop: '',
+        isOriginal: '',
         originalUrl: ''
       }
     }

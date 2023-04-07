@@ -98,7 +98,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="封面" align="center" prop="cover" />
+      <el-table-column label="封面" align="center" prop="cover">
+        <template slot-scope="scope">
+          <el-image :src="scope.row.cover" :preview-src-list="srcList" />
+        </template>
+      </el-table-column>
       <el-table-column label="文章标题" align="center" prop="title" />
       <el-table-column label="分类" align="center" prop="categoryId">
         <template slot-scope="scope">
@@ -184,7 +188,8 @@ export default {
         title: null,
         categoryId: null,
         tags: []
-      }
+      },
+      srcList: []
     }
   },
   created() {
@@ -216,6 +221,13 @@ export default {
         this.articleList = response.data.records
         this.total = response.data.total
         this.loading = false
+        // 加载图片
+        response.data.records.forEach(key => {
+          if (key.cover) {
+            key.cover = process.env.VUE_APP_BASE_API_FILE + key.cover
+            this.srcList.push(key.cover)
+          }
+        })
       })
     },
     /** 搜索按钮操作 */
@@ -243,7 +255,6 @@ export default {
       const id = row.id || this.ids
       this.$router.push({ path: '/note/edit', query: { id: id }})
     },
-
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
