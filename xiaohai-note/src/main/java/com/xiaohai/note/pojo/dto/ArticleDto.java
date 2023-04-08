@@ -1,13 +1,13 @@
 package com.xiaohai.note.pojo.dto;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
 * <p>
@@ -36,7 +36,7 @@ public class ArticleDto implements Serializable {
     private Integer categoryId;
 
     @Schema(description = "标签列表")
-    private Long[] tags;
+    private List<Long> tags;
 
     @Schema(description = "是否发布(0否，1是)")
     private Integer isPush;

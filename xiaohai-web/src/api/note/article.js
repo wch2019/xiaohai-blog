@@ -51,3 +51,17 @@ export function getBingWallpaper() {
     method: 'get'
   })
 }
+// id更新发布状态
+export function updatePush(id) {
+  return request({
+    url: api + '/push/' + id,
+    method: 'put'
+  })
+}
+// id更新置顶状态
+export function updateTop(id) {
+  return request({
+    url: api + '/top/' + id,
+    method: 'put'
+  })
+}

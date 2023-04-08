@@ -1,12 +1,12 @@
 package com.xiaohai.note.service;
 
-import com.xiaohai.note.pojo.dto.ArticleDtoAll;
-import com.xiaohai.note.pojo.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.note.pojo.dto.ArticleDto;
+import com.xiaohai.note.pojo.dto.ArticleDtoAll;
+import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
-import com.xiaohai.note.pojo.dto.ArticleDto;
 
 /**
  *
@@ -64,4 +64,18 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     String wallpaper();
+
+    /**
+     * 是否顶置
+     * @param id
+     * @return
+     */
+    Integer top(Long id);
+
+    /**
+     * 是否发布
+     * @param id
+     * @return
+     */
+    Integer push(Long id);
 }

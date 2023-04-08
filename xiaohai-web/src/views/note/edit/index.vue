@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span style="font-weight: 600;font-size: 20px;">{{ title }}</span>
-        <el-button size="small" style="float: right; " type="primary" @click="submitForm">发 布</el-button>
+        <el-button size="small" style="float: right; " type="primary" @click="submitForm">保 存</el-button>
       </div>
       <!-- 添加或修改参数配置对话框 -->
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -54,28 +54,19 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="顶置" prop="isTop">
-                  <el-radio v-for="(item,index) in isTop" :key="index" v-model="form.isTop" size="small" :label="index"
-                            border
-                  >{{ item }}
-                  </el-radio>
+                  <el-radio v-for="(item,index) in isTop" :key="index" v-model="form.isTop" size="small" :label="index" border>{{ item }}</el-radio>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
                 <el-form-item label="发布" prop="isPush">
-                  <el-radio v-for="(item,index) in isPush" :key="index" v-model="form.isPush" size="small"
-                            :label="index" border
-                  >{{ item }}
-                  </el-radio>
+                  <el-radio v-for="(item,index) in isPush" :key="index" v-model="form.isPush" size="small" :label="index" border>{{ item }}</el-radio>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="类型" prop="isOriginal">
-                  <el-radio v-for="(item,index) in isOriginal" :key="index" v-model="form.isOriginal" size="small"
-                            :label="index" border
-                  >{{ item }}
-                  </el-radio>
+                  <el-radio v-for="(item,index) in isOriginal" :key="index" v-model="form.isOriginal" size="small" :label="index" border>{{ item }}</el-radio>
                 </el-form-item>
               </el-col>
               <el-col :span="8">

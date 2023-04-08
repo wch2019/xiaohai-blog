@@ -1,11 +1,16 @@
 package com.xiaohai.note.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.annotation.SaMode;
 import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
+import com.xiaohai.note.pojo.query.ArticleQuery;
+import com.xiaohai.note.pojo.vo.ArticleVo;
+import com.xiaohai.note.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -14,13 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.xiaohai.note.service.ArticleService;
-import com.xiaohai.note.pojo.entity.Article;
-import com.xiaohai.note.pojo.query.ArticleQuery;
-import com.xiaohai.note.pojo.vo.ArticleVo;
-import com.xiaohai.note.pojo.dto.ArticleDto;
-
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 文章表Controller
@@ -38,7 +36,7 @@ public class ArticleController {
 
 
     @Operation(summary = "新增文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @SaCheckPermission("note:article:add")
+    @SaCheckPermission(value = {"note:article:add"}, mode = SaMode.OR)
     @Log(title = "新增文章")
     @PostMapping()
     public Response<Integer> add(@Validated  @RequestBody ArticleVo vo) {
@@ -54,7 +52,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "更新文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @SaCheckPermission("note:article:update")
+    @SaCheckPermission(value = {"note:article:update"}, mode = SaMode.OR)
     @Log(title = "更新文章")
     @PutMapping()
     public Response<Integer> update(@Validated @RequestBody ArticleVo vo) {
@@ -84,4 +82,18 @@ public class ArticleController {
         return Response.success("获取随机图片成功！", articleService.wallpaper());
     }
 
+    @Operation(summary = "是否顶置", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:article:top")
+    @Log(title = "是否顶置")
+    @PutMapping("/top/{id}")
+    public Response<Integer> top(@PathVariable Long id) {
+        return Response.success("修改成功！", articleService.top(id));
+    }
+    @Operation(summary = "是否发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:article:push")
+    @Log(title = "是否发布")
+    @PutMapping("/push/{id}")
+    public Response<Integer> push(@PathVariable Long id) {
+        return Response.success("调整成功！", articleService.push(id));
+    }
 }

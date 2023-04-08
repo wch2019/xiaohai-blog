@@ -1,7 +1,7 @@
 package com.xiaohai.note.dao;
 
-import com.xiaohai.note.pojo.entity.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xiaohai.note.pojo.entity.Article;
 
 /**
  * <p>

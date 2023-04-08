@@ -93,9 +93,11 @@
     <el-table
       v-loading="loading"
       border
-      style="margin-top: 10px"
+      style="margin-top: 10px;width: 100%"
+      :row-class-name="tableRowClassName"
       :data="articleList"
       @selection-change="handleSelectionChange"
+      @row-dblclick="handle"
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="封面" align="center" prop="cover">
@@ -106,17 +108,39 @@
       <el-table-column label="文章标题" align="center" prop="title" />
       <el-table-column label="分类" align="center" prop="categoryId">
         <template slot-scope="scope">
-          <el-tag type="warning"> {{ scope.row.categoryId }}</el-tag>
+          <template v-for="(item,index) in CategoryList">
+            <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
+          </template>
         </template>
       </el-table-column>
       <el-table-column label="标签" align="center" prop="tags">
         <template slot-scope="scope">
-          <el-tag type="warning"> {{ scope.row.tags }}</el-tag>
+          <template v-for="(item,index) in TagsList">
+            <el-tag
+              v-if="scope.row.tags.includes(item.id)"
+              :key="index"
+              style="margin-right:4px"
+              type="success"
+              size="small"
+              :label="index"
+              border
+            >{{ item.name }}
+            </el-tag>
+          </template>
         </template>
       </el-table-column>
-      <el-table-column label="发布" align="center" prop="isPush" />
-      <el-table-column label="顶置" align="center" prop="isTop" />
-      <el-table-column label="原创" align="center" prop="isOriginal" />
+      <el-table-column label="发布" align="center">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.isPush"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="push(scope.row)"
+          />
+        </template>
+      </el-table-column>
+      <!--      <el-table-column label="顶置" align="center" prop="isTop" />-->
+      <!--      <el-table-column label="原创" align="center" prop="isOriginal" />-->
       <el-table-column label="浏览量" align="center" prop="pageView">
         <template slot-scope="scope">
           <el-tag type="warning"> {{ scope.row.pageView }}</el-tag>
@@ -157,7 +181,7 @@
 </template>
 
 <script>
-import { listArticle, delArticle } from '@/api/note/article'
+import { listArticle, delArticle, updatePush, updateTop } from '@/api/note/article'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 
@@ -270,7 +294,39 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
+    },
+    // 顶置颜色样式添加
+    tableRowClassName({ row, rowIndex }) {
+      if (row.isTop === 1) {
+        return 'success-row'
+      }
+      return ''
+    },
+    // 是否发布
+    push(row) {
+      updatePush(row.id).then(response => {
+        this.$message.success(response.msg)
+      })
+    },
+    // 双击行顶置
+    handle(row, column, event, cell) {
+      updateTop(row.id).then(response => {
+        this.$message.success(response.msg)
+        this.getList()
+      })
     }
   }
 }
 </script>
+<style scoped>
+::v-deep .el-table .success-row {
+  background-color: #f0f9eb
+}
+
+.dis {
+  border-radius: 100px;
+  width: 10px;
+  height: 10px;
+  background: #39C178;
+}
+</style>
