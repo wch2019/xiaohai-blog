@@ -4,6 +4,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.xiaohai.common.annotation.Log;
+import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.ip.IpUtils;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.vo.LogVo;
@@ -15,6 +17,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -28,6 +31,7 @@ import java.util.Arrays;
 /**
  * Log注解日志操作
  * 例如：@Log(title = "用户模块")
+ *
  * @author wangchenghai
  * @date 2022/3/20 9:36
  */
@@ -45,6 +49,7 @@ public class LogOperationAop {
     /**
      * 定义了一个切入点
      * execution(* com.xiaohai.*.controller..*.*(..))
+     *
      * @annotation(controllerLog)
      */
     @Pointcut(value = "@annotation(controllerLog)")
@@ -52,7 +57,7 @@ public class LogOperationAop {
     }
 
     @Before(value = "methodAspect(controllerLog)", argNames = "joinPoint,controllerLog")
-    public void outInfo(JoinPoint joinPoint,Log controllerLog) {
+    public void outInfo(JoinPoint joinPoint, Log controllerLog) {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -85,7 +90,7 @@ public class LogOperationAop {
      */
 
     @AfterReturning(returning = "ret", value = "methodAspect(controllerLog)", argNames = "ret,controllerLog")
-    public void afterReturning(Object ret,Log controllerLog){
+    public void afterReturning(Object ret, Log controllerLog) {
         // 处理完请求，返回内容
         log.info("【注解：AfterReturning】这个会在切面最后的最后打印，方法的返回值 : " + ret);
     }
@@ -99,8 +104,8 @@ public class LogOperationAop {
      */
 
     @AfterThrowing(value = "methodAspect(controllerLog)", throwing = "e", argNames = "joinPoint,controllerLog,e")
-    public void afterThrowing(JoinPoint joinPoint,Log controllerLog, Exception e) {
-        log.info("【注解：AfterThrowing】方法异常时执行....."+e.getMessage());
+    public void afterThrowing(JoinPoint joinPoint, Log controllerLog, Exception e) {
+        log.info("【注解：AfterThrowing】方法异常时执行....." + e.getMessage());
     }
 
     /**
@@ -113,25 +118,33 @@ public class LogOperationAop {
      */
 
     @Around(value = "methodAspect(controllerLog)", argNames = "pjp,controllerLog")
-    public Object around(ProceedingJoinPoint pjp,Log controllerLog){
+    public Object around(ProceedingJoinPoint pjp, Log controllerLog) {
         log.info("【注解：Around . 环绕前】方法环绕start.....");
-        Object o=null;
-        Throwable ex =null;
+        Object o = null;
+        Throwable ex = null;
         try {
             //如果不执行这句，会不执行切面的Before方法及controller的业务方法
-             o =  pjp.proceed();
+            o = pjp.proceed();
             log.info("【注解：Around. 环绕后】方法环绕proceed，结果是 :" + o);
+        } catch (IllegalArgumentException e) {
+            //Assert业务异常
+            log.error(e.getMessage());
+            o = Response.failure(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (ServiceException e) {
+            //业务异常
+            log.error(e.getMessage());
+            o = Response.failure(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Throwable e) {
-            ex=e;
+            ex = e;
             throw new RuntimeException(e);
-        }finally {
-            handleLog(pjp,ex,o,controllerLog);
+        } finally {
+            handleLog(pjp, ex, o, controllerLog);
         }
         return o;
     }
 
 
-    protected void handleLog(final JoinPoint joinPoint, final Throwable e, Object jsonResult,Log controllerLog) {
+    protected void handleLog(final JoinPoint joinPoint, final Throwable e, Object jsonResult, Log controllerLog) {
         try {
             // 接收到请求，记录请求内容
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -148,7 +161,7 @@ public class LogOperationAop {
             if (e != null) {
                 log.setStatus("1");
                 log.setErrorMsg(StringUtils.substring(e.getMessage(), 0, 2000));
-            }else{
+            } else {
                 log.setStatus("0");
             }
             //返回参数
@@ -156,7 +169,7 @@ public class LogOperationAop {
                 log.setJsonResult(StringUtils.substring(new JSONObject(jsonResult).toString(), 0, 2000));
             }
             // 当前操作用户
-            User nowUser =  userService.getById((Serializable) StpUtil.getLoginId());
+            User nowUser = userService.getById((Serializable) StpUtil.getLoginId());
             log.setCreatedBy(nowUser.getUsername());
             log.setCreatedTime(LocalDateTime.now());
             logService.add(log);

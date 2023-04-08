@@ -9,15 +9,18 @@ import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.common.utils.TreeUtils;
 import com.xiaohai.system.dao.MenuMapper;
 import com.xiaohai.system.dao.RoleMapper;
+import com.xiaohai.system.dao.RoleMenuMapper;
 import com.xiaohai.system.pojo.dto.MetaDto;
 import com.xiaohai.system.pojo.dto.RouterDto;
 import com.xiaohai.system.pojo.entity.Menu;
+import com.xiaohai.system.pojo.entity.RoleMenu;
 import com.xiaohai.system.pojo.query.MenuQuery;
 import com.xiaohai.system.pojo.vo.MenuVo;
 import com.xiaohai.system.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -34,6 +37,8 @@ import java.util.List;
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
     private final RoleMapper roleMapper;
 
+    private final RoleMenuMapper roleMenuMapper;
+
     @Override
     public Integer add(MenuVo vo) {
         Menu menu = new Menu();
@@ -43,6 +48,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public Integer delete(Long id) {
+        var count=roleMenuMapper.selectCount(new QueryWrapper<RoleMenu>().eq("menu_id",id));
+        Assert.isTrue(count == 0, "当前菜单存在绑定，无法删除");
         return baseMapper.deleteById(id);
     }
 

@@ -62,7 +62,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
             Long codeCount = userRoleMapper.selectCount(new QueryWrapper<UserRole>().eq("role_id", id));
-            Assert.isTrue(codeCount != 0, "当前角色存在用户，无法删除");
+            Assert.isTrue(codeCount == 0, "当前角色存在用户，无法删除");
             roleMenuService.delete(Math.toIntExact(id));
             baseMapper.deleteById(id);
         }
