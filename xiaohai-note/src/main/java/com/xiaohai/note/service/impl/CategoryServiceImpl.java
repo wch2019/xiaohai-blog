@@ -49,7 +49,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public Integer delete(Long[] ids){
         for (Long id : ids) {
             Long codeCount = articleMapper.selectCount(new QueryWrapper<Article>().eq("category_id", id));
-            Assert.isTrue(codeCount != 0, "当前分类已引用，无法删除");
+            Assert.isTrue(codeCount == 0, "当前分类已引用，无法删除");
             baseMapper.deleteById(id);
         }
         return ids.length;

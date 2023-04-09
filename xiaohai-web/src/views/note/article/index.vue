@@ -102,7 +102,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="封面" align="center" prop="cover">
         <template slot-scope="scope">
-          <el-image :src="scope.row.cover" :preview-src-list="srcList" />
+          <div style="position: relative">
+            <el-image :src="scope.row.cover" :preview-src-list="srcList" />
+            <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
+            <svg-icon v-if="scope.row.isOriginal===1 " icon-class="original" style="position: absolute; bottom: 7px; right: 0;font-size: 10px;" />
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="文章标题" align="center" prop="title" />
@@ -139,8 +143,6 @@
           />
         </template>
       </el-table-column>
-      <!--      <el-table-column label="顶置" align="center" prop="isTop" />-->
-      <!--      <el-table-column label="原创" align="center" prop="isOriginal" />-->
       <el-table-column label="浏览量" align="center" prop="pageView">
         <template slot-scope="scope">
           <el-tag type="warning"> {{ scope.row.pageView }}</el-tag>
@@ -297,9 +299,9 @@ export default {
     },
     // 顶置颜色样式添加
     tableRowClassName({ row, rowIndex }) {
-      if (row.isTop === 1) {
-        return 'success-row'
-      }
+      // if (row.isTop === 1) {
+      //   return 'success-row'
+      // }
       return ''
     },
     // 是否发布

@@ -11,7 +11,6 @@ import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.ArticleTagMapper;
 import com.xiaohai.note.dao.TagsMapper;
 import com.xiaohai.note.pojo.dto.TagsDto;
-import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.ArticleTag;
 import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.query.TagsQuery;
@@ -51,7 +50,7 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
     public Integer delete(Long[] ids){
         for (Long id : ids) {
             Long codeCount = articleTagMapper.selectCount(new QueryWrapper<ArticleTag>().eq("tag_id", id));
-            Assert.isTrue(codeCount != 0, "当前标签已引用，无法删除");
+            Assert.isTrue(codeCount == 0, "当前标签已引用，无法删除");
             baseMapper.deleteById(id);
         }
         return ids.length;

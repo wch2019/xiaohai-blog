@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -65,6 +66,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
         //顶置写入时间
         if (article.getIsTop() == 1) {
+            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1));
+            Assert.isTrue(countTop <1, "已存在顶置");
             article.setTopTime(LocalDateTime.now());
         }
         article.setCreatedTime(LocalDateTime.now());
@@ -93,6 +96,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         BeanUtils.copyProperties(vo, article);
         //顶置写入时间
         if (article.getIsTop() == 1) {
+            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1));
+            Assert.isTrue(countTop <1, "已存在顶置");
             article.setTopTime(LocalDateTime.now());
         } else {
             article.setTopTime(null);
@@ -117,7 +122,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Article article = new Article();
         BeanUtils.copyProperties(query, article);
         IPage<Article> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Article> iPage = baseMapper.selectPage(wherePage, Wrappers.query(article));
+        IPage<Article> iPage = baseMapper.selectPage(wherePage, Wrappers.query(article)
+                .orderByDesc(" is_top")
+                .orderByDesc("top_time")
+                .orderByDesc("created_time"));
         List<ArticleDto> list = new ArrayList<>();
         for (Article articles : iPage.getRecords()) {
             ArticleDto articleDto = new ArticleDto();
@@ -171,6 +179,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             article.setIsTop(0);
             article.setTopTime(null);
         }else{
+            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1));
+            Assert.isTrue(countTop <1, "已存在顶置");
             article.setIsTop(1);
             article.setTopTime(LocalDateTime.now());
         }
