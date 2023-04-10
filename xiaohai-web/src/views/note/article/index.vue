@@ -7,7 +7,6 @@
           placeholder="请输入文章名称"
           clearable
           size="small"
-          style="width: 140px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -17,7 +16,6 @@
           placeholder="分类"
           clearable
           size="small"
-          style="width: 100px"
           @clear="queryParams.categoryId = null"
         >
           <el-option
@@ -28,21 +26,53 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="标签" prop="tags">
+      <el-form-item label="标签" prop="tagId">
         <el-select
-          v-model="queryParams.tags"
+          v-model="queryParams.tagId"
           placeholder="标签"
           clearable
           size="small"
-          multiple
-          style="width: 100px"
-          @clear="queryParams.tags = []"
+          @clear="queryParams.tagId = []"
         >
           <el-option
             v-for="tag in TagsList"
             :key="tag.id"
             :label="tag.name"
             :value="tag.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="发布" prop="isPush">
+        <el-select
+          v-model="queryParams.isPush"
+          placeholder="发布"
+          clearable
+          size="small"
+
+          @clear="queryParams.isPush = null"
+        >
+          <el-option
+            v-for="(item,index)  in isPush"
+            :key="index"
+            :label="item"
+            :value="index"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="类型" prop="isOriginal">
+        <el-select
+          v-model="queryParams.isOriginal"
+          placeholder="类型"
+          clearable
+          size="small"
+
+          @clear="queryParams.isOriginal = null"
+        >
+          <el-option
+            v-for="(item,index)  in isOriginal"
+            :key="index"
+            :label="item"
+            :value="index"
           />
         </el-select>
       </el-form-item>
@@ -99,9 +129,9 @@
       @selection-change="handleSelectionChange"
       @row-dblclick="handle"
     >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="封面" align="center" prop="cover">
-        <template slot-scope="scope">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="封面" align="center" prop="cover" :render-header="renderHeader">
+        <template slot-scope="scope" >
           <div style="position: relative">
             <el-image :src="scope.row.cover" :preview-src-list="srcList" />
             <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
@@ -121,7 +151,7 @@
         <template slot-scope="scope">
           <template v-for="(item,index) in TagsList">
             <el-tag
-              v-if="scope.row.tags.includes(item.id)"
+              v-if="scope.row.tags&&scope.row.tags.includes(item.id)"
               :key="index"
               style="margin-right:4px"
               type="success"
@@ -201,6 +231,8 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      isOriginal: ['原创', '转载'],
+      isPush: ['草稿', '发布'],
       // 标签表格数据
       articleList: [],
       // 标签下拉选
@@ -213,7 +245,7 @@ export default {
         pageSize: 10,
         title: null,
         categoryId: null,
-        tags: []
+        tagId: null
       },
       srcList: []
     }
@@ -309,6 +341,27 @@ export default {
       updatePush(row.id).then(response => {
         this.$message.success(response.msg)
       })
+    },
+    renderHeader(h, { column, $index }) {
+      return [
+        '封面',
+        h(
+          'el-tooltip',
+          {
+            props: {
+              content: '双击行顶置',
+              placement: 'top'
+            }
+          },
+          [
+            h('span', {
+              class: {
+                'el-icon-question': true
+              }
+            })
+          ]
+        )
+      ]
     },
     // 双击行顶置
     handle(row, column, event, cell) {

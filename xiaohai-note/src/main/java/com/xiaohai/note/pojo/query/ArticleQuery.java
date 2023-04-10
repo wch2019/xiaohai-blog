@@ -34,8 +34,8 @@ public class ArticleQuery implements Serializable {
     @Parameter(description = "分类id")
     private Integer categoryId;
 
-    @Schema(description = "标签列表")
-    private Long[] tags;
+    @Schema(description = "标签id")
+    private Long tagId;
 
     @Parameter(description = "是否发布(0否，1是)")
     private Integer isPush;

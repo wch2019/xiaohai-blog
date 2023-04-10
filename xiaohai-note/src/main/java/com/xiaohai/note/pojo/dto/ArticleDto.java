@@ -36,7 +36,7 @@ public class ArticleDto implements Serializable {
     private Integer categoryId;
 
     @Schema(description = "标签列表")
-    private List<Long> tags;
+    private String tags;
 
     @Schema(description = "是否发布(0否，1是)")
     private Integer isPush;
@@ -53,6 +53,4 @@ public class ArticleDto implements Serializable {
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
 
-    @Schema(description = "更新时间")
-    private LocalDateTime updatedTime;
 }

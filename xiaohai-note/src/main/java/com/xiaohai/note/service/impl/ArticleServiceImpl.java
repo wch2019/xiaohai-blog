@@ -119,23 +119,24 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
-        Article article = new Article();
-        BeanUtils.copyProperties(query, article);
-        IPage<Article> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Article> iPage = baseMapper.selectPage(wherePage, Wrappers.query(article)
-                .orderByDesc(" is_top")
-                .orderByDesc("top_time")
-                .orderByDesc("created_time"));
-        List<ArticleDto> list = new ArrayList<>();
-        for (Article articles : iPage.getRecords()) {
-            ArticleDto articleDto = new ArticleDto();
-            BeanUtils.copyProperties(articles, articleDto);
-            articleDto.setTags(articleTagMapper.searchAllByArticleId(Long.valueOf(articles.getId())));
-            list.add(articleDto);
-        }
+//        Article article = new Article();
+//        BeanUtils.copyProperties(query, article);
+        IPage<ArticleDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
+        IPage<ArticleDto> iPage =baseMapper.selectPageArticleQuery(wherePage,query);
+//        IPage<Article> iPage = baseMapper.selectPage(wherePage, Wrappers.query(article)
+//                .orderByDesc(" is_top")
+//                .orderByDesc("top_time")
+//                .orderByDesc("created_time"));
+//        List<ArticleDto> list = new ArrayList<>();
+//        for (Article articles : iPage.getRecords()) {
+//            ArticleDto articleDto = new ArticleDto();
+//            BeanUtils.copyProperties(articles, articleDto);
+//            articleDto.setTags(articleTagMapper.searchAllByArticleId(Long.valueOf(articles.getId())));
+//            list.add(articleDto);
+//        }
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
-        return ReturnPageData.fillingData(pageData, list);
+        return ReturnPageData.fillingData(pageData, iPage.getRecords());
     }
 
     @Override

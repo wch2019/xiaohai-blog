@@ -26,5 +26,44 @@
         updated_time,
         id, user_id, category_id, title, cover, text, is_push, is_top, top_time, is_original, original_url, page_view
     </sql>
+    <select id="selectPageArticleQuery" resultType="com.xiaohai.note.pojo.dto.ArticleDto">
+        SELECT
+            a.id,
+            a.cover,
+            a.title,
+            a.category_id,
+            a.is_push as isPush,
+            a.is_top as isTop,
+            a.is_original as isOriginal,
+            a.page_view as pageView,
+            a.created_time as createdTime,
+            GROUP_CONCAT( DISTINCT t.tag_id ) as tags
+        FROM
+            b_article a
+                LEFT JOIN b_article_tag t ON a.id = t.article_id
+        <where>
+            <if test="param.title != null and param.title != ''">
+                a.title like concat('%',#{param.title},'%')
+            </if>
+            <if test="param.categoryId != null and param.categoryId != ''">
+                and a.category_id=#{param.categoryId}
+            </if>
+            <if test="param.tagId != null and param.tagId != ''">
+                and a.id in (SELECT article_id FROM b_article_tag where tag_id=#{param.tagId})
+            </if>
+            <if test="param.isPush != null and param.isPush != ''">
+                and a.is_push=#{param.isPush}
+            </if>
+            <if test="param.isOriginal != null and param.isOriginal != ''">
+                and a.is_original=#{param.isOriginal}
+            </if>
+        </where>
+        GROUP BY
+            a.id
+        ORDER BY
+            a.is_top DESC,
+            a.top_time DESC,
+            a.created_time DESC
+    </select>
 
 </mapper>
