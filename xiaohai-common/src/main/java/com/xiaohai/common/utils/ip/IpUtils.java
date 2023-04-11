@@ -1,6 +1,8 @@
 package com.xiaohai.common.utils.ip;
 
 
+//import cn.hutool.http.useragent.UserAgentUtil;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -165,6 +167,16 @@ public class IpUtils {
             return null;
         }
         return bytes;
+    }
+
+    /**
+     * 获取访问设备
+     *
+     * @param request 请求
+     * @return {@link UserAgent} 访问设备
+     */
+    public static UserAgent getUserAgent(HttpServletRequest request){
+        return UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
     }
 
     /**

@@ -13,6 +13,8 @@
         <el-descriptions-item label="请求方式">{{ form.requestMethod }}</el-descriptions-item>
         <el-descriptions-item label="请求url">{{ form.operUrl }}</el-descriptions-item>
         <el-descriptions-item label="主机地址">{{ form.operIp }}</el-descriptions-item>
+        <el-descriptions-item label="系统">{{ form.operOs }}</el-descriptions-item>
+        <el-descriptions-item label="浏览器">{{ form.operBrowser }}</el-descriptions-item>
         <el-descriptions-item label="方法名称">{{ form.method }}</el-descriptions-item>
       </el-descriptions>
       <el-descriptions direction="vertical" :column="1" border>

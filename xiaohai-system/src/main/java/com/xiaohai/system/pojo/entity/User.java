@@ -66,9 +66,22 @@ public class User extends BaseEntity  implements Serializable  {
     @Schema(description = "帐号状态（0正常 1停用）")
     private String status;
 
+    @Schema(description = "登录次数")
+    private Integer loginCount;
+
     @Schema(description = "最后登录ip")
     private String loginIp;
 
+    @Schema(description = "ip来源")
+    private String loginSource;
+
     @Schema(description = "最后登录时间")
     private LocalDateTime loginDate;
+
+    @Schema(description = "操作系统")
+    private String loginOs;
+
+    @Schema(description = "浏览器")
+    private String loginBrowser;
+
 }

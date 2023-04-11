@@ -11,6 +11,7 @@ import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.vo.LogVo;
 import com.xiaohai.system.service.LogService;
 import com.xiaohai.system.service.UserService;
+import eu.bitwalker.useragentutils.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -156,6 +157,10 @@ public class LogOperationAop {
             log.setRequestMethod(request.getMethod());
             log.setOperUrl(request.getRequestURL().toString());
             log.setOperIp(IpUtils.getIpAddr(request));
+            //获取UA信息
+            UserAgent userAgent = IpUtils.getUserAgent(request);
+            log.setOperOs(userAgent.getOperatingSystem().getName());
+            log.setOperBrowser(userAgent.getBrowser().getName());
             log.setOperParam(new JSONArray(joinPoint.getArgs()).toString());
             //异常
             if (e != null) {
@@ -169,8 +174,10 @@ public class LogOperationAop {
                 log.setJsonResult(StringUtils.substring(new JSONObject(jsonResult).toString(), 0, 2000));
             }
             // 当前操作用户
-            User nowUser = userService.getById((Serializable) StpUtil.getLoginId());
-            log.setCreatedBy(nowUser.getUsername());
+            if(StpUtil.getLoginIdDefaultNull()!=null){
+                User nowUser = userService.getById((Serializable) StpUtil.getLoginId());
+                log.setCreatedBy(nowUser.getUsername());
+            }
             log.setCreatedTime(LocalDateTime.now());
             logService.add(log);
         } catch (Exception exp) {

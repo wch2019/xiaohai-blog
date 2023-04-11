@@ -40,6 +40,12 @@ public class LogVo implements Serializable {
     @Schema(description = "主机地址")
     private String operIp;
 
+    @Schema(description = "操作系统")
+    private String operOs;
+
+    @Schema(description = "浏览器")
+    private String operBrowser;
+
     @Schema(description = "请求参数")
     private String operParam;
 

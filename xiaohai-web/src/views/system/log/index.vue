@@ -136,7 +136,7 @@
 
 <script>
 import RoleDialog from './componets/logDialog.vue'
-import { listLog, delLog, getLog, delLogAll} from '@/api/system/log'
+import { listLog, delLog, getLog, delLogAll } from '@/api/system/log'
 
 export default {
   name: 'Index',
