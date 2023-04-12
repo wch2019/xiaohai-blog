@@ -20,4 +20,8 @@ public class RedisConstants {
      * 字典管理 cache key
      */
     public static final String SYS_DICT_KEY = "sys_dict:";
+    /**
+     * 在线用户管理 cache key
+     */
+    public static final String ON_LINE_USER = "on_line_user:";
 }

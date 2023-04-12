@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.utils.OnLineUtils;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RegisterVo;
 import com.xiaohai.system.pojo.vo.RoleVo;
@@ -55,6 +56,8 @@ public class LoginController {
     @GetMapping("logout")
     public Response<Object> logout() {
         StpUtil.logout();
+        //去除redis在线用户
+        OnLineUtils.removeOnLineCache(StpUtil.getLoginId().toString());
         return Response.success("退出成功");
     }
 }

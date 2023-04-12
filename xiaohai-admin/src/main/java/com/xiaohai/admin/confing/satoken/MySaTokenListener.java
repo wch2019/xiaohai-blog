@@ -2,8 +2,10 @@ package com.xiaohai.admin.confing.satoken;
 
 import cn.dev33.satoken.listener.SaTokenListener;
 import cn.dev33.satoken.stp.SaLoginModel;
+import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.NumberUtil;
+import com.xiaohai.common.daomain.OnLineUser;
+import com.xiaohai.common.utils.OnLineUtils;
 import com.xiaohai.common.utils.ip.AddressUtils;
 import com.xiaohai.common.utils.ip.IpUtils;
 import com.xiaohai.system.dao.UserMapper;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 /**
  * 自定义侦听器的实现 
  */
@@ -48,9 +52,10 @@ public class MySaTokenListener implements SaTokenListener {
         BeanUtils.copyProperties(userNew,onLineUser);
         onLineUser.setUsername(user.getUsername());
         onLineUser.setNickName(user.getNickName());
-        String token = StpUtil.getTokenValueByLoginId(loginId);
-
-        log.info("用户已登录,useId:{},token:{}", loginId, token);
+        onLineUser.setLogoutDate(onLineUser.getLoginDate().plus(loginModel.getCookieTimeout(),ChronoUnit.SECONDS));
+        onLineUser.setTime(loginModel.getCookieTimeout());
+        OnLineUtils.setOnLineCache(loginId.toString(),onLineUser);
+        log.info("用户已登录,useId:{},token:{}", loginId, tokenValue);
     }
 
     /** 每次注销时触发 */

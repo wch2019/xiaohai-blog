@@ -1,4 +1,4 @@
-package com.xiaohai.admin.confing.satoken;
+package com.xiaohai.common.daomain;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -31,11 +31,17 @@ public class OnLineUser{
     @Schema(description = "登录时间")
     private LocalDateTime loginDate;
 
+    @Schema(description = "过期时间")
+    private LocalDateTime logoutDate;
+
+    @Schema(description = "持续时间秒")
+    private Integer time;
+
     @Schema(description = "ip来源")
     private String loginSource;
 
     @Schema(description = "登录次数")
-    private String loginCount;
+    private Integer loginCount;
 
     @Schema(description = "操作系统")
     private String loginOs;
