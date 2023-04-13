@@ -82,6 +82,7 @@ service.interceptors.response.use(
   },
   error => {
     if (error.response) {
+      console.log(error)
       // 业务异常
       if (error.response.data.code === 400) {
         message.error(error.response.data.msg)
@@ -103,11 +104,11 @@ service.interceptors.response.use(
           })
         })
       }
-      message.error(error.response.data.msg)
+      message.error(error)
     } else {
       // 设置触发错误的请求时发生某些情况
-      console.log('Error', error.message)
-      message.error(error.response.data.msg)
+      console.log('Error', error)
+      message.error(error)
     }
     return Promise.reject(error)
   }

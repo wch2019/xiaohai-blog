@@ -58,9 +58,9 @@ public class OnLineUtils {
         if(pageNo==0){
             pageNo=1;
         }
-        pageData.setTotal(pageNo);
+        pageData.setTotal(keys.size());
         pageData.setSize(PageUtils.getPageSize());
-        pageData.setCurrent(keys.size());
+        pageData.setCurrent(pageNo);
         //java8 使用stream api进行分页
         List<String> list=keys.stream().skip((pageNo-1)*pageData.getSize()).limit(pageData.getSize()).toList();
         List<OnLineUser> onLineUsers=new ArrayList<>();

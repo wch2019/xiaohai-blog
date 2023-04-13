@@ -84,22 +84,22 @@
       :data="logList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="模块名称" align="center" prop="title" :show-overflow-tooltip="true"/>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="模块名称" align="center" prop="title" :show-overflow-tooltip="true" />
       <el-table-column label="请求方式" align="center" prop="requestMethod" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_request_method" :value="scope.row.requestMethod"/>
+          <dict-tag :options="$store.getters.dict.sys_request_method" :value="scope.row.requestMethod" />
         </template>
       </el-table-column>
-      <el-table-column label="ip地址" align="center" prop="operIp" :show-overflow-tooltip="true"/>
+      <el-table-column label="ip地址" align="center" prop="operIp" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status==1" type="danger">异常</el-tag>
           <el-tag v-if="scope.row.status==0" type="success">正常</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作人" align="center" prop="createdBy" width="180"/>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180"/>
+      <el-table-column label="操作人" align="center" prop="createdBy" width="180" />
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -129,7 +129,7 @@
       @pagination="getList"
     />
 
-    <RoleDialog ref="userDialog" @closeDialog="closeDialog"/>
+    <RoleDialog ref="userDialog" @closeDialog="closeDialog" />
   </div>
 
 </template>

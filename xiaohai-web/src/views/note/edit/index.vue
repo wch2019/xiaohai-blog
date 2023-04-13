@@ -11,7 +11,7 @@
           <el-col :span="16">
             <el-row>
               <el-form-item label="标题" prop="title">
-                <el-input v-model="form.title" style="width: 80%" placeholder="请输入标题"/>
+                <el-input v-model="form.title" style="width: 80%" placeholder="请输入标题" />
               </el-form-item>
             </el-row>
             <el-row>
@@ -71,13 +71,13 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item v-if="form.isOriginal===1" label="转载地址" prop="originalUrl">
-                  <el-input v-model="form.originalUrl" placeholder="请输入转载地址"/>
+                  <el-input v-model="form.originalUrl" placeholder="请输入转载地址" />
                 </el-form-item>
               </el-col>
             </el-row>
           </el-col>
           <el-col :span="8">
-            <el-form-item/>
+            <el-form-item />
             <el-form-item prop="cover">
               <template #label>
                 封面
@@ -90,7 +90,7 @@
                     随机获取一张图片
                     <el-button type="text" size="mini" @click="randomImg()">确定</el-button>
                   </div>
-                  <i slot="reference" class="el-icon-question"/>
+                  <i slot="reference" class="el-icon-question" />
                 </el-popover>
               </template>
 
@@ -102,7 +102,7 @@
                 :http-request="uploadSectionFile"
               >
                 <img v-if="form.cover" :src="form.cover" class="el-upload-dragger">
-                <i v-else class="el-icon-upload"/>
+                <i v-else class="el-icon-upload" />
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em>
 
                 </div>

@@ -52,7 +52,7 @@
           @clear="queryParams.isPush = null"
         >
           <el-option
-            v-for="(item,index)  in isPush"
+            v-for="(item,index) in isPush"
             :key="index"
             :label="item"
             :value="index"
@@ -65,11 +65,10 @@
           placeholder="类型"
           clearable
           size="small"
-
           @clear="queryParams.isOriginal = null"
         >
           <el-option
-            v-for="(item,index)  in isOriginal"
+            v-for="(item,index) in isOriginal"
             :key="index"
             :label="item"
             :value="index"
@@ -129,9 +128,9 @@
       @selection-change="handleSelectionChange"
       @row-dblclick="handle"
     >
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="封面" align="center" prop="cover" :render-header="renderHeader">
-        <template slot-scope="scope" >
+        <template slot-scope="scope">
           <div style="position: relative">
             <el-image :src="scope.row.cover" :preview-src-list="srcList" />
             <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
