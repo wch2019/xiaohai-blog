@@ -74,6 +74,9 @@ Vue.use(JsonViewer)
 // Jsonp
 import { VueJsonp } from 'vue-jsonp'
 Vue.use(VueJsonp)
+//标签云
+import tagCloud from '@/utils/tag-cloud'
+Vue.use(tagCloud)
 
 Vue.config.productionTip = false
 
