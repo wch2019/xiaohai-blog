@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "0.18.1",
     "core-js": "3.6.5",
+    "echarts": "^5.4.2",
     "element-ui": "^2.15.13",
     "fuse.js": "3.4.4",
     "github-markdown-css": "^5.2.0",
@@ -31,6 +32,7 @@
     "v-viewer": "^1.6.4",
     "vue": "2.6.10",
     "vue-calendar-heatmap": "^0.8.4",
+    "vue-count-to": "^1.0.13",
     "vue-cropper": "^0.5.10",
     "vue-json-viewer": "^2.2.22",
     "vue-jsonp": "^2.0.0",
