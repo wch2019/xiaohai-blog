@@ -1,5 +1,12 @@
 <template>
   <div class="dashboard-editor-container">
+    <!-- 用户信息 -->
+    <el-card class="drop-shadow">
+      <div style="text-align: center">
+        {{ a }}
+        普希金说过，假如生活欺骗了你，不要悲伤，不要心急！忧郁的日子里需要镇静。相信吧，快乐的日子将会来临。而我们的快乐便是明天又能愉快地摸鱼！
+      </div>
+    </el-card>
     <panel-group/>
 
     <el-row :gutter="24">
@@ -23,20 +30,26 @@
 
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <div class="e-title">分类</div>
+        <el-card class="box-card" style=" margin-bottom: 32px;">
+          <div slot="header" class="clearfix">
+            <span>分类</span>
+          </div>
           <pie-chart :chart-data="pieChart"/>
-        </div>
+        </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <div class="e-title">标签云</div>
+        <el-card class="box-card" style=" margin-bottom: 32px;">
+          <div slot="header" class="clearfix">
+            <span>标签云</span>
+          </div>
           <tag-cloud :data="hotTag" style="height: 400px;width: 80%"/>
-        </div>
+        </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper ">
-          <div class="e-title">文章阅读量排行</div>
+        <el-card class="box-card" style=" margin-bottom: 32px;">
+          <div slot="header" class="clearfix">
+            <span>文章阅读量排行</span>
+          </div>
           <el-table :data="list" style="width: 100%;padding-top: 15px;" height="400" max-height="400">
             <el-table-column label="标题">
               <template slot-scope="scope">
@@ -45,12 +58,16 @@
             </el-table-column>
             <el-table-column label="阅读量" prop="quantity" align="center"/>
           </el-table>
-        </div>
+        </el-card>
       </el-col>
     </el-row>
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <div class="e-title">一周访问量</div>
-      <line-chart :chart-data="lineChartData"/>
+    <el-row>
+      <el-card class="box-card" style=" margin-bottom: 32px;">
+        <div slot="header" class="clearfix">
+          <span>一周访问量</span>
+        </div>
+        <line-chart :chart-data="lineChartData"/>
+      </el-card>
     </el-row>
   </div>
 </template>
@@ -121,10 +138,26 @@ export default {
         { date: '2023-04-04', count: 4 },
         { date: '2023-04-05', count: 5 },
         { date: '2023-04-06', count: 6 }
-      ]
+      ],
+      a: this.greetings()
     }
   },
-  methods: {}
+  methods: {
+    greetings() {
+      const date = new Date()
+      if (date.getHours() >= 6 && date.getHours() < 8) {
+        return '晨起披衣出草堂，轩窗已自喜微凉🌅！'
+      } else if (date.getHours() >= 8 && date.getHours() < 12) {
+        return '上午好🌞！'
+      } else if (date.getHours() >= 12 && date.getHours() < 18) {
+        return '下午好☕！'
+      } else if (date.getHours() >= 18 && date.getHours() < 24) {
+        return '晚上好🌃！'
+      } else if (date.getHours() >= 0 && date.getHours() < 6) {
+        return '偷偷向银河要了一把碎星，只等你闭上眼睛撒入你的梦中，晚安🌛！'
+      }
+    }
+  }
 }
 </script>
 
