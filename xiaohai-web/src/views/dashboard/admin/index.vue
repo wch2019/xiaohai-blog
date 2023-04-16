@@ -1,12 +1,12 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group />
+    <panel-group/>
 
     <el-row :gutter="24">
-      <div style="padding:1% 20% 0 20%">
-        <h3 style="text-align: center;margin: 20px">
-          <mallki class-name="mallki-text" text="近一年文章数" />
-        </h3>
+      <div style="padding:1% 20% 1% 20%">
+        <h4 style="text-align: center;margin: 20px">
+          <mallki class-name="mallki-text" text="近一年文章数"/>
+        </h4>
         <calendar-heatmap
           :end-date="new Date().toLocaleDateString()"
           :values="timeValue"
@@ -24,40 +24,34 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-             <div class="e-title">分类</div>
-          <pie-chart />
+          <div class="e-title">分类</div>
+          <pie-chart :chart-data="pieChart"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-             <div class="e-title">标签云</div>
-          <tag-cloud :data="hotTag" style="height: 400px;width: 80%" />
+          <div class="e-title">标签云</div>
+          <tag-cloud :data="hotTag" style="height: 400px;width: 80%"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper ">
-            <div class="e-title">文章阅读量排行</div>
-            <el-table :data="list" style="width: 100%;padding-top: 15px;" max-height="400">
-              <el-table-column label="标题">
-                <template slot-scope="scope">
-                  <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
-                </template>
-              </el-table-column>
-              <el-table-column label="阅读量" prop="quantity" align="center" />
-            </el-table>
-          </div>
+        <div class="chart-wrapper ">
+          <div class="e-title">文章阅读量排行</div>
+          <el-table :data="list" style="width: 100%;padding-top: 15px;" height="400" max-height="400">
+            <el-table-column label="标题">
+              <template slot-scope="scope">
+                <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
+              </template>
+            </el-table-column>
+            <el-table-column label="阅读量" prop="quantity" align="center"/>
+          </el-table>
+        </div>
       </el-col>
-<!--            <el-col :xs="24" :sm="24" :lg="6">-->
-<!--              <div class="chart-wrapper">-->
-<!--                <todo-list />-->
-<!--              </div>-->
-<!--            </el-col>-->
     </el-row>
-
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+      <div class="e-title">一周访问量</div>
+      <line-chart :chart-data="lineChartData"/>
     </el-row>
-
   </div>
 </template>
 
@@ -65,7 +59,6 @@
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import PieChart from './components/PieChart'
-import TodoList from './components/TodoList'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 import 'vue-calendar-heatmap/dist/vue-calendar-heatmap.css'
 import { CalendarHeatmap } from 'vue-calendar-heatmap/dist/vue-calendar-heatmap.common'
@@ -77,7 +70,6 @@ export default {
     LineChart,
     Mallki,
     PieChart,
-    TodoList,
     CalendarHeatmap
   },
   data() {
@@ -96,17 +88,24 @@ export default {
         { name: '太极' }
       ],
       lineChartData: {
-        expectedData: [100, 120, 161, 134, 105, 160, 165],
-        actualData: [120, 82, 91, 154, 162, 140, 145]
+        PVData: [100, 120, 161, 134, 105, 160, 165],
+        UVData: [120, 82, 91, 154, 162, 140, 145],
+        IPData: [110, 72, 81, 144, 162, 140, 135]
+      },
+      pieChart: {
+        nameData: ['测试', 'Technology', 'Forex', 'Gold', 'Forecasts'],
+        valueData: [
+          { value: 320, name: '测试' },
+          { value: 240, name: 'Technology' },
+          { value: 149, name: 'Forex' },
+          { value: 100, name: 'Gold' },
+          { value: 59, name: 'Forecasts' }
+        ]
       },
       list: [
         { title: 'aaa' },
-        { title: 'aaa' },
-        { title: 'aaa' },
-        { title: 'aaa' },
-        { title: 'aaa' },
-        { title: 'aaa' },
         { title: 'aaa' }
+
       ],
       locale: {
         months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
@@ -125,9 +124,7 @@ export default {
       ]
     }
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 

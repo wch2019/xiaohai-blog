@@ -59,7 +59,7 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ UVData, PVData, IPData } = {}) {
       this.chart.setOption({
         xAxis: {
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -88,7 +88,7 @@ export default {
           }
         },
         legend: {
-          data: ['访问量(PV)', '独立用户(UV)']
+          data: ['访问量(PV)', '独立用户(UV)', 'IP(独立IP)']
         },
         series: [{
           name: '访问量(PV)', itemStyle: {
@@ -102,7 +102,7 @@ export default {
           },
           smooth: true,
           type: 'line',
-          data: expectedData,
+          data: PVData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         },
@@ -122,7 +122,27 @@ export default {
               }
             }
           },
-          data: actualData,
+          data: UVData,
+          animationDuration: 2800,
+          animationEasing: 'quadraticOut'
+        },
+        {
+          name: 'IP(独立IP)',
+          smooth: true,
+          type: 'line',
+          itemStyle: {
+            normal: {
+              color: '#46c200',
+              lineStyle: {
+                color: '#46c200',
+                width: 2
+              },
+              areaStyle: {
+                color: '#f3f8ff'
+              }
+            }
+          },
+          data: IPData,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
         }]

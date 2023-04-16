@@ -1,9 +1,10 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{height:height,width:width}"/>
 </template>
 
 <script>
 import * as echarts from 'echarts'
+
 require('echarts/theme/macarons') // echarts theme
 
 export default {
@@ -19,6 +20,10 @@ export default {
     height: {
       type: String,
       default: '400px'
+    },
+    chartData: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -41,7 +46,6 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
       this.chart.setOption({
         tooltip: {
           trigger: 'item',
@@ -50,22 +54,16 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: this.chartData.nameData
         },
         series: [
           {
-            name: '测试',
+            name: '分类',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: this.chartData.valueData,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }
