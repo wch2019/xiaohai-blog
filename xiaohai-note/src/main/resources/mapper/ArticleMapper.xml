@@ -65,5 +65,12 @@
             a.top_time DESC,
             a.created_time DESC
     </select>
+    <select id="getPageView" resultType="java.lang.Long">
+        SELECT sum(page_view)  FROM b_article
+    </select>
+    <select id="getCreatedTime" resultType="com.xiaohai.note.pojo.dto.DateCount">
+        select date(updated_time) as date,count(id) as count from b_article where YEAR(updated_time)=YEAR(now()) GROUP BY date(created_time)
+    </select>
+
 
 </mapper>

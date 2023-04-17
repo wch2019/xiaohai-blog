@@ -8,6 +8,8 @@ import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 
+import java.util.Map;
+
 /**
  *
  * 文章表 服务类
@@ -78,4 +80,16 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     Integer push(Long id);
+
+    /**
+     * 获取所有文章的阅读量
+     * @return
+     */
+    Long getPageView();
+
+    /**
+     * 近一年个章贡献度
+     * @return
+     */
+    Map<String, Object> contribution();
 }

@@ -284,6 +284,10 @@ export default {
             key.cover = process.env.VUE_APP_BASE_API_FILE + key.cover
             this.srcList.push(key.cover)
           }
+          if (key.isPush === 1) {
+            key.isPush = true
+            this.srcList.push(key.isPush)
+          }
         })
       })
     },

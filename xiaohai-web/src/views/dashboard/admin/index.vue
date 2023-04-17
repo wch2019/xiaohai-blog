@@ -3,8 +3,7 @@
     <!-- 用户信息 -->
     <el-card class="drop-shadow">
       <div style="text-align: center">
-        {{ a }}
-        普希金说过，假如生活欺骗了你，不要悲伤，不要心急！忧郁的日子里需要镇静。相信吧，快乐的日子将会来临。而我们的快乐便是明天又能愉快地摸鱼！
+        {{ a + word }}
       </div>
     </el-card>
     <panel-group/>
@@ -12,7 +11,7 @@
     <el-row :gutter="24">
       <div style="padding:1% 20% 1% 20%">
         <h4 style="text-align: center;margin: 20px">
-          <mallki class-name="mallki-text" text="近一年文章数"/>
+          <mallki class-name="mallki-text" text="近一年文章贡献度"/>
         </h4>
         <calendar-heatmap
           :end-date="new Date().toLocaleDateString()"
@@ -23,7 +22,7 @@
           :range-color="[ '#dae2ef', '#c0ddf9', '#73b3f3', '#3886e1', '#17459e']"
         />
         <div style="padding-left:5%;padding-bottom:2%;font-size: 12px">
-          最近一年提交: 123次 最长连续提交: 3天 最近持续提交: 0天
+          最近一年创作: {{oneYear}}次 最长连续创作: {{longest}}日 最近持续创作: {{continuous}}日
         </div>
       </div>
     </el-row>
@@ -50,13 +49,13 @@
           <div slot="header" class="clearfix">
             <span>文章阅读量排行</span>
           </div>
-          <el-table :data="list" style="width: 100%;padding-top: 15px;" height="400" max-height="400">
+          <el-table :data="rank" style="width: 100%;padding-top: 15px;" height="400" max-height="400">
             <el-table-column label="标题">
               <template slot-scope="scope">
                 <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
               </template>
             </el-table-column>
-            <el-table-column label="阅读量" prop="quantity" align="center"/>
+            <el-table-column label="阅读量" prop="pageView" align="center"/>
           </el-table>
         </el-card>
       </el-col>
@@ -79,6 +78,7 @@ import PieChart from './components/PieChart'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 import 'vue-calendar-heatmap/dist/vue-calendar-heatmap.css'
 import { CalendarHeatmap } from 'vue-calendar-heatmap/dist/vue-calendar-heatmap.common'
+import { getWord, getRank, getContribution } from '@/api/dashboard/index'
 
 export default {
   name: 'DashboardAdmin',
@@ -91,39 +91,18 @@ export default {
   },
   data() {
     return {
-      hotTag: [
-        { name: '民族舞' },
-        { name: '书法' },
-        { name: '象棋' },
-        { name: '象棋7' },
-        { name: '象棋' },
-        { name: '象棋' },
-        { name: '象棋' },
-        { name: '象棋' },
-        { name: '象棋' },
-        { name: '围棋' },
-        { name: '太极' }
-      ],
+      // 标签云
+      hotTag: [],
+      // 流量线图
       lineChartData: {
         PVData: [100, 120, 161, 134, 105, 160, 165],
         UVData: [120, 82, 91, 154, 162, 140, 145],
         IPData: [110, 72, 81, 144, 162, 140, 135]
       },
-      pieChart: {
-        nameData: ['测试', 'Technology', 'Forex', 'Gold', 'Forecasts'],
-        valueData: [
-          { value: 320, name: '测试' },
-          { value: 240, name: 'Technology' },
-          { value: 149, name: 'Forex' },
-          { value: 100, name: 'Gold' },
-          { value: 59, name: 'Forecasts' }
-        ]
-      },
-      list: [
-        { title: 'aaa' },
-        { title: 'aaa' }
-
-      ],
+      // 分类饼状图
+      pieChart: {},
+      // 文章阅读量排行
+      rank: [],
       locale: {
         months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
         days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
@@ -131,18 +110,46 @@ export default {
         less: '少',
         more: '多'
       },
-      timeValue: [
-        { date: '2023-04-01', count: 1 },
-        { date: '2023-04-02', count: 2 },
-        { date: '2023-04-03', count: 3 },
-        { date: '2023-04-04', count: 4 },
-        { date: '2023-04-05', count: 5 },
-        { date: '2023-04-06', count: 6 }
-      ],
-      a: this.greetings()
+      // 近一年文章贡献度图
+      timeValue: [],
+      // 最近一年文章贡献
+      oneYear: 0,
+      // 最长连续创作
+      longest: 0,
+      // 最近持续持续
+      continuous: 0,
+      // 获取时间语句
+      a: this.greetings(),
+      // 随机输出毒鸡汤
+      word: ''
     }
   },
+  created() {
+    this.getWord()
+    this.getRank()
+    this.getContribution()
+  },
   methods: {
+    getWord() {
+      getWord().then(response => {
+        this.word = response.data
+      })
+    },
+    getRank() {
+      getRank().then(response => {
+        this.pieChart = response.data.category
+        this.hotTag = response.data.tags
+        this.rank = response.data.rank
+      })
+    },
+    getContribution() {
+      getContribution().then(response => {
+        this.timeValue = response.data.timeValue
+        this.oneYear = response.data.oneYear
+        this.longest = response.data.longest
+        this.continuous = response.data.continuous
+      })
+    },
     greetings() {
       const date = new Date()
       if (date.getHours() >= 6 && date.getHours() < 8) {

@@ -32,6 +32,10 @@ export default {
     }
   },
   mounted() {
+    // 添加延时加载
+    setTimeout(() => {
+      this.initChart()
+    }, 500)
     this.$nextTick(() => {
       this.initChart()
     })

@@ -10,14 +10,17 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.confing.FileConfig;
+import com.xiaohai.common.daomain.Contribution;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.ContributionUtils;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.ArticleTagMapper;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
+import com.xiaohai.note.pojo.dto.DateCount;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
@@ -37,10 +40,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 文章表 服务实现类
@@ -75,6 +78,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         var count = baseMapper.insert(article);
         //新增标签
         articleTagService.add(vo.getTags(), article.getId());
+        //统计持续创作天数
+        ContributionUtils.setContribution();
         return count;
     }
 
@@ -105,6 +110,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //更新标签
         articleTagService.rewriteArticleTag(vo.getTags(), article.getId());
         article.setUpdatedTime(LocalDateTime.now());
+        //统计持续创作天数
+        ContributionUtils.setContribution();
         return baseMapper.updateById(article);
     }
 
@@ -119,21 +126,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
-//        Article article = new Article();
-//        BeanUtils.copyProperties(query, article);
         IPage<ArticleDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<ArticleDto> iPage =baseMapper.selectPageArticleQuery(wherePage,query);
-//        IPage<Article> iPage = baseMapper.selectPage(wherePage, Wrappers.query(article)
-//                .orderByDesc(" is_top")
-//                .orderByDesc("top_time")
-//                .orderByDesc("created_time"));
-//        List<ArticleDto> list = new ArrayList<>();
-//        for (Article articles : iPage.getRecords()) {
-//            ArticleDto articleDto = new ArticleDto();
-//            BeanUtils.copyProperties(articles, articleDto);
-//            articleDto.setTags(articleTagMapper.searchAllByArticleId(Long.valueOf(articles.getId())));
-//            list.add(articleDto);
-//        }
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
@@ -198,4 +192,26 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         return baseMapper.updateById(article);
     }
+
+    @Override
+    public Long getPageView() {
+        return baseMapper.getPageView();
+    }
+
+    @Override
+    public Map<String, Object> contribution() {
+        Map<String, Object> data=new HashMap<>();
+        List<DateCount> timeValue=baseMapper.getCreatedTime();
+        Contribution contribution=ContributionUtils.getContribution();
+        //最近一年文章
+        data.put("oneYear", timeValue.stream().map(DateCount::getCount).mapToLong(Long::intValue).sum());
+        //最长连续创作
+        data.put("longest",contribution.getLongest());
+        //最近持续持续
+        data.put("continuous",contribution.getContinuous());
+        //统计表
+        data.put("timeValue",timeValue);
+        return data;
+    }
+
 }

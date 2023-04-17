@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.daomain.ValueName;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.CategoryMapper;
@@ -23,7 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -38,6 +42,7 @@ import java.util.List;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
     private final ArticleMapper articleMapper;
+
     @Override
     public Integer add(CategoryVo vo){
         Category category=new Category();
@@ -94,5 +99,22 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
             list.add(categoryDto);
         }
         return list;
+    }
+
+    @Override
+    public  Map<String,Object> pieChart() {
+        Map<String,Object> map=new HashMap<>();
+        List<Category> categories=baseMapper.selectList(new QueryWrapper<Category>().orderByAsc("sort"));
+        List<String> nameList  = categories.stream().map(Category::getName).toList();
+        List<ValueName> valueNames=new ArrayList<>();
+        for(Category category:categories){
+            ValueName valueName=new ValueName();
+            valueName.setValue(articleMapper.selectCount(new QueryWrapper<Article>().eq("category_id", category.getId())));
+            valueName.setName(category.getName());
+            valueNames.add(valueName);
+        }
+        map.put("nameData",nameList);
+        map.put("valueData",valueNames);
+        return map;
     }
 }

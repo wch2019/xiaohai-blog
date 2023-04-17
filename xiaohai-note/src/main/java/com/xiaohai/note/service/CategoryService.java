@@ -8,6 +8,7 @@ import com.xiaohai.note.pojo.vo.CategoryVo;
 import com.xiaohai.note.pojo.dto.CategoryDto;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -65,4 +66,10 @@ public interface CategoryService extends IService<Category> {
      * @return
      */
     List<CategoryDto> optionSelect();
+
+    /**
+     * 查询分类饼状图
+     * @return
+     */
+    Map<String,Object> pieChart();
 }
