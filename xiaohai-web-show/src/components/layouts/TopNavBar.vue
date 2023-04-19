@@ -1,7 +1,9 @@
 <template>
   <nav>
     <ul>
-      <li><div class="font">dotcode</div></li>
+      <li>
+        <div class="font">dotcode</div>
+      </li>
       <li><a href="#">首页</a></li>
       <li><a href="#">技术</a></li>
       <li><a href="#">设计</a></li>
@@ -72,8 +74,9 @@ import { toggleDark } from '@/utils/dark'
 }
 
 a:hover {
-  filter: drop-shadow(0 0 2em rgba(143, 149, 250, 0.67));
+  filter: drop-shadow(0 0 2em rgb(252, 191, 191));
 }
+
 .font {
   font-size: 40px;
   /*color: #50bfff !important;*/
@@ -87,7 +90,7 @@ nav {
   background-color: rgba(255, 255, 255, 0.5);
   /* 模糊大小就是靠的blur这个函数中的数值大小 */
   backdrop-filter: blur(5px);
-  box-shadow: 2px 2px 5px 3px red;
+  box-shadow: 1px 1px 1px 1px #fcbfbfff;
   padding: 10px;
 }
 
@@ -111,6 +114,6 @@ a {
 }
 
 a:hover {
-  background-color: #ddd;
+  background-color: rgb(252, 191, 191);
 }
 </style>
