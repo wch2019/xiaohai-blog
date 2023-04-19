@@ -1,32 +1,35 @@
 <template>
-<!--  <v-footer app padless absolute v-if="!this.isMessage">-->
-    <div class="footer-wrap">
-      <div>
-        ©{{  2023 }} -
-        {{ new Date().getFullYear() }} By
-<!--        {{blogInfo.webSite.author}}-->
-      </div>
-      <a href="https://beian.miit.gov.cn/" target="_blank">
-<!--        {{blogInfo.webSite.recordNum}}-->
-      </a>
+  <el-card class="box-card">
+    <!--    <div class="footer-wrap">-->
+    <div>
+      ©{{ 2023 }} - {{ new Date().getFullYear() }} By
+      <!--        {{blogInfo.webSite.author}}-->
     </div>
-<!--  </v-footer>-->
+    <a href="https://beian.miit.gov.cn/" target="_blank">
+      <!--        {{blogInfo.webSite.recordNum}}-->
+    </a>
+    <!--    </div>-->
+  </el-card>
 </template>
 
 <script>
 export default {
   computed: {
     isMessage() {
-      return this.$route.path == "/message";
+      return this.$route.path === '/message'
     },
     blogInfo() {
-      return this.$store.state.blogInfo;
+      return this.$store.state.blogInfo
     }
   }
-};
+}
 </script>
 
 <style scoped>
+.box-card:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
 .footer-wrap {
   margin-top: auto;
   width: 100%;
@@ -40,9 +43,11 @@ export default {
   background-size: 400% 400%;
   animation: Gradient 10s ease infinite;
 }
+
 .footer-wrap a {
   color: #eee !important;
 }
+
 @keyframes Gradient {
   0% {
     background-position: 0 50%;

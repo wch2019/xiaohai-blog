@@ -1,23 +1,16 @@
 // 路由配置文件
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Home from '@/views/home.vue'
-import Vuex from '@/views/vuex.vue'
+import index from '@/views/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
-  },
-  {
-    path: '/vuex',
-    name: 'Vuex',
-    component: Vuex
-  },
-  {
-    path: '/axios',
-    name: 'Axios',
-    component: () => import('@/views/axios.vue') // 懒加载组件
+    component: index,
+    children: [
+      { path: '/', component: () => import('@/views/index.vue') },
+      { path: '/axios', component: () => import('@/views/axios.vue') }
+    ]
   }
 ]
 

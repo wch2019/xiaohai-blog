@@ -29,32 +29,32 @@
   <el-row>
     <el-button circle>
       <el-icon>
-        <Search/>
+        <Search />
       </el-icon>
     </el-button>
     <el-button type="primary" circle>
       <el-icon>
-        <Edit/>
+        <Edit />
       </el-icon>
     </el-button>
     <el-button type="success" circle>
       <el-icon>
-        <Check/>
+        <Check />
       </el-icon>
     </el-button>
     <el-button type="info" circle>
       <el-icon>
-        <Message/>
+        <Message />
       </el-icon>
     </el-button>
     <el-button type="warning" circle>
       <el-icon>
-        <Star/>
+        <Star />
       </el-icon>
     </el-button>
     <el-button type="danger" circle>
       <el-icon>
-        <Delete/>
+        <Delete />
       </el-icon>
     </el-button>
   </el-row>
