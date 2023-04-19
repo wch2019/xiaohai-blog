@@ -5,7 +5,6 @@ import Axios from "@/views/axios.vue";
 import TopNavBar from "@/components/layouts/TopNavBar.vue";
 import Footer from "@/components/layouts/Footer.vue";
 
-
 </script>
 
 <template>
