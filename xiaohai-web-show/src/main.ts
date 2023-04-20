@@ -9,6 +9,8 @@ import router from './router/index'
 import store from './store/index'
 // 挂载 Element Plus
 import 'element-plus/dist/index.css'
+// 隐藏元素
+import 'element-plus/theme-chalk/display.css'
 // 注册所有图标
 // eslint-disable-next-line import/order
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'

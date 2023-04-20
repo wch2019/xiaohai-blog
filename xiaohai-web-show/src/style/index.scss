@@ -2,7 +2,9 @@
 @use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
 
 body {
+  height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 ::-webkit-scrollbar {
@@ -21,6 +23,6 @@ body {
 ::-webkit-scrollbar-track {
   /*滚动条里面轨道*/
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 0px;
   background: rgba(234, 233, 233, 0.98);
 }
