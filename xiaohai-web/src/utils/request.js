@@ -110,6 +110,7 @@ service.interceptors.response.use(
       console.log('Error', error)
       message.error(error)
     }
+    console.log(error)
     return Promise.reject(error)
   }
 )

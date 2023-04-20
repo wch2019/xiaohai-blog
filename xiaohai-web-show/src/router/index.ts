@@ -8,8 +8,8 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: index,
     children: [
-      { path: '/', component: () => import('@/views/index.vue') },
-      { path: '/axios', component: () => import('@/views/axios.vue') }
+      { path: '/', component: () => import('@/views/home.vue') },
+      { path: '/axios', component: () => import('@/views/home.vue') }
     ]
   }
 ]

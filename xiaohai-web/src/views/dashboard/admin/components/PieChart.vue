@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}"/>
+  <div :class="className" :style="{height:height,width:width}" />
 </template>
 
 <script>
@@ -35,7 +35,7 @@ export default {
     // 添加延时加载
     setTimeout(() => {
       this.initChart()
-    }, 500)
+    }, 1000)
     this.$nextTick(() => {
       this.initChart()
     })
