@@ -36,17 +36,25 @@
           <el-col :span="8"></el-col>
           <el-col :span="4">
             <div class="menus-item">
-              <el-icon size="18">
-                <Search />
-              </el-icon>
+              <svg-icon icon-class="search" class="search-icon" style="font-size: 20px"></svg-icon>
             </div>
           </el-col>
           <el-col :span="4">
             <div class="menus-item">
-              <el-icon size="18" @click="toggleDark()">
-                <Sunny v-if="value" />
-                <Moon v-else />
-              </el-icon>
+              <svg-icon
+                @click="isLight"
+                v-if="value"
+                icon-class="lightning-dark"
+                class="lightning-dark"
+                style="font-size: 20px"
+              ></svg-icon>
+              <svg-icon
+                @click="isLight"
+                v-else
+                icon-class="lightning-light"
+                class="lightning-light"
+                style="font-size: 18px"
+              ></svg-icon>
             </div>
           </el-col>
           <el-col :span="4">
@@ -62,29 +70,42 @@
       <!--小于1200尺寸应用-->
       <el-col class="hidden-lg-and-up">
         <div class="nav-title">
-          <el-col :span="18">
+          <el-col :span="15">
             <div class="blog-title">
               <router-link to="/">DotCode</router-link>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="3">
             <div class="menus-item">
-              <el-icon size="18">
-                <Search />
-              </el-icon>
+              <svg-icon icon-class="search" class="search-icon" style="font-size: 20px"></svg-icon>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="3">
             <div class="menus-item">
-              <el-icon size="18" @click="toggleDark()">
-                <Sunny v-if="value" />
-                <Moon v-else />
-              </el-icon>
+              <svg-icon
+                @click="isLight"
+                v-if="value"
+                icon-class="lightning-dark"
+                class="lightning-dark"
+                style="font-size: 20px"
+              ></svg-icon>
+              <svg-icon
+                @click="isLight"
+                v-else
+                icon-class="lightning-light"
+                class="lightning-light"
+                style="font-size: 20px"
+              ></svg-icon>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col :span="3">
             <div class="menus-item">
-              <el-icon size="18" @click="drawer = true"><Fold /></el-icon>
+              <svg-icon
+                @click="drawer = true"
+                icon-class="more"
+                class="more"
+                style="font-size: 20px"
+              ></svg-icon>
             </div>
           </el-col>
         </div>
@@ -93,28 +114,22 @@
     </el-row>
   </el-card>
   <!-- 侧边菜单-->
-  <el-drawer v-model="drawer" direction="ltr" :with-header="false">
-    <router-link to="/">
-      <el-card class="drawer-menus"> 首 页 </el-card>
-    </router-link>
-    <router-link to="/">
-      <el-card class="drawer-menus"> 分 类 </el-card>
-    </router-link>
-    <router-link to="/links">
-      <el-card class="drawer-menus"> 标 签 </el-card>
-    </router-link>
-    <router-link to="/links">
-      <el-card class="drawer-menus"> 归 档 </el-card>
-    </router-link>
-    <router-link to="/message">
-      <el-card class="drawer-menus"> 留 言 </el-card>
-    </router-link>
-    <router-link to="/message">
-      <el-card class="drawer-menus"> 友 链 </el-card>
-    </router-link>
-    <router-link to="/about">
-      <el-card class="drawer-menus"> 关 于 </el-card>
-    </router-link>
+  <el-drawer
+    v-model="drawer"
+    direction="ltr"
+    size="40%"
+    :style="isDarkBackground()"
+    :with-header="false"
+  >
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/')"> 首 页 </el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/category')">
+      分 类
+    </el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/tags')"> 标 签 </el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/back')"> 归 档 </el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/message')"> 留 言 </el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链 </el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/about')"> 关 于 </el-card>
   </el-drawer>
 </template>
 <script lang="ts" setup>
@@ -123,6 +138,19 @@ import { toggleDark, isDark } from '@/utils/dark'
 
 const value = ref(isDark.value)
 const drawer = ref(false)
+
+// 亮暗
+const isLight = () => {
+  toggleDark()
+  value.value = isDark.value
+}
+// 内容背景色根据主题色调整
+function isDarkBackground() {
+  if (!isDark.value) {
+    return 'background-color: #e9e9eb'
+  }
+  return ''
+}
 </script>
 
 <style scoped>

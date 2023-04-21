@@ -41,3 +41,6 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
 # 格式化所有文件（. 表示所有文件）
 
 npx prettier --write .
+
+图标组件
+vite-plugin-svg-icons

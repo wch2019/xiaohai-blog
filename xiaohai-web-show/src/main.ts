@@ -12,18 +12,16 @@ import 'element-plus/dist/index.css'
 // 隐藏元素
 import 'element-plus/theme-chalk/display.css'
 // 注册所有图标
-// eslint-disable-next-line import/order
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import 'virtual:svg-icons-register' // 引入注册脚本
+import SvgIcon from '@/components/SvgIcon/index.vue'
+import elementIcons from '@/components/SvgIcon/svgicon'
 
 const app = createApp(App)
 
 app.use(router)
 app.use(store)
 app.use(ElementPlus)
-
-// 注册所有图标
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
+app.component('SvgIcon', SvgIcon)
+app.use(elementIcons)
 
 app.mount('#app')
