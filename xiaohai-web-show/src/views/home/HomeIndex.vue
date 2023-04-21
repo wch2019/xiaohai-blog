@@ -24,7 +24,7 @@
         style="height: 200px"
       >
         <el-row :gutter="20">
-          <el-col span="6">
+          <el-col :span="6">
             <div style="height: 160px">
               <img
                 src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
@@ -32,20 +32,25 @@
               />
             </div>
           </el-col>
-          <el-col span="18">
+          <el-col :span="18">
             <h1>啦啦啦啦啦啦，对对对</h1>
             <span>啦啦啦啦啦啦，对对对</span>
-            <div>
-              <el-avatar
-                size="default"
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-              />
-              <el-space alignment="center">
-                <svg-icon icon-class="eye-light" style="font-size: 20px"></svg-icon>
-                <svg-icon icon-class="give-light" style="font-size: 20px"></svg-icon>
-                <svg-icon icon-class="message" style="font-size: 20px"></svg-icon>
-              </el-space>
-            </div>
+
+            <el-row>
+              <el-col :span="16">
+                <el-avatar
+                  size="default"
+                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                />xiaohai
+              </el-col>
+              <el-col :span="8">
+                <el-space alignment="center" size="large">
+                  <span> <svg-icon icon-class="eye-light" style="font-size: 20px" /> 100 </span>
+                  <span><svg-icon icon-class="give-light" style="font-size: 20px" /> 20</span>
+                  <span><svg-icon icon-class="message" style="font-size: 20px" /> 30</span>
+                </el-space>
+              </el-col>
+            </el-row>
           </el-col>
         </el-row>
 
