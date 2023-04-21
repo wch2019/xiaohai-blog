@@ -12,19 +12,19 @@
             <router-link class="menu-btn" to="/"> 首页</router-link>
           </div>
           <div class="menus-item">
-            <router-link class="menu-btn" to="/links"> 分类</router-link>
+            <router-link class="menu-btn" to="/category"> 分类</router-link>
           </div>
           <div class="menus-item">
-            <router-link class="menu-btn" to="/links"> 标签</router-link>
+            <router-link class="menu-btn" to="/tags"> 标签</router-link>
           </div>
           <div class="menus-item">
-            <router-link class="menu-btn" to="/links"> 归档</router-link>
+            <router-link class="menu-btn" to="/back"> 归档</router-link>
           </div>
           <div class="menus-item">
             <router-link class="menu-btn" to="/message"> 留言</router-link>
           </div>
           <div class="menus-item">
-            <router-link class="menu-btn" to="/message"> 友链</router-link>
+            <router-link class="menu-btn" to="/links"> 友链</router-link>
           </div>
           <div class="menus-item">
             <router-link class="menu-btn" to="/about"> 关于</router-link>
@@ -121,15 +121,13 @@
     :style="isDarkBackground()"
     :with-header="false"
   >
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/')"> 首 页 </el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/category')">
-      分 类
-    </el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/tags')"> 标 签 </el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/back')"> 归 档 </el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/message')"> 留 言 </el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链 </el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/about')"> 关 于 </el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/')"> 首 页</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/category')">分 类</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/tags')"> 标 签</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/back')"> 归 档</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/message')"> 留 言</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/about')"> 关 于</el-card>
   </el-drawer>
 </template>
 <script lang="ts" setup>
@@ -144,6 +142,7 @@ const isLight = () => {
   toggleDark()
   value.value = isDark.value
 }
+
 // 内容背景色根据主题色调整
 function isDarkBackground() {
   if (!isDark.value) {
@@ -207,7 +206,7 @@ function isDarkBackground() {
   z-index: -1;
   width: 0;
   height: 3px;
-  background-color: #80c8f8;
+  background-color: #fcbfbf;
   content: '';
   transition: all 0.3s ease-in-out;
 }
@@ -218,6 +217,7 @@ function isDarkBackground() {
   color: #409eff;
   text-shadow: 2px 2px 5px #409eff;
 }
+
 .drawer-menus {
   border-radius: 8px;
   border: 1px solid transparent;

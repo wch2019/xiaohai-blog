@@ -2,12 +2,11 @@
 @use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
 
 html,body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
   padding: 0;
   //下面俩属性防止手机端出现横向滚动条
-  overflow:hidden;
-  overflow-y:auto;
+  overflow-x:hidden;
 }
 
 ::-webkit-scrollbar {
