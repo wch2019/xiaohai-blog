@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card footer-wrap" shadow="hover" style="width: 100%">
+  <el-card class="box-card footer-wrap" shadow="hover">
     <div>
       ©{{ 2023 }} - {{ new Date().getFullYear() }} By
       <!--        {{blogInfo.webSite.author}}-->

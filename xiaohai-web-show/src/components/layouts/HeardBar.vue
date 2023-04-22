@@ -1,9 +1,9 @@
 <template>
-  <el-card class="box-card" shadow="hover">
+  <el-card class="box-card" shadow="hover" body-style="padding:10px">
     <el-row :gutter="20">
-      <el-col class="hidden-md-and-down" :lg="1" :xl="3"></el-col>
+      <el-col class="hidden-md-and-down" :lg="3" :xl="5"></el-col>
       <!--小于1200尺寸隐藏-->
-      <el-col class="hidden-md-and-down" :md="16" :lg="15" :xl="13">
+      <el-col class="hidden-md-and-down" :md="16" :lg="14" :xl="10">
         <div class="nav-title">
           <div class="blog-title">
             <router-link to="/">DotCode</router-link>
@@ -23,48 +23,41 @@
           <div class="menus-item">
             <router-link class="menu-btn" to="/message"> 留言</router-link>
           </div>
-          <div class="menus-item">
-            <router-link class="menu-btn" to="/links"> 友链</router-link>
-          </div>
+          <!--          <div class="menus-item">-->
+          <!--            <router-link class="menu-btn" to="/links"> 友链</router-link>-->
+          <!--          </div>-->
           <div class="menus-item">
             <router-link class="menu-btn" to="/about"> 关于</router-link>
           </div>
         </div>
       </el-col>
-      <el-col class="hidden-md-and-down" :md="8" :lg="7" :xl="5">
-        <div class="nav-title">
-          <el-col :span="8"></el-col>
-          <el-col :span="4">
-            <div class="menus-item">
-              <svg-icon icon-class="search" class="search-icon" style="font-size: 20px"></svg-icon>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="menus-item">
-              <svg-icon
-                @click="isLight"
-                v-if="value"
-                icon-class="lightning-dark"
-                class="lightning-dark"
-                style="font-size: 20px"
-              ></svg-icon>
-              <svg-icon
-                @click="isLight"
-                v-else
-                icon-class="lightning-light"
-                class="lightning-light"
-                style="font-size: 18px"
-              ></svg-icon>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="menus-item">
-              <el-avatar
-                size="default"
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-              />
-            </div>
-          </el-col>
+      <el-col class="hidden-md-and-down" :md="8" :lg="4" :xl="4">
+        <div style="display: flex; justify-content: space-evenly; align-items: center">
+          <div class="menus-item">
+            <svg-icon icon-class="search" class="search-icon" style="font-size: 20px"></svg-icon>
+          </div>
+          <div class="menus-item">
+            <svg-icon
+              @click="isLight"
+              v-if="value"
+              icon-class="lightning-dark"
+              class="lightning-dark"
+              style="font-size: 20px"
+            ></svg-icon>
+            <svg-icon
+              @click="isLight"
+              v-else
+              icon-class="lightning-light"
+              class="lightning-light"
+              style="font-size: 18px"
+            ></svg-icon>
+          </div>
+          <div class="menus-item">
+            <el-avatar
+              size="default"
+              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            />
+          </div>
         </div>
       </el-col>
       <!--小于1200尺寸应用-->
@@ -75,42 +68,50 @@
               <router-link to="/">DotCode</router-link>
             </div>
           </el-col>
-          <el-col :span="3">
-            <div class="menus-item">
-              <svg-icon icon-class="search" class="search-icon" style="font-size: 20px"></svg-icon>
-            </div>
-          </el-col>
-          <el-col :span="3">
-            <div class="menus-item">
-              <svg-icon
-                @click="isLight"
-                v-if="value"
-                icon-class="lightning-dark"
-                class="lightning-dark"
-                style="font-size: 20px"
-              ></svg-icon>
-              <svg-icon
-                @click="isLight"
-                v-else
-                icon-class="lightning-light"
-                class="lightning-light"
-                style="font-size: 20px"
-              ></svg-icon>
-            </div>
-          </el-col>
-          <el-col :span="3">
-            <div class="menus-item">
-              <svg-icon
-                @click="drawer = true"
-                icon-class="more"
-                class="more"
-                style="font-size: 20px"
-              ></svg-icon>
+          <el-col :span="9">
+            <div style="display: flex; justify-content: space-evenly; align-items: center">
+              <!--          <el-col :span="3">-->
+              <div class="menus-item">
+                <svg-icon
+                  icon-class="search"
+                  class="search-icon"
+                  style="font-size: 20px"
+                ></svg-icon>
+              </div>
+              <!--          </el-col>-->
+              <!--          <el-col :span="3">-->
+              <div class="menus-item">
+                <svg-icon
+                  @click="isLight"
+                  v-if="value"
+                  icon-class="lightning-dark"
+                  class="lightning-dark"
+                  style="font-size: 20px"
+                ></svg-icon>
+                <svg-icon
+                  @click="isLight"
+                  v-else
+                  icon-class="lightning-light"
+                  class="lightning-light"
+                  style="font-size: 20px"
+                ></svg-icon>
+              </div>
+              <!--          </el-col>-->
+              <!--          <el-col :span="3">-->
+              <div class="menus-item">
+                <svg-icon
+                  @click="drawer = true"
+                  icon-class="more"
+                  class="more"
+                  style="font-size: 20px"
+                ></svg-icon>
+              </div>
+              <!--          </el-col>-->
             </div>
           </el-col>
         </div>
       </el-col>
-      <el-col class="hidden-md-and-down" :lg="1" :xl="3"></el-col>
+      <el-col class="hidden-md-and-down" :lg="3" :xl="5"></el-col>
     </el-row>
   </el-card>
   <!-- 侧边菜单-->

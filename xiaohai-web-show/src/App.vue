@@ -15,15 +15,15 @@ function isDarkBackground() {
 
 <template>
   <!-- 导航栏 -->
-  <el-affix>
+  <el-affix :offset="0.00001">
     <HeardBar></HeardBar>
   </el-affix>
   <!--内容区-->
   <el-main :style="isDarkBackground()">
     <el-row :gutter="20">
-      <el-col class="hidden-md-and-down" :lg="1" :xl="3"></el-col>
+      <el-col class="hidden-md-and-down" :lg="3" :xl="5"></el-col>
       <router-view></router-view>
-      <el-col class="hidden-md-and-down" :lg="1" :xl="3"></el-col>
+      <el-col class="hidden-md-and-down" :lg="3" :xl="5"></el-col>
     </el-row>
   </el-main>
   <!-- 底部栏 -->
