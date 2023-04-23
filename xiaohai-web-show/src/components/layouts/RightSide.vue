@@ -3,12 +3,12 @@
     <el-card
       class="box-card"
       shadow="hover"
-      :body-style="{ padding: '0px', heigh: '400px' }"
+      :body-style="{ padding: '0px', height: '380px' }"
       style="position: relative"
     >
-      <div class="test">
-        <img src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" class="image" />
-      </div>
+      <!--      <div class="test">-->
+      <img src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" class="image" />
+      <!--      </div>-->
 
       <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
         <el-avatar
@@ -54,14 +54,14 @@
               -webkit-line-clamp: 2;
               -webkit-box-orient: vertical;
             "
-            >啦啦啦啦啦啦，对对对啦，对对啦啦啦啦啦啦对对啦啦啦啦啦啦啦啦啦啦啦啦
+            >啦啦啦啦啦啦，对对对啦啦啦啦啦啦啦，对对对啦
           </span>
 
           <span class="text-xs font-number text-color">2023-04-23</span>
         </div>
         <el-image
           src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
-          style="border-radius: 10px; height: 80px"
+          style="margin-left: 10px; border-radius: 10px; height: 80px; min-width: 140px"
         />
       </div>
     </el-card>
@@ -119,7 +119,7 @@ const a = greetings()
 }
 .image {
   width: 100%;
-  height: 150px;
+  height: 170px;
   display: block;
 }
 .test::before {
@@ -153,7 +153,7 @@ const a = greetings()
   height: 100px !important;
   width: 100px !important;
   position: absolute !important;
-  top: 100px;
+  top: 115px;
   border: 5px solid #ffffff;
 }
 </style>

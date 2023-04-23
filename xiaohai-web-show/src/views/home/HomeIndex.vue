@@ -1,8 +1,8 @@
 <template>
   <!--左内容区-->
-  <el-col :lg="12" :xl="12">
+  <el-col :lg="14" :xl="11">
     <!--电脑端-->
-    <el-space direction="vertical" fill size="large">
+    <el-space class="hidden-sm-and-down" direction="vertical" fill size="large">
       <el-carousel :interval="4000" height="310px">
         <el-carousel-item v-for="item in 3" :key="item">
           <h3 text="2xl" justify="center">{{ item }}</h3>
@@ -27,7 +27,16 @@
             class="image"
           />
           <div style="margin-left: 18px">
-            <h2>啦啦啦啦啦啦，对对对</h2>
+            <h2
+              style="
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+              "
+            >
+              啦啦啦啦啦啦，对对对
+            </h2>
             <span
               style="
                 overflow: hidden;
@@ -72,8 +81,62 @@
       </el-card>
     </el-space>
   </el-col>
+  <!--手机端-->
+  <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
+    <el-carousel :interval="4000" height="210px">
+      <el-carousel-item v-for="item in 3" :key="item">
+        <h3 text="2xl" justify="center">{{ item }}</h3>
+      </el-carousel-item>
+    </el-carousel>
+
+    <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
+      <el-scrollbar>
+        <el-space wrap style="height: 40px">
+          <el-button round>最新文章</el-button>
+          <el-button round>最热文章</el-button>
+          <el-button round>原创文章</el-button>
+          <el-button round>转载文章</el-button>
+        </el-space>
+      </el-scrollbar>
+    </el-card>
+
+    <el-card v-for="i in 10" :key="i" class="box-card box-card-hover" shadow="hover">
+      <div style="display: flex; flex-direction: row">
+        <el-image
+          src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
+          class="image"
+        />
+        <div style="margin-left: 18px">
+          <h2>啦啦啦啦啦啦，对对对</h2>
+          <span
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-top: 12px;
+            "
+          >
+            <span style="display: flex; align-items: center">
+              <el-avatar
+                size="small"
+                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+              />
+              <span class="text-xs">xiaohai</span>
+            </span>
+
+            <el-space alignment="center" size="large">
+              <span class="text-xs font-number text-color"
+                ><svg-icon icon-class="give-light" style="font-size: 15px" /> 20</span
+              >
+            </el-space>
+          </span>
+        </div>
+      </div>
+    </el-card>
+  </el-space>
+
   <!--右内容区-->
-  <el-col class="hidden-md-and-down" :lg="6" :xl="4">
+  <el-col class="hidden-md-and-down" :lg="6" :xl="5">
     <RightSide></RightSide>
   </el-col>
 </template>
@@ -113,6 +176,7 @@ const onChange = (status: boolean) => {
 }
 .image {
   border-radius: 10px;
+  min-width: 238px;
   height: 140px;
 }
 .box-card-hover:hover {

@@ -16,15 +16,24 @@ function isDarkBackground() {
 <template>
   <el-scrollbar>
     <!-- 导航栏 -->
-    <el-affix>
+    <el-affix :offset="0.0001">
       <HeardBar></HeardBar>
     </el-affix>
     <!--内容区-->
     <el-main :style="isDarkBackground()">
-      <el-row :gutter="20">
-        <el-col class="hidden-md-and-down" :lg="3" :xl="4"></el-col>
+      <el-row
+        :gutter="20"
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          position: relative;
+          box-sizing: border-box;
+          justify-content: center;
+        "
+      >
+        <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
         <router-view></router-view>
-        <el-col class="hidden-md-and-down" :lg="3" :xl="4"></el-col>
+        <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
       </el-row>
     </el-main>
     <!-- 底部栏 -->
