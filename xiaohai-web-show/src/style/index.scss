@@ -28,3 +28,22 @@ html,body {
   border-radius: 0px;
   background: rgba(234, 233, 233, 0.98);
 }
+// 最小文字
+.text-xs {
+  font-size: .75rem;
+}
+// 小文字
+.text-sm {
+  font-size: .875rem;
+}
+// 大一点文字
+.text-xl {
+  font-size: 1.375rem;
+}
+// 数字相关的文字
+.font-number {
+  font-family: "Rough-Motion", arial, sans-serif;
+}
+.text-color {
+  color: var(--el-color-info-light-3) !important;
+}

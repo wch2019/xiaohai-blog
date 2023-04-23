@@ -1,9 +1,9 @@
 <template>
   <el-card class="box-card" shadow="hover" body-style="padding:10px">
     <el-row :gutter="20">
-      <el-col class="hidden-md-and-down" :lg="3" :xl="5"></el-col>
+      <el-col class="hidden-md-and-down" :lg="3" :xl="4"></el-col>
       <!--小于1200尺寸隐藏-->
-      <el-col class="hidden-md-and-down" :md="16" :lg="14" :xl="10">
+      <el-col class="hidden-md-and-down" :md="16" :lg="14" :xl="11">
         <div class="nav-title">
           <div class="blog-title">
             <router-link to="/">DotCode</router-link>
@@ -31,7 +31,7 @@
           </div>
         </div>
       </el-col>
-      <el-col class="hidden-md-and-down" :md="8" :lg="4" :xl="4">
+      <el-col class="hidden-md-and-down" :md="8" :lg="4" :xl="5">
         <div style="display: flex; justify-content: space-evenly; align-items: center">
           <div class="menus-item">
             <svg-icon icon-class="search" class="search-icon" style="font-size: 20px"></svg-icon>
@@ -111,7 +111,7 @@
           </el-col>
         </div>
       </el-col>
-      <el-col class="hidden-md-and-down" :lg="3" :xl="5"></el-col>
+      <el-col class="hidden-md-and-down" :lg="3" :xl="4"></el-col>
     </el-row>
   </el-card>
   <!-- 侧边菜单-->
@@ -127,7 +127,7 @@
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/tags')"> 标 签</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/back')"> 归 档</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/message')"> 留 言</el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>
+    <!--    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>-->
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/about')"> 关 于</el-card>
   </el-drawer>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <!--左内容区-->
-  <el-col :md="24" :lg="15" :xl="13">
+  <el-col :lg="12" :xl="10">
     <el-card class="box-card" shadow="hover">
       <el-timeline>
         <el-timeline-item timestamp="2018/4/12" placement="top">
@@ -25,7 +25,7 @@
     </el-card>
   </el-col>
   <!--右内容区-->
-  <el-col class="hidden-md-and-down" :md="8" :lg="7" :xl="5">
+  <el-col class="hidden-md-and-down" :lg="6" :xl="4">
     <RightSide></RightSide>
   </el-col>
 </template>
