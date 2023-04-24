@@ -26,7 +26,14 @@
             src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
             class="image"
           />
-          <div style="margin-left: 18px">
+          <div
+            style="
+              margin-left: 18px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+            "
+          >
             <h2
               style="
                 overflow: hidden;
@@ -48,14 +55,7 @@
               过去两年是人工智能赛道需要极力反思的两年。一方面，巨亏之下，明星AI企业融资难度加大，云从、商汤等，要么上市一波三折，要么股价节节败退，资本市场不看好的声音此起彼伏。，资本市场不看好的声音此起彼伏。
               另 过去两年是人工智
             </span>
-            <span
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-top: 12px;
-              "
-            >
+            <span style="display: flex; align-items: center; justify-content: space-between">
               <span style="display: flex; align-items: center">
                 <el-avatar
                   size="small"
@@ -112,7 +112,14 @@
           src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
           class="image-mobile"
         />
-        <div style="margin-left: 10px">
+        <div
+          style="
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          "
+        >
           <h2
             class="text-md"
             style="
