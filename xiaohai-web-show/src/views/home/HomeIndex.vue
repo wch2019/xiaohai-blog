@@ -100,22 +100,31 @@
       </el-scrollbar>
     </el-card>
 
-    <el-card v-for="i in 10" :key="i" class="box-card box-card-hover" shadow="hover">
+    <el-card
+      v-for="i in 10"
+      :key="i"
+      class="box-card-mobile box-card-hover"
+      shadow="hover"
+      :body-style="{ padding: '10px' }"
+    >
       <div style="display: flex; flex-direction: row">
         <el-image
           src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
-          class="image"
+          class="image-mobile"
         />
-        <div style="margin-left: 18px">
-          <h2>啦啦啦啦啦啦，对对对</h2>
-          <span
+        <div style="margin-left: 10px">
+          <h2
+            class="text-md"
             style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              margin-top: 12px;
+              overflow: hidden;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
             "
           >
+            啦啦啦啦啦啦，对对对对对对对对对对对对对对对对对对
+          </h2>
+          <span style="display: flex; align-items: center; justify-content: space-between">
             <span style="display: flex; align-items: center">
               <el-avatar
                 size="small"
@@ -125,7 +134,7 @@
             </span>
 
             <el-space alignment="center" size="large">
-              <span class="text-xs font-number text-color"
+              <span class="text-xs font-number"
                 ><svg-icon icon-class="give-light" style="font-size: 15px" /> 20</span
               >
             </el-space>
@@ -174,10 +183,21 @@ const onChange = (status: boolean) => {
   border-radius: 10px;
   border: 1px solid transparent;
 }
+.box-card-mobile {
+  max-height: 120px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
 .image {
   border-radius: 10px;
   min-width: 238px;
   height: 140px;
+}
+.image-mobile {
+  border-radius: 10px;
+  min-width: 149px;
+  height: 92px;
 }
 .box-card-hover:hover {
   filter: drop-shadow(0 0 2em rgb(252, 191, 191));

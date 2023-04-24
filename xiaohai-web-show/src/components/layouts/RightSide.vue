@@ -43,7 +43,7 @@
     <el-card class="box-card" shadow="hover" style="text-align: center"> {{ a }} </el-card>
     <el-card class="box-card" shadow="hover">
       <template #header>
-        <h2 style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 热门</h2>
+        <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 热门</h2>
       </template>
       <div v-for="o in 5" :key="o" style="display: flex; margin-top: 16px">
         <div style="display: flex; flex-direction: column; justify-content: space-between">
@@ -67,7 +67,7 @@
     </el-card>
     <el-card class="box-card" shadow="hover">
       <template #header>
-        <h2 style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 标签</h2>
+        <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 标签</h2>
       </template>
       <el-space wrap size="small">
         <el-button v-for="o in 10" :key="o" text bg
@@ -77,7 +77,7 @@
     </el-card>
     <el-card class="box-card" shadow="hover">
       <template #header>
-        <h2 style="margin: 0"><svg-icon icon-class="link"></svg-icon> 友链</h2>
+        <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="link"></svg-icon> 友链</h2>
       </template>
       <el-space wrap size="small">
         <el-link v-for="o in 10" :key="o" href="https://element-plus.org" target="_blank"
