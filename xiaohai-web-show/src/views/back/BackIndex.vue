@@ -1,6 +1,7 @@
 <template>
   <!--左内容区-->
-  <el-col :lg="12" :xl="10">
+  <el-col :lg="14" :xl="11">
+    <h1><svg-icon icon-class="tags"></svg-icon> 归档</h1>
     <el-card class="box-card" shadow="hover">
       <el-timeline>
         <el-timeline-item timestamp="2018/4/12" placement="top">
@@ -25,7 +26,7 @@
     </el-card>
   </el-col>
   <!--右内容区-->
-  <el-col class="hidden-md-and-down" :lg="6" :xl="4">
+  <el-col class="hidden-md-and-down" :lg="6" :xl="5">
     <RightSide></RightSide>
   </el-col>
 </template>
@@ -34,4 +35,10 @@
 import RightSide from '@/components/layouts/RightSide.vue'
 </script>
 
-<style scoped></style>
+<style scoped>
+.box-card {
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+</style>

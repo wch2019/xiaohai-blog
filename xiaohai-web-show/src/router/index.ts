@@ -7,12 +7,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     children: [
       { path: '/', component: () => import('@/views/home/HomeIndex.vue') },
-      { path: '/category', component: () => import('@/views/category/index.vue') },
-      { path: '/tags', component: () => import('@/views/tags/index.vue') },
+      { path: '/category', component: () => import('@/views/category/CategoryIndex.vue') },
+      { path: '/tags', component: () => import('@/views/tags/TagsIndex.vue') },
       { path: '/back', component: () => import('@/views/back/BackIndex.vue') },
-      { path: '/message', component: () => import('@/views/message/index.vue') },
-      { path: '/links', component: () => import('@/views/links/index.vue') },
-      { path: '/about', component: () => import('@/views/about/index.vue') }
+      { path: '/message', component: () => import('@/views/message/MessageIndex.vue') },
+      { path: '/links', component: () => import('@/views/links/LinksIndex.vue') },
+      { path: '/about', component: () => import('@/views/about/AboutIndex.vue') }
     ]
   }
 ]
