@@ -62,6 +62,7 @@
         <el-image
           src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
           style="margin-left: 10px; border-radius: 10px; height: 80px; min-width: 140px"
+          class="image-hot"
         />
       </div>
     </el-card>
@@ -155,5 +156,12 @@ const a = greetings()
   position: absolute !important;
   top: 115px;
   border: 5px solid #ffffff;
+}
+.image-hot:hover {
+  transform: scale(1.1);
+}
+
+.image:hover {
+  transform: scale(1.1);
 }
 </style>

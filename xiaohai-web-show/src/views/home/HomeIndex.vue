@@ -168,22 +168,6 @@ const onChange = (status: boolean) => {
 </script>
 
 <style scoped>
-.el-carousel__item h3 {
-  color: #475669;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
-  text-align: center;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
 .box-card {
   max-height: 180px;
   padding: 0;
@@ -207,7 +191,10 @@ const onChange = (status: boolean) => {
   height: 92px;
 }
 .box-card-hover:hover {
-  filter: drop-shadow(0 0 2em rgb(252, 191, 191));
+  filter: drop-shadow(0 0 0.5em rgb(252, 191, 191));
   transform: scale(1.01);
+}
+.image:hover {
+  transform: scale(1.1);
 }
 </style>

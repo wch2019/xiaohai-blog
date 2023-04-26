@@ -124,7 +124,7 @@
   >
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/')"> 首 页</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/category')">分 类</el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/tags')"> 标 签</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="cancelClick"> 标 签</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/back')"> 归 档</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="$router.push('/message')"> 留 言</el-card>
     <!--    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>-->
@@ -133,10 +133,13 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { toggleDark, isDark } from '@/utils/dark'
 
 const value = ref(isDark.value)
 const drawer = ref(false)
+
+console.log(useRoute, 'this')
 
 // 亮暗
 const isLight = () => {
@@ -150,6 +153,11 @@ function isDarkBackground() {
     return 'background-color: #e9e9eb'
   }
   return ''
+}
+const Route = useRoute()
+function cancelClick() {
+  Route.path('/tags')
+  drawer.value = false
 }
 </script>
 
