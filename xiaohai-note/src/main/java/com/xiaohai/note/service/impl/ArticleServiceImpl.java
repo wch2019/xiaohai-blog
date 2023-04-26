@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.confing.FileConfig;
@@ -40,10 +39,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * 文章表 服务实现类
@@ -101,7 +101,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         BeanUtils.copyProperties(vo, article);
         //顶置写入时间
         if (article.getIsTop() == 1) {
-            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1));
+            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1).ne("id",article.getId()));
             Assert.isTrue(countTop <1, "已存在顶置");
             article.setTopTime(LocalDateTime.now());
         } else {

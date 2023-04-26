@@ -1,13 +1,12 @@
 package com.xiaohai.note.pojo.vo;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
 * <p>
@@ -29,6 +28,10 @@ public class ArticleVo implements Serializable {
     @Schema(description = "文章标题")
     @NotNull(message = "文章标题为空")
     private String title;
+
+    @Schema(description = "文章简介")
+    @NotNull(message = "文章简介为空")
+    private String summary;
 
     @Schema(description = "分类id")
     @NotNull(message = "分类为空")

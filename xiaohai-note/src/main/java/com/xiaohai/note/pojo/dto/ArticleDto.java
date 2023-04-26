@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
 * <p>
@@ -31,6 +30,9 @@ public class ArticleDto implements Serializable {
 
     @Schema(description = "文章标题")
     private String title;
+
+    @Schema(description = "文章简介")
+    private String summary;
 
     @Schema(description = "分类id")
     private Integer categoryId;

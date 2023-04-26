@@ -1,15 +1,14 @@
 package com.xiaohai.note.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.xiaohai.common.daomain.BaseEntity;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.io.Serial;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -40,6 +39,9 @@ public class Article  implements Serializable  {
 
     @Schema(description = "文章标题")
     private String title;
+
+    @Schema(description = "文章简介")
+    private String summary;
 
     @Schema(description = "封面")
     private String cover;

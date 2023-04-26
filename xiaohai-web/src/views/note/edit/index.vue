@@ -10,9 +10,16 @@
         <el-row>
           <el-col :span="16">
             <el-row>
-              <el-form-item label="标题" prop="title">
-                <el-input v-model="form.title" style="width: 80%" placeholder="请输入标题" />
-              </el-form-item>
+              <el-col :span="8">
+                <el-form-item label="标题" prop="title">
+                  <el-input v-model="form.title" style="width: 100%" placeholder="请输入标题" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="15">
+                <el-form-item label="简介" prop="summary">
+                  <el-input v-model="form.summary" style="width: 100%" placeholder="请输入简介" />
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
@@ -151,6 +158,7 @@ export default {
       // 表单校验
       rules: {
         title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
+        summary: [{ required: true, message: '请输入简介', trigger: 'blur' }],
         categoryId: [{ required: true, message: '分类不能为空', trigger: 'blur' }],
         tags: [{ required: true, message: '标签不能为空', trigger: 'blur' }],
         isTop: [{ required: true, message: '顶置不能为空', trigger: 'blur' }],
