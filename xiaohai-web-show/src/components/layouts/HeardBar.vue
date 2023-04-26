@@ -122,24 +122,24 @@
     :style="isDarkBackground()"
     :with-header="false"
   >
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/')"> 首 页</el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/category')">分 类</el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="cancelClick"> 标 签</el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/back')"> 归 档</el-card>
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/message')"> 留 言</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/')"> 首 页</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/category')">分 类</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/tags')"> 标 签</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/back')"> 归 档</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/message')"> 留 言</el-card>
     <!--    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>-->
-    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/about')"> 关 于</el-card>
+    <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/about')"> 关 于</el-card>
   </el-drawer>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { toggleDark, isDark } from '@/utils/dark'
 
 const value = ref(isDark.value)
 const drawer = ref(false)
 
-console.log(useRoute, 'this')
+// console.log(useRoute, 'this')
 
 // 亮暗
 const isLight = () => {
@@ -154,9 +154,9 @@ function isDarkBackground() {
   }
   return ''
 }
-const Route = useRoute()
-function cancelClick() {
-  Route.path('/tags')
+const router = useRouter()
+function cancelClick(path: any) {
+  router.push(path)
   drawer.value = false
 }
 </script>
