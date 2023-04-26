@@ -5,13 +5,13 @@
     <el-space class="hidden-sm-and-down" direction="vertical" fill size="large">
       <el-carousel :interval="4000" height="310px">
         <el-carousel-item v-for="item in 3" :key="item">
-          <h3 text="2xl" justify="center">{{ item }}</h3>
+          <el-image src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" />
         </el-carousel-item>
       </el-carousel>
 
       <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
         <el-scrollbar>
-          <el-space wrap style="height: 40px">
+          <el-space wrap class="category">
             <el-button round>最新文章</el-button>
             <el-button round>最热文章</el-button>
             <el-button round>原创文章</el-button>
@@ -81,17 +81,18 @@
       </el-card>
     </el-space>
   </el-col>
+
   <!--手机端-->
   <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
     <el-carousel :interval="4000" height="210px">
       <el-carousel-item v-for="item in 3" :key="item">
-        <h3 text="2xl" justify="center">{{ item }}</h3>
+        <el-image src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" />
       </el-carousel-item>
     </el-carousel>
 
     <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
       <el-scrollbar>
-        <el-space wrap style="height: 40px">
+        <el-space wrap class="category">
           <el-button round>最新文章</el-button>
           <el-button round>最热文章</el-button>
           <el-button round>原创文章</el-button>
@@ -107,10 +108,10 @@
       shadow="hover"
       :body-style="{ padding: '10px' }"
     >
-      <div style="display: flex; flex-direction: row">
+      <div class="article-flex">
         <el-image
           src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
-          class="image-mobile"
+          class="image"
         />
         <div
           style="
@@ -185,16 +186,31 @@ const onChange = (status: boolean) => {
   min-width: 238px;
   height: 140px;
 }
-.image-mobile {
-  border-radius: 10px;
-  min-width: 149px;
-  height: 92px;
-}
+
 .box-card-hover:hover {
   filter: drop-shadow(0 0 0.5em rgb(252, 191, 191));
   transform: scale(1.01);
 }
+/*手机端*/
+@media (max-width: 992px) {
+  .image {
+    border-radius: 10px;
+    min-width: 149px;
+    height: 92px;
+  }
+}
 .image:hover {
   transform: scale(1.1);
+}
+.category {
+  height: 40px;
+}
+.article-flex {
+  display: flex;
+  flex-direction: row;
+}
+.article-right-flex {
+  display: flex;
+  flex-direction: row;
 }
 </style>

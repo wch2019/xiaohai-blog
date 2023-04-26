@@ -20,16 +20,7 @@ function isDarkBackground() {
   </el-affix>
   <!--内容区-->
   <el-main :style="isDarkBackground()">
-    <el-row
-      :gutter="20"
-      style="
-        display: flex;
-        flex-wrap: wrap;
-        position: relative;
-        box-sizing: border-box;
-        justify-content: center;
-      "
-    >
+    <el-row :gutter="20" class="el-row-flex">
       <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
       <router-view></router-view>
       <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
@@ -41,4 +32,12 @@ function isDarkBackground() {
   <BackTop></BackTop>
 </template>
 
-<style scoped></style>
+<style scoped>
+.el-row-flex {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  box-sizing: border-box;
+  justify-content: center;
+}
+</style>

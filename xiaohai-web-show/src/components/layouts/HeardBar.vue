@@ -139,8 +139,6 @@ import { toggleDark, isDark } from '@/utils/dark'
 const value = ref(isDark.value)
 const drawer = ref(false)
 
-// console.log(useRoute, 'this')
-
 // 亮暗
 const isLight = () => {
   toggleDark()
