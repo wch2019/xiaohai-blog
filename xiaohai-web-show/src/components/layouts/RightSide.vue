@@ -41,22 +41,24 @@
       </div>
     </el-card>
     <el-card class="box-card" shadow="hover" style="text-align: center"> {{ a }} </el-card>
+
     <el-card class="box-card" shadow="hover">
       <template #header>
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 热门</h2>
       </template>
       <div v-for="o in 5" :key="o" style="display: flex; margin-top: 16px">
         <div style="display: flex; flex-direction: column; justify-content: space-between">
-          <span
-            style="
-              overflow: hidden;
-              display: -webkit-box;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
-            "
-            >啦啦啦啦啦啦，对对对啦啦啦啦啦啦啦，对对对啦
-          </span>
-
+          <el-link :underline="false" style="justify-content: left">
+            <span
+              style="
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+              "
+              >啦啦啦啦啦啦，对对对啦啦啦啦啦啦啦，对对对啦
+            </span>
+          </el-link>
           <span class="text-xs font-number text-color">2023-04-23</span>
         </div>
         <el-image
@@ -66,6 +68,7 @@
         />
       </div>
     </el-card>
+
     <el-card class="box-card" shadow="hover">
       <template #header>
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 标签</h2>

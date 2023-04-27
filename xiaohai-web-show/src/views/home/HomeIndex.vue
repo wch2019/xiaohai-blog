@@ -34,16 +34,19 @@
               justify-content: space-between;
             "
           >
-            <h2
-              style="
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-              "
-            >
-              啦啦啦啦啦啦，对对对
-            </h2>
+            <el-link :underline="false" style="justify-content: left">
+              <h2
+                style="
+                  overflow: hidden;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                "
+              >
+                <svg-icon icon-class="top" />
+                啦啦啦啦啦啦，对对对
+              </h2>
+            </el-link>
             <span
               style="
                 overflow: hidden;
@@ -57,11 +60,16 @@
             </span>
             <span style="display: flex; align-items: center; justify-content: space-between">
               <span style="display: flex; align-items: center">
-                <el-avatar
-                  size="small"
-                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-                />
-                <span class="text-xs">xiaohai</span>
+                <el-space size="small">
+                  <el-avatar
+                    size="small"
+                    src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                  />
+                  <span class="text-xs">xiaohai</span>
+                  <el-tag size="small">Tag 1</el-tag>
+                  <el-tag type="success" size="small">Tag 2</el-tag>
+                  <el-tag type="success" size="small">Tag 2</el-tag>
+                </el-space>
               </span>
 
               <el-space alignment="center" size="large">
@@ -134,11 +142,13 @@
           </h2>
           <span style="display: flex; align-items: center; justify-content: space-between">
             <span style="display: flex; align-items: center">
-              <el-avatar
-                size="small"
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-              />
-              <span class="text-xs">xiaohai</span>
+              <el-space size="small">
+                <el-avatar
+                  size="small"
+                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                />
+                <span class="text-xs">xiaohai</span>
+              </el-space>
             </span>
 
             <el-space alignment="center" size="large">

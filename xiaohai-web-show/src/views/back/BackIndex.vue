@@ -1,7 +1,7 @@
 <template>
   <!--左内容区-->
   <el-col :lg="14" :xl="11">
-    <h1><svg-icon icon-class="tags"></svg-icon> 归档</h1>
+    <h1><svg-icon icon-class="time-dark"></svg-icon> 归档</h1>
     <el-card class="box-card" shadow="hover">
       <el-timeline>
         <el-timeline-item timestamp="2018/4/12" placement="top">

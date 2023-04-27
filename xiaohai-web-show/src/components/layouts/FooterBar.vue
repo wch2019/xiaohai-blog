@@ -1,9 +1,29 @@
 <template>
   <el-card class="box-card footer-wrap" shadow="hover">
-    <div>
-      ©{{ 2023 }} - {{ new Date().getFullYear() }} By
-      <!--        {{blogInfo.webSite.author}}-->
+    <div class="menus-item">
+      <router-link class="menu-btn" to="/"> 首页</router-link>
     </div>
+    <el-divider direction="vertical" />
+    <div class="menus-item">
+      <router-link class="menu-btn" to="/category"> 分类</router-link>
+    </div>
+    <el-divider direction="vertical" />
+    <div class="menus-item">
+      <router-link class="menu-btn" to="/tags"> 标签</router-link>
+    </div>
+    <el-divider direction="vertical" />
+    <div class="menus-item">
+      <router-link class="menu-btn" to="/back"> 归档</router-link>
+    </div>
+    <el-divider direction="vertical" />
+    <div class="menus-item">
+      <router-link class="menu-btn" to="/message"> 留言</router-link>
+    </div>
+    <el-divider direction="vertical" />
+    <div class="menus-item">
+      <router-link class="menu-btn" to="/about"> 关于</router-link>
+    </div>
+    <div>©{{ 2023 }} - {{ new Date().getFullYear() }} By XiaoHai</div>
     <a href="https://beian.miit.gov.cn/" target="_blank">
       <!--        {{blogInfo.webSite.recordNum}}-->
     </a>
@@ -46,10 +66,6 @@ export default {
   animation: Gradient 10s ease infinite;
 }
 
-.footer-wrap a {
-  color: #eee !important;
-}
-
 @keyframes Gradient {
   0% {
     background-position: 0 50%;
@@ -60,5 +76,15 @@ export default {
   100% {
     background-position: 0 50%;
   }
+}
+.menus-item {
+  position: relative;
+  display: inline-block;
+}
+.menus-item a {
+  display: block;
+  color: var(--color);
+  text-align: center;
+  text-decoration: none;
 }
 </style>
