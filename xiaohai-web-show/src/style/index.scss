@@ -58,3 +58,7 @@ html,body {
 .text-color {
   color: var(--el-color-info-light-3) !important;
 }
+// flex居中
+.flex-center{
+  display: flex; align-items: center
+}

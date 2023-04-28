@@ -1,7 +1,7 @@
 <template>
   <!--左内容区-->
   <el-col :lg="14" :xl="11">
-    <h1>
+    <h1 class="flex-center">
       <el-icon><Connection /></el-icon> 友链
     </h1>
     <el-card class="box-card" shadow="hover">

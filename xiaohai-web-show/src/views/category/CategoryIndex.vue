@@ -1,7 +1,7 @@
 <template>
   <!--左内容区-->
   <el-col :lg="14" :xl="11" style="height: 100%">
-    <h1>
+    <h1 class="flex-center">
       <el-icon><Menu /></el-icon> 分类
     </h1>
     <el-card class="box-card" shadow="hover">

@@ -6,16 +6,19 @@
       <el-carousel :interval="4000" height="310px">
         <el-carousel-item v-for="item in 3" :key="item">
           <el-image src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" />
+          <div class="carousel-title">
+            <span>这是一个神奇的数据</span>
+          </div>
         </el-carousel-item>
       </el-carousel>
 
       <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
         <el-scrollbar>
           <el-space wrap class="category">
-            <el-button round>最新文章</el-button>
-            <el-button round>最热文章</el-button>
-            <el-button round>原创文章</el-button>
-            <el-button round>转载文章</el-button>
+            <router-link to="/article"> <el-button round>最新文章</el-button></router-link>
+            <router-link to="/article"><el-button round>最热文章</el-button></router-link>
+            <router-link to="/article"><el-button round>原创文章</el-button></router-link>
+            <router-link to="/article"><el-button round>转载文章</el-button></router-link>
           </el-space>
         </el-scrollbar>
       </el-card>
@@ -89,22 +92,24 @@
       </el-card>
     </el-space>
   </el-col>
-
   <!--手机端-->
   <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
     <el-carousel :interval="4000" height="210px">
       <el-carousel-item v-for="item in 3" :key="item">
         <el-image src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" />
+        <div class="carousel-title">
+          <span>这是一个神奇的数据</span>
+        </div>
       </el-carousel-item>
     </el-carousel>
 
     <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
       <el-scrollbar>
         <el-space wrap class="category">
-          <el-button round>最新文章</el-button>
-          <el-button round>最热文章</el-button>
-          <el-button round>原创文章</el-button>
-          <el-button round>转载文章</el-button>
+          <router-link to="/article"> <el-button round>最新文章</el-button></router-link>
+          <router-link to="/article"><el-button round>最热文章</el-button></router-link>
+          <router-link to="/article"><el-button round>原创文章</el-button></router-link>
+          <router-link to="/article"><el-button round>转载文章</el-button></router-link>
         </el-space>
       </el-scrollbar>
     </el-card>
@@ -161,7 +166,6 @@
       </div>
     </el-card>
   </el-space>
-
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
     <RightSide></RightSide>
@@ -222,5 +226,19 @@ const onChange = (status: boolean) => {
 .article-right-flex {
   display: flex;
   flex-direction: row;
+}
+.carousel-title {
+  cursor: pointer;
+  position: absolute;
+  z-index: 10;
+  bottom: 40px;
+  height: 40px;
+  width: 100%;
+  line-height: 40px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 22px;
+  color: #ecf8ff;
+  font-weight: bold;
 }
 </style>
