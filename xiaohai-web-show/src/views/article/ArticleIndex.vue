@@ -35,6 +35,7 @@
       <el-divider />
       <div class="tip">原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br /></div>
       <div class="tip">转载 本文转载自http://localhost:4001/#/article<br /></div>
+      <v-md-preview :text="text"></v-md-preview>
       <div>
         Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)
         后，启动容器会报错，本文就介绍一下Springboot2.6.x高版本与Swagger2版本冲突问题解决方法，感兴趣的可以了解一下
@@ -85,12 +86,6 @@
       <div class="tip">转载 本文转载自http://localhost:4001/#/article<br /></div>
       <div>
         <h2>ddddd</h2>
-        Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)
-        后，启动容器会报错，本文就介绍一下Springboot2.6.x高版本与Swagger2版本冲突问题解决方法，感兴趣的可以了解一下
-        问题: Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)
-        后，启动容器会报错： Failed to start bean ‘ documentationPluginsBootstrapper ‘ ; nested
-        exception… 原因 Springfox 假设 Spring MVC 的路径匹配策略是 ant-path-matcher，而 Spring Boot
-        2.6.x版本的默认匹配策略是 path-pattern-matcher，这就造成了上面的报错。
       </div>
 
       <el-divider />
@@ -107,6 +102,13 @@
 
 <script setup lang="ts">
 import RightSide from '@/views/article/RightSide.vue'
+
+const text =
+  '## 使用 markdown Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)后，启动容器会报错，本文就介绍一下Springboot2.6.x高版本与Swagger2版本冲突问题解决方法，感兴趣的可以了解一下' +
+  '        问题: Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)' +
+  '        后，启动容器会报错： Failed to start bean ‘ documentationPluginsBootstrapper ‘ ; nested' +
+  '        exception… 原因 Springfox 假设 Spring MVC 的路径匹配策略是 ant-path-matcher，而 Spring Boot' +
+  '        2.6.x版本的默认匹配策略是 path-pattern-matcher，这就造成了上面的报错。\n'
 </script>
 
 <style scoped>
