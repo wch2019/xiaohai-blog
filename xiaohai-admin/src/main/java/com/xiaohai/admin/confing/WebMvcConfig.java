@@ -32,7 +32,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 //swagger
                 .excludePathPatterns("/favicon.ico", "/webjars/**", "/img.icons/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger-ui/**", "/doc.html", "/swagger-ui.html")
                 //登录、验证码、注册、文件
-                .excludePathPatterns("/login","/sendEmailCode","/register","/document/upload/**");
+                .excludePathPatterns("/login","/sendEmailCode","/register","/document/upload/**")
+                //展示页接口
+                .excludePathPatterns("/home/show/**");
         //分页拦截器
         registry.addInterceptor(new PageableInterceptor());
     }
