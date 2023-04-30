@@ -1,7 +1,9 @@
 package com.xiaohai.admin.home;
 
 import com.xiaohai.common.daomain.Response;
+import com.xiaohai.note.pojo.dto.CategoryDto;
 import com.xiaohai.note.pojo.dto.TagsDto;
+import com.xiaohai.note.service.CategoryService;
 import com.xiaohai.note.service.TagsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,9 +25,16 @@ import java.util.List;
 @RequestMapping("/home/show")
 public class HomeShowController {
     private final TagsService tagsService;
+    private final CategoryService categoryService;
+
     @Operation(summary = "标签")
     @GetMapping("/tags")
-    public Response<List<TagsDto>> getRank() {
-        return Response.success("获取标签成功！", tagsService.optionSelect());
+    public Response<List<TagsDto>> getTagsArticleCount() {
+        return Response.success("获取标签成功！", tagsService.getTagsArticleCount());
+    }
+    @Operation(summary = "分类")
+    @GetMapping("/category")
+    public Response<List<CategoryDto>> getCategoryArticleCount() {
+        return Response.success("获取分类成功！", categoryService.getCategoryArticleCount());
     }
 }

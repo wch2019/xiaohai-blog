@@ -4,12 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xiaohai.common.daomain.BaseEntity;
-import java.io.Serializable;
-import java.io.Serial;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -32,7 +33,7 @@ public class Tags extends BaseEntity  implements Serializable  {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @Schema(description = "分类名称")
+    @Schema(description = "标签名称")
     private String name;
 
     @Schema(description = "点击次数")

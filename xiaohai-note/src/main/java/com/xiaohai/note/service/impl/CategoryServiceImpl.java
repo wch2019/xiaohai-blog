@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -91,7 +90,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public List<CategoryDto> optionSelect() {
-        List<Category> categories=baseMapper.selectList(new QueryWrapper<Category>().orderByAsc("sort"));
+        List<Category> categories=baseMapper.selectList(new QueryWrapper<Category>().eq("status",0).orderByAsc("sort"));
         List<CategoryDto> list=new ArrayList<>();
         for(Category category:categories){
             CategoryDto categoryDto=new CategoryDto();
@@ -116,5 +115,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         map.put("nameData",nameList);
         map.put("valueData",valueNames);
         return map;
+    }
+
+    @Override
+    public List<CategoryDto> getCategoryArticleCount() {
+        return baseMapper.getCategoryArticleCount();
     }
 }

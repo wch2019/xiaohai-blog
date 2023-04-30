@@ -87,7 +87,7 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
 
     @Override
     public List<TagsDto> optionSelect() {
-        List<Tags> tags=baseMapper.selectList(new QueryWrapper<Tags>().orderByAsc("sort"));
+        List<Tags> tags=baseMapper.selectList(new QueryWrapper<Tags>().eq("status",0).orderByAsc("sort"));
         List<TagsDto> list=new ArrayList<>();
         for(Tags tagss:tags){
             TagsDto tagsDto=new TagsDto();
@@ -95,5 +95,10 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
             list.add(tagsDto);
         }
         return list;
+    }
+
+    @Override
+    public List<TagsDto> getTagsArticleCount() {
+        return baseMapper.selectTagsArticleCount();
     }
 }

@@ -65,4 +65,10 @@ public interface TagsService extends IService<Tags> {
      * @return
      */
     List<TagsDto> optionSelect();
+
+    /**
+     * 查询标签展示列表(包含对应文章数)
+     * @return
+     */
+    List<TagsDto> getTagsArticleCount();
 }

@@ -23,5 +23,16 @@
         updated_time,
         id, name, click, sort, status
     </sql>
+    <select id="selectTagsArticleCount" resultType="com.xiaohai.note.pojo.dto.TagsDto">
+        SELECT t.id,
+               t.`name`,
+               (SELECT count(1) FROM b_article_tag where tag_id=t.id) as count,
+               t.sort
+        FROM
+            `b_tags` t
+        where
+            status=0
+        ORDER BY sort ASC
+    </select>
 
 </mapper>

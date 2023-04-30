@@ -23,5 +23,17 @@
         updated_time,
         id, name, click, sort, status
     </sql>
+    <select id="getCategoryArticleCount" resultType="com.xiaohai.note.pojo.dto.CategoryDto">
+
+        SELECT c.id,
+               c.`name`,
+               (SELECT count(1) FROM b_article where category_id=c.id) as count,
+               c.sort
+        FROM
+            `b_category` c
+        where
+            c.status=0
+        ORDER BY sort ASC
+    </select>
 
 </mapper>

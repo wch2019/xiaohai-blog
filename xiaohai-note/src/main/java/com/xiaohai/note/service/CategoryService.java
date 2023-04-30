@@ -72,4 +72,10 @@ public interface CategoryService extends IService<Category> {
      * @return
      */
     Map<String,Object> pieChart();
+
+    /**
+     * 查询分类列表(包含对应文章数)
+     * @return
+     */
+    List<CategoryDto> getCategoryArticleCount();
 }

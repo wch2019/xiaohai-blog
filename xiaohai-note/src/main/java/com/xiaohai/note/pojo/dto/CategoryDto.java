@@ -1,11 +1,11 @@
 package com.xiaohai.note.pojo.dto;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
 * <p>
@@ -31,6 +31,8 @@ public class CategoryDto implements Serializable {
     @Schema(description = "点击次数")
     private Integer click;
 
+    @Schema(description = "分类对应的文章数")
+    private long count;
     @Schema(description = "排序")
     private Integer sort;
 
