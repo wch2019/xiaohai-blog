@@ -19,6 +19,7 @@ import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.ArticleTagMapper;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
+import com.xiaohai.note.pojo.dto.ArticleShowDto;
 import com.xiaohai.note.pojo.dto.DateCount;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
@@ -69,8 +70,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
         //顶置写入时间
         if (article.getIsTop() == 1) {
-            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1));
-            Assert.isTrue(countTop <1, "已存在顶置");
+            var countTop = baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top", 1));
+            Assert.isTrue(countTop < 1, "已存在顶置");
             article.setTopTime(LocalDateTime.now());
         }
         article.setCreatedTime(LocalDateTime.now());
@@ -101,8 +102,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         BeanUtils.copyProperties(vo, article);
         //顶置写入时间
         if (article.getIsTop() == 1) {
-            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1).ne("id",article.getId()));
-            Assert.isTrue(countTop <1, "已存在顶置");
+            var countTop = baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top", 1).ne("id", article.getId()));
+            Assert.isTrue(countTop < 1, "已存在顶置");
             article.setTopTime(LocalDateTime.now());
         } else {
             article.setTopTime(null);
@@ -127,7 +128,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
         IPage<ArticleDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<ArticleDto> iPage =baseMapper.selectPageArticleQuery(wherePage,query);
+        IPage<ArticleDto> iPage = baseMapper.selectPageArticleQuery(wherePage, query);
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
@@ -173,9 +174,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (article.getIsTop() == 1) {
             article.setIsTop(0);
             article.setTopTime(null);
-        }else{
-            var countTop=baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top",1));
-            Assert.isTrue(countTop <1, "已存在顶置");
+        } else {
+            var countTop = baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top", 1));
+            Assert.isTrue(countTop < 1, "已存在顶置");
             article.setIsTop(1);
             article.setTopTime(LocalDateTime.now());
         }
@@ -187,7 +188,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Article article = baseMapper.selectById(id);
         if (article.getIsPush() == 1) {
             article.setIsPush(0);
-        }else{
+        } else {
             article.setIsPush(1);
         }
         return baseMapper.updateById(article);
@@ -200,18 +201,28 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public Map<String, Object> contribution() {
-        Map<String, Object> data=new HashMap<>();
-        List<DateCount> timeValue=baseMapper.getCreatedTime();
-        Contribution contribution=ContributionUtils.getContribution();
+        Map<String, Object> data = new HashMap<>();
+        List<DateCount> timeValue = baseMapper.getCreatedTime();
+        Contribution contribution = ContributionUtils.getContribution();
         //最近一年文章
         data.put("oneYear", timeValue.stream().map(DateCount::getCount).mapToLong(Long::intValue).sum());
         //最长连续创作
-        data.put("longest",contribution.getLongest());
+        data.put("longest", contribution.getLongest());
         //最近持续持续
-        data.put("continuous",contribution.getContinuous());
+        data.put("continuous", contribution.getContinuous());
         //统计表
-        data.put("timeValue",timeValue);
+        data.put("timeValue", timeValue);
         return data;
+    }
+
+    @Override
+    public ReturnPageData<ArticleShowDto> findShowListByPage(Integer type) {
+        IPage<ArticleShowDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
+        //1:最新文章,2:最热文章,3:原创文章,4:转载文章
+        IPage<ArticleShowDto> iPage = baseMapper.findShowListByPage(wherePage,type);
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, iPage.getRecords());
     }
 
 }

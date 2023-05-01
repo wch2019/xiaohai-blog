@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
+import com.xiaohai.note.pojo.dto.ArticleShowDto;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
@@ -92,4 +93,11 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     Map<String, Object> contribution();
+
+    /**
+     * 查询展示文章表列表数据
+     * @param type
+     * @return
+     */
+    ReturnPageData<ArticleShowDto> findShowListByPage(Integer type);
 }

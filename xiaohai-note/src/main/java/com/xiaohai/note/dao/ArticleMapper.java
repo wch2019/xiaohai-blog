@@ -3,12 +3,12 @@ package com.xiaohai.note.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xiaohai.note.pojo.dto.ArticleDto;
+import com.xiaohai.note.pojo.dto.ArticleShowDto;
 import com.xiaohai.note.pojo.dto.DateCount;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -39,6 +39,14 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     List<DateCount> getCreatedTime();
+
+    /**
+     * 查询文章表列表数据
+     * @param wherePage
+     * @param type
+     * @return
+     */
+    IPage<ArticleShowDto> findShowListByPage(@Param("page")IPage<ArticleShowDto> wherePage,Integer type);
 
 
 }

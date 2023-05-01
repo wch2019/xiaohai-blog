@@ -71,6 +71,45 @@
     <select id="getCreatedTime" resultType="com.xiaohai.note.pojo.dto.DateCount">
         select date(updated_time) as date,count(id) as count from b_article where YEAR(updated_time)=YEAR(now()) GROUP BY date(updated_time)
     </select>
+    <select id="findShowListByPage" resultType="com.xiaohai.note.pojo.dto.ArticleShowDto">
+        SELECT
+        a.id,
+        a.user_id as userId,
+        (SELECT username from sys_user where id=a.user_id) as userName,
+        (SELECT nick_name from sys_user where id=a.user_id) as nickName,
+        (SELECT avatar from sys_user where id=a.user_id) as avatar,
+        a.cover,
+        a.title,
+        a.summary,
+        a.category_id as categoryId,
+        (SELECT name from b_category where id=a.category_id) as categoryName,
+        a.is_push as isPush,
+        a.is_top as isTop,
+        a.is_original as isOriginal,
+        a.page_view as pageView,
+        a.created_time as createdTime,
+        GROUP_CONCAT( DISTINCT t.tag_id ) as tags
+        FROM
+        b_article a
+        LEFT JOIN b_article_tag t ON a.id = t.article_id
+        <where>
+            <if test="type != null and type ==3">
+                a.is_original=0
+            </if>
+            <if test="type != null and type ==4">
+                and   a.is_original=1
+            </if>
+        </where>
+        GROUP BY
+        a.id
+        ORDER BY
+        <if test="type != null and type ==2">
+            a.page_view DESC,
+        </if>
+        a.is_top DESC,
+        a.top_time DESC,
+        a.created_time DESC
+    </select>
 
 
 </mapper>

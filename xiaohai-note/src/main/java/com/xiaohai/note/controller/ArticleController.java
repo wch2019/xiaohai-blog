@@ -89,6 +89,7 @@ public class ArticleController {
     public Response<Integer> top(@PathVariable Long id) {
         return Response.success("修改成功！", articleService.top(id));
     }
+
     @Operation(summary = "是否发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:push")
     @Log(title = "是否发布")
