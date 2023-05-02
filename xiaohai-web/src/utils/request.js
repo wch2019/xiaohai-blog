@@ -108,10 +108,10 @@ service.interceptors.response.use(
     } else {
       // 设置触发错误的请求时发生某些情况
       console.log('Error', error)
-      message.error(error)
+      message.error('系统异常')
     }
     console.log(error)
-    return Promise.reject(error)
+    return Promise.reject('系统异常')
   }
 )
 

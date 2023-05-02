@@ -24,8 +24,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // 设置host访问
     port: 4000, // 设置服务启动端口号
-    open: true, // 设置服务启动时是否自动打开浏览器
-    cors: true // 允许跨域
+    open: false, // 设置服务启动时是否自动打开浏览器
+    cors: true, // 允许跨域
 
     // 设置代理，根据我们项目实际情况配置
     // proxy: {

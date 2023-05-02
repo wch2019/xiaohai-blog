@@ -2,7 +2,13 @@
   <!--左内容区-->
   <el-col :lg="14" :xl="11">
     <!--电脑端-->
-    <el-space class="hidden-sm-and-down" direction="vertical" fill size="large">
+    <el-space
+      class="hidden-sm-and-down"
+      direction="vertical"
+      fill
+      size="large"
+      style="display: flex"
+    >
       <el-carousel :interval="4000" height="310px">
         <el-carousel-item v-for="item in 3" :key="item">
           <el-image src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" />
@@ -22,19 +28,22 @@
           </el-space>
         </el-scrollbar>
       </el-card>
-
-      <el-card v-for="i in 10" :key="i" class="box-card box-card-hover" shadow="hover">
+      <el-card
+        v-loading="loading"
+        v-for="article in dataList"
+        :key="article"
+        class="box-card box-card-hover"
+        shadow="hover"
+      >
         <div style="display: flex; flex-direction: row">
-          <el-image
-            src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
-            class="image"
-          />
+          <el-image :src="image(article.cover)" class="image" />
           <div
             style="
               margin-left: 18px;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
+              width: 100%;
             "
           >
             <el-link :underline="false" style="justify-content: left">
@@ -46,8 +55,8 @@
                   -webkit-box-orient: vertical;
                 "
               >
-                <svg-icon icon-class="top" />
-                啦啦啦啦啦啦，对对对
+                <svg-icon v-if="article.isTop == 1" icon-class="top" />
+                {{ article.title }}
               </h2>
             </el-link>
             <span
@@ -58,26 +67,33 @@
                 -webkit-box-orient: vertical;
               "
             >
-              过去两年是人工智能赛道需要极力反思的两年。一方面，巨亏之下，明星AI企业融资难度加大，云从、商汤等，要么上市一波三折，要么股价节节败退，资本市场不看好的声音此起彼伏。，资本市场不看好的声音此起彼伏。
-              另 过去两年是人工智
+              {{ article.summary }}
             </span>
             <span style="display: flex; align-items: center; justify-content: space-between">
               <span style="display: flex; align-items: center">
                 <el-space size="small">
-                  <el-avatar
-                    size="small"
-                    src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-                  />
-                  <span class="text-xs">xiaohai</span>
-                  <el-tag size="small">Tag 1</el-tag>
-                  <el-tag type="success" size="small">Tag 2</el-tag>
-                  <el-tag type="success" size="small">Tag 2</el-tag>
+                  <el-avatar size="small" :src="image(article.avatar)" />
+                  <span v-if="article.nickName" class="text-xs">{{ article.nickName }}</span>
+                  <span v-else class="text-xs">{{ article.username }}</span>
+                  <el-tag size="small">{{ article.categoryName }}</el-tag>
+                  <template v-for="(item, index) in tags">
+                    <el-tag
+                      v-if="article.tags && article.tags.includes(item.id)"
+                      :key="index"
+                      style="margin-right: 4px"
+                      type="success"
+                      size="small"
+                      :label="index"
+                      border
+                      >{{ item.name }}
+                    </el-tag>
+                  </template>
                 </el-space>
               </span>
 
               <el-space alignment="center" size="large">
                 <span class="text-xs font-number text-color">
-                  <svg-icon icon-class="eye-light" style="font-size: 15px" /> 100
+                  <svg-icon icon-class="eye-light" style="font-size: 15px" /> {{ article.pageView }}
                 </span>
                 <span class="text-xs font-number text-color"
                   ><svg-icon icon-class="message" style="font-size: 15px" /> 30</span
@@ -115,23 +131,21 @@
     </el-card>
 
     <el-card
-      v-for="i in 10"
-      :key="i"
+      v-for="article in dataList"
+      :key="article"
       class="box-card-mobile box-card-hover"
       shadow="hover"
       :body-style="{ padding: '10px' }"
     >
       <div class="article-flex">
-        <el-image
-          src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
-          class="image"
-        />
+        <el-image :src="image(article.cover)" class="image" />
         <div
           style="
             margin-left: 10px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            width: 100%;
           "
         >
           <h2
@@ -143,24 +157,20 @@
               -webkit-box-orient: vertical;
             "
           >
-            啦啦啦啦啦啦，对对对对对对对对对对对对对对对对对对
+            <svg-icon v-if="article.isTop == 1" icon-class="top" />
+            {{ article.title }}
           </h2>
           <span style="display: flex; align-items: center; justify-content: space-between">
             <span style="display: flex; align-items: center">
               <el-space size="small">
-                <el-avatar
-                  size="small"
-                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-                />
-                <span class="text-xs">xiaohai</span>
+                <el-avatar size="small" :src="image(article.avatar)" />
+                <span v-if="article.nickName" class="text-xs">{{ article.nickName }}</span>
+                <span v-else class="text-xs">{{ article.username }}</span>
               </el-space>
             </span>
-
-            <el-space alignment="center" size="large">
-              <span class="text-xs font-number"
-                ><svg-icon icon-class="give-light" style="font-size: 15px" /> 20</span
-              >
-            </el-space>
+            <span class="text-xs font-number">
+              <svg-icon icon-class="give-light" style="font-size: 15px" /> 20
+            </span>
           </span>
         </div>
       </div>
@@ -173,13 +183,59 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, toRefs } from 'vue'
 import RightSide from '@/components/layouts/RightSide.vue'
+import { listTag, listArticles } from '@/api/show'
 
-const checked = ref(false)
-const onChange = (status: boolean) => {
-  checked.value = status
+const loading = ref(true)
+// 展示文章列表
+const dataList = ref([])
+const tags = ref([])
+
+const data = reactive({
+  form: {},
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10
+  },
+  rules: {
+    dictName: [{ required: true, message: '字典名称不能为空', trigger: 'blur' }],
+    dictType: [{ required: true, message: '字典类型不能为空', trigger: 'blur' }]
+  }
+})
+
+const { queryParams, form, rules } = toRefs(data)
+
+/** 查询展示文章列表 */
+function getList() {
+  loading.value = true
+  listArticles(queryParams.value).then((response) => {
+    dataList.value = response.data.data.records
+    loading.value = false
+  })
 }
+
+/**
+ * 图片地址拼接
+ * @param cover
+ */
+function image(cover: any) {
+  return import.meta.env.VITE_APP_BASE_API_FILE + cover
+}
+
+/**
+ * 标签列表
+ */
+const getTags = async () => {
+  // 函解构用async和await包裹
+  const { data: res } = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
+  // 对data进行解构赋值 取出请求的结果res
+  tags.value = res.data
+  // data = res.data // 将请求结果的data值赋给data.list 方便表格table与之数据双向绑定
+}
+
+getTags() // 调用函数
+getList()
 </script>
 
 <style scoped>
