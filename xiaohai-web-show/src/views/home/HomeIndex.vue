@@ -36,7 +36,7 @@
         shadow="hover"
       >
         <div style="display: flex; flex-direction: row">
-          <el-image :src="image(article.cover)" class="image" />
+          <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)" />
           <div
             style="
               margin-left: 18px;
@@ -54,6 +54,7 @@
                   -webkit-line-clamp: 2;
                   -webkit-box-orient: vertical;
                 "
+                @click="getArticle(article.id)"
               >
                 <svg-icon v-if="article.isTop == 1" icon-class="top" />
                 {{ article.title }}
@@ -184,6 +185,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listTag, listArticles } from '@/api/show'
 
@@ -222,7 +224,10 @@ function getList() {
 function image(cover: any) {
   return import.meta.env.VITE_APP_BASE_API_FILE + cover
 }
-
+const router = useRouter()
+function getArticle(id: any) {
+  router.push({ path: `/article/${id}` })
+}
 /**
  * 标签列表
  */

@@ -2,8 +2,8 @@
   <!--左内容区-->
   <el-col :lg="14" :xl="11">
     <!--电脑端-->
-    <el-card class="box-card hidden-sm-and-down" shadow="hover">
-      <h1 class="flex-center">这是一个标题嗷嗷</h1>
+    <el-card v-loading="loading" class="box-card hidden-sm-and-down" shadow="hover">
+      <h1 class="flex-center">{{ articleOne.title }}</h1>
       <span style="display: flex; align-items: center; justify-content: space-between">
         <span style="display: flex; align-items: center">
           <el-space size="default">
@@ -19,7 +19,7 @@
         </span>
         <el-space alignment="center" size="large">
           <span class="text-sm font-number text-color">
-            <svg-icon icon-class="time-light" /> 2023-04-22 16:46:33</span
+            <svg-icon icon-class="time-light" />{{ articleOne.createdTime }}</span
           >
           <span class="text-sm font-number text-color">
             <svg-icon icon-class="eye-light" style="font-size: 15px" /> 100
@@ -35,15 +35,7 @@
       <el-divider />
       <div class="tip">原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br /></div>
       <div class="tip">转载 本文转载自http://localhost:4001/#/article<br /></div>
-      <v-md-preview :text="text"></v-md-preview>
-      <div>
-        Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)
-        后，启动容器会报错，本文就介绍一下Springboot2.6.x高版本与Swagger2版本冲突问题解决方法，感兴趣的可以了解一下
-        问题: Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)
-        后，启动容器会报错： Failed to start bean ‘ documentationPluginsBootstrapper ‘ ; nested
-        exception… 原因 Springfox 假设 Spring MVC 的路径匹配策略是 ant-path-matcher，而 Spring Boot
-        2.6.x版本的默认匹配策略是 path-pattern-matcher，这就造成了上面的报错。
-      </div>
+      <v-md-preview :text="articleOne.text"></v-md-preview>
       <el-divider />
       <el-divider />
       <h3 class="flex-center"><svg-icon icon-class="message"></svg-icon> <span>评论</span></h3>
@@ -101,14 +93,24 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import RightSide from '@/views/article/RightSide.vue'
+import { article } from '@/api/show'
 
-const text =
-  '## 使用 markdown Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)后，启动容器会报错，本文就介绍一下Springboot2.6.x高版本与Swagger2版本冲突问题解决方法，感兴趣的可以了解一下' +
-  '        问题: Spring Boot 2.6.x版本引入依赖 springfox-boot-starter (Swagger 3.0)' +
-  '        后，启动容器会报错： Failed to start bean ‘ documentationPluginsBootstrapper ‘ ; nested' +
-  '        exception… 原因 Springfox 假设 Spring MVC 的路径匹配策略是 ant-path-matcher，而 Spring Boot' +
-  '        2.6.x版本的默认匹配策略是 path-pattern-matcher，这就造成了上面的报错。\n'
+const loading = ref(true)
+const articleOne = ref('')
+const route = useRoute()
+
+function getArticle() {
+  const { id } = route.params
+  loading.value = true
+  article(id).then((response) => {
+    articleOne.value = response.data.data
+    loading.value = false
+  })
+}
+getArticle()
 </script>
 
 <style scoped>

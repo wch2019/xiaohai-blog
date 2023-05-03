@@ -29,3 +29,9 @@ export const listArticles = (data: any) => {
     data
   })
 }
+export const article = (id: any) => {
+  return request({
+    url: `${api}/article/${id}`,
+    method: 'get'
+  })
+}
