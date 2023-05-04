@@ -63,7 +63,7 @@ public class ArticleController {
     @Operation(summary = "id查询文章表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
     public Response<ArticleDtoAll> findById(@PathVariable Long id) {
-        return Response.success("id查询文章成功！", articleService.findById(id));
+        return Response.success("id查询文章成功！", articleService.findById(id,1));
     }
 
     @Operation(summary = "查询文章表列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})

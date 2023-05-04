@@ -17,6 +17,7 @@ import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.ArticleTagMapper;
+import com.xiaohai.note.dao.CategoryMapper;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
 import com.xiaohai.note.pojo.dto.ArticleShowDto;
@@ -59,7 +60,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final FileConfig fileConfig;
 
     private final ArticleTagService articleTagService;
+
     private final ArticleTagMapper articleTagMapper;
+
+    private final CategoryMapper categoryMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -117,11 +121,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public ArticleDtoAll findById(Long id) {
+    public ArticleDtoAll findById(Long id,int type) {
         ArticleDtoAll articleDtoAll = new ArticleDtoAll();
         Article article = baseMapper.selectById(id);
         BeanUtils.copyProperties(article, articleDtoAll);
+        articleDtoAll.setCategoryName(categoryMapper.selectById(article.getCategoryId()).getName());
         articleDtoAll.setTags(articleTagMapper.searchAllByArticleId(id));
+        //更新浏览量
+        if(type==0){
+            Article articleCount=new Article();
+            articleCount.setId(article.getId());
+            articleCount.setPageView(article.getPageView()+1);
+            baseMapper.updateById(articleCount);
+        }
         return articleDtoAll;
     }
 

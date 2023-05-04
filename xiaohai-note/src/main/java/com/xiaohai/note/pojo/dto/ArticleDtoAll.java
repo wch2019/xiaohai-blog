@@ -42,6 +42,9 @@ public class ArticleDtoAll implements Serializable {
     @Schema(description = "分类id")
     private Integer categoryId;
 
+    @Schema(description = "分类名称")
+    private String categoryName;
+
     @Schema(description = "标签列表")
     private List<Long> tags;
 

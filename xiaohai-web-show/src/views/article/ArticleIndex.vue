@@ -12,7 +12,7 @@
               src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
             />
             <span class="text-sm">xiaohai</span>
-            <el-tag size="default">Tag 1</el-tag>
+            <el-tag size="default">{{ articleOne.categoryName }}</el-tag>
             <el-tag type="success" size="default">Tag 2</el-tag>
             <el-tag type="success" size="default">Tag 2</el-tag>
           </el-space>
@@ -33,8 +33,10 @@
         </el-space>
       </span>
       <el-divider />
-      <div class="tip">原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br /></div>
-      <div class="tip">转载 本文转载自http://localhost:4001/#/article<br /></div>
+      <div v-if="articleOne.isOriginal == 0" class="tip">
+        原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
+      </div>
+      <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
       <v-md-preview :text="articleOne.text"></v-md-preview>
       <el-divider />
       <el-divider />

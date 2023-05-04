@@ -32,7 +32,6 @@ import java.util.List;
 public class HomeShowController {
     private final TagsService tagsService;
     private final CategoryService categoryService;
-
     private final ArticleService articleService;
 
     @Operation(summary = "标签")
@@ -57,6 +56,6 @@ public class HomeShowController {
     @Operation(summary = "id查询文章详情")
     @GetMapping("/article/{id}")
     public Response<ArticleDtoAll> findById(@PathVariable Long id) {
-        return Response.success("id查询文章详情成功！", articleService.findById(id));
+        return Response.success("id查询文章详情成功！", articleService.findById(id,0));
     }
 }

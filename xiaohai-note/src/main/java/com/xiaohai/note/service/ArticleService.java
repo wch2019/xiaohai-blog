@@ -50,9 +50,10 @@ public interface ArticleService extends IService<Article> {
      * id查询数据
      *
      * @param id id
+     * @param type 展示0,管理1 （展示会累计浏览量）
      * @return   Article
 */
-    ArticleDtoAll findById(Long id);
+    ArticleDtoAll findById(Long id,int type);
 
     /**
     * 查询文章表列表数据

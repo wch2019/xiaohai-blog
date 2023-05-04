@@ -21,10 +21,10 @@
       <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
         <el-scrollbar>
           <el-space wrap class="category">
-            <router-link to="/article"> <el-button round>最新文章</el-button></router-link>
-            <router-link to="/article"><el-button round>最热文章</el-button></router-link>
-            <router-link to="/article"><el-button round>原创文章</el-button></router-link>
-            <router-link to="/article"><el-button round>转载文章</el-button></router-link>
+            <el-button round>最新文章</el-button>
+            <el-button round>最热文章</el-button>
+            <el-button round>原创文章</el-button>
+            <el-button round>转载文章</el-button>
           </el-space>
         </el-scrollbar>
       </el-card>
