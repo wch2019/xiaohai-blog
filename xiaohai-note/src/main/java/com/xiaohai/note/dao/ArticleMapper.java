@@ -46,7 +46,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param type
      * @return
      */
-    IPage<ArticleShowDto> findShowListByPage(@Param("page")IPage<ArticleShowDto> wherePage,Integer type);
+    IPage<ArticleShowDto> findShowListByPage(@Param("page")IPage<ArticleShowDto> wherePage,@Param("type")Integer type);
 
 
 }

@@ -46,7 +46,12 @@
       <template #header>
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 热门</h2>
       </template>
-      <div v-for="o in 5" :key="o" style="display: flex; margin-top: 16px">
+      <div
+        v-loading="loading"
+        v-for="article in dataList"
+        :key="article"
+        style="display: flex; margin-top: 16px; justify-content: space-between"
+      >
         <div style="display: flex; flex-direction: column; justify-content: space-between">
           <el-link :underline="false" style="justify-content: left">
             <span
@@ -56,15 +61,20 @@
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
               "
-              >啦啦啦啦啦啦，对对对啦啦啦啦啦啦啦，对对对啦
+              @click="getArticle(article.id)"
+            >
+              {{ article.title }}
             </span>
           </el-link>
-          <span class="text-xs font-number text-color">2023-04-23</span>
+          <span class="text-xs font-number text-color" v-if="article.createdTime">
+            {{ article.createdTime.split(' ')[0] }}
+          </span>
         </div>
         <el-image
-          src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
+          :src="image(article.cover)"
           style="margin-left: 10px; border-radius: 10px; height: 80px; min-width: 140px"
           class="image-hot"
+          @click="getArticle(article.id)"
         />
       </div>
     </el-card>
@@ -74,8 +84,8 @@
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 标签</h2>
       </template>
       <el-space wrap size="small">
-        <el-button v-for="o in 10" :key="o" text bg
-          ><svg-icon icon-class="label-sign"></svg-icon> linux</el-button
+        <el-button v-for="tag in tags" :key="tag.id" text bg
+          ><svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}</el-button
         >
       </el-space>
     </el-card>
@@ -93,6 +103,24 @@
 </template>
 
 <script setup lang="ts">
+import { reactive, ref, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
+import { listArticles, listTag } from '@/api/show'
+
+const loading = ref(true)
+// 标签列表
+const tags = ref([])
+// 展示热门文章列表
+const dataList = ref([])
+
+const data = reactive({
+  queryParams: {
+    pageNum: 1,
+    pageSize: 5,
+    type: 2
+  }
+})
+const { queryParams } = toRefs(data)
 function greetings() {
   const date = new Date()
   if (date.getHours() >= 6 && date.getHours() < 8) {
@@ -113,6 +141,39 @@ function greetings() {
   return ''
 }
 const a = greetings()
+/**
+ * 标签列表
+ */
+const getTags = async () => {
+  // 函解构用async和await包裹
+  const { data: res } = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
+  // 对data进行解构赋值 取出请求的结果res
+  tags.value = res.data
+}
+/** 查询展示文章列表 */
+function getList() {
+  loading.value = true
+  listArticles(queryParams.value).then((response) => {
+    dataList.value = response.data.data.records
+    loading.value = false
+  })
+}
+
+/**
+ * 图片地址拼接
+ * @param cover
+ */
+function image(cover: any) {
+  return import.meta.env.VITE_APP_BASE_API_FILE + cover
+}
+
+const router = useRouter()
+// 路由跳转
+function getArticle(id: any) {
+  router.push({ path: `/article/${id}` })
+}
+getTags()
+getList()
 </script>
 
 <style scoped>

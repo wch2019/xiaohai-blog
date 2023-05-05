@@ -6,7 +6,9 @@
     </h1>
     <el-card class="box-card" shadow="hover">
       <el-space wrap size="large">
-        <el-button v-for="o in 10" :key="o" text bg size="large"> dffdfdlinux</el-button>
+        <el-button v-for="category in categories" :key="category.id" text bg size="large">
+          {{ category.name }}</el-button
+        >
       </el-space>
     </el-card>
   </el-col>
@@ -17,7 +19,21 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import RightSide from '@/components/layouts/RightSide.vue'
+import { listCategory } from '@/api/show'
+// 分类列表
+const categories = ref([])
+
+/**
+ * 分类
+ */
+function getCategory() {
+  listCategory().then((response) => {
+    categories.value = response.data.data
+  })
+}
+getCategory()
 </script>
 
 <style scoped>

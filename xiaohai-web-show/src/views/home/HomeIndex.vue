@@ -10,10 +10,10 @@
       style="display: flex"
     >
       <el-carousel :interval="4000" height="310px">
-        <el-carousel-item v-for="item in 3" :key="item">
-          <el-image src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" />
-          <div class="carousel-title">
-            <span>这是一个神奇的数据</span>
+        <el-carousel-item v-for="article in dataList" :key="article">
+          <el-image :src="image(article.cover)" @click="getArticle(article.id)" />
+          <div class="carousel-title" @click="getArticle(article.id)">
+            <span>{{ article.title }}</span>
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -21,10 +21,10 @@
       <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
         <el-scrollbar>
           <el-space wrap class="category">
-            <el-button round>最新文章</el-button>
-            <el-button round>最热文章</el-button>
-            <el-button round>原创文章</el-button>
-            <el-button round>转载文章</el-button>
+            <el-button round @click="getList(1)">最新文章</el-button>
+            <el-button round @click="getList(2)">最热文章</el-button>
+            <el-button round @click="getList(3)">原创文章</el-button>
+            <el-button round @click="getList(4)">转载文章</el-button>
           </el-space>
         </el-scrollbar>
       </el-card>
@@ -112,10 +112,10 @@
   <!--手机端-->
   <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
     <el-carousel :interval="4000" height="210px">
-      <el-carousel-item v-for="item in 3" :key="item">
-        <el-image src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" />
-        <div class="carousel-title">
-          <span>这是一个神奇的数据</span>
+      <el-carousel-item v-for="article in dataList" :key="article">
+        <el-image :src="image(article.cover)" @click="getArticle(article.id)" />
+        <div class="carousel-title" @click="getArticle(article.id)">
+          <span>{{ article.title }}</span>
         </div>
       </el-carousel-item>
     </el-carousel>
@@ -123,10 +123,10 @@
     <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
       <el-scrollbar>
         <el-space wrap class="category">
-          <router-link to="/article"> <el-button round>最新文章</el-button></router-link>
-          <router-link to="/article"><el-button round>最热文章</el-button></router-link>
-          <router-link to="/article"><el-button round>原创文章</el-button></router-link>
-          <router-link to="/article"><el-button round>转载文章</el-button></router-link>
+          <el-button round @click="getList(1)">最新文章</el-button>
+          <el-button round @click="getList(2)">最热文章</el-button>
+          <el-button round @click="getList(3)">原创文章</el-button>
+          <el-button round @click="getList(4)">转载文章</el-button>
         </el-space>
       </el-scrollbar>
     </el-card>
@@ -139,7 +139,7 @@
       :body-style="{ padding: '10px' }"
     >
       <div class="article-flex">
-        <el-image :src="image(article.cover)" class="image" />
+        <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)" />
         <div
           style="
             margin-left: 10px;
@@ -157,6 +157,7 @@
               -webkit-line-clamp: 2;
               -webkit-box-orient: vertical;
             "
+            @click="getArticle(article.id)"
           >
             <svg-icon v-if="article.isTop == 1" icon-class="top" />
             {{ article.title }}
@@ -192,13 +193,15 @@ import { listTag, listArticles } from '@/api/show'
 const loading = ref(true)
 // 展示文章列表
 const dataList = ref([])
+// 标签列表
 const tags = ref([])
 
 const data = reactive({
   form: {},
   queryParams: {
     pageNum: 1,
-    pageSize: 10
+    pageSize: 10,
+    type: 1
   },
   rules: {
     dictName: [{ required: true, message: '字典名称不能为空', trigger: 'blur' }],
@@ -209,7 +212,8 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data)
 
 /** 查询展示文章列表 */
-function getList() {
+function getList(type: any) {
+  queryParams.value.type = type
   loading.value = true
   listArticles(queryParams.value).then((response) => {
     dataList.value = response.data.data.records
@@ -224,6 +228,7 @@ function getList() {
 function image(cover: any) {
   return import.meta.env.VITE_APP_BASE_API_FILE + cover
 }
+
 const router = useRouter()
 function getArticle(id: any) {
   router.push({ path: `/article/${id}` })
@@ -240,7 +245,7 @@ const getTags = async () => {
 }
 
 getTags() // 调用函数
-getList()
+getList(1)
 </script>
 
 <style scoped>

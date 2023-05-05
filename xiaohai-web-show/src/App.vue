@@ -15,7 +15,7 @@ function isDarkBackground() {
 
 <template>
   <!-- 导航栏 -->
-  <el-affix>
+  <el-affix :offset="0.00001">
     <HeardBar></HeardBar>
   </el-affix>
   <!--内容区-->

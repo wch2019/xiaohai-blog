@@ -22,7 +22,7 @@
             <svg-icon icon-class="time-light" />{{ articleOne.createdTime }}</span
           >
           <span class="text-sm font-number text-color">
-            <svg-icon icon-class="eye-light" style="font-size: 15px" /> 100
+            <svg-icon icon-class="eye-light" style="font-size: 15px" /> {{ articleOne.pageView }}
           </span>
           <span class="text-sm font-number text-color"
             ><svg-icon icon-class="message" style="font-size: 15px" /> 30</span
@@ -46,11 +46,11 @@
     <!--手机端-->
     <el-card class="box-card hidden-md-and-up" shadow="hover">
       <el-space alignment="center" wrap size="small">
-        <el-tag size="small">Tag 1</el-tag>
+        <el-tag size="small">{{ articleOne.categoryName }}</el-tag>
         <el-tag type="success" size="small">Tag 2</el-tag>
         <el-tag type="success" size="small">Tag 2</el-tag>
       </el-space>
-      <h1 class="flex-center">这是一个标题嗷nnbnbbn嗷</h1>
+      <h1 class="flex-center">{{ articleOne.title }}</h1>
       <span
         style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap"
       >
@@ -64,11 +64,11 @@
           </el-space>
         </span>
         <el-space alignment="center" size="small">
-          <span class="text-xs font-number text-color">
-            <svg-icon icon-class="time-light" /> 2023-04-22</span
+          <span class="text-xs font-number text-color" v-if="articleOne.createdTime">
+            <svg-icon icon-class="time-light" /> {{ articleOne.createdTime.split(' ')[0] }}</span
           >
           <span class="text-xs font-number text-color">
-            <svg-icon icon-class="eye-light" /> 100
+            <svg-icon icon-class="eye-light" /> {{ articleOne.pageView }}
           </span>
           <span class="text-xs font-number text-color"><svg-icon icon-class="message" /> 30</span>
           <span class="text-xs font-number"><svg-icon icon-class="give-light" /> 20</span>
@@ -76,12 +76,13 @@
       </span>
       <el-divider />
 
-      <div class="tip">原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br /></div>
-      <div class="tip">转载 本文转载自http://localhost:4001/#/article<br /></div>
-      <div>
-        <h2>ddddd</h2>
+      <div v-if="articleOne.isOriginal == 0" class="tip">
+        原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
       </div>
+      <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
+      <v-md-preview :text="articleOne.text"></v-md-preview>
 
+      <el-divider />
       <el-divider />
       <h3 class="flex-center"><svg-icon icon-class="message"></svg-icon> <span>评论</span></h3>
       <el-empty description="暂无评论" />
@@ -90,14 +91,86 @@
 
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
-    <RightSide></RightSide>
+    <el-space direction="vertical" fill size="large" style="width: 100%">
+      <el-card
+        class="box-card"
+        shadow="hover"
+        :body-style="{ padding: '0px', height: '380px' }"
+        style="position: relative"
+      >
+        <img src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" class="image" />
+
+        <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
+          <el-avatar
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            class="panThumb"
+          />
+
+          <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
+            <h3>xiaohai</h3>
+            <div>用一点点代码改变生活</div>
+            <div style="display: inline-flex; vertical-align: top; justify-content: space-between">
+              <el-space fill direction="vertical">
+                <div class="text-sm text-color">文章</div>
+                <div class="text-xl font-number">7</div>
+              </el-space>
+              <el-space fill direction="vertical">
+                <div class="text-sm text-color">分类</div>
+                <div class="text-xl font-number">4</div>
+              </el-space>
+              <el-space fill direction="vertical" size="small">
+                <div class="text-sm text-color">标签</div>
+                <div class="text-xl font-number">14</div>
+              </el-space>
+              <el-space fill direction="vertical" size="small">
+                <div class="text-sm text-color">评论</div>
+                <div class="text-xl font-number">2</div>
+              </el-space>
+            </div>
+          </el-space>
+        </div>
+      </el-card>
+      <el-card class="box-card" shadow="hover">
+        <template #header>
+          <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 目录</h2>
+        </template>
+        <el-space wrap size="small">
+          <div>***</div>
+        </el-space>
+      </el-card>
+      <el-card class="box-card" shadow="hover">
+        <template #header>
+          <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 推荐</h2>
+        </template>
+        <div v-for="o in 3" :key="o" style="display: flex; margin-top: 16px">
+          <div style="display: flex; flex-direction: column; justify-content: space-between">
+            <el-link :underline="false" style="justify-content: left">
+              <span
+                style="
+                  overflow: hidden;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                "
+                >啦啦啦啦啦啦，对对对啦啦啦啦啦啦啦，对对对啦
+              </span>
+            </el-link>
+            <span class="text-xs font-number text-color">2023-04-23</span>
+          </div>
+          <el-image
+            src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
+            style="margin-left: 10px; border-radius: 10px; height: 80px; min-width: 140px"
+            class="image-hot"
+          />
+        </div>
+      </el-card>
+    </el-space>
   </el-col>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import RightSide from '@/views/article/RightSide.vue'
 import { article } from '@/api/show'
 
 const loading = ref(true)
@@ -120,22 +193,7 @@ getArticle()
   padding: 0;
   border-radius: 10px;
   border: 1px solid transparent;
-}
-.image {
-  border-radius: 10px;
-  min-width: 238px;
-  height: 140px;
-}
-/*手机端*/
-@media (max-width: 992px) {
-  .image {
-    border-radius: 10px;
-    min-width: 149px;
-    height: 92px;
-  }
-}
-.image:hover {
-  transform: scale(1.1);
+  height: 100%;
 }
 .tip {
   padding: 10px;
@@ -144,5 +202,25 @@ getArticle()
   border-radius: 4px;
   border-left: 5px solid #50bfff;
   color: #888;
+}
+.image {
+  width: 100%;
+  height: 170px;
+  display: block;
+}
+
+.panThumb {
+  height: 100px !important;
+  width: 100px !important;
+  position: absolute !important;
+  top: 115px;
+  border: 5px solid #ffffff;
+}
+.image-hot:hover {
+  transform: scale(1.1);
+}
+
+.image:hover {
+  transform: scale(1.1);
 }
 </style>

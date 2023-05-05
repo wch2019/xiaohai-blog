@@ -22,11 +22,11 @@ export const listCategory = () => {
     method: 'get'
   })
 }
-export const listArticles = (data: any) => {
+export const listArticles = (query: any) => {
   return request({
     url: `${api}/articles`,
     method: 'get',
-    data
+    params: query
   })
 }
 export const article = (id: any) => {

@@ -106,8 +106,10 @@
         <if test="type != null and type ==2">
             a.page_view DESC,
         </if>
-        a.is_top DESC,
-        a.top_time DESC,
+        <if test="type != null and type !=2">
+            a.is_top DESC,
+            a.top_time DESC,
+        </if>
         a.created_time DESC
     </select>
 
