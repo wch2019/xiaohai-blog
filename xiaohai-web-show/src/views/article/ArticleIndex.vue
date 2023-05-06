@@ -2,7 +2,7 @@
   <!--左内容区-->
   <el-col :lg="14" :xl="11">
     <!--电脑端-->
-    <el-card v-loading="loading" class="box-card hidden-sm-and-down" shadow="hover">
+    <el-card class="box-card hidden-sm-and-down" shadow="hover">
       <h1 class="flex-center">{{ articleOne.title }}</h1>
       <span style="display: flex; align-items: center; justify-content: space-between">
         <span style="display: flex; align-items: center">
@@ -37,11 +37,12 @@
         原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
       </div>
       <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
-      <v-md-preview :text="articleOne.text"></v-md-preview>
+      <v-md-preview :text="articleOne.text" ref="preview"></v-md-preview>
       <el-divider />
       <el-divider />
       <h3 class="flex-center"><svg-icon icon-class="message"></svg-icon> <span>评论</span></h3>
       <el-empty description="暂无评论" />
+      <!--      <Test></Test>-->
     </el-card>
     <!--手机端-->
     <el-card class="box-card hidden-md-and-up" shadow="hover">
@@ -132,14 +133,6 @@
       </el-card>
       <el-card class="box-card" shadow="hover">
         <template #header>
-          <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 目录</h2>
-        </template>
-        <el-space wrap size="small">
-          <div>***</div>
-        </el-space>
-      </el-card>
-      <el-card class="box-card" shadow="hover">
-        <template #header>
           <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 推荐</h2>
         </template>
         <div v-for="o in 3" :key="o" style="display: flex; margin-top: 16px">
@@ -164,28 +157,71 @@
           />
         </div>
       </el-card>
+      <el-affix position="bottom" :offset="100">
+        <el-card class="box-card" shadow="hover">
+          <template #header>
+            <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 目录</h2>
+          </template>
+          <div
+            v-for="anchor in titles"
+            :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
+            @click="handleAnchorClick(anchor)"
+          >
+            <a style="cursor: pointer">{{ anchor.title }}</a>
+          </div>
+        </el-card>
+      </el-affix>
     </el-space>
   </el-col>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { article } from '@/api/show'
 
-const loading = ref(true)
 const articleOne = ref('')
 const route = useRoute()
+const titles = ref()
+const preview = ref()
 
-function getArticle() {
-  const { id } = route.params
-  loading.value = true
-  article(id).then((response) => {
-    articleOne.value = response.data.data
-    loading.value = false
+// 获取文章详情
+const getArticle = async () => {
+  await article(route.params.id).then((res: any) => {
+    articleOne.value = res.data.data
   })
 }
-getArticle()
+
+// 跳转到指定位置
+const handleAnchorClick = (anchor: any) => {
+  const { lineIndex } = anchor
+  const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`)
+  if (heading) {
+    preview.value.scrollToTarget({
+      target: heading,
+      scrollContainer: window,
+      top: 80
+    })
+  }
+}
+
+// 目录生成方法
+onMounted(async () => {
+  await getArticle()
+  console.log('[ proxy ]', preview.value.$el)
+  const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6')
+  const filterTitles = Array.from(anchors).filter((title: any) => !!title.innerText.trim())
+  if (!filterTitles.length) {
+    titles.value = []
+    return
+  }
+  const hTags = Array.from(new Set(filterTitles.map((title: any) => title.tagName))).sort()
+  titles.value = filterTitles.map((el: any) => ({
+    title: el.innerText,
+    lineIndex: el.getAttribute('data-v-md-line'),
+    indent: hTags.indexOf(el.tagName)
+  }))
+})
 </script>
 
 <style scoped>
@@ -222,5 +258,9 @@ getArticle()
 
 .image:hover {
   transform: scale(1.1);
+}
+/*样式穿透 md文件*/
+>>> .github-markdown-body {
+  padding: 0;
 }
 </style>
