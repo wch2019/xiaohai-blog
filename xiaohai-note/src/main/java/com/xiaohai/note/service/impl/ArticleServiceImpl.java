@@ -228,10 +228,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public ReturnPageData<ArticleShowDto> findShowListByPage(Integer type) {
+    public ReturnPageData<ArticleShowDto> findShowListByPage(Integer type,Long id) {
         IPage<ArticleShowDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        //1:最新文章,2:最热文章,3:原创文章,4:转载文章
-        IPage<ArticleShowDto> iPage = baseMapper.findShowListByPage(wherePage,type);
+        //1:最新文章,2:最热文章,3:原创文章,4:转载文章,5:标签id,6:分类id
+        IPage<ArticleShowDto> iPage = baseMapper.findShowListByPage(wherePage,type,id);
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());

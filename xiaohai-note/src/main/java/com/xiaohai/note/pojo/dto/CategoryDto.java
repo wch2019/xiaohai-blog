@@ -33,6 +33,7 @@ public class CategoryDto implements Serializable {
 
     @Schema(description = "分类对应的文章数")
     private long count;
+
     @Schema(description = "排序")
     private Integer sort;
 

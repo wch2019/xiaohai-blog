@@ -98,7 +98,8 @@ public interface ArticleService extends IService<Article> {
     /**
      * 查询展示文章表列表数据
      * @param type
+     * @param id
      * @return
      */
-    ReturnPageData<ArticleShowDto> findShowListByPage(Integer type);
+    ReturnPageData<ArticleShowDto> findShowListByPage(Integer type,Long id);
 }
