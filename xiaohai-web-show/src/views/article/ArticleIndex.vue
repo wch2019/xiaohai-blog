@@ -13,8 +13,18 @@
             />
             <span class="text-sm">xiaohai</span>
             <el-tag size="default">{{ articleOne.categoryName }}</el-tag>
-            <el-tag type="success" size="default">Tag 2</el-tag>
-            <el-tag type="success" size="default">Tag 2</el-tag>
+            <template v-for="(item, index) in tags">
+              <el-tag
+                v-if="articleOne.tags && articleOne.tags.includes(item.id)"
+                :key="index"
+                style="margin-right: 4px"
+                type="success"
+                size="default"
+                :label="index"
+                border
+                >{{ item.name }}
+              </el-tag>
+            </template>
           </el-space>
         </span>
         <el-space alignment="center" size="large">
@@ -49,8 +59,12 @@
             />
             <div style="padding: 14px">
               <div
-                style="display: flex; flex-direction: column; justify-content: space-between;align-items: flex-end;
-}"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-between;
+                  align-items: flex-end;
+                "
               >
                 <el-link :underline="false" style="justify-content: left">
                   <span
@@ -72,14 +86,23 @@
       <el-divider />
       <h3 class="flex-center"><svg-icon icon-class="message"></svg-icon> <span>评论</span></h3>
       <el-empty description="暂无评论" />
-      <!--      <Test></Test>-->
     </el-card>
     <!--手机端-->
     <el-card class="box-card hidden-md-and-up" shadow="hover">
       <el-space alignment="center" wrap size="small">
         <el-tag size="small">{{ articleOne.categoryName }}</el-tag>
-        <el-tag type="success" size="small">Tag 2</el-tag>
-        <el-tag type="success" size="small">Tag 2</el-tag>
+        <template v-for="(item, index) in tags">
+          <el-tag
+            v-if="articleOne.tags && articleOne.tags.includes(item.id)"
+            :key="index"
+            style="margin-right: 4px"
+            type="success"
+            size="small"
+            :label="index"
+            border
+            >{{ item.name }}
+          </el-tag>
+        </template>
       </el-space>
       <h1 class="flex-center">{{ articleOne.title }}</h1>
       <span
@@ -170,7 +193,7 @@
           :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
           @click="handleAnchorClick(anchor)"
         >
-          <a style="cursor: pointer">{{ anchor.title }}</a>
+          <el-link :underline="false">{{ anchor.title }}</el-link>
         </div>
       </el-card>
     </el-space>
@@ -180,12 +203,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { article } from '@/api/show'
+import { article, listTag } from '@/api/show'
 
+// 文章详情
 const articleOne = ref('')
 const route = useRoute()
 const titles = ref()
 const preview = ref()
+// 标签列表
+const tags = ref([])
 
 // 获取文章详情
 const getArticle = async () => {
@@ -194,6 +220,17 @@ const getArticle = async () => {
   })
 }
 
+/**
+ * 标签列表
+ */
+const getTags = async () => {
+  // 函解构用async和await包裹
+  const { data: res } = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
+  // 对data进行解构赋值 取出请求的结果res
+  tags.value = res.data
+}
+
+getTags()
 // 跳转到指定位置
 const handleAnchorClick = (anchor: any) => {
   const { lineIndex } = anchor
