@@ -84,12 +84,15 @@
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 标签</h2>
       </template>
       <el-space v-for="tag in tags" :key="tag.id" wrap size="small">
-        <router-link :to="'/tagSearch/' + tag.id + '?name=' + tag.name">
-          <el-button text bg size="large">
-            <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
-            <div class="tags">{{ tag.count }}</div>
-          </el-button>
-        </router-link>
+        <el-button
+          text
+          bg
+          size="large"
+          @click="cancelClick('/tagSearch/' + tag.id + '?name=' + tag.name)"
+        >
+          <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
+          <div class="tags">{{ tag.count }}</div>
+        </el-button>
       </el-space>
     </el-card>
     <el-card class="box-card" shadow="hover">
@@ -174,6 +177,10 @@ const router = useRouter()
 // 路由跳转
 function getArticle(id: any) {
   router.push({ path: `/article/${id}` })
+}
+// 标签跳转
+function cancelClick(path: any) {
+  router.push(path)
 }
 getTags()
 getList()

@@ -6,12 +6,15 @@
     </h1>
     <el-card class="box-card" shadow="hover">
       <el-space v-for="category in categories" :key="category.id" wrap size="large">
-        <router-link :to="'/categorySearch/' + category.id + '?name=' + category.name">
-          <el-button text bg size="large">
-            <svg-icon icon-class="label-sign"></svg-icon> {{ category.name }}
-            <div class="tags">{{ category.count }}</div>
-          </el-button>
-        </router-link>
+        <el-button
+          text
+          bg
+          size="large"
+          @click="cancelClick('/categorySearch/' + category.id + '?name=' + category.name)"
+        >
+          <svg-icon icon-class="label-sign"></svg-icon> {{ category.name }}
+          <div class="tags">{{ category.count }}</div>
+        </el-button>
       </el-space>
     </el-card>
   </el-col>
@@ -23,6 +26,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listCategory } from '@/api/show'
 // 分类列表
@@ -36,6 +40,12 @@ function getCategory() {
     categories.value = response.data.data
   })
 }
+const router = useRouter()
+// 分类跳转
+function cancelClick(path: any) {
+  router.push(path)
+}
+
 getCategory()
 </script>
 
