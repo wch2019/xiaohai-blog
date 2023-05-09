@@ -83,11 +83,13 @@
       <template #header>
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 标签</h2>
       </template>
-      <el-space wrap size="small">
-        <el-button v-for="tag in tags" :key="tag.id" text bg>
-          <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
-          <div class="tags">{{ tag.count }}</div>
-        </el-button>
+      <el-space v-for="tag in tags" :key="tag.id" wrap size="small">
+        <router-link :to="'/tagSearch/' + tag.id + '?name=' + tag.name">
+          <el-button text bg size="large">
+            <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
+            <div class="tags">{{ tag.count }}</div>
+          </el-button>
+        </router-link>
       </el-space>
     </el-card>
     <el-card class="box-card" shadow="hover">

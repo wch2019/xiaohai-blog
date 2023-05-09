@@ -3,11 +3,13 @@
   <el-col :lg="14" :xl="11">
     <h1 class="flex-center"><svg-icon icon-class="tags"></svg-icon> 标签</h1>
     <el-card class="box-card" shadow="hover">
-      <el-space wrap size="large">
-        <el-button v-for="tag in tags" :key="tag.id" text bg size="large">
-          <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
-          <div class="tags">{{ tag.count }}</div>
-        </el-button>
+      <el-space v-for="tag in tags" :key="tag.id" wrap size="large">
+        <router-link :to="'/tagSearch/' + tag.id + '?name=' + tag.name">
+          <el-button text bg size="large">
+            <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
+            <div class="tags">{{ tag.count }}</div>
+          </el-button>
+        </router-link>
       </el-space>
     </el-card>
   </el-col>

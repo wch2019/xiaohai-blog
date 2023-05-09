@@ -99,10 +99,10 @@
             <if test="type != null and type ==4">
                 and   a.is_original=1
             </if>
-            <if test="type != null and type ==5 and id!=null">
+            <if test="type != null and type ==6 and id!=null">
                 and a.category_id=#{id}
             </if>
-            <if test="type != null and type ==6 and id!=null">
+            <if test="type != null and type ==5 and id!=null">
                 and a.id in (SELECT article_id FROM b_article_tag where tag_id=#{id})
             </if>
         </where>

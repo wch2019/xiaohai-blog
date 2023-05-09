@@ -51,34 +51,13 @@
       <el-divider />
       <h3 class="flex-center"><svg-icon icon-class="hot"></svg-icon> 推荐</h3>
       <el-row style="justify-content: center">
-        <el-col v-for="(o, index) in 3" :key="o" :span="7" :offset="index > 0 ? 1 : 0">
+        <el-col v-for="(o, index) in dataList" :key="o" :span="7" :offset="index > 0 ? 1 : 0">
           <el-card :body-style="{ padding: '0px' }">
-            <img
-              src="http://localhost:8089/api/document/upload/image/1/20230401.jpg"
-              class="image"
-            />
-            <div style="padding: 14px">
-              <div
-                style="
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: space-between;
-                  align-items: flex-end;
-                "
-              >
-                <el-link :underline="false" style="justify-content: left">
-                  <span
-                    style="
-                      overflow: hidden;
-                      display: -webkit-box;
-                      -webkit-line-clamp: 2;
-                      -webkit-box-orient: vertical;
-                    "
-                    >啦啦啦啦啦啦，对对对啦啦啦啦啦啦啦，对对对啦
-                  </span>
-                </el-link>
-                <span class="text-xs font-number text-color">2023-04-23</span>
-              </div>
+            <img :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
+            <div style="padding: 14px; text-align: center">
+              <el-link :underline="false" @click="getArticleId(o.id)">
+                <span>{{ o.title }} </span>
+              </el-link>
             </div>
           </el-card>
         </el-col>
@@ -201,9 +180,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { article, listTag } from '@/api/show'
+import { onMounted, reactive, ref, toRefs, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { article, listArticles, listTag } from '@/api/show'
 
 // 文章详情
 const articleOne = ref('')
@@ -212,11 +191,52 @@ const titles = ref()
 const preview = ref()
 // 标签列表
 const tags = ref([])
+// 展示文章列表
+const dataList = ref([])
+
+const data = reactive({
+  queryParams: {
+    pageNum: 1,
+    pageSize: 3,
+    type: 6,
+    id: 0
+  }
+})
+
+const { queryParams } = toRefs(data)
+
+/** 查询展示推荐列表 */
+function getList(categoryId: any) {
+  queryParams.value.id = categoryId
+  listArticles(queryParams.value).then((response) => {
+    dataList.value = response.data.data.records
+  })
+}
+
+const router = useRouter()
+// 页面跳转
+function getArticleId(id: any) {
+  router.push({ path: `/article/${id}` })
+}
+
+/**
+ * 图片地址拼接
+ * @param cover
+ */
+function image(cover: any) {
+  return import.meta.env.VITE_APP_BASE_API_FILE + cover
+}
 
 // 获取文章详情
 const getArticle = async () => {
   await article(route.params.id).then((res: any) => {
     articleOne.value = res.data.data
+    // 文章内图片地址替换
+    articleOne.value.text = articleOne.value.text.replaceAll(
+      '../image',
+      `${import.meta.env.VITE_APP_BASE_API_FILE}/image`
+    )
+    getList(res.data.data.categoryId)
   })
 }
 
@@ -245,9 +265,8 @@ const handleAnchorClick = (anchor: any) => {
 }
 
 // 目录生成方法
-onMounted(async () => {
+async function getCatalog() {
   await getArticle()
-  console.log('[ proxy ]', preview.value.$el)
   const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6')
   const filterTitles = Array.from(anchors).filter((title: any) => !!title.innerText.trim())
   if (!filterTitles.length) {
@@ -260,6 +279,20 @@ onMounted(async () => {
     lineIndex: el.getAttribute('data-v-md-line'),
     indent: hTags.indexOf(el.tagName)
   }))
+}
+
+onMounted(async () => {
+  // 监听$route对象上的参数属性变化
+  watch(
+    () => route.params.id,
+    (newId, oldId) => {
+      if (newId !== oldId) {
+        // 如果发生变化重新载入
+        window.location.reload()
+      }
+    }
+  )
+  await getCatalog()
 })
 </script>
 

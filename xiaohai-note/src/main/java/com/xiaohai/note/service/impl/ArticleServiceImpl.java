@@ -18,11 +18,14 @@ import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.ArticleTagMapper;
 import com.xiaohai.note.dao.CategoryMapper;
+import com.xiaohai.note.dao.TagsMapper;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
 import com.xiaohai.note.pojo.dto.ArticleShowDto;
 import com.xiaohai.note.pojo.dto.DateCount;
 import com.xiaohai.note.pojo.entity.Article;
+import com.xiaohai.note.pojo.entity.Category;
+import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import com.xiaohai.note.service.ArticleService;
@@ -64,6 +67,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final ArticleTagMapper articleTagMapper;
 
     private final CategoryMapper categoryMapper;
+
+    private final TagsMapper tagsMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -234,6 +239,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         IPage<ArticleShowDto> iPage = baseMapper.findShowListByPage(wherePage,type,id);
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
+        //标签
+        if(type==5){
+            Tags tag=new Tags();
+            tag.setId(Math.toIntExact(id));
+            tag.setClick(tagsMapper.selectById(Math.toIntExact(id)).getClick()+1);
+            tagsMapper.updateById(tag);
+        }
+        //分类
+        if(type==6){
+            Category category=new Category();
+            category.setId(Math.toIntExact(id));
+            category.setClick(categoryMapper.selectById(Math.toIntExact(id)).getClick()+1);
+            categoryMapper.updateById(category);
+        }
+
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
     }
 
