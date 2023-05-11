@@ -107,7 +107,8 @@
           </div>
         </div>
       </el-card>
-      <el-button type="primary" @click="loadMore">加载更多</el-button>
+      <el-button v-if="loadMores" text type="primary" bg @click="loadMore">加载更多</el-button>
+      <el-button v-else text disabled>没有更多了</el-button>
     </el-space>
   </el-col>
   <!--手机端-->
@@ -178,6 +179,8 @@
         </div>
       </div>
     </el-card>
+    <el-button v-if="loadMores" text type="primary" bg @click="loadMore">加载更多</el-button>
+    <el-button v-else text disabled>没有更多了</el-button>
   </el-space>
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
@@ -193,17 +196,19 @@ import { listTag, listArticles } from '@/api/show'
 
 const loading = ref(true)
 // 展示文章列表
-const dataList = ref([])
+const dataList: any = ref([])
 // 标签列表
 const tags = ref([])
 // 总数
 const total = ref()
+// 是否展示加载更多
+const loadMores = ref(true)
 
 const data = reactive({
   form: {},
   queryParams: {
     pageNum: 1,
-    pageSize: 2,
+    pageSize: 10,
     type: 1
   },
   rules: {
@@ -218,11 +223,15 @@ const { queryParams, form, rules } = toRefs(data)
 function getList(type: any) {
   queryParams.value.type = type
   queryParams.value.pageNum = 1
-  queryParams.value.pageSize = 2
+  queryParams.value.pageSize = 10
   loading.value = true
   listArticles(queryParams.value).then((response) => {
     dataList.value = response.data.data.records
     total.value = response.data.data.total
+    const a = Math.ceil(total.value / queryParams.value.pageSize)
+    if (queryParams.value.pageNum + 1 > a) {
+      loadMores.value = false
+    }
     loading.value = false
   })
 }
@@ -255,11 +264,13 @@ const getTags = async () => {
  */
 function loadMore() {
   const a = Math.ceil(total.value / queryParams.value.pageSize)
+  if (queryParams.value.pageNum + 1 >= a) {
+    loadMores.value = false
+  }
   if (queryParams.value.pageNum + 1 <= a) {
     queryParams.value.pageNum = 1 + queryParams.value.pageNum
     listArticles(queryParams.value).then((response) => {
-      dataList.value.push(response.data.data.records)
-      console.log(dataList.value)
+      dataList.value = [...dataList.value, ...response.data.data.records]
     })
   }
 }
