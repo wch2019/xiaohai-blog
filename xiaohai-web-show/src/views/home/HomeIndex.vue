@@ -107,6 +107,7 @@
           </div>
         </div>
       </el-card>
+      <el-button type="primary" @click="loadMore">加载更多</el-button>
     </el-space>
   </el-col>
   <!--手机端-->
@@ -195,12 +196,14 @@ const loading = ref(true)
 const dataList = ref([])
 // 标签列表
 const tags = ref([])
+// 总数
+const total = ref()
 
 const data = reactive({
   form: {},
   queryParams: {
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 2,
     type: 1
   },
   rules: {
@@ -214,9 +217,12 @@ const { queryParams, form, rules } = toRefs(data)
 /** 查询展示文章列表 */
 function getList(type: any) {
   queryParams.value.type = type
+  queryParams.value.pageNum = 1
+  queryParams.value.pageSize = 2
   loading.value = true
   listArticles(queryParams.value).then((response) => {
     dataList.value = response.data.data.records
+    total.value = response.data.data.total
     loading.value = false
   })
 }
@@ -244,6 +250,19 @@ const getTags = async () => {
   // data = res.data // 将请求结果的data值赋给data.list 方便表格table与之数据双向绑定
 }
 
+/**
+ * 加载更多
+ */
+function loadMore() {
+  const a = Math.ceil(total.value / queryParams.value.pageSize)
+  if (queryParams.value.pageNum + 1 <= a) {
+    queryParams.value.pageNum = 1 + queryParams.value.pageNum
+    listArticles(queryParams.value).then((response) => {
+      dataList.value.push(response.data.data.records)
+      console.log(dataList.value)
+    })
+  }
+}
 getTags() // 调用函数
 getList(1)
 </script>
