@@ -102,4 +102,10 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     ReturnPageData<ArticleShowDto> findShowListByPage(Integer type,Long id);
+
+    /**
+     * 查询归档列表数据
+     * @return
+     */
+    ReturnPageData<ArticleShowDto> findBackListByPage();
 }

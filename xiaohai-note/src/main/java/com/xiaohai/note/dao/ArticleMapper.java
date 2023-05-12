@@ -48,5 +48,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
      */
     IPage<ArticleShowDto> findShowListByPage(@Param("page")IPage<ArticleShowDto> wherePage,@Param("type")Integer type,@Param("id")Long id);
 
+    /**
+     * 查询归档列表数据
+     * @param wherePage
+     * @return
+     */
+    IPage<ArticleShowDto> findBackListByPage(@Param("page")IPage<ArticleShowDto> wherePage);
+
 
 }

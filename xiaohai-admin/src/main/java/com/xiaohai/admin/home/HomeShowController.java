@@ -59,4 +59,11 @@ public class HomeShowController {
     public Response<ArticleDtoAll> findById(@PathVariable Long id) {
         return Response.success("id查询文章详情成功！", articleService.findById(id,0));
     }
+    @Operation(summary = "查询归档列表数据")
+    @Parameter(name = "pageNum", description = "页码", required = true)
+    @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @GetMapping("/back")
+    public Response<ReturnPageData<ArticleShowDto>> findBackListByPage() {
+        return Response.success("查询归档列表数据成功！", articleService.findBackListByPage());
+    }
 }

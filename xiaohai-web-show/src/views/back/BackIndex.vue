@@ -4,22 +4,21 @@
     <h1 class="flex-center"><svg-icon icon-class="time-dark"></svg-icon> 归档</h1>
     <el-card class="box-card" shadow="hover">
       <el-timeline>
-        <el-timeline-item timestamp="2018/4/12" placement="top">
-          <el-card shadow="hover">
-            <h4>Update Github template</h4>
-            <p>Tom committed 2018/4/12 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/3" placement="top">
-          <el-card shadow="hover">
-            <h4>Update Github template</h4>
-            <p>Tom committed 2018/4/3 20:46</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2018/4/2" placement="top">
-          <el-card shadow="hover">
-            <h4>Update Github template</h4>
-            <p>Tom committed 2018/4/2 20:46</p>
+        <el-timeline-item
+          v-for="article in dataList"
+          :key="article"
+          :timestamp="article.createdTime.split(' ')[0]"
+          placement="top"
+        >
+          <el-card class="box-card">
+            <h2>{{ article.title }}</h2>
+            <span style="display: flex; align-items: center; flex-direction: row-reverse">
+              <el-space size="small">
+                <el-avatar size="small" :src="image(article.avatar)" />
+                <span v-if="article.nickName" class="text-xs">{{ article.nickName }}</span>
+                <span v-else class="text-xs">{{ article.username }}</span>
+              </el-space>
+            </span>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -32,7 +31,38 @@
 </template>
 
 <script setup lang="ts">
+import { reactive, ref, toRefs } from 'vue'
 import RightSide from '@/components/layouts/RightSide.vue'
+import { listBack } from '@/api/show'
+
+// 展示归档列表
+const dataList: any = ref([])
+
+const data = reactive({
+  queryParams: {
+    pageNum: 1,
+    pageSize: 20
+  }
+})
+
+const { queryParams } = toRefs(data)
+
+/** 查询展示推荐列表 */
+function getList() {
+  listBack(queryParams.value).then((response) => {
+    dataList.value = response.data.data.records
+  })
+}
+
+/**
+ * 图片地址拼接
+ * @param cover
+ */
+function image(cover: any) {
+  return import.meta.env.VITE_APP_BASE_API_FILE + cover
+}
+
+getList()
 </script>
 
 <style scoped>

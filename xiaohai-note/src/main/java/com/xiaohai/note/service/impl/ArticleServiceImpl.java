@@ -257,4 +257,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
     }
 
+    @Override
+    public ReturnPageData<ArticleShowDto> findBackListByPage() {
+        IPage<ArticleShowDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
+        IPage<ArticleShowDto> iPage = baseMapper.findBackListByPage(wherePage);
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, iPage.getRecords());
+    }
+
 }

@@ -35,3 +35,11 @@ export const article = (id: any) => {
     method: 'get'
   })
 }
+// 归档列表
+export const listBack = (query: any) => {
+  return request({
+    url: `${api}/back`,
+    method: 'get',
+    params: query
+  })
+}

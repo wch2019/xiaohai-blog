@@ -119,6 +119,30 @@
         </if>
         a.created_time DESC
     </select>
+    <select id="findBackListByPage" resultType="com.xiaohai.note.pojo.dto.ArticleShowDto">
+        SELECT a.id,
+               a.user_id                                              as userId,
+               (SELECT username from sys_user where id = a.user_id)   as userName,
+               (SELECT nick_name from sys_user where id = a.user_id)  as nickName,
+               (SELECT avatar from sys_user where id = a.user_id)     as avatar,
+               a.cover,
+               a.title,
+               a.summary,
+               a.category_id                                          as categoryId,
+               (SELECT name from b_category where id = a.category_id) as categoryName,
+               a.is_push                                              as isPush,
+               a.is_top                                               as isTop,
+               a.is_original                                          as isOriginal,
+               a.page_view                                            as pageView,
+               a.created_time                                         as createdTime
+        FROM b_article a
+                 LEFT JOIN b_article_tag t ON a.id = t.article_id
+        where is_push = 1
+        GROUP BY a.id
+        ORDER BY a.is_top DESC,
+                 a.top_time DESC,
+                 a.created_time DESC
+    </select>
 
 
 </mapper>
