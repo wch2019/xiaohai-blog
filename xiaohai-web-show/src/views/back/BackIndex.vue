@@ -22,6 +22,15 @@
           </el-card>
         </el-timeline-item>
       </el-timeline>
+      <el-pagination
+        style="justify-content: center"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :page-size="queryParams.pageSize"
+        :pager-count="10"
+        layout="prev, pager, next"
+        :total="total"
+      />
     </el-card>
   </el-col>
   <!--右内容区-->
@@ -37,20 +46,23 @@ import { listBack } from '@/api/show'
 
 // 展示归档列表
 const dataList: any = ref([])
+// 总数
+const total = ref()
 
 const data = reactive({
   queryParams: {
     pageNum: 1,
-    pageSize: 20
+    pageSize: 10
   }
 })
 
 const { queryParams } = toRefs(data)
 
-/** 查询展示推荐列表 */
+/** 查询归档列表 */
 function getList() {
   listBack(queryParams.value).then((response) => {
     dataList.value = response.data.data.records
+    total.value = response.data.data.total
   })
 }
 
@@ -60,6 +72,17 @@ function getList() {
  */
 function image(cover: any) {
   return import.meta.env.VITE_APP_BASE_API_FILE + cover
+}
+const handleSizeChange = (val: number) => {
+  queryParams.value.pageNum = val
+  getList()
+  console.log(`${val} items per page`)
+}
+
+const handleCurrentChange = (val: number) => {
+  queryParams.value.pageNum = val
+  getList()
+  console.log(`current page: ${val}`)
 }
 
 getList()
