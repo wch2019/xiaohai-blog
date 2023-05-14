@@ -1,7 +1,7 @@
 FROM openjdk:17.0.3.1
 
 # 作者
-MAINTAINER wangchenghai
+MAINTAINER xiaohai
 
 # 配置环境变量
 ENV JAVA_HOME=/usr/local/jdk-17.0.3.1
@@ -12,7 +12,7 @@ ENV CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 ADD server-0.0.1-SNAPSHOT.jar server.jar
 
 # 镜像启动后暴露的端口
-EXPOSE 18888
+EXPOSE 8089
 
 # jar运行命令，参数使用逗号隔开
 ENTRYPOINT ["java","-jar","server-0.0.1.jar"]

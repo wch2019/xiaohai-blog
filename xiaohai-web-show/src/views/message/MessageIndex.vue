@@ -4,13 +4,7 @@
     <h1 class="flex-center">
       <el-icon><Comment /></el-icon> 留言板
     </h1>
-    <el-card class="box-card" shadow="hover">
-      <el-space wrap size="large">
-        <el-button v-for="o in 10" :key="o" text bg size="large">
-          <svg-icon icon-class="label-sign"></svg-icon> linux
-        </el-button>
-      </el-space>
-    </el-card>
+    <el-card class="el-card-d" shadow="always"> 功能暂未开放 </el-card>
   </el-col>
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
