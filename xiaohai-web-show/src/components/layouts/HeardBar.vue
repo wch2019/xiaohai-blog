@@ -53,10 +53,19 @@
             ></svg-icon>
           </div>
           <div class="menus-item">
-            <el-avatar
-              size="default"
-              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            />
+            <el-dropdown>
+              <el-avatar
+                size="default"
+                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+              />
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
+                  <!--                  <el-dropdown-item divided>后台管理</el-dropdown-item>-->
+                  <!--                  <el-dropdown-item divided>退出登录</el-dropdown-item>-->
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </div>
         </div>
       </el-col>
@@ -70,7 +79,6 @@
           </el-col>
           <el-col :span="9">
             <div style="display: flex; justify-content: space-evenly; align-items: center">
-              <!--          <el-col :span="3">-->
               <div class="menus-item">
                 <svg-icon
                   icon-class="search"
@@ -78,8 +86,6 @@
                   style="font-size: 20px"
                 ></svg-icon>
               </div>
-              <!--          </el-col>-->
-              <!--          <el-col :span="3">-->
               <div class="menus-item">
                 <svg-icon
                   @click="isLight"
@@ -96,8 +102,6 @@
                   style="font-size: 20px"
                 ></svg-icon>
               </div>
-              <!--          </el-col>-->
-              <!--          <el-col :span="3">-->
               <div class="menus-item">
                 <svg-icon
                   @click="drawer = true"
@@ -106,7 +110,6 @@
                   style="font-size: 20px"
                 ></svg-icon>
               </div>
-              <!--          </el-col>-->
             </div>
           </el-col>
         </div>
@@ -156,6 +159,12 @@ const router = useRouter()
 function cancelClick(path: any) {
   router.push(path)
   drawer.value = false
+}
+function adminClick() {
+  window.open(
+    `${import.meta.env.VITE_APP_BLOG_WEB_API}/#/login?show=${router.currentRoute.value.fullPath}`,
+    '_self'
+  )
 }
 </script>
 

@@ -108,7 +108,8 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      show: undefined
     }
   },
   watch: {
@@ -170,7 +171,13 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+            this.show = this.$route.query.show
+            console.log(this.show)
+            if (this.show) {
+              window.open(process.env.VUE_APP_BLOG_WEB_API + this.show, '_blank')
+            } else {
+              this.$router.push({ path: this.redirect || '/' })
+            }
             this.loading = false
           }).catch(() => {
             this.loading = false
