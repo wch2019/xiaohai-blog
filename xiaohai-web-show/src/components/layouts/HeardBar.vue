@@ -59,10 +59,12 @@
                 src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
               />
               <template #dropdown>
-                <el-dropdown-menu>
+                <el-dropdown-menu v-if="hasToken === undefined">
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
-                  <!--                  <el-dropdown-item divided>后台管理</el-dropdown-item>-->
-                  <!--                  <el-dropdown-item divided>退出登录</el-dropdown-item>-->
+                </el-dropdown-menu>
+                <el-dropdown-menu v-else>
+                  <el-dropdown-item>后台管理</el-dropdown-item>
+                  <el-dropdown-item divided>退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -138,6 +140,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toggleDark, isDark } from '@/utils/dark'
+import { getToken } from '@/utils/auth'
 
 const value = ref(isDark.value)
 const drawer = ref(false)
@@ -160,12 +163,17 @@ function cancelClick(path: any) {
   router.push(path)
   drawer.value = false
 }
+// 跳转登录
 function adminClick() {
   window.open(
     `${import.meta.env.VITE_APP_BLOG_WEB_API}/#/login?show=${router.currentRoute.value.fullPath}`,
     '_self'
   )
 }
+
+// 获取token
+const hasToken = getToken()
+console.log(hasToken, 'aaaaa')
 </script>
 
 <style scoped>
