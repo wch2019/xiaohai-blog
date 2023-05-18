@@ -34,23 +34,7 @@
       <el-col class="hidden-md-and-down" :md="8" :lg="4" :xl="5">
         <div style="display: flex; justify-content: space-evenly; align-items: center">
           <div class="menus-item">
-            <el-input v-if="search" placeholder="想搜点啥呢？" v-model="inputValue">
-              <template #suffix
-                ><svg-icon
-                  icon-class="search"
-                  class="search-icon"
-                  style="font-size: 20px"
-                  @click="searchInput"
-                ></svg-icon>
-              </template>
-            </el-input>
-            <svg-icon
-              v-if="input"
-              icon-class="search"
-              class="search-icon"
-              style="font-size: 20px"
-              @click="searchInput"
-            ></svg-icon>
+            <SearchModel></SearchModel>
           </div>
           <div class="menus-item">
             <svg-icon
@@ -98,11 +82,7 @@
           <el-col :span="9">
             <div style="display: flex; justify-content: space-evenly; align-items: center">
               <div class="menus-item">
-                <svg-icon
-                  icon-class="search"
-                  class="search-icon"
-                  style="font-size: 20px"
-                ></svg-icon>
+                <SearchModel></SearchModel>
               </div>
               <div class="menus-item">
                 <svg-icon
@@ -159,7 +139,6 @@ import { toggleDark, isDark } from '@/utils/dark'
 import { getToken, removeToken } from '@/utils/auth'
 import { logout } from '@/api/user'
 
-const searchData = []
 const value = ref(isDark.value)
 const drawer = ref(false)
 // 搜索框

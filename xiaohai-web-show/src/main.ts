@@ -18,6 +18,7 @@ import 'element-plus/theme-chalk/display.css'
 // 注册所有图标
 import 'virtual:svg-icons-register' // 引入注册脚本
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import SearchModel from '@/components/seach/SearchModel.vue'
 import elementIcons from '@/components/SvgIcon/svgicon'
 // v-md-editor 预览组件
 import '@kangc/v-md-editor/lib/style/preview.css'
@@ -34,6 +35,7 @@ app.use(router)
 app.use(store)
 app.use(ElementPlus)
 app.component('SvgIcon', SvgIcon)
+app.component('SearchModel', SearchModel)
 app.use(elementIcons)
 app.use(VMdPreview)
 
