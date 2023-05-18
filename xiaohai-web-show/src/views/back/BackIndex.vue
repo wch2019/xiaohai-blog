@@ -11,7 +11,10 @@
           placement="top"
         >
           <el-card class="box-card">
-            <h2>{{ article.title }}</h2>
+            <el-link :underline="false" @click="getArticleId(article.id)">
+              <h2>{{ article.title }}</h2>
+            </el-link>
+
             <span style="display: flex; align-items: center; flex-direction: row-reverse">
               <el-space size="small">
                 <el-avatar size="small" :src="image(article.avatar)" />
@@ -41,9 +44,11 @@
 
 <script setup lang="ts">
 import { reactive, ref, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listBack } from '@/api/show'
 
+const router = useRouter()
 // 展示归档列表
 const dataList: any = ref([])
 // 总数
@@ -66,6 +71,10 @@ function getList() {
   })
 }
 
+// 页面跳转
+function getArticleId(id: any) {
+  router.push({ path: `/article/${id}` })
+}
 /**
  * 图片地址拼接
  * @param cover

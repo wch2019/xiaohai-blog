@@ -23,7 +23,22 @@
 
 ##  项目介绍
 
-DotCode(点码），是一个前后分离的博客系统。**Web** 端使用 **Vue** + **ElementUi** , 
+DotCode(点码），是一个前后分离的博客系统。
+
+前端使用 **Vue** + **ElementUi** 和**Vue 3 + TypeScript + Vite + ElementPlus**
 
 后端使用 **SpringBoot** + **Mybatis-plus**进行开发，使用**Sa-Token**作为登录验证和权限校验。
 
+## 项目特点
+
+- 后台采用父子包的方式以及友好的代码结构及注释，便于阅读及二次开发
+
+- 实现前后端分离，通过 **Json** 进行数据交互，前端再也不用关注后端技术
+
+- 页面交互，后台管理使用 **Vue2.x**，门户展示采用**Vue3**。
+
+- 引入 **RBAC** 权限管理设计，灵活的权限控制，按钮级别的细粒度权限控制，满足绝大部分的权限需求
+
+- 采用**Markdown** 编辑器([mavonEditor](www.mavoneditor.com)），更符合开发者的编辑方式
+
+  

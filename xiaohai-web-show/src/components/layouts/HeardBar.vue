@@ -34,7 +34,23 @@
       <el-col class="hidden-md-and-down" :md="8" :lg="4" :xl="5">
         <div style="display: flex; justify-content: space-evenly; align-items: center">
           <div class="menus-item">
-            <svg-icon icon-class="search" class="search-icon" style="font-size: 20px"></svg-icon>
+            <el-input v-if="search" placeholder="想搜点啥呢？" v-model="inputValue">
+              <template #suffix
+                ><svg-icon
+                  icon-class="search"
+                  class="search-icon"
+                  style="font-size: 20px"
+                  @click="searchInput"
+                ></svg-icon>
+              </template>
+            </el-input>
+            <svg-icon
+              v-if="input"
+              icon-class="search"
+              class="search-icon"
+              style="font-size: 20px"
+              @click="searchInput"
+            ></svg-icon>
           </div>
           <div class="menus-item">
             <svg-icon
@@ -63,8 +79,8 @@
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
-                  <el-dropdown-item>后台管理</el-dropdown-item>
-                  <el-dropdown-item divided>退出登录</el-dropdown-item>
+                  <el-dropdown-item @click="manageClick">后台管理</el-dropdown-item>
+                  <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -140,11 +156,16 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toggleDark, isDark } from '@/utils/dark'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
+import { logout } from '@/api/user'
 
+const searchData = []
 const value = ref(isDark.value)
 const drawer = ref(false)
-
+// 搜索框
+const input = ref(false)
+// 搜索
+const search = ref(true)
 // 亮暗
 const isLight = () => {
   toggleDark()
@@ -170,10 +191,30 @@ function adminClick() {
     '_self'
   )
 }
-
+// 跳转管理页
+function manageClick() {
+  window.open(`${import.meta.env.VITE_APP_BLOG_WEB_API}/#/dashboard`, '_self')
+}
+function searchInput() {
+  if (search.value === false) {
+    input.value = false
+    search.value = true
+  } else {
+    input.value = true
+    search.value = false
+  }
+}
 // 获取token
 const hasToken = getToken()
 console.log(hasToken, 'aaaaa')
+// 退出登录
+function exit() {
+  logout().then(() => {
+    removeToken()
+    // 如果发生变化重新载入
+    window.location.reload()
+  })
+}
 </script>
 
 <style scoped>

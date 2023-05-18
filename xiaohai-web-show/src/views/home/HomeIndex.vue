@@ -9,8 +9,8 @@
       size="large"
       style="display: flex"
     >
-      <el-carousel :interval="4000" height="310px">
-        <el-carousel-item v-for="article in dataList" :key="article">
+      <el-carousel :interval="4000" height="310px" style="border-radius: 10px">
+        <el-carousel-item v-for="article in carouselList" :key="article">
           <el-image :src="image(article.cover)" @click="getArticle(article.id)" />
           <div class="carousel-title" @click="getArticle(article.id)">
             <span>{{ article.title }}</span>
@@ -113,8 +113,8 @@
   </el-col>
   <!--手机端-->
   <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
-    <el-carousel :interval="4000" height="210px">
-      <el-carousel-item v-for="article in dataList" :key="article">
+    <el-carousel :interval="4000" height="210px" style="border-radius: 10px">
+      <el-carousel-item v-for="article in carouselList" :key="article">
         <el-image :src="image(article.cover)" @click="getArticle(article.id)" />
         <div class="carousel-title" @click="getArticle(article.id)">
           <span>{{ article.title }}</span>
@@ -197,6 +197,8 @@ import { listTag, listArticles } from '@/api/show'
 const loading = ref(true)
 // 展示文章列表
 const dataList: any = ref([])
+// 轮播列表
+const carouselList: any = ref([])
 // 标签列表
 const tags = ref([])
 // 总数
@@ -233,6 +235,19 @@ function getList(type: any) {
       loadMores.value = false
     }
     loading.value = false
+  })
+}
+
+/**
+ * 轮播
+ * @param type
+ */
+function getCarouselList() {
+  queryParams.value.type = 2
+  queryParams.value.pageNum = 1
+  queryParams.value.pageSize = 3
+  listArticles(queryParams.value).then((response) => {
+    carouselList.value = response.data.data.records
   })
 }
 
@@ -276,6 +291,7 @@ function loadMore() {
 }
 getTags() // 调用函数
 getList(1)
+getCarouselList()
 </script>
 
 <style scoped>
