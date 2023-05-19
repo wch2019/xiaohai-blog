@@ -4,11 +4,13 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.confing.FileConfig;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Contribution;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -19,10 +21,7 @@ import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.ArticleTagMapper;
 import com.xiaohai.note.dao.CategoryMapper;
 import com.xiaohai.note.dao.TagsMapper;
-import com.xiaohai.note.pojo.dto.ArticleDto;
-import com.xiaohai.note.pojo.dto.ArticleDtoAll;
-import com.xiaohai.note.pojo.dto.ArticleShowDto;
-import com.xiaohai.note.pojo.dto.DateCount;
+import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.Category;
 import com.xiaohai.note.pojo.entity.Tags;
@@ -45,10 +44,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 文章表 服务实现类
@@ -264,6 +260,30 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
+    }
+
+    @Override
+    public List<ArticleSearchDto> searchArticle(String keywords) {
+        // 搜索文章
+        List<Article> articles = baseMapper.selectList(new QueryWrapper<Article>()
+                .eq("is_push",1)
+                .like("title",keywords)
+                .or().like("summary",keywords).
+                orderByDesc("is_top").
+                orderByDesc("top_time").
+                orderByDesc("created_time"));
+        List<ArticleSearchDto> list=new ArrayList<>();
+        for (Article article:articles){
+            ArticleSearchDto articleSearchDto=new ArticleSearchDto();
+            // 文章标题高亮
+            String articleTitle = article.getTitle().replaceAll(keywords, Constants.PRE_TAG + keywords + Constants.POST_TAG);
+            // 文章简介高亮
+            String summary = article.getSummary().replaceAll(keywords, Constants.PRE_TAG + keywords + Constants.POST_TAG);
+            articleSearchDto.setTitle(articleTitle);
+            articleSearchDto.setSummary(summary);
+            list.add(articleSearchDto);
+        }
+        return list;
     }
 
 }

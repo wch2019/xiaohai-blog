@@ -2,15 +2,13 @@ package com.xiaohai.admin.home;
 
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.note.pojo.dto.ArticleDtoAll;
-import com.xiaohai.note.pojo.dto.ArticleShowDto;
-import com.xiaohai.note.pojo.dto.CategoryDto;
-import com.xiaohai.note.pojo.dto.TagsDto;
+import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.service.ArticleService;
 import com.xiaohai.note.service.CategoryService;
 import com.xiaohai.note.service.TagsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,5 +63,11 @@ public class HomeShowController {
     @GetMapping("/back")
     public Response<ReturnPageData<ArticleShowDto>> findBackListByPage() {
         return Response.success("查询归档列表数据成功！", articleService.findBackListByPage());
+    }
+    @Operation(summary = "文章搜索")
+    @Parameter(name = "keywords", description = "关键词", required = true)
+    @GetMapping("/search")
+    public Response<List<ArticleSearchDto>> searchArticle(String keywords) {
+        return Response.success("文章搜索成功！", articleService.searchArticle(keywords));
     }
 }

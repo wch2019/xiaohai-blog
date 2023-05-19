@@ -38,4 +38,13 @@ public class Constants {
      * 图片后缀
      */
     public static final String[] IMAGE_EXTENSION = { "bmp", "gif", "jpg", "jpeg", "png" };
+
+    /**
+     * 文章内容高亮开始
+     */
+    public static final String PRE_TAG = "<span style=\"color:red\">";
+    /**
+     * 文章内容高亮结束
+     */
+    public static final String POST_TAG = "</span>";
 }

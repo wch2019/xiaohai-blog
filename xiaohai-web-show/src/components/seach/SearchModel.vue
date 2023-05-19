@@ -26,7 +26,7 @@
       <ul style="list-style: none; padding: 0">
         <li class="search-reslut" v-for="item of data.articleList" :key="item.id">
           <!-- 文章标题 -->
-          <el-link @click="goTo(item.id)">{{ item.title }}</el-link>
+          <el-link @click="goTo(item.id)" style="font-size: larger" v-html="item.title"></el-link>
           <!-- 文章内容 -->
           <p class="search-reslut-content" v-html="item.summary" />
         </li>
@@ -42,19 +42,14 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { listArticles, listCategory } from '@/api/show'
+import { getSearch } from '@/api/show'
 
 const dialogVisible = ref(false)
 
 const data = reactive({
   keywords: '',
   articleList: [],
-  flag: false,
-  queryParams: {
-    pageNum: 1,
-    pageSize: 10,
-    type: 1
-  }
+  flag: false
 })
 function reset() {
   data.keywords = ''
@@ -80,8 +75,8 @@ watch(
   () => {
     data.flag = data.keywords.trim() !== ''
     if (data.flag) {
-      listArticles(data.queryParams).then((res) => {
-        data.articleList = res.data.data.records
+      getSearch(data.keywords).then((res) => {
+        data.articleList = res.data.data
       })
     }
   }

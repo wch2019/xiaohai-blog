@@ -43,3 +43,11 @@ export const listBack = (query: any) => {
     params: query
   })
 }
+// 查询文章
+export const getSearch = (keywords: any) => {
+  return request({
+    url: `${api}/search`,
+    method: 'get',
+    params: { keywords }
+  })
+}

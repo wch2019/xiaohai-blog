@@ -141,10 +141,7 @@ import { logout } from '@/api/user'
 
 const value = ref(isDark.value)
 const drawer = ref(false)
-// 搜索框
-const input = ref(false)
-// 搜索
-const search = ref(true)
+
 // 亮暗
 const isLight = () => {
   toggleDark()
@@ -174,15 +171,7 @@ function adminClick() {
 function manageClick() {
   window.open(`${import.meta.env.VITE_APP_BLOG_WEB_API}/#/dashboard`, '_self')
 }
-function searchInput() {
-  if (search.value === false) {
-    input.value = false
-    search.value = true
-  } else {
-    input.value = true
-    search.value = false
-  }
-}
+
 // 获取token
 const hasToken = getToken()
 console.log(hasToken, 'aaaaa')
