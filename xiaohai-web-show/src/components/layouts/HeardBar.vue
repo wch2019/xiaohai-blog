@@ -138,6 +138,7 @@ import { useRouter } from 'vue-router'
 import { toggleDark, isDark } from '@/utils/dark'
 import { getToken, removeToken } from '@/utils/auth'
 import { logout } from '@/api/user'
+import SearchModel from '@/components/seach/SearchModel.vue'
 
 const value = ref(isDark.value)
 const drawer = ref(false)
