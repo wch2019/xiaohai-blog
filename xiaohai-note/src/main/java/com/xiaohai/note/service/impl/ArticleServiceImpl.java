@@ -281,6 +281,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             String summary = article.getSummary().replaceAll(keywords, Constants.PRE_TAG + keywords + Constants.POST_TAG);
             articleSearchDto.setTitle(articleTitle);
             articleSearchDto.setSummary(summary);
+            articleSearchDto.setId(article.getId());
             list.add(articleSearchDto);
         }
         return list;

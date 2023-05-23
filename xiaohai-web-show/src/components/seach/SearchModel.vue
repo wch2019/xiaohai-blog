@@ -101,6 +101,7 @@ watch(
   margin-left: 5px;
   outline: none;
   border: 0;
+  background-color: transparent;
 }
 @media (min-width: 960px) {
   .search-result-wrapper {
@@ -131,9 +132,5 @@ watch(
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-}
-.divider {
-  margin: 20px 0;
-  border: 2px dashed #d2ebfd;
 }
 </style>

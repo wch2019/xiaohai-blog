@@ -9,6 +9,10 @@ import lombok.Data;
  */
 @Data
 public class ArticleSearchDto {
+
+    @Schema(description = "id")
+    private Integer id;
+
     @Schema(description = "文章标题")
     private String title;
 

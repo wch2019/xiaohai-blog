@@ -48,7 +48,7 @@
       </div>
       <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
       <v-md-preview :text="articleOne.text" ref="preview"></v-md-preview>
-      <el-divider />
+      <hr class="divider" />
       <h3 class="flex-center">推荐</h3>
       <el-row style="justify-content: center">
         <el-col v-for="(o, index) in dataList" :key="o" :span="7" :offset="index > 0 ? 1 : 0">
@@ -62,7 +62,7 @@
           </el-card>
         </el-col>
       </el-row>
-      <el-divider />
+      <hr class="divider" />
       <u-comment :config="config" @submit="submit" @like="like" relative-time></u-comment>
     </el-card>
     <!--手机端-->
@@ -423,6 +423,7 @@ onMounted(async () => {
 }
 
 >>> .u-comment {
+  background-color: transparent;
   padding: 0;
 }
 </style>
