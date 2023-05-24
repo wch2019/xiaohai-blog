@@ -42,7 +42,7 @@
           </span>
         </el-space>
       </span>
-      <el-divider />
+      <hr class="divider" />
       <div v-if="articleOne.isOriginal == 0" class="tip">
         原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
       </div>
@@ -65,65 +65,78 @@
       <hr class="divider" />
       <u-comment :config="config" @submit="submit" @like="like" relative-time></u-comment>
     </el-card>
-    <!--手机端-->
-    <el-card class="box-card hidden-md-and-up" shadow="hover">
-      <el-space alignment="center" wrap size="small">
-        <el-tag size="small">{{ articleOne.categoryName }}</el-tag>
-        <template v-for="(item, index) in tags">
-          <el-tag
-            v-if="articleOne.tags && articleOne.tags.includes(item.id)"
-            :key="index"
-            style="margin-right: 4px"
-            type="success"
+  </el-col>
+  <!--手机端-->
+  <el-card class="box-card hidden-md-and-up" shadow="hover" style="width: 100%">
+    <el-space alignment="center" wrap size="small">
+      <el-tag size="small">{{ articleOne.categoryName }}</el-tag>
+      <template v-for="(item, index) in tags">
+        <el-tag
+          v-if="articleOne.tags && articleOne.tags.includes(item.id)"
+          :key="index"
+          style="margin-right: 4px"
+          type="success"
+          size="small"
+          :label="index"
+          border
+          >{{ item.name }}
+        </el-tag>
+      </template>
+    </el-space>
+    <h1 class="flex-center">{{ articleOne.title }}</h1>
+    <span
+      style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap"
+    >
+      <span style="display: flex; align-items: center">
+        <el-space size="default">
+          <el-avatar
             size="small"
-            :label="index"
-            border
-            >{{ item.name }}
-          </el-tag>
-        </template>
-      </el-space>
-      <h1 class="flex-center">{{ articleOne.title }}</h1>
-      <span
-        style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap"
-      >
-        <span style="display: flex; align-items: center">
-          <el-space size="default">
-            <el-avatar
-              size="small"
-              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            />
-            <span class="text-sm">xiaohai</span>
-          </el-space>
-        </span>
-        <el-space alignment="center" size="small">
-          <span class="text-xs font-number text-color" v-if="articleOne.createdTime">
-            <svg-icon icon-class="time-light" /> {{ articleOne.createdTime.split(' ')[0] }}</span
-          >
-          <span class="text-xs font-number text-color">
-            <svg-icon icon-class="eye-light" /> {{ articleOne.pageView }}
-          </span>
-          <span class="text-xs font-number text-color"><svg-icon icon-class="message" /> 30</span>
-          <span class="text-xs font-number"><svg-icon icon-class="give-light" /> 20</span>
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          />
+          <span class="text-sm">xiaohai</span>
         </el-space>
       </span>
-      <el-divider />
+      <el-space alignment="center" size="small">
+        <span class="text-xs font-number text-color" v-if="articleOne.createdTime">
+          <svg-icon icon-class="time-light" /> {{ articleOne.createdTime.split(' ')[0] }}</span
+        >
+        <span class="text-xs font-number text-color">
+          <svg-icon icon-class="eye-light" /> {{ articleOne.pageView }}
+        </span>
+        <span class="text-xs font-number text-color"><svg-icon icon-class="message" /> 30</span>
+        <span class="text-xs font-number"><svg-icon icon-class="give-light" /> 20</span>
+      </el-space>
+    </span>
+    <hr class="divider" />
 
-      <div v-if="articleOne.isOriginal == 0" class="tip">
-        原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
+    <div v-if="articleOne.isOriginal == 0" class="tip">
+      原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
+    </div>
+    <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
+    <v-md-preview :text="articleOne.text"></v-md-preview>
+
+    <hr class="divider" />
+    <h3 class="flex-center">推荐</h3>
+    <el-card
+      :body-style="{ padding: '0px' }"
+      v-for="o in dataList"
+      :key="o"
+      style="margin-bottom: 8px; position: relative"
+    >
+      <img :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
+      <div style="padding: 14px; text-align: center">
+        <el-link :underline="false" @click="getArticleId(o.id)">
+          <span>{{ o.title }} </span>
+        </el-link>
       </div>
-      <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
-      <v-md-preview :text="articleOne.text"></v-md-preview>
-
-      <el-divider />
-      <el-divider />
-      <h3 class="flex-center">
-        <svg-icon icon-class="message"></svg-icon>
-        <span>评论</span>
-      </h3>
-      <el-empty description="暂无评论" />
     </el-card>
-  </el-col>
-
+    <hr class="divider" />
+    <h3 class="flex-center">
+      <svg-icon icon-class="message"></svg-icon>
+      <span>评论</span>
+    </h3>
+    <el-empty description="暂无评论" />
+  </el-card>
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
     <el-space direction="vertical" fill size="large" style="position: fixed; top: 90px">
