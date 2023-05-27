@@ -1,5 +1,6 @@
 package com.xiaohai.common.utils;
 
+import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.MenuTree;
 import org.springframework.beans.BeanUtils;
 
@@ -13,11 +14,11 @@ import java.util.List;
  * @author wangchenghai
  * @date 2023/03/02 10:34:52
  */
-public interface TreeUtils {
+public class TreeUtils {
     /**
      * 根节点,parentId
      */
-    Integer TREE_PARENT_ID = 0;
+    static Integer TREE_PARENT_ID = 0;
 
 
     /**
@@ -26,7 +27,7 @@ public interface TreeUtils {
      * @param list 菜单列表
      * @return List<MenuTree>
      */
-    static List<MenuTree> getTree(List<MenuTree> list) {
+    public static List<MenuTree> getTree(List<MenuTree> list) {
         if(list==null){
             return new ArrayList<>();
         }
@@ -62,4 +63,45 @@ public interface TreeUtils {
         return childrenList;
     }
 
+    /**
+     * 评论树形结构数据
+     *
+     * @param list 评论列表
+     * @return List<CommentTree>
+     */
+    public static List<CommentTree> getCommentTree(List<CommentTree> list) {
+        if(list==null){
+            return new ArrayList<>();
+        }
+        List<CommentTree> treeList = new LinkedList<>();
+        for (CommentTree menuTree : list) {
+            if (TREE_PARENT_ID.equals(menuTree.getParentId())) {
+                CommentTree treeVO = new CommentTree();
+                BeanUtils.copyProperties(menuTree, treeVO);
+                treeVO.setChildren(getCommentChild(menuTree.getId(), list));
+                treeList.add(treeVO);
+            }
+        }
+        return treeList;
+    }
+
+    /**
+     * 树形子结构
+     *
+     * @param id        id
+     * @param list     评论列表
+     * @return List<CommentTree>
+     */
+    private static List<CommentTree> getCommentChild(Integer id, List<CommentTree> list) {
+        List<CommentTree> childrenList = new LinkedList<>();
+        for (CommentTree menuTree : list) {
+            if (id.equals(menuTree.getParentId())) {
+                CommentTree treeVO = new CommentTree();
+                BeanUtils.copyProperties(menuTree, treeVO);
+                treeVO.setChildren(getCommentChild(menuTree.getId(), list));
+                childrenList.add(treeVO);
+            }
+        }
+        return childrenList;
+    }
 }

@@ -17,5 +17,51 @@
         created_time,
         id, parent_id, article_id, user_id, content
     </sql>
+    <select id="findCommentListByPage" resultType="com.xiaohai.note.pojo.dto.CommentDto">
+        SELECT
+        c.id,
+        c.parent_id as parentId,
+        c.article_id as articleId,
+        c.user_id as userId,
+        c.content,
+        COALESCE(u.nick_name, u.username) AS username,
+        u.avatar,
+        a.title,
+        c.created_time as createdTime
+        FROM
+        b_comment c
+        LEFT JOIN b_article a ON a.id = c.article_id
+        LEFT JOIN sys_user u ON u.id = c.user_id
+        <where>
+            <if test="query.content != null and query.content != ''">
+                and c.content like CONCAT(#{query.content},'%')
+            </if>
+            <if test="query.username != null and query.username != ''">
+               and u.username  like CONCAT(#{query.username},'%') or u.nick_name like CONCAT(#{query.username},'%')
+            </if>
+        </where>
+        ORDER BY
+        a.created_time DESC
+    </select>
+    <select id="findCommentList" resultType="com.xiaohai.common.daomain.CommentTree">
+        SELECT
+            c.id,
+            c.parent_id as parentId,
+            c.article_id as articleId,
+            c.user_id as userId,
+            c.content,
+            COALESCE(u.nick_name, u.username) AS username,
+            u.avatar,
+            a.title,
+            c.created_time as createdTime
+        FROM
+            b_comment c
+                LEFT JOIN b_article a ON a.id = c.article_id
+                LEFT JOIN sys_user u ON u.id = c.user_id
+        where
+            c.article_id=#{articleId}
+        ORDER BY
+            a.created_time DESC
+    </select>
 
 </mapper>

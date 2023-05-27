@@ -1,17 +1,15 @@
-package com.xiaohai.note.pojo.entity;
+package com.xiaohai.common.daomain;
 
-import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
- * 评论表
+ * 评论
  * </p>
  *
  * @author xiaohai
@@ -19,14 +17,10 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@TableName("b_comment")
-@Schema(name = "Comment", description = "评论表")
-public class Comment implements Serializable  {
-    @Serial
-    private static final long serialVersionUID = 1L;
+@Schema(name = "CommentTree", description = "评论")
+public class CommentTree {
 
     @Schema(description = "id")
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @Schema(description = "父id")
@@ -44,4 +38,14 @@ public class Comment implements Serializable  {
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
 
+    @Schema(description = "文章标题")
+    private String title;
+
+    @Schema(description = "用户名")
+    private String username;
+
+    @Schema(description = "头像地址")
+    private String avatar;
+
+    private List<CommentTree> children;
 }

@@ -1,14 +1,17 @@
 package com.xiaohai.admin.home;
 
+import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.service.ArticleService;
 import com.xiaohai.note.service.CategoryService;
+import com.xiaohai.note.service.CommentService;
 import com.xiaohai.note.service.TagsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +34,7 @@ public class HomeShowController {
     private final TagsService tagsService;
     private final CategoryService categoryService;
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @Operation(summary = "标签")
     @GetMapping("/tags")
@@ -70,4 +74,11 @@ public class HomeShowController {
     public Response<List<ArticleSearchDto>> searchArticle(String keywords) {
         return Response.success("文章搜索成功！", articleService.searchArticle(keywords));
     }
+
+    @Operation(summary = "文章id查询评论", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping("article/comment/{id}")
+    public Response<List<CommentTree>> findByArticleId(@PathVariable Long id) {
+        return Response.success("文章id查询评论成功！", commentService.findByArticleId(id));
+    }
+
 }

@@ -1,16 +1,17 @@
 package com.xiaohai.note.service;
 
-import com.xiaohai.note.pojo.entity.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.note.pojo.dto.CommentDto;
+import com.xiaohai.note.pojo.entity.Comment;
 import com.xiaohai.note.pojo.query.CommentQuery;
 import com.xiaohai.note.pojo.vo.CommentVo;
-import com.xiaohai.note.pojo.dto.CommentDto;
+
+import java.util.List;
 
 /**
- *
  * 评论表 服务类
- *
  *
  * @author xiaohai
  * @since 2023-05-24
@@ -46,15 +47,23 @@ public interface CommentService extends IService<Comment> {
      * id查询数据
      *
      * @param id id
-     * @return   Comment
-*/
+     * @return Comment
+     */
     Comment findById(Long id);
 
     /**
-    * 查询评论表列表数据
-    *
-    * @param query 评论表 Query 数据查询对象
-    * @return Response
-    */
+     * 查询评论表列表数据
+     *
+     * @param query 评论表 Query 数据查询对象
+     * @return Response
+     */
     ReturnPageData<CommentDto> findListByPage(CommentQuery query);
+
+    /**
+     * 文章id查询评论
+     *
+     * @param id 文章id
+     * @return
+     */
+    List<CommentTree> findByArticleId(Long id);
 }

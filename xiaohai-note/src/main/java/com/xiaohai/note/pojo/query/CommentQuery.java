@@ -1,13 +1,13 @@
 package com.xiaohai.note.pojo.query;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springdoc.api.annotations.ParameterObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import org.springdoc.api.annotations.ParameterObject;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
 * <p>
@@ -39,4 +39,6 @@ public class CommentQuery implements Serializable {
 
     @Parameter(description = "评论内容")
     private String content;
+    @Parameter(description = "用户名")
+    private String username;
 }

@@ -1,26 +1,27 @@
 package com.xiaohai.note.service.impl;
 
-import com.xiaohai.common.daomain.PageData;
-import com.xiaohai.note.pojo.entity.Comment;
-import com.xiaohai.note.dao.CommentMapper;
-import com.xiaohai.note.service.CommentService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xiaohai.common.daomain.ReturnPageData;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.xiaohai.common.utils.PageUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.BeanUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.daomain.CommentTree;
+import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.common.utils.TreeUtils;
+import com.xiaohai.note.dao.CommentMapper;
+import com.xiaohai.note.pojo.dto.CommentDto;
+import com.xiaohai.note.pojo.entity.Comment;
 import com.xiaohai.note.pojo.query.CommentQuery;
 import com.xiaohai.note.pojo.vo.CommentVo;
-import com.xiaohai.note.pojo.dto.CommentDto;
+import com.xiaohai.note.service.CommentService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
  * 评论表 服务实现类
  *
  * @author xiaohai
@@ -30,14 +31,17 @@ import java.util.List;
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
     @Override
-    public Integer add(CommentVo vo){
-        Comment comment=new Comment();
-        BeanUtils.copyProperties(vo,comment);
+    public Integer add(CommentVo vo) {
+        Comment comment = new Comment();
+        BeanUtils.copyProperties(vo, comment);
+        //当前登录人id
+        comment.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
+        comment.setCreatedTime(LocalDateTime.now());
         return baseMapper.insert(comment);
     }
 
     @Override
-    public Integer delete(Long[] ids){
+    public Integer delete(Long[] ids) {
         for (Long id : ids) {
             baseMapper.deleteById(id);
         }
@@ -45,31 +49,29 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public Integer updateData(CommentVo vo){
-        Comment comment=new Comment();
-        BeanUtils.copyProperties(vo,comment);
+    public Integer updateData(CommentVo vo) {
+        Comment comment = new Comment();
+        BeanUtils.copyProperties(vo, comment);
         return baseMapper.updateById(comment);
     }
 
     @Override
-    public Comment findById(Long id){
+    public Comment findById(Long id) {
         return baseMapper.selectById(id);
     }
 
     @Override
-    public ReturnPageData<CommentDto> findListByPage(CommentQuery query){
-        Comment comment=new Comment();
-        BeanUtils.copyProperties(query,comment);
-        IPage<Comment> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Comment> iPage = baseMapper.selectPage(wherePage,Wrappers.query(comment));
-        List<CommentDto> list=new ArrayList<>();
-        for(Comment comments:iPage.getRecords()){
-            CommentDto commentDto=new CommentDto();
-            BeanUtils.copyProperties(comments,commentDto);
-            list.add(commentDto);
-        }
-        PageData pageData=new PageData();
-        BeanUtils.copyProperties(iPage,pageData);
-        return ReturnPageData.fillingData(pageData,list);
+    public ReturnPageData<CommentDto> findListByPage(CommentQuery query) {
+        IPage<CommentDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
+        IPage<CommentDto> iPage = baseMapper.findCommentListByPage(wherePage, query);
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, iPage.getRecords());
+    }
+
+    @Override
+    public List<CommentTree> findByArticleId(Long id) {
+        List<CommentTree> commentList = baseMapper.findCommentList(id);
+        return TreeUtils.getCommentTree(commentList);
     }
 }
