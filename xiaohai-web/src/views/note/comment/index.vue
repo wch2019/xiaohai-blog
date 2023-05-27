@@ -3,8 +3,18 @@
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="评论用户" prop="username">
         <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.username"
           placeholder="请输入评论用户"
+          clearable
+          size="small"
+          style="width: 240px"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="评论内容" prop="username">
+        <el-input
+          v-model="queryParams.content"
+          placeholder="请输入评论内容"
           clearable
           size="small"
           style="width: 240px"
@@ -40,7 +50,7 @@
           <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="评论用户" align="center" prop="nickName" :show-overflow-tooltip="true" />
+      <el-table-column label="评论用户" align="center" prop="username" :show-overflow-tooltip="true" />
       <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true" />
       <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
@@ -92,7 +102,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null
+        username: null,
+        content: null
       }
     }
   },
