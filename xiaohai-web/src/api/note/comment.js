@@ -20,15 +20,6 @@ export function addComment(data) {
   })
 }
 
-// 更新留言
-export function updateComment(data) {
-  return request({
-    url: api,
-    method: 'put',
-    data
-  })
-}
-
 // id查询留言
 export function getComment(data) {
   return request({

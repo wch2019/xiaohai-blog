@@ -41,7 +41,7 @@
             </if>
         </where>
         ORDER BY
-        a.created_time DESC
+        c.created_time DESC
     </select>
     <select id="findCommentList" resultType="com.xiaohai.common.daomain.CommentTree">
         SELECT
@@ -61,7 +61,7 @@
         where
             c.article_id=#{articleId}
         ORDER BY
-            a.created_time DESC
+            c.created_time ASC
     </select>
 
 </mapper>

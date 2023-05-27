@@ -57,6 +57,14 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="$store.getters.permission.includes('note:category:update')"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleAdd(scope.row)"
+          >回复
+          </el-button>
+          <el-button
             v-if="$store.getters.permission.includes('system:user:delete')"
             size="mini"
             type="text"
@@ -75,15 +83,17 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+    <CommentDialog ref="commentDialog" @closeDialog="closeDialog" />
   </div>
-
 </template>
 
 <script>
 import { listComment, delComment } from '@/api/note/comment'
+import CommentDialog from '@/views/note/comment/componets/commentDialog.vue'
 
 export default {
   name: 'Index',
+  components: { CommentDialog },
   data() {
     return {
       // 遮罩层
@@ -136,7 +146,14 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-
+    /** 回复按钮操作 */
+    handleAdd(row) {
+      this.$refs.commentDialog.reset()
+      this.$refs.commentDialog.form.parentId = row.id
+      this.$refs.commentDialog.form.articleId = row.articleId
+      this.$refs.commentDialog.open = true
+      this.$refs.commentDialog.title = '回复'
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
@@ -156,6 +173,10 @@ export default {
     // 头像展示
     image(row) {
       return process.env.VUE_APP_BASE_API_FILE + row.avatar
+    },
+    /** 回调*/
+    closeDialog() {
+      this.getList()
     }
   }
 }
