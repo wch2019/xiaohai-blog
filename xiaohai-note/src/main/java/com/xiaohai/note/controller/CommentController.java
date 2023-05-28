@@ -1,5 +1,6 @@
 package com.xiaohai.note.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -32,6 +33,7 @@ public class CommentController {
 
 
     @Operation(summary = "新增评论", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:comment:add")
     @PostMapping()
     public Response<Integer> add(@Validated @RequestBody CommentVo vo) {
         return Response.success("评论成功！", commentService.add(vo));
@@ -39,6 +41,7 @@ public class CommentController {
 
     @Operation(summary = "删除评论", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @DeleteMapping("{ids}")
+    @SaCheckPermission("note:comment:delete")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除评论成功！", commentService.delete(ids));
     }
@@ -59,6 +62,7 @@ public class CommentController {
     @Operation(summary = "查询评论列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @SaCheckPermission("note:comment:list")
     @GetMapping()
     public Response<ReturnPageData<CommentDto>> findListByPage(@ParameterObject CommentQuery query) {
         return Response.success("查询评论列表成功！", commentService.findListByPage(query));

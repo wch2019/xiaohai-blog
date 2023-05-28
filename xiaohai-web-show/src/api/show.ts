@@ -2,26 +2,21 @@ import request from '@/utils/axios'
 
 const api = '/home/show'
 
-// 查询文章列表数据
-// export function listArticle(data: any) {
-//   return request({
-//     url: api,
-//     method: 'get',
-//     params: data
-//   })
-// }
+// 标签
 export const listTag = () => {
   return request({
     url: `${api}/tags`,
     method: 'get'
   })
 }
+// 分类
 export const listCategory = () => {
   return request({
     url: `${api}/category`,
     method: 'get'
   })
 }
+// 查询展示文章表列表数据
 export const listArticles = (query: any) => {
   return request({
     url: `${api}/articles`,
@@ -29,6 +24,7 @@ export const listArticles = (query: any) => {
     params: query
   })
 }
+// 文章详情
 export const article = (id: any) => {
   return request({
     url: `${api}/article/${id}`,
@@ -49,5 +45,13 @@ export const getSearch = (keywords: any) => {
     url: `${api}/search`,
     method: 'get',
     params: { keywords }
+  })
+}
+
+// 文章id查询评论
+export const getComment = (id: any) => {
+  return request({
+    url: `${api}/article/comment/${id}`,
+    method: 'get'
   })
 }

@@ -30,7 +30,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('system:user:delete')"
+          v-if="$store.getters.permission.includes('note:comment:delete')"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -57,7 +57,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            v-if="$store.getters.permission.includes('note:category:update')"
+            v-if="$store.getters.permission.includes('note:comment:add')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -65,7 +65,7 @@
           >回复
           </el-button>
           <el-button
-            v-if="$store.getters.permission.includes('system:user:delete')"
+            v-if="$store.getters.permission.includes('note:comment:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"

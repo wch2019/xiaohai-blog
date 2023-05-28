@@ -201,7 +201,9 @@
 import { onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { CommentApi, ConfigApi, SubmitParamApi, UToast, createObjectURL, dayjs } from 'undraw-ui'
-import { article, listArticles, listTag } from '@/api/show'
+import { ElMessage } from 'element-plus'
+import { article, listArticles, listTag, getComment } from '@/api/show'
+import { addComment } from '@/api/user'
 import emoji from '@/components/emoji/emoji'
 
 // 文章详情
@@ -209,10 +211,13 @@ const articleOne = ref('')
 const route = useRoute()
 const titles = ref()
 const preview = ref()
+const router = useRouter()
 // 标签列表
 const tags = ref([])
 // 展示文章列表
 const dataList = ref([])
+// 评论列表
+const commentList = ref([])
 
 const data = reactive({
   queryParams: {
@@ -220,8 +225,14 @@ const data = reactive({
     pageSize: 3,
     type: 6,
     id: 0
+  },
+  comment: {
+    parentId: 0,
+    articleId: route.params.id,
+    content: ''
   }
 })
+
 const config = reactive<ConfigApi>({
   user: {
     id: 1,
@@ -235,47 +246,7 @@ const config = reactive<ConfigApi>({
   comments: [],
   total: 10
 })
-let temp_id = 100
-// 提交评论事件
-const submit = ({ content, parentId, files, finish, replyId }: SubmitParamApi) => {
-  const str = `提交评论:${content};\t父id: ${parentId};\t图片:${files};\t回复id:${replyId}`
-  console.log(str)
-
-  /**
-   * 上传文件后端返回图片访问地址，格式以'||'为分割; 如:  '/static/img/program.gif||/static/img/normal.webp'
-   */
-  const contentImg = files?.map((e) => createObjectURL(e)).join('||')
-
-  temp_id += 1
-  const comment: CommentApi = {
-    id: String(temp_id),
-    parentId,
-    uid: config.user.id,
-    address: '来自江苏',
-    content,
-    likes: 0,
-    createTime: dayjs().subtract(5, 'seconds').toString(),
-    contentImg,
-    user: {
-      username: config.user.username,
-      avatar: config.user.avatar,
-      level: 6,
-      homeLink: `/${temp_id}`
-    },
-    reply: null
-  }
-  setTimeout(() => {
-    finish(comment)
-    UToast({ message: '评论成功!', type: 'info' })
-  }, 200)
-}
-// 点赞按钮事件 将评论id返回后端判断是否点赞，然后在处理点赞状态
-const like = (id: string, finish: () => void) => {
-  console.log(`点赞: ${id}`)
-  setTimeout(() => {
-    finish()
-  }, 200)
-}
+const temp_id = 100
 
 config.comments = [
   {
@@ -298,7 +269,7 @@ config.comments = [
   }
 ]
 
-const { queryParams } = toRefs(data)
+const { queryParams, comment } = toRefs(data)
 
 /** 查询展示推荐列表 */
 function getList(categoryId: any) {
@@ -308,7 +279,21 @@ function getList(categoryId: any) {
   })
 }
 
-const router = useRouter()
+/**
+ * 根据文章id获取评论列表
+ */
+function getCommentList() {
+  getComment(route.params.id).then((response) => {
+    commentList.value = response.data.data.records
+  })
+}
+// 提交评论事件
+function addCommenta(categoryId: any) {
+  addComment(route.params.id).then((response) => {
+    commentList.value = response.data.data.records
+    ElMessage.info(response.msg)
+  })
+}
 
 // 页面跳转
 function getArticleId(id: any) {
@@ -332,6 +317,7 @@ const getArticle = async () => {
       '../image',
       `${import.meta.env.VITE_APP_BASE_API_FILE}/image`
     )
+    getCommentList()
     getList(res.data.data.categoryId)
   })
 }

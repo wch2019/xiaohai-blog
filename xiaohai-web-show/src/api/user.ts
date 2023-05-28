@@ -10,7 +10,15 @@ export const logout = () => {
 // 获取用户信息
 export const userInfo = () => {
   return request({
-    url: '/logout',
+    url: '/userinfo',
     method: 'get'
+  })
+}
+// 新增评论
+export const addComment = (data: any) => {
+  return request({
+    url: '/note/comment',
+    method: 'post',
+    data
   })
 }

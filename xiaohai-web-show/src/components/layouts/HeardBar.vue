@@ -59,7 +59,7 @@
                 src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
               />
               <template #dropdown>
-                <el-dropdown-menu v-if="hasToken === undefined">
+                <el-dropdown-menu v-if="$store.token">
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
@@ -135,11 +135,13 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { toggleDark, isDark } from '@/utils/dark'
 import { getToken, removeToken } from '@/utils/auth'
 import { logout } from '@/api/user'
 import SearchModel from '@/components/seach/SearchModel.vue'
 
+const store = useStore()
 const value = ref(isDark.value)
 const drawer = ref(false)
 
@@ -175,7 +177,7 @@ function manageClick() {
 
 // 获取token
 const hasToken = getToken()
-console.log(hasToken, 'aaaaa')
+console.log(store.state.token, 'aaaaa')
 // 退出登录
 function exit() {
   logout().then(() => {

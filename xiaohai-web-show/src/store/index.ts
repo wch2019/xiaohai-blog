@@ -1,7 +1,12 @@
 import { createStore } from 'vuex'
+import { getToken } from '@/utils/auth'
 
 const defaultState = {
-  count: 0
+  count: 0,
+  username: '',
+  token: getToken(),
+  name: 'aaa',
+  avatar: ''
 }
 
 // Create a new store instance.
