@@ -136,9 +136,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { ElMessageBox } from 'element-plus'
 import { toggleDark, isDark } from '@/utils/dark'
-import { getToken, removeToken } from '@/utils/auth'
-import { logout } from '@/api/user'
 import SearchModel from '@/components/seach/SearchModel.vue'
 
 const store = useStore()
@@ -176,15 +175,20 @@ function manageClick() {
 }
 
 // 获取token
-const hasToken = getToken()
 console.log(store.state.token, 'aaaaa')
 // 退出登录
 function exit() {
-  logout().then(() => {
-    removeToken()
-    // 如果发生变化重新载入
-    window.location.reload()
+  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
   })
+    .then(() => {
+      store.state.logOut().then(() => {
+        location.href = '/index'
+      })
+    })
+    .catch(() => {})
 }
 </script>
 

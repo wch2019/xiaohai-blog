@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
+import { logout } from '@/api/user'
 
 const defaultState = {
   count: 0,
@@ -22,6 +23,19 @@ export default createStore({
   actions: {
     increment(context) {
       context.commit('increment')
+    },
+    // 退出系统
+    logOut() {
+      return new Promise<void>((resolve, reject) => {
+        logout()
+          .then(() => {
+            removeToken()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {
