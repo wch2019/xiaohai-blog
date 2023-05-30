@@ -55,11 +55,14 @@
           <div class="menus-item">
             <el-dropdown>
               <el-avatar
+                v-if="!store.state.avatar"
                 size="default"
                 src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
               />
+              <el-avatar size="default" :src="store.state.avatar" v-else />
+
               <template #dropdown>
-                <el-dropdown-menu v-if="$store.token">
+                <el-dropdown-menu v-if="!store.state.token">
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
@@ -141,6 +144,7 @@ import { toggleDark, isDark } from '@/utils/dark'
 import SearchModel from '@/components/seach/SearchModel.vue'
 
 const store = useStore()
+const router = useRouter()
 const value = ref(isDark.value)
 const drawer = ref(false)
 
@@ -157,7 +161,7 @@ function isDarkBackground() {
   }
   return ''
 }
-const router = useRouter()
+
 function cancelClick(path: any) {
   router.push(path)
   drawer.value = false
@@ -176,6 +180,10 @@ function manageClick() {
 
 // 获取token
 console.log(store.state.token, 'aaaaa')
+// 登录信息获取
+function info() {
+  store.dispatch('getInfo')
+}
 // 退出登录
 function exit() {
   ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
@@ -184,12 +192,11 @@ function exit() {
     type: 'warning'
   })
     .then(() => {
-      store.state.logOut().then(() => {
-        location.href = '/index'
-      })
+      store.dispatch('logOut')
     })
     .catch(() => {})
 }
+info()
 </script>
 
 <style scoped>

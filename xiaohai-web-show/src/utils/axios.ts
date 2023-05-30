@@ -1,6 +1,9 @@
 import Axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useStore } from 'vuex'
 import { getToken } from '@/utils/auth'
+
+const store = useStore()
 
 const axios = Axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -35,6 +38,13 @@ axios.interceptors.response.use(
      * 根据你的项目实际情况来对 response 和 error 做处理
      * 这里对 response 和 error 不做任何处理，直接返回
      */
+    // 登录异常
+    if (response.data.code === 401) {
+      console.log(response, 'aaaa')
+      store.dispatch('resetToken').then(() => {
+        window.location.reload()
+      })
+    }
     return response
   },
   (error) => {

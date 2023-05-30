@@ -8,9 +8,9 @@ export const logout = () => {
   })
 }
 // 获取用户信息
-export const userInfo = () => {
+export const getInfo = () => {
   return request({
-    url: '/userinfo',
+    url: '/system/user/info',
     method: 'get'
   })
 }
