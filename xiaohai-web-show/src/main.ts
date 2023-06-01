@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 // 初始化系统样式
 import './style/index.scss'
 import ElementPlus from 'element-plus'
@@ -10,8 +11,6 @@ import UndrawUi from 'undraw-ui'
 import App from './App.vue'
 // 挂载路由配置
 import router from './router/index'
-// 挂载 Vuex 配置
-import store from './store/index'
 // 挂载 Element Plus
 import 'element-plus/dist/index.css'
 // 隐藏元素
@@ -31,9 +30,8 @@ VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
 const app = createApp(App)
-
 app.use(router)
-app.use(store)
+app.use(createPinia())
 app.use(ElementPlus)
 app.component('SvgIcon', SvgIcon)
 app.use(elementIcons)

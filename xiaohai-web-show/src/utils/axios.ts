@@ -1,9 +1,10 @@
 import Axios from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
+import  useStore from '@/store/index'
 import { getToken } from '@/utils/auth'
 
-const store = useStore()
+
 
 const axios = Axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -40,9 +41,13 @@ axios.interceptors.response.use(
      */
     // 登录异常
     if (response.data.code === 401) {
-      console.log(response, 'aaaa')
-      store.dispatch('resetToken').then(() => {
-        window.location.reload()
+      // store.dispatch('resetToken').then(() => {
+      //   window.location.reload()
+      // })
+      ElMessage.error(`Code: ${response.status}, Message: ${response.data.msg}`)
+      const store = useStore()
+      store.resetToken().then(()=>{
+        // window.location.reload()
       })
     }
     return response
@@ -52,7 +57,6 @@ axios.interceptors.response.use(
       const code = error.response.status
       const msg = error.response.data.message
       ElMessage.error(`Code: ${code}, Message: ${msg}`)
-      console.error('[Axios Error]', error.response)
     } else {
       ElMessage.error(`${error}`)
     }

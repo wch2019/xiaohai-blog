@@ -55,14 +55,14 @@
           <div class="menus-item">
             <el-dropdown>
               <el-avatar
-                v-if="!store.state.avatar"
+                v-if="!store.avatar"
                 size="default"
                 src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
               />
-              <el-avatar size="default" :src="store.state.avatar" v-else />
+              <el-avatar size="default" :src="store.avatar" v-else />
 
               <template #dropdown>
-                <el-dropdown-menu v-if="!store.state.token">
+                <el-dropdown-menu v-if="!store.token">
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
@@ -138,7 +138,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import  useStore from '@/store/index'
 import { ElMessageBox } from 'element-plus'
 import { toggleDark, isDark } from '@/utils/dark'
 import SearchModel from '@/components/seach/SearchModel.vue'
@@ -147,7 +147,6 @@ const store = useStore()
 const router = useRouter()
 const value = ref(isDark.value)
 const drawer = ref(false)
-
 // 亮暗
 const isLight = () => {
   toggleDark()
@@ -178,11 +177,9 @@ function manageClick() {
   window.open(`${import.meta.env.VITE_APP_BLOG_WEB_API}/#/dashboard`, '_self')
 }
 
-// 获取token
-console.log(store.state.token, 'aaaaa')
 // 登录信息获取
 function info() {
-  store.dispatch('getInfo')
+  store.getInfo()
 }
 // 退出登录
 function exit() {
@@ -192,11 +189,14 @@ function exit() {
     type: 'warning'
   })
     .then(() => {
-      store.dispatch('logOut')
+      store.logOut()
     })
     .catch(() => {})
 }
-info()
+if (!!store.token){
+  info()
+}
+
 </script>
 
 <style scoped>
