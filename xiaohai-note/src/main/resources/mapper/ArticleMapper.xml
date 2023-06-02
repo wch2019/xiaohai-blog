@@ -143,6 +143,18 @@
                  a.top_time DESC,
                  a.created_time DESC
     </select>
+    <select id="findUserBasic" resultType="com.xiaohai.note.pojo.dto.UserBasicDto">
+        SELECT COALESCE(nick_name,username ) AS username,
+               avatar,
+               summary,
+               (select count(*) from b_article a where  a.user_id=#{userId})as articleCount,
+               (select count(distinct category_id) from b_article a where  a.user_id=#{userId})as categoryCount,
+               (select count(distinct  t.tag_id) from b_article a LEFT JOIN b_article_tag t on a.id=t.article_id where  a.user_id=#{userId})as tagsCount
+        FROM
+            sys_user
+        WHERE
+            id =#{userId}
+    </select>
 
 
 </mapper>

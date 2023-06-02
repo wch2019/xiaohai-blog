@@ -71,4 +71,7 @@ public class ArticleDtoAll implements Serializable {
 
     @Schema(description = "更新时间")
     private LocalDateTime updatedTime;
+
+    @Schema(description = "用户详情")
+    private UserBasicDto userBasic;
 }

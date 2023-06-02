@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleShowDto;
 import com.xiaohai.note.pojo.dto.DateCount;
+import com.xiaohai.note.pojo.dto.UserBasicDto;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import org.apache.ibatis.annotations.Param;
@@ -54,6 +55,13 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     IPage<ArticleShowDto> findBackListByPage(@Param("page")IPage<ArticleShowDto> wherePage);
+
+    /**
+     * 查询指定用户基础信息 文章相关的
+     * @param userId
+     * @return
+     */
+    UserBasicDto findUserBasic(Long userId);
 
 
 }
