@@ -150,6 +150,7 @@
                (select count(*) from b_article a where  a.user_id=#{userId})as articleCount,
                (select count(distinct category_id) from b_article a where  a.user_id=#{userId})as categoryCount,
                (select count(distinct  t.tag_id) from b_article a LEFT JOIN b_article_tag t on a.id=t.article_id where  a.user_id=#{userId})as tagsCount
+               (SELECT COUNT(*) FROM b_comment c LEFT JOIN b_article a  on a.id=c.article_id where  a.user_id=#{userId})as messageCount
         FROM
             sys_user
         WHERE
