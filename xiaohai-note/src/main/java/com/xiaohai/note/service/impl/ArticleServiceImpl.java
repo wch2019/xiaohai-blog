@@ -128,6 +128,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         BeanUtils.copyProperties(article, articleDtoAll);
         articleDtoAll.setCategoryName(categoryMapper.selectById(article.getCategoryId()).getName());
         articleDtoAll.setTags(articleTagMapper.searchAllByArticleId(id));
+        //用户详情
+        articleDtoAll.setUserBasic(baseMapper.findUserBasic(Long.valueOf(article.getUserId())));
         //更新浏览量
         if(type==0){
             Article articleCount=new Article();

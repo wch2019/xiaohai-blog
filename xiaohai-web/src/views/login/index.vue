@@ -174,7 +174,7 @@ export default {
             this.show = this.$route.query.show
             console.log(this.show)
             if (this.show) {
-              window.open(process.env.VUE_APP_BLOG_WEB_API + this.show, '_blank')
+              window.open(process.env.VUE_APP_BLOG_WEB_API + this.show, '_self')
             } else {
               this.$router.push({ path: this.redirect || '/' })
             }

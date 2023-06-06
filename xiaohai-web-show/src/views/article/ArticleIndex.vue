@@ -149,30 +149,27 @@
         <img src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" class="image" />
 
         <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-          <el-avatar
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            class="panThumb"
-          />
+          <el-avatar :src="image(userBasic.avatar ? userBasic.avatar : '')" class="panThumb" />
 
           <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
-            <h3>xiaohai</h3>
-            <div>用一点点代码改变生活</div>
+            <h3>{{ userBasic.username }}</h3>
+            <div>{{ userBasic.summary }}</div>
             <div style="display: inline-flex; vertical-align: top; justify-content: space-between">
               <el-space fill direction="vertical">
                 <div class="text-sm text-color">文章</div>
-                <div class="text-xl font-number">7</div>
+                <div class="text-xl font-number">{{ userBasic.articleCount }}</div>
               </el-space>
               <el-space fill direction="vertical">
                 <div class="text-sm text-color">分类</div>
-                <div class="text-xl font-number">4</div>
+                <div class="text-xl font-number">{{ userBasic.categoryCount }}</div>
               </el-space>
               <el-space fill direction="vertical" size="small">
                 <div class="text-sm text-color">标签</div>
-                <div class="text-xl font-number">14</div>
+                <div class="text-xl font-number">{{ userBasic.tagsCount }}</div>
               </el-space>
               <el-space fill direction="vertical" size="small">
                 <div class="text-sm text-color">评论</div>
-                <div class="text-xl font-number">2</div>
+                <div class="text-xl font-number">{{ userBasic.messageCount }}</div>
               </el-space>
             </div>
           </el-space>
@@ -208,6 +205,8 @@ import emoji from '@/components/emoji/emoji'
 
 // 文章详情
 const articleOne = ref('')
+// 用户信息
+const userBasic = ref('')
 const route = useRoute()
 const titles = ref()
 const preview = ref()
@@ -312,11 +311,13 @@ function image(cover: any) {
 const getArticle = async () => {
   await article(route.params.id).then((res: any) => {
     articleOne.value = res.data.data
+    userBasic.value = res.data.data.userBasic
     // 文章内图片地址替换
     articleOne.value.text = articleOne.value.text.replaceAll(
       '../image',
       `${import.meta.env.VITE_APP_BASE_API_FILE}/image`
     )
+    console.log(articleOne.value)
     getCommentList()
     getList(res.data.data.categoryId)
   })

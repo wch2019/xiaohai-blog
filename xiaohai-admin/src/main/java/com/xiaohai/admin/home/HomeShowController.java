@@ -75,7 +75,7 @@ public class HomeShowController {
         return Response.success("文章搜索成功！", articleService.searchArticle(keywords));
     }
 
-    @Operation(summary = "文章id查询评论", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "文章id查询评论")
     @GetMapping("article/comment/{id}")
     public Response<List<CommentTree>> findByArticleId(@PathVariable Long id) {
         return Response.success("文章id查询评论成功！", commentService.findByArticleId(id));

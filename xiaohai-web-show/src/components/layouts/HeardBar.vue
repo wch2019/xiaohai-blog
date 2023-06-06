@@ -66,7 +66,12 @@
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
-                  <el-dropdown-item @click="manageClick">后台管理</el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-avatar size="default" :src="store.avatar" />
+                    <div>{{ store.name }}</div>
+                    <div>{{ store.summary }}</div>
+                  </el-dropdown-item>
+                  <el-dropdown-item divided @click="manageClick">后台管理</el-dropdown-item>
                   <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -138,8 +143,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import  useStore from '@/store/index'
 import { ElMessageBox } from 'element-plus'
+import useStore from '@/store/index'
 import { toggleDark, isDark } from '@/utils/dark'
 import SearchModel from '@/components/seach/SearchModel.vue'
 
@@ -193,10 +198,9 @@ function exit() {
     })
     .catch(() => {})
 }
-if (!!store.token){
+if (store.token) {
   info()
 }
-
 </script>
 
 <style scoped>
