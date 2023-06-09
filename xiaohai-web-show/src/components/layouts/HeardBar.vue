@@ -131,6 +131,23 @@
     :style="isDarkBackground()"
     :with-header="false"
   >
+    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px">
+      <!--      <el-space direction="vertical">-->
+      <el-avatar
+        v-if="!store.avatar"
+        :size="100"
+        src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+      />
+      <h3>小海</h3>
+      <div>啊啦啦啦</div>
+      <!--      <div v-else>-->
+      <!--        <el-avatar size="default" :src="store.avatar" />-->
+      <!--        <h3>{{ store.name }}</h3>-->
+      <!--        <div>{{ store.summary }}</div>-->
+      <!--      </div>-->
+      <!--      </el-space>-->
+    </div>
+
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/')"> 首 页</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/category')">分 类</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/tags')"> 标 签</el-card>
@@ -138,6 +155,15 @@
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/message')"> 留 言</el-card>
     <!--    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>-->
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/about')"> 关 于</el-card>
+    <el-card class="drawer-menus">
+      <div v-if="!store.token">
+        <div @click="adminClick">登 录</div>
+      </div>
+      <div v-else>
+        <div @click="manageClick">后台管理</div>
+        <div @click="exit">退出登录</div>
+      </div>
+    </el-card>
   </el-drawer>
 </template>
 <script lang="ts" setup>
