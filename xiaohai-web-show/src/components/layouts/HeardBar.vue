@@ -66,13 +66,21 @@
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
-                  <el-dropdown-item>
-                    <el-avatar size="default" :src="store.avatar" />
-                    <div>{{ store.name }}</div>
-                    <div>{{ store.summary }}</div>
-                  </el-dropdown-item>
-                  <el-dropdown-item divided @click="manageClick">后台管理</el-dropdown-item>
-                  <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
+                  <div style="display: flex;flex-direction: column; ">
+                    <div style="display: flex;align-items: center; margin-left: 10px">
+                    <el-avatar  size="default" :src="store.avatar" />
+                      <div style="display: flex;flex-direction: column;margin-left: 20px">
+                        <h3>{{ store.name }}fghf</h3>
+                        <div>{{ store.summary }}hhhhhhhhhhh</div>
+                      </div>
+
+                    </div>
+                    <div style="display: flex;">
+                    <el-dropdown-item divided  @click="manageClick">后台管理</el-dropdown-item>
+                    <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
+                    </div>
+                  </div>
+
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -132,20 +140,15 @@
     :with-header="false"
   >
     <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px">
-      <!--      <el-space direction="vertical">-->
       <el-avatar
         v-if="!store.avatar"
+        @click="adminClick"
         :size="100"
         src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
       />
-      <h3>小海</h3>
-      <div>啊啦啦啦</div>
-      <!--      <div v-else>-->
-      <!--        <el-avatar size="default" :src="store.avatar" />-->
-      <!--        <h3>{{ store.name }}</h3>-->
-      <!--        <div>{{ store.summary }}</div>-->
-      <!--      </div>-->
-      <!--      </el-space>-->
+      <el-avatar @click="manageClick" v-else :size="100" :src="store.avatar" />
+      <h3>{{ store.name }}</h3>
+      <div>{{ store.summary }}</div>
     </div>
 
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/')"> 首 页</el-card>
@@ -155,14 +158,8 @@
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/message')"> 留 言</el-card>
     <!--    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>-->
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/about')"> 关 于</el-card>
-    <el-card class="drawer-menus">
-      <div v-if="!store.token">
-        <div @click="adminClick">登 录</div>
-      </div>
-      <div v-else>
-        <div @click="manageClick">后台管理</div>
-        <div @click="exit">退出登录</div>
-      </div>
+    <el-card v-if="store.token" class="drawer-menus">
+      <div @click="exit">退出登录</div>
     </el-card>
   </el-drawer>
 </template>

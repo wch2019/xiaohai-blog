@@ -42,6 +42,7 @@ const useStore = defineStore('user', {
         logout()
           .then(() => {
             removeToken()
+            window.location.reload()
             resolve()
           })
           .catch((error) => {

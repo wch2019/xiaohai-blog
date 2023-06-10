@@ -1,10 +1,8 @@
 import Axios from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
 // import { useStore } from 'vuex'
-import  useStore from '@/store/index'
+import useStore from '@/store/index'
 import { getToken } from '@/utils/auth'
-
-
 
 const axios = Axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -46,7 +44,7 @@ axios.interceptors.response.use(
       // })
       ElMessage.error(`Code: ${response.status}, Message: ${response.data.msg}`)
       const store = useStore()
-      store.resetToken().then(()=>{
+      store.resetToken().then(() => {
         // window.location.reload()
       })
     }

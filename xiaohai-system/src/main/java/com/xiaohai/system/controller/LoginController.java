@@ -8,16 +8,16 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.utils.OnLineUtils;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RegisterVo;
-import com.xiaohai.system.pojo.vo.RoleVo;
 import com.xiaohai.system.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author wangchenghai
@@ -55,9 +55,9 @@ public class LoginController {
     @SaCheckLogin
     @GetMapping("logout")
     public Response<Object> logout() {
-        StpUtil.logout();
         //去除redis在线用户
         OnLineUtils.removeOnLineCache(StpUtil.getLoginId().toString());
+        StpUtil.logout();
         return Response.success("退出成功");
     }
 }
