@@ -69,9 +69,9 @@
                   <div style="display: flex;flex-direction: column; ">
                     <div style="display: flex;align-items: center; margin-left: 10px">
                     <el-avatar  size="default" :src="store.avatar" />
-                      <div style="display: flex;flex-direction: column;margin-left: 20px">
-                        <h3>{{ store.name }}fghf</h3>
-                        <div>{{ store.summary }}hhhhhhhhhhh</div>
+                      <div style="display: flex;flex-direction: column;margin-left: 20px;align-items: center;">
+                        <h3>{{ store.name }}</h3>
+                        <div>{{ store.summary }}</div>
                       </div>
 
                     </div>
