@@ -41,4 +41,35 @@ DotCode(点码），是一个前后分离的博客系统。
 
 - 采用**Markdown** 编辑器([mavonEditor](www.mavoneditor.com)），更符合开发者的编辑方式
 
+## nginx配置
+
+    server {
+    listen       80;
+    server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        location /manage/ {
+            alias  E:/project/gitee/xiaohai-blog/xiaohai-web/dist/;
+            try_files $uri $uri/ /manage/index.html;
+            index  index.html index.htm;
+        }
+
+        location /prod-api/ {
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header REMOTE-HOST $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_pass http://localhost:8089/;
+		}
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+
   

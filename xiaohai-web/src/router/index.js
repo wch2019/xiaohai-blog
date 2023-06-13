@@ -80,7 +80,8 @@ export const constantRoutes = [
 export const asyncRoutes = []
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
+  base: '/manage/', // 设置基本路径为与非根路径相匹配
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

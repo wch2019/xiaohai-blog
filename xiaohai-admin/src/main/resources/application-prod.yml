@@ -1,0 +1,102 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /prod-api
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xiaohai_blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    username: root
+    password: 123456
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+    # redis配置
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 1
+    # Redis服务器地址
+    host: 127.0.0.1
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: 123456
+    # 连接超时时间
+    timeout: 10s
+    lettuce:
+      pool:
+        # 连接池最大连接数
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
+#==============================线程池配置==============================
+task:
+  executor:
+    # 核心线程池数
+    core_pool_size: 10
+    # 最大线程池数
+    max_pool_size: 200
+    # 任务队列的容量
+    queue_capacity: 1200
+    # 非核心线程的存活时间
+    keep_alive_seconds: 60
+    # 线程池的前缀名称
+    name_prefix: hai-task-
+#==============================Sa-Token配置==============================
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: authorization
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 3600
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+  #是否尝试从 cookie 里读取 Token
+  is-read-cookie: false
+
+#==============================mybatis-plus配置==============================
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    #是否控制台 print mybatis-plus 的 LOGO
+    banner: false
+#==============================springdoc-openapi项目配置=======================================
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    #正式改为false
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
+    #正式改为false
+    enabled: true
+  group-configs:
+    - group: '展示页'
+      #组匹配的路径列表（逗号分隔）
+      paths-to-match: '/**'
+      #要扫描组的包列表（逗号分隔）
+      packages-to-scan: com.xiaohai.admin
+    - group: '管理页'
+      paths-to-match: '/**'
+      packages-to-scan: com.xiaohai.system,com.xiaohai.admin,com.xiaohai.file,com.xiaohai.note
+#==============================系统文件存放配置=======================================
+file:
+  profile: E:/xiaohai-blog/
