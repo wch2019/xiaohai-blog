@@ -1,7 +1,7 @@
 ## DotCode(点码）
 <p align=center>
-  <a href="">
-    <img src="../xiaohai-blog/xiaohai-web/public/favicon.ico" alt="DotCode" style="border-radius: 50%">
+  <a href="https://gitee.com/wch2019/xiaohai-blog">
+    <img src="./doc/image/favicon.ico" alt="DotCode" style="border-radius: 50%">
   </a>
 </p>
 
@@ -74,5 +74,5 @@ DotCode(点码），是一个前后分离的博客系统。
     }
 
 ## 致谢
-[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="80" />](https://www.jetbrains.com/?from=xiaohai_blog)
+[<img src="./doc/image/jb_beam.png" width="80" />](https://www.jetbrains.com/?from=xiaohai_blog)
 感谢 **[jetbrains](https://www.jetbrains.com/?from=mogu_blog_v2)** 提供的开源 **License**
