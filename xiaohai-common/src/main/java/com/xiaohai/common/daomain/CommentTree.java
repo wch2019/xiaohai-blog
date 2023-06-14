@@ -47,5 +47,6 @@ public class CommentTree {
     @Schema(description = "头像地址")
     private String avatar;
 
+    @Schema(description = "子评论")
     private List<CommentTree> children;
 }
