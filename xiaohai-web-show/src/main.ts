@@ -9,6 +9,8 @@ import hljs from 'highlight.js'
 // undraw
 import UndrawUi from 'undraw-ui'
 import App from './App.vue'
+
+import { image } from '@/utils/publicMethods'
 // 挂载路由配置
 import router from './router/index'
 // 挂载 Element Plus
@@ -37,5 +39,7 @@ app.component('SvgIcon', SvgIcon)
 app.use(elementIcons)
 app.use(VMdPreview)
 app.use(UndrawUi)
+
+app.config.globalProperties.image = image
 
 app.mount('#app')

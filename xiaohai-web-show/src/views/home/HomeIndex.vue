@@ -251,13 +251,6 @@ function getCarouselList() {
   })
 }
 
-/**
- * 图片地址拼接
- * @param cover
- */
-function image(cover: any) {
-  return import.meta.env.VITE_APP_BASE_API_FILE + cover
-}
 
 const router = useRouter()
 function getArticle(id: any) {
