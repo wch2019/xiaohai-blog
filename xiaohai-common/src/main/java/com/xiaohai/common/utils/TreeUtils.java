@@ -78,7 +78,7 @@ public class TreeUtils {
             if (TREE_PARENT_ID.equals(menuTree.getParentId())) {
                 CommentTree treeVO = new CommentTree();
                 BeanUtils.copyProperties(menuTree, treeVO);
-                treeVO.setChildren(getCommentChild(menuTree.getId(), list));
+                treeVO.setCommentTrees(getCommentChild(menuTree.getId(), list));
                 treeList.add(treeVO);
             }
         }
@@ -98,7 +98,6 @@ public class TreeUtils {
             if (id.equals(menuTree.getParentId())) {
                 CommentTree treeVO = new CommentTree();
                 BeanUtils.copyProperties(menuTree, treeVO);
-                treeVO.setChildren(getCommentChild(menuTree.getId(), list));
                 childrenList.add(treeVO);
             }
         }
