@@ -10,7 +10,9 @@
           text
           bg
           size="large"
-          @click="cancelClick('/categorySearch/' + category.id + '?name=' + category.name)"
+          @click="
+            cancelClick('/categorySearch/' + (category.id || '') + '?name=' + (category.name || ''))
+          "
         >
           <svg-icon icon-class="label-sign"></svg-icon> {{ category.name }}
           <div class="tags">{{ category.count }}</div>
