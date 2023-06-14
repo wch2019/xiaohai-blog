@@ -7,11 +7,8 @@
       <span style="display: flex; align-items: center; justify-content: space-between">
         <span style="display: flex; align-items: center">
           <el-space size="default">
-            <el-avatar
-              size="default"
-              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            />
-            <span class="text-sm">xiaohai</span>
+            <el-avatar size="default" :src="image(userBasic.avatar)" />
+            <span class="text-sm">{{ userBasic.username }}</span>
             <el-tag size="default">{{ articleOne.categoryName }}</el-tag>
             <template v-for="(item, index) in tags">
               <el-tag
@@ -146,10 +143,10 @@
         :body-style="{ padding: '0px', height: '380px' }"
         style="position: relative"
       >
-        <img src="http://localhost:8089/api/document/upload/image/1/20230401.jpg" class="image" />
+        <img src="../../assets/image/1.jpg" class="image" />
 
         <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-          <el-avatar :src="image(userBasic.avatar ? userBasic.avatar : '')" class="panThumb" />
+          <el-avatar :src="image(userBasic.avatar)" class="panThumb" />
 
           <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
             <h3>{{ userBasic.username }}</h3>
@@ -204,7 +201,7 @@ import { addComment } from '@/api/user'
 import emoji from '@/components/emoji/emoji'
 
 // 文章详情
-const articleOne = ref('')
+const articleOne = ref({})
 // 用户信息
 const userBasic = ref('')
 const route = useRoute()

@@ -48,12 +48,13 @@ DotCode(点码），是一个前后分离的博客系统。
     server_name  localhost;
 
         location / {
-            root   html;
+            alias  D:/Project/gitee/xiaohai-blog/xiaohai-web-show/dist/;  #修改为自己路径
+            try_files $uri $uri/ /index.html;
             index  index.html index.htm;
         }
 
         location /manage/ {
-            alias  E:/project/gitee/xiaohai-blog/xiaohai-web/dist/;
+            alias  E:/project/gitee/xiaohai-blog/xiaohai-web/dist/; #修改为自己路径
             try_files $uri $uri/ /manage/index.html;
             index  index.html index.htm;
         }
@@ -72,4 +73,6 @@ DotCode(点码），是一个前后分离的博客系统。
         }
     }
 
-  
+## 致谢
+[<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="80" />](https://www.jetbrains.com/?from=xiaohai_blog)
+感谢 **[jetbrains](https://www.jetbrains.com/?from=mogu_blog_v2)** 提供的开源 **License**
