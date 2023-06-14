@@ -61,7 +61,9 @@
       </el-row>
       <hr class="divider" />
       <u-comment :config="config" @submit="submit" @like="like" relative-time></u-comment>
-      <comments></comments>
+      <comments
+        :articleId="route.params.id"
+      ></comments>
     </el-card>
   </el-col>
   <!--手机端-->

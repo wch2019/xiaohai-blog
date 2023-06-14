@@ -10,29 +10,30 @@
       </div>
     </div>
     <h3 class="flex-center">全部评论</h3>
-    <div class="dataList">
+    <div class="dataList" v-for="(item,index) in dataList" :key="index">
       <div class="headProtrait">
-        <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png">
+        <img :src="image(item.avatar)">
       </div>
       <div class="dataListRight">
         <div class="title">
-          <div>名字</div>
-          <div>来自上海</div>
+          <div>{{item.username}}</div>
+<!--          <div>来自上海</div>-->
         </div>
         <div class="content">
-          缘生缘灭，缘起缘落，我在看别人的故事，别人何尝不是在看我的故事?别人在演绎人生，我又何尝不是在这场戏里?谁的眼神沧桑了谁?我的眼神，只是沧桑了自己
+          {{item.content}}
         </div>
         <div class="listOperation">
           <div>
             <el-icon><PictureRounded /></el-icon>
             <span>2</span>
           </div>
-          <div>
+          <div class="replyBtn" @click="replyClick()">
             <el-icon><ChatDotRound /></el-icon>
             <span>回复</span>
           </div>
         </div>
         <comments-input
+          v-if="replyInputShow"
           :placeholderValue="placeholderValue"
           :btnValue="btnValue"
         ></comments-input>
@@ -44,9 +45,27 @@
 <script setup lang="ts">
 import CommentsInput from "@/components/comments/commentsInput.vue";
 import {ref} from "vue";
-
+import {getComment} from "@/api/show";
 const placeholderValue = ref('回复谁谁谁')
 const btnValue = ref('发布')
+const replyInputShow = ref(false)
+const dataList = ref([])
+const props = defineProps({
+  articleId:{
+    type:Number,
+    default:0
+  }
+})
+
+function replyClick(){
+  replyInputShow.value =!replyInputShow.value
+}
+function getlistComment(){
+  getComment(props.articleId).then(res=>{
+    dataList.value = res.data.data
+  })
+}
+getlistComment()
 </script>
 
 <style scoped lang="scss">
@@ -104,5 +123,11 @@ const btnValue = ref('发布')
   span{
     margin-left: 5px;
   }
+}
+.replyBtn{
+  cursor: pointer;
+}
+.replyBtn:hover{
+  color: rgb(30, 128, 255);
 }
 </style>
