@@ -76,6 +76,7 @@ public class HomeShowController {
     }
 
     @Operation(summary = "文章id查询评论")
+    @Parameter(name = "id", description = "文章id", required = true)
     @GetMapping("article/comment/{id}")
     public Response<List<CommentTree>> findByArticleId(@PathVariable Long id) {
         return Response.success("文章id查询评论成功！", commentService.findByArticleId(id));
