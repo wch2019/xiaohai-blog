@@ -64,6 +64,7 @@
       </el-row>
       <hr class="divider" />
       <u-comment :config="config" @submit="submit" @like="like" relative-time></u-comment>
+      <comments></comments>
     </el-card>
   </el-col>
   <!--手机端-->
@@ -202,6 +203,7 @@ import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import emoji from '@/components/emoji/emoji'
+import comments from '@/components/comments/index.vue'
 
 // 文章详情
 const articleOne = ref('')
