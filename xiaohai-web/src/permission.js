@@ -19,32 +19,27 @@ router.beforeEach(async(to, from, next) => {
 
   // 确定用户是否已登录
   const hasToken = getToken()
-
   if (hasToken) {
     if (to.path === '/login') {
       // 如果已登录，请重定向到主页
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
-        next()
-      } else {
-        try {
-          // 获取用户信息
-          await store.dispatch('user/getInfo')
-          // 获取字典信息
-          await store.dispatch('dict/setDictAll')
-          const accessRoutes = await store.dispatch('permission/generateRoutes')
-          router.addRoutes(accessRoutes) // 动态添加可访问路由表
-          next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
-        } catch (error) {
-          // 删除令牌并转到登录页面重新登录
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
-          NProgress.done()
-        }
+      next()
+      try {
+        // 获取用户信息
+        await store.dispatch('user/getInfo')
+        // 获取字典信息
+        await store.dispatch('dict/setDictAll')
+        const accessRoutes = await store.dispatch('permission/generateRoutes')
+        router.addRoutes(accessRoutes) // 动态添加可访问路由表
+        next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+      } catch (error) {
+        // 删除令牌并转到登录页面重新登录
+        await store.dispatch('user/resetToken')
+        Message.error(error || 'Has Error')
+        next(`/login?redirect=${to.path}`)
+        NProgress.done()
       }
     }
   } else {

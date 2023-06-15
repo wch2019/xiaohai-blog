@@ -57,11 +57,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/404',
-    component: () => import('@/views/error/404.vue'),
-    hidden: true
-  },
-  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -71,6 +66,11 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index.vue'),
       meta: { title: '首页', icon: 'dashboard', noCache: true }
     }]
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error/404.vue'),
+    hidden: true
   }
 ]
 /**

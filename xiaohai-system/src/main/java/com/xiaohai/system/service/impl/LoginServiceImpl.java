@@ -72,6 +72,9 @@ public class LoginServiceImpl implements LoginService {
         vo.setPassword(EncryptUtils.aesEncrypt(vo.getPassword()));
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(vo, userVo);
+        //普通用户默认2
+        Long[] a = {2L};
+        userVo.setRoleIds(a);
         return serService.add(userVo);
     }
 }
