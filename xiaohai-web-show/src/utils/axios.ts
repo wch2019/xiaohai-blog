@@ -3,7 +3,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 // import { useStore } from 'vuex'
 import useStore from '@/store/index'
 import { getToken } from '@/utils/auth'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const axios = Axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: 20000 // 请求超时 20s
@@ -39,10 +40,17 @@ axios.interceptors.response.use(
      */
     // 登录异常
     if (response.data.code === 401) {
-      // store.dispatch('resetToken').then(() => {
-      //   window.location.reload()
-      // })
-      ElMessage.error(`Code: ${response.status}, Message: ${response.data.msg}`)
+      // ElMessage.error(`Code: ${response.status}, Message: ${response.data.msg}`)
+      ElMessageBox.confirm('继续使用，请重新登录', '提示', {
+          confirmButtonText: '去登陆',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(() => {
+          window.open(
+            `${import.meta.env.VITE_APP_BLOG_WEB_API}/#/login`,
+            '_self'
+          )
+        }).catch(() => {})
       const store = useStore()
       store.resetToken().then(() => {
         // window.location.reload()

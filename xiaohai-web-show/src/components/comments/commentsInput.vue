@@ -1,7 +1,7 @@
 <template>
   <div class="commentInput">
     <el-input
-      v-model="textarea"
+      v-model="content"
       :rows="4"
       type="textarea"
       :placeholder="props.placeholderValue"
@@ -26,15 +26,15 @@
                     <img :src="item.img" class="emojiImg">
                   </span>
                 </template>
-                <div v-for="k in item.childrens" class="emojiBox">
-                  <img :src="k" class="emojiImg">
+                <div v-for="(v,k,i) in item.childrens" class="emojiBox">
+                  <img :src="v" class="emojiImg" @click="selectEmoji(k)">
                 </div>
               </el-tab-pane>
             </el-tabs>
           </div>
         </el-popover>
 
-      <el-button type="primary">{{props.btnValue}}</el-button>
+      <el-button type="primary" @click="submit()">{{props.btnValue}}</el-button>
     </div>
   </div>
 </template>
@@ -42,8 +42,9 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {emojiList} from '@/components/emoji/emoji'
+import {addComment} from "@/api/show";
 console.log(emojiList,'emojiList')
-const textarea = ref('')
+const content = ref('')
 const activeName = ref('first')
 const props = defineProps({
   placeholderValue:{
@@ -53,8 +54,32 @@ const props = defineProps({
   btnValue:{
     type:String,
     default:'发表评论'
+  },
+  parentId:{
+    type:String,
+    default:''
+  },
+  articleId:{
+    type:String,
+    default:''
   }
 })
+const emit=defineEmits(['getlistComment'])
+
+function selectEmoji(val:any){
+  content.value += val
+}
+function submit(){
+  let data:any={
+    parentId:props.parentId,
+    articleId:props.articleId,
+    content:content.value
+  }
+  addComment(data).then(res=>{
+    content.value = ''
+    emit('getlistComment')
+  })
+}
 </script>
 
 <style scoped lang="scss">

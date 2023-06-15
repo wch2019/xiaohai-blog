@@ -1,6 +1,7 @@
 import request from '@/utils/axios'
 
 const api = '/home/show'
+const comment = '/note'
 
 // 标签
 export const listTag = () => {
@@ -53,5 +54,13 @@ export const getComment = (id: any) => {
   return request({
     url: `${api}/article/comment/${id}`,
     method: 'get'
+  })
+}
+// 新增评论
+export const addComment = (data:any) => {
+  return request({
+    url: `${comment}/comment`,
+    method: 'post',
+    data
   })
 }
