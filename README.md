@@ -73,6 +73,8 @@ DotCode(点码），是一个前后分离的博客系统。
         }
     }
 
-## 致谢
-[<img src="./doc/image/jb_beam.png" width="80" />](https://www.jetbrains.com/?from=xiaohai_blog)
-感谢 **[jetbrains](https://www.jetbrains.com/?from=mogu_blog_v2)** 提供的开源 **License**
+## 特别鸣谢
+
+- 感谢 [JetBrains](https://jb.gg/OpenSourceSupport) 提供的免费开源 License：
+
+[<img src="./doc/image/jb_beam.png" width="100" />](https://www.jetbrains.com/?from=xiaohai_blog)

@@ -1,7 +1,6 @@
 package com.xiaohai.common.daomain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
@@ -60,13 +59,6 @@ public class Response<T> {
     @Schema(description = "数据信息", example = "返回数据")
     private T data;
 
-    public List<T> getDataList() {
-        if (data instanceof List) {
-            return (List<T>) data;
-        } else {
-            return null;
-        }
-    }
     public Response() {
 
     }

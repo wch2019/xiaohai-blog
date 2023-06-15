@@ -1,6 +1,5 @@
 package com.xiaohai.admin.home;
 
-import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -11,7 +10,6 @@ import com.xiaohai.note.service.CommentService;
 import com.xiaohai.note.service.TagsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +74,7 @@ public class HomeShowController {
     }
 
     @Operation(summary = "文章id查询评论")
+    @Parameter(name = "id", description = "文章id", required = true)
     @GetMapping("article/comment/{id}")
     public Response<List<CommentTree>> findByArticleId(@PathVariable Long id) {
         return Response.success("文章id查询评论成功！", commentService.findByArticleId(id));
