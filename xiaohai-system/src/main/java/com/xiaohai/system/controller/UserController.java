@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @Operation(summary = "更新用户表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @SaCheckPermission("system:user:update")
+    @SaCheckPermission(value="system:user:update",orRole = "user")
     @Log(title = "更新用户")
     @PutMapping()
     public Response<Integer> update(@Validated @RequestBody UserVo vo) {

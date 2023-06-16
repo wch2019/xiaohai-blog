@@ -100,6 +100,7 @@ export default {
   },
   methods: {
     getUser() {
+      console.log(this.$store.getters.userId,'this.$store.getters.userId')
       getUser(this.$store.getters.userId).then(response => {
         this.user = response.data
       })
