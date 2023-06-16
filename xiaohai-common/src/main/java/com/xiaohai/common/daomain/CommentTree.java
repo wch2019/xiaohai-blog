@@ -26,6 +26,9 @@ public class CommentTree {
     @Schema(description = "父id")
     private Integer parentId;
 
+    @Schema(description = "@用户")
+    private Integer parentName;
+
     @Schema(description = "文章id")
     private Integer articleId;
 
