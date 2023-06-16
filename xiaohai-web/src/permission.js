@@ -19,6 +19,7 @@ router.beforeEach(async(to, from, next) => {
 
   // 确定用户是否已登录
   const hasToken = getToken()
+  console.log(store,'store')
   if (hasToken) {
     if (to.path === '/login') {
       // 如果已登录，请重定向到主页
