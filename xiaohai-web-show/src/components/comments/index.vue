@@ -50,7 +50,7 @@
             <div class="titleChild">
               <span>{{i.username}}</span>&nbsp;
               <span>回复</span>&nbsp;
-              <span>{{i.username}}</span>
+              <span>{{i.parentName}}</span>
             </div>
             <div class="content">
               {{i.content}}

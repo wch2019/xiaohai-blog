@@ -47,7 +47,6 @@
         SELECT
             c.id,
             c.parent_id as parentId,
-            (c.parent_id) as parentId,
             c.article_id as articleId,
             c.user_id as userId,
             c.content,

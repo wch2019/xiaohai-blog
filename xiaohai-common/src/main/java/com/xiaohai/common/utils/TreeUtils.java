@@ -74,11 +74,11 @@ public class TreeUtils {
             return new ArrayList<>();
         }
         List<CommentTree> treeList = new LinkedList<>();
-        for (CommentTree menuTree : list) {
-            if (TREE_PARENT_ID.equals(menuTree.getParentId())) {
+        for (CommentTree commentTree : list) {
+            if (TREE_PARENT_ID.equals(commentTree.getParentId())) {
                 CommentTree treeVO = new CommentTree();
-                BeanUtils.copyProperties(menuTree, treeVO);
-                treeVO.setCommentTrees(getCommentChild(menuTree.getId(), list));
+                BeanUtils.copyProperties(commentTree, treeVO);
+                treeVO.setCommentTrees(getCommentChild(commentTree.getId(),commentTree.getUsername(), list));
                 treeList.add(treeVO);
             }
         }
@@ -92,13 +92,15 @@ public class TreeUtils {
      * @param list     评论列表
      * @return List<CommentTree>
      */
-    private static List<CommentTree> getCommentChild(Integer id, List<CommentTree> list) {
+    private static List<CommentTree> getCommentChild(Integer id, String username,List<CommentTree> list) {
         List<CommentTree> childrenList = new LinkedList<>();
-        for (CommentTree menuTree : list) {
-            if (id.equals(menuTree.getParentId())) {
+        for (CommentTree commentTree : list) {
+            if (id.equals(commentTree.getParentId())) {
                 CommentTree treeVO = new CommentTree();
-                BeanUtils.copyProperties(menuTree, treeVO);
+                BeanUtils.copyProperties(commentTree, treeVO);
+                treeVO.setParentName(username);
                 childrenList.add(treeVO);
+                childrenList.addAll(getCommentChild(commentTree.getId(),commentTree.getUsername(), list));
             }
         }
         return childrenList;
