@@ -43,7 +43,6 @@
 import {ref} from "vue";
 import {emojiList} from '@/components/emoji/emoji'
 import {addComment} from "@/api/show";
-console.log(emojiList,'emojiList')
 const content = ref('')
 const activeName = ref('first')
 const props = defineProps({

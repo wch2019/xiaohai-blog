@@ -84,6 +84,8 @@
 import CommentsInput from "@/components/comments/commentsInput.vue";
 import {ref} from "vue";
 import {getComment} from "@/api/show";
+import {allEmoji} from '@/components/emoji/emoji'
+console.log(allEmoji(),'1111')
 const placeholderValue = ref('')
 const btnValue = ref('发布')
 const dataList = ref([])
