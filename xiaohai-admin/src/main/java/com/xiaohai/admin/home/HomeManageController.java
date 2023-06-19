@@ -10,6 +10,7 @@ import com.xiaohai.common.utils.OnLineUtils;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.service.ArticleService;
 import com.xiaohai.note.service.CategoryService;
+import com.xiaohai.note.service.CommentService;
 import com.xiaohai.note.service.TagsService;
 import com.xiaohai.system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,7 @@ public class HomeManageController {
     private final ArticleService articleService;
     private final TagsService tagsService;
     private final CategoryService categoryService;
+    private final CommentService commentService;
 
     @Operation(summary = "文章数,用户数,评论数，浏览量", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("/count")
@@ -45,8 +47,8 @@ public class HomeManageController {
         Map<String, Long> map = new HashMap<>();
         //文章数
         map.put("article", articleService.count());
-        // TODO 评论数
-        map.put("message", 0L);
+        //评论数
+        map.put("message", commentService.count());
         //用户数
         map.put("user", userService.count());
         //阅读量

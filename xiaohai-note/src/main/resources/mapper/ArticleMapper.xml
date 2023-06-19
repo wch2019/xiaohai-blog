@@ -57,6 +57,9 @@
             <if test="param.isOriginal != null and param.isOriginal != ''">
                 and a.is_original=#{param.isOriginal}
             </if>
+            <if test="userId != null and userId != ''">
+                and a.user_id=#{userId}
+            </if>
         </where>
         GROUP BY
             a.id

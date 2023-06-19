@@ -27,7 +27,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param query
      * @return
      */
-    IPage<ArticleDto> selectPageArticleQuery(@Param("page")IPage<ArticleDto> wherePage, @Param("param") ArticleQuery query);
+    IPage<ArticleDto> selectPageArticleQuery(@Param("page")IPage<ArticleDto> wherePage, @Param("param") ArticleQuery query,@Param("userId") Integer userId);
 
     /**
      * 获取所有文章的阅读量

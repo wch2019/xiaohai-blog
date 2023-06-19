@@ -141,8 +141,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
+        Integer userId=null;
+        //判断角色是否是管理员
+        if(!StpUtil.hasRole("admin")){
+            //不是管理员只查询当前用户数据
+            userId=Integer.valueOf((String)StpUtil.getLoginId());
+        }
         IPage<ArticleDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<ArticleDto> iPage = baseMapper.selectPageArticleQuery(wherePage, query);
+        IPage<ArticleDto> iPage = baseMapper.selectPageArticleQuery(wherePage, query,userId);
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
