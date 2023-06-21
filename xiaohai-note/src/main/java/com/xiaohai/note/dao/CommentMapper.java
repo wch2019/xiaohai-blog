@@ -25,7 +25,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
      * @param wherePage
      * @return
      */
-    IPage<CommentDto> findCommentListByPage(@Param("page") IPage<CommentDto> wherePage, @Param("query") CommentQuery query);
+    IPage<CommentDto> findCommentListByPage(@Param("page") IPage<CommentDto> wherePage, @Param("query") CommentQuery query,@Param("userId") Integer userId);
 
     /**
      * 文章id查询评论

@@ -3,7 +3,7 @@
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="用户名称" prop="username">
         <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.username"
           placeholder="请输入用户名称"
           clearable
           size="small"
@@ -179,7 +179,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
+        username: null,
         nickName: null,
         status: null
       }

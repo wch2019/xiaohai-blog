@@ -32,8 +32,23 @@ public class CommentDto implements Serializable {
     @Schema(description = "文章id")
     private Integer articleId;
 
-    @Schema(description = "用户id")
+    @Schema(description = "评论人id")
     private Integer userId;
+
+    @Schema(description = "用户名")
+    private String username;
+
+    @Schema(description = "头像地址")
+    private String avatar;
+
+    @Schema(description = "回复人id")
+    private Integer replyUserId;
+
+    @Schema(description = "回复人用户名")
+    private String replyUsername;
+
+    @Schema(description = "回复人头像地址")
+    private String replyAvatar;
 
     @Schema(description = "评论内容")
     private String content;
@@ -43,10 +58,4 @@ public class CommentDto implements Serializable {
     
     @Schema(description = "文章标题")
     private String title;
-
-    @Schema(description = "用户名")
-    private String username;
-
-    @Schema(description = "头像地址")
-    private String avatar;
 }

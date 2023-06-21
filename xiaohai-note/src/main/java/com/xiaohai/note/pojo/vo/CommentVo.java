@@ -30,6 +30,9 @@ public class CommentVo implements Serializable {
     @NotNull(message = "文章id为空")
     private Integer articleId;
 
+    @Schema(description = "回复人id")
+    private Integer replyUserId;
+
     @Schema(description = "评论内容")
     @NotNull(message = "评论内容为空")
     private String content;

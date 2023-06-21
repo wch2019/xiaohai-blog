@@ -1,6 +1,23 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+      <el-form-item label="评论类型" prop="status">
+        <el-select
+          v-model="queryParams.discussant"
+          placeholder="评论类型"
+          clearable
+          size="small"
+          style="width: 240px"
+          @clear="queryParams.discussant = null"
+        >
+          <el-option
+            v-for="discussant in discussantList"
+            :key="discussant.value"
+            :label="discussant.label"
+            :value="discussant.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="评论用户" prop="username">
         <el-input
           v-model="queryParams.username"
@@ -43,17 +60,24 @@
     </el-row>
 
     <el-table v-loading="loading" border style="margin-top: 10px" :data="commentList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="头像" align="center" width="120" prop="avatar">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="评论人头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
-          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)" />
-          <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
+          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)"/>
+          <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="评论用户" align="center" prop="username" :show-overflow-tooltip="true" />
-      <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true" />
-      <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
+      <el-table-column label="评论人" align="center" prop="username" :show-overflow-tooltip="true"/>
+      <el-table-column label="回复人头像" align="center" width="120" prop="avatar">
+        <template slot-scope="scope">
+          <el-avatar v-if="scope.row.replyAvatar" shape="square" :src="image(scope.row.replyAvatar)"/>
+          <el-avatar v-else shape="square"> {{ scope.row.replyUsername }}</el-avatar>
+        </template>
+      </el-table-column>
+      <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true"/>
+      <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true"/>
+      <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true"/>
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -83,7 +107,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <CommentDialog ref="commentDialog" @closeDialog="closeDialog" />
+    <CommentDialog ref="commentDialog" @closeDialog="closeDialog"/>
   </div>
 </template>
 
@@ -108,10 +132,13 @@ export default {
       total: 0,
       // 评论表格数据
       commentList: [],
+      // 评论类型
+      discussantList: [{ 'value': 1, 'label': '我的评论' }, { 'value': 2, 'label': '回复我的' }],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        discussant: 1,
         username: null,
         content: null
       }
@@ -171,8 +198,8 @@ export default {
       })
     },
     // 头像展示
-    image(row) {
-      return process.env.VUE_APP_BASE_API_FILE + row.avatar
+    image(avatar) {
+      return process.env.VUE_APP_BASE_API_FILE + avatar
     },
     /** 回调*/
     closeDialog() {

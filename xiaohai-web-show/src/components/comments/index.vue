@@ -3,21 +3,24 @@
     <h3 class="flex-center">评论</h3>
     <div class="publishTop">
       <div class="headProtrait">
-        <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png">
+        <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
       </div>
       <div style="width: 100%">
-        <comments-input :articleId="props.articleId" @getlistComment="getlistComment"></comments-input>
+        <comments-input
+          :articleId="props.articleId"
+          @getlistComment="getlistComment"
+        ></comments-input>
       </div>
     </div>
     <h3 class="flex-center">全部评论</h3>
-    <div class="dataList" v-for="(item,index) in dataList" :key="index">
+    <div class="dataList" v-for="(item, index) in dataList" :key="index">
       <div class="headProtrait">
-        <img :src="image(item.avatar)">
+        <img :src="image(item.avatar)" />
       </div>
       <div class="dataListRight">
         <div>
           <div class="title">
-            <div>{{item.username}}</div>
+            <div>{{ item.username }}</div>
             <!--          <div>来自上海</div>-->
           </div>
           <div class="content" >
@@ -42,18 +45,18 @@
             @getlistComment="getlistComment"
           ></comments-input>
         </div>
-        <div v-for="(i,k) in item.commentTrees" :key="k" class="commentTrees">
+        <div v-for="(i, k) in item.commentTrees" :key="k" class="commentTrees">
           <div class="childImg">
-            <img :src="image(i.avatar)">
+            <img :src="image(i.avatar)" />
           </div>
           <div class="dataListRight">
             <div class="titleChild">
-              <span>{{i.username}}</span>&nbsp;
-              <span>回复</span>&nbsp;
-              <span>{{i.parentName}}</span>
+              <span>{{ i.username }}</span
+              >&nbsp; <span>回复</span>&nbsp;
+              <span>{{ i.replyUsername }}</span>
             </div>
             <div class="content">
-              {{i.content}}
+              {{ i.content }}
             </div>
             <div class="listOperation">
               <div>
@@ -177,11 +180,11 @@ getlistComment()
     align-items: center;
     margin-right: 10px;
   }
-  span{
+  span {
     margin-left: 5px;
   }
 }
-.replyBtn{
+.replyBtn {
   cursor: pointer;
 }
 .replyBtn:hover{
