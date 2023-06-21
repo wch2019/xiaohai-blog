@@ -20,8 +20,8 @@
             <div>{{item.username}}</div>
             <!--          <div>来自上海</div>-->
           </div>
-          <div class="content">
-            {{item.content}}
+          <div class="content" >
+            <span v-html="parseEmojis(item.content)"></span>
           </div>
           <div class="listOperation">
             <div>
@@ -85,7 +85,6 @@ import CommentsInput from "@/components/comments/commentsInput.vue";
 import {ref} from "vue";
 import {getComment} from "@/api/show";
 import {allEmoji} from '@/components/emoji/emoji'
-console.log(allEmoji(),'1111')
 const placeholderValue = ref('')
 const btnValue = ref('发布')
 const dataList = ref([])
@@ -111,6 +110,17 @@ function getlistComment(){
         (dataList.value[i] as any).replyInputShow = false
     }
   })
+}
+function parseEmojis(text:any) {
+  let emojiMap:any = allEmoji()
+  // 使用正则表达式匹配表情符号，并替换为对应的图片标签
+  return text.replace(/\[[^\[\]]+\]/g, (match:any) => {
+    const emojiImg = emojiMap[match];
+    if (emojiImg) {
+      return `<img src="${emojiImg}" alt="${match}" style="width: 20px;"/>`;
+    }
+    return match; // 如果未找到对应的表情图片，则保留原始文本
+  });
 }
 getlistComment()
 </script>
