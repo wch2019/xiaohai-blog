@@ -98,7 +98,7 @@ public class TreeUtils {
             if (id.equals(commentTree.getParentId())) {
                 CommentTree treeVO = new CommentTree();
                 BeanUtils.copyProperties(commentTree, treeVO);
-                treeVO.setParentName(username);
+                treeVO.setReplyUsername(username);
                 childrenList.add(treeVO);
                 childrenList.addAll(getCommentChild(commentTree.getId(),commentTree.getUsername(), list));
             }
