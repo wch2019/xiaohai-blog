@@ -36,6 +36,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         BeanUtils.copyProperties(vo, comment);
         //当前登录人id
         comment.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
+        // 存在父id就去获取父评论用户
+        if (vo.getParentId() != null) {
+            comment.setReplyUserId(baseMapper.selectById(vo.getParentId()).getUserId());
+        }
         comment.setCreatedTime(LocalDateTime.now());
         return baseMapper.insert(comment);
     }
@@ -62,8 +66,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public ReturnPageData<CommentDto> findListByPage(CommentQuery query) {
+        //当前登录用户
+        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+        //判断角色是否是管理员
+        if (StpUtil.hasRole("admin")) {
+            query.setUserRole(true);
+        }
         IPage<CommentDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<CommentDto> iPage = baseMapper.findCommentListByPage(wherePage, query);
+        IPage<CommentDto> iPage = baseMapper.findCommentListByPage(wherePage, query, userId);
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());

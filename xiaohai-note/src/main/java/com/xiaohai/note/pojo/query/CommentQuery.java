@@ -1,5 +1,6 @@
 package com.xiaohai.note.pojo.query;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -41,4 +42,11 @@ public class CommentQuery implements Serializable {
     private String content;
     @Parameter(description = "用户名")
     private String username;
+
+    @Parameter(description = "评论类型 1:我的评论,2:回复我的")
+    private Integer discussant;
+
+    @Parameter(description = "用户类型 管理员是true，其他是false")
+    @Hidden
+    private boolean userRole=false;
 }

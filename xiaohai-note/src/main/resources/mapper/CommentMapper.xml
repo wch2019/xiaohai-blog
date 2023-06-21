@@ -9,25 +9,29 @@
         <result column="parent_id" property="parentId" />
         <result column="article_id" property="articleId" />
         <result column="user_id" property="userId" />
+        <result column="reply_user_id" property="replyUserId" />
         <result column="content" property="content" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         created_time,
-        id, parent_id, article_id, user_id, content
+        id, parent_id, article_id, user_id, reply_user_id, content
     </sql>
     <select id="findCommentListByPage" resultType="com.xiaohai.note.pojo.dto.CommentDto">
         SELECT
         c.id,
-        c.parent_id as parentId,
-        c.article_id as articleId,
-        c.user_id as userId,
-        c.content,
-        COALESCE(u.nick_name, u.username) AS username,
+        c.parent_id AS parentId,
+        c.article_id AS articleId,
+        c.user_id AS userId,
+        CASE WHEN u.nick_name IS NULL || u.nick_name = '' THEN u.username ELSE u.nick_name END AS username,
         u.avatar,
+        c.reply_user_id AS replyUserId,
+        ( SELECT  CASE WHEN nick_name IS NULL || nick_name = '' THEN username ELSE nick_name END FROM sys_user WHERE id = replyUserId ) AS replyUsername,
+        ( SELECT avatar FROM sys_user WHERE id = replyUserId ) AS replyAvatar,
+        c.content,
         a.title,
-        c.created_time as createdTime
+        c.created_time AS createdTime
         FROM
         b_comment c
         LEFT JOIN b_article a ON a.id = c.article_id
@@ -38,6 +42,14 @@
             </if>
             <if test="query.username != null and query.username != ''">
                and u.username  like CONCAT(#{query.username},'%') or u.nick_name like CONCAT(#{query.username},'%')
+            </if>
+            <!--1:我的评论-->
+            <if test="(query.discussant != null and query.discussant == 1) or query.userRole == false">
+                and c.user_id = #{userId}
+            </if>
+            <!--2:回复我的-->
+            <if test="query.discussant != null and query.discussant ==2">
+                and c.reply_user_id = #{userId}
             </if>
         </where>
         ORDER BY
