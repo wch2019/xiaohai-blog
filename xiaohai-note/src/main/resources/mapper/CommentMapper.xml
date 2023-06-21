@@ -62,7 +62,7 @@
             c.article_id as articleId,
             c.user_id as userId,
             c.content,
-            COALESCE(u.nick_name, u.username) AS username,
+            CASE WHEN u.nick_name IS NULL || u.nick_name = '' THEN u.username ELSE u.nick_name END AS username,
             u.avatar,
             a.title,
             c.created_time as createdTime
