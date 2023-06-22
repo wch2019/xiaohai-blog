@@ -97,7 +97,7 @@
                   <svg-icon icon-class="eye-light" style="font-size: 15px" /> {{ article.pageView }}
                 </span>
                 <span class="text-xs font-number text-color"
-                  ><svg-icon icon-class="message" style="font-size: 15px" /> 30</span
+                  ><svg-icon icon-class="message" style="font-size: 15px" /> {{ article.commentCount }}</span
                 >
                 <span class="text-xs font-number text-color"
                   ><svg-icon icon-class="give-light" style="font-size: 15px" /> 20</span

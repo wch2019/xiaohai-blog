@@ -1,14 +1,12 @@
 package com.xiaohai.note.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.note.pojo.dto.CommentCountDto;
 import com.xiaohai.note.pojo.dto.CommentDto;
 import com.xiaohai.note.pojo.entity.Comment;
 import com.xiaohai.note.pojo.query.CommentQuery;
 import com.xiaohai.note.pojo.vo.CommentVo;
-
-import java.util.List;
 
 /**
  * 评论表 服务类
@@ -65,5 +63,5 @@ public interface CommentService extends IService<Comment> {
      * @param id 文章id
      * @return
      */
-    List<CommentTree> findByArticleId(Long id);
+    CommentCountDto findByArticleId(Long id);
 }

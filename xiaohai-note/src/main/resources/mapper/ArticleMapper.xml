@@ -91,6 +91,7 @@
         a.is_original as isOriginal,
         a.page_view as pageView,
         a.created_time as createdTime,
+        (select count(*) from b_comment where article_id=a.id) as commentCount,
         GROUP_CONCAT( DISTINCT t.tag_id ) as tags
         FROM
         b_article a

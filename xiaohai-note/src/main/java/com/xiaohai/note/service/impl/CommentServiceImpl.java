@@ -10,6 +10,7 @@ import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.common.utils.TreeUtils;
 import com.xiaohai.note.dao.CommentMapper;
+import com.xiaohai.note.pojo.dto.CommentCountDto;
 import com.xiaohai.note.pojo.dto.CommentDto;
 import com.xiaohai.note.pojo.entity.Comment;
 import com.xiaohai.note.pojo.query.CommentQuery;
@@ -80,8 +81,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public List<CommentTree> findByArticleId(Long id) {
+    public CommentCountDto findByArticleId(Long id) {
+        CommentCountDto commentCountDto=new CommentCountDto();
         List<CommentTree> commentList = baseMapper.findCommentList(id);
-        return TreeUtils.getCommentTree(commentList);
+        commentCountDto.setCommentCount(commentList.size());
+        commentCountDto.setCommentTrees(TreeUtils.getCommentTree(commentList));
+        return commentCountDto;
     }
 }
