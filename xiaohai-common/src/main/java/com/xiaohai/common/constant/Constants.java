@@ -33,6 +33,14 @@ public class Constants {
      *系统默认密码
      */
     public static final String SYSTEM_PASSWORD = "123456";
+    /**
+     *管理员角色
+     */
+    public static final String ADMIN = "admin";
+    /**
+     *普通用户角色
+     */
+    public static final String USER = "user";
 
     /**
      * 图片后缀

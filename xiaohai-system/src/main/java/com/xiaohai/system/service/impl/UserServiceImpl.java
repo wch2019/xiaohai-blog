@@ -83,7 +83,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 当前操作用户
         Long userId = Long.valueOf((String) StpUtil.getLoginId());
         for (Long id : ids) {
-            Assert.isTrue(userId!=id, "不可删除当前登录用户");
+            Assert.isTrue(!Objects.equals(1L, id), "不可删除管理员");
+            Assert.isTrue(!Objects.equals(userId, id), "不可删除当前登录用户");
             //删除角色
             userRoleService.delete(Math.toIntExact(id));
             //删除用户
