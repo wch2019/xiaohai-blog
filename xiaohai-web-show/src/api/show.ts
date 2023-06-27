@@ -57,10 +57,17 @@ export const getComment = (id: any) => {
   })
 }
 // 新增评论
-export const addComment = (data:any) => {
+export const addComment = (data: any) => {
   return request({
     url: `${comment}/comment`,
     method: 'post',
     data
+  })
+}
+// 站点信息展示
+export const findShowBasic = () => {
+  return request({
+    url: `${api}/findShowBasic`,
+    method: 'get'
   })
 }

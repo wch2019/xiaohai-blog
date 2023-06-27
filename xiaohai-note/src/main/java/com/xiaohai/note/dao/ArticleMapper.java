@@ -63,5 +63,11 @@ public interface ArticleMapper extends BaseMapper<Article> {
      */
     UserBasicDto findUserBasic(Long userId);
 
+    /**
+     * 展示页信息展示
+     * @return
+     */
+    UserBasicDto findShowBasic();
+
 
 }

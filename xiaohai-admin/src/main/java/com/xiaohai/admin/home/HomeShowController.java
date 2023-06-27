@@ -80,4 +80,10 @@ public class HomeShowController {
         return Response.success("文章id查询评论成功！", commentService.findByArticleId(id));
     }
 
+    @Operation(summary = "站点信息展示")
+    @GetMapping("/findShowBasic")
+    public Response<UserBasicDto> findShowBasic() {
+        return Response.success("站点信息展示成功！", articleService.findShowBasic());
+    }
+
 }

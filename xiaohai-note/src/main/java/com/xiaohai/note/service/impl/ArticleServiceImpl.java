@@ -294,4 +294,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return list;
     }
 
+    @Override
+    public UserBasicDto findShowBasic() {
+        return baseMapper.findShowBasic();
+    }
+
 }

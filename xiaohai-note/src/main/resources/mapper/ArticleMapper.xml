@@ -160,6 +160,19 @@
         WHERE
             id =#{userId}
     </select>
+    <select id="findShowBasic" resultType="com.xiaohai.note.pojo.dto.UserBasicDto">
+        SELECT COALESCE(nick_name,username ) AS username,
+               avatar,
+               summary,
+               (select count(*) from b_article)as articleCount,
+               (select count(distinct category_id) from b_article)as categoryCount,
+               (select count(distinct  t.tag_id) from b_article a LEFT JOIN b_article_tag t on a.id=t.article_id)as tagsCount,
+               (SELECT COUNT(*) FROM b_comment c LEFT JOIN b_article a  on a.id=c.article_id)as messageCount
+        FROM
+            sys_user
+        WHERE
+            id = 1
+    </select>
 
 
 </mapper>

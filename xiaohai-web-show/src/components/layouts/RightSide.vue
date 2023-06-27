@@ -6,34 +6,29 @@
       :body-style="{ padding: '0px', height: '380px' }"
       style="position: relative"
     >
-      <!--      <div class="test">-->
       <img src="../../assets/image/1.jpg" class="image" />
-      <!--      </div>-->
       <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-        <el-avatar
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-          class="panThumb"
-        />
+        <el-avatar :src="image(showBasic.avatar)" class="panThumb" />
 
         <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
-          <h3>xiaohai</h3>
-          <div>用一点点代码改变生活</div>
+          <h3>{{ showBasic.username }}</h3>
+          <div>{{ showBasic.summary }}</div>
           <div style="display: inline-flex; vertical-align: top; justify-content: space-between">
             <el-space fill direction="vertical">
               <div class="text-sm text-color">文章</div>
-              <div class="text-xl font-number">7</div>
+              <div class="text-xl font-number">{{ showBasic.articleCount }}</div>
             </el-space>
             <el-space fill direction="vertical">
               <div class="text-sm text-color">分类</div>
-              <div class="text-xl font-number">4</div>
+              <div class="text-xl font-number">{{ showBasic.categoryCount }}</div>
             </el-space>
             <el-space fill direction="vertical" size="small">
               <div class="text-sm text-color">标签</div>
-              <div class="text-xl font-number">14</div>
+              <div class="text-xl font-number">{{ showBasic.tagsCount }}</div>
             </el-space>
             <el-space fill direction="vertical" size="small">
               <div class="text-sm text-color">评论</div>
-              <div class="text-xl font-number">2</div>
+              <div class="text-xl font-number">{{ showBasic.messageCount }}</div>
             </el-space>
           </div>
         </el-space>
@@ -110,13 +105,15 @@
 <script setup lang="ts">
 import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { listArticles, listTag } from '@/api/show'
+import { listArticles, listTag, findShowBasic } from '@/api/show'
 
 const loading = ref(true)
 // 标签列表
 const tags = ref([])
 // 展示热门文章列表
 const dataList = ref([])
+
+const showBasic = ref({})
 
 const data = reactive({
   queryParams: {
@@ -163,7 +160,11 @@ function getList() {
     loading.value = false
   })
 }
-
+function getShowBasic() {
+  findShowBasic().then((response) => {
+    showBasic.value = response.data.data
+  })
+}
 /**
  * 图片地址拼接
  * @param cover
@@ -181,6 +182,7 @@ function getArticle(id: any) {
 function cancelClick(path: any) {
   router.push(path)
 }
+getShowBasic()
 getTags()
 getList()
 </script>
