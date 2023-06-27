@@ -1,121 +1,110 @@
 <template>
   <div class="commentInput">
-    <el-input
-      v-model="content"
-      :rows="4"
-      type="textarea"
-      :placeholder="props.placeholderValue"
-    />
+    <el-input v-model="content" :rows="4" type="textarea" :placeholder="placeholderValue" />
     <div class="opertionBtn">
-        <el-popover
-          placement="bottom"
-          :width="200"
-          trigger="hover"
-        >
-          <template #reference>
-            <div class="btnleft">
-              <el-icon><Sunny /></el-icon>
-              <span>表情</span>
-            </div>
-          </template>
-          <div class="emojiDiv">
-            <el-tabs v-model="activeName" class="demo-tabs">
-              <el-tab-pane v-for="(item,index) in emojiList" :name="item.label">
-                <template #label>
-                  <span class="custom-tabs-label">
-                    <img :src="item.img" class="emojiImg">
-                  </span>
-                </template>
-                <div v-for="(v,k,i) in item.childrens" class="emojiBox">
-                  <img :src="v" class="emojiImg" @click="selectEmoji(k)">
-                </div>
-              </el-tab-pane>
-            </el-tabs>
+      <el-popover placement="bottom" :width="200" trigger="hover">
+        <template #reference>
+          <div class="btnleft">
+            <el-icon><Sunny /></el-icon>
+            <span>表情</span>
           </div>
-        </el-popover>
+        </template>
+        <div class="emojiDiv">
+          <el-tabs v-model="activeName" class="demo-tabs">
+            <el-tab-pane v-for="(item, index) in emojiList" :name="item.label">
+              <template #label>
+                <span class="custom-tabs-label">
+                  <img :src="item.img" class="emojiImg" />
+                </span>
+              </template>
+              <div v-for="(v, k, i) in item.childrens" class="emojiBox">
+                <img :src="v" class="emojiImg" @click="selectEmoji(k)" />
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </el-popover>
 
-      <el-button type="primary" @click="submit()">{{props.btnValue}}</el-button>
+      <el-button type="primary" @click="submit()">{{ btnValue }}</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import {emojiList} from '@/components/emoji/emoji'
-import {addComment} from "@/api/show";
+import { ref, toRefs } from 'vue'
+import { emojiList } from '@/components/emoji/emoji'
+
 const content = ref('')
 const activeName = ref('first')
 const props = defineProps({
-  placeholderValue:{
-    type:String,
-    default:'留下点什么吧...'
+  placeholderValue: {
+    type: String,
+    default: '留下点什么吧...'
   },
-  btnValue:{
-    type:String,
-    default:'发表评论'
+  btnValue: {
+    type: String,
+    default: '发表评论'
   },
-  parentId:{
-    type:String,
-    default:''
+  parentId: {
+    type: Number,
+    default: null
   },
-  articleId:{
-    type:String,
-    default:''
+  articleId: {
+    type: String,
+    default: ''
   }
 })
-const emit=defineEmits(['getlistComment'])
-
-function selectEmoji(val:any){
+const emit = defineEmits(['getlistComment', 'submitComments'])
+const { placeholderValue, btnValue, parentId, articleId } = toRefs(props)
+function selectEmoji(val: any) {
   content.value += val
 }
-function submit(){
-  let data:any={
-    parentId:props.parentId,
-    articleId:props.articleId,
-    content:content.value
+function submit() {
+  const data: any = {
+    parentId: parentId.value,
+    articleId: articleId.value,
+    content: content.value
   }
-  addComment(data).then(res=>{
-    content.value = ''
-    emit('getlistComment')
-  })
+  emit('submitComments', data)
+  content.value = ''
 }
 </script>
 
 <style scoped lang="scss">
-.commentInput{
+.commentInput {
   width: 100%;
 }
-.opertionBtn{
+.opertionBtn {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
   font-size: 14px;
   color: #909399;
-  span{
+  span {
     margin-left: 5px;
   }
 }
-.btnleft{
+.btnleft {
   display: flex;
   align-items: center;
 }
-.emojiImg{
+.emojiImg {
   width: 18px;
   height: 18px;
 }
-.emojiDiv{
-   :deep(.el-tabs__nav){
+.emojiDiv {
+  :deep(.el-tabs__nav) {
     width: 100%;
   }
-  :deep(.el-tabs__item){
+  :deep(.el-tabs__item) {
     width: 50%;
   }
-  :deep(.el-tabs__content){
+  :deep(.el-tabs__content) {
     height: 150px;
     overflow: auto;
   }
 }
-.emojiBox{
+.emojiBox {
   width: 24px;
   margin: 2px;
   height: 24px;
@@ -123,7 +112,7 @@ function submit(){
   line-height: 24px;
   display: inline-block;
 }
-.emojiBox:hover{
+.emojiBox:hover {
   background: #ddd;
 }
 </style>

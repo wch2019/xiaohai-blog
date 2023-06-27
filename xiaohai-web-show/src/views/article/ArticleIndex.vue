@@ -60,9 +60,12 @@
         </el-col>
       </el-row>
       <hr class="divider" />
-      <u-comment :config="config" @submit="submit" @like="like" relative-time></u-comment>
+      <!--      <u-comment :config="config" @submit="submit" @like="like" relative-time></u-comment>-->
       <comments
-        :articleId="route.params.id"
+        v-if="config.disabled"
+        :config="config"
+        @getlistComment="getlistComment"
+        @submitComments="submitComments"
       ></comments>
     </el-card>
   </el-col>
@@ -195,7 +198,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, toRefs, watch } from 'vue'
+import { onMounted, reactive, ref, toRefs, watch, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { CommentApi, ConfigApi, SubmitParamApi, UToast, createObjectURL, dayjs } from 'undraw-ui'
 import { ElMessage } from 'element-plus'
@@ -232,42 +235,47 @@ const data = reactive({
     content: ''
   }
 })
-
-const config = reactive<ConfigApi>({
-  user: {
-    id: 1,
-    username: 'jack',
-    avatar:
-      'https://static.juzicon.com/avatars/avatar-200602130320-HMR2.jpeg?x-oss-process=image/resize,w_100',
-    // 评论id数组 建议:存储方式用户uid和评论id组成关系,根据用户uid来获取对应点赞评论id,然后加入到数组中返回
-    likeIds: [1, 2, 3]
-  },
-  emoji,
-  comments: [],
-  total: 10
+const config = ref({
+  dataList: [],
+  disabled: false,
+  articleId: route.params.id
 })
+
+// const config = reactive<ConfigApi>({
+//   user: {
+//     id: 1,
+//     username: 'jack',
+//     avatar:
+//       'https://static.juzicon.com/avatars/avatar-200602130320-HMR2.jpeg?x-oss-process=image/resize,w_100',
+//     // 评论id数组 建议:存储方式用户uid和评论id组成关系,根据用户uid来获取对应点赞评论id,然后加入到数组中返回
+//     likeIds: [1, 2, 3]
+//   },
+//   emoji,
+//   comments: [],
+//   total: 10
+// })
 const temp_id = 100
 
-config.comments = [
-  {
-    id: '1',
-    parentId: null,
-    uid: '1',
-    address: '来自上海',
-    content:
-      '缘生缘灭，缘起缘落，我在看别人的故事，别人何尝不是在看我的故事?别人在演绎人生，我又何尝不是在这场戏里?谁的眼神沧桑了谁?我的眼神，只是沧桑了自己[喝酒]',
-    likes: 2,
-    contentImg: 'https://gitee.com/undraw/undraw-ui/raw/master/public/docs/normal.webp',
-    createTime: dayjs().subtract(10, 'minute').toString(),
-    user: {
-      username: '落🤍尘',
-      avatar:
-        'https://static.juzicon.com/avatars/avatar-200602130320-HMR2.jpeg?x-oss-process=image/resize,w_100',
-      level: 6,
-      homeLink: '/1'
-    }
-  }
-]
+// config.comments = [
+//   {
+//     id: '1',
+//     parentId: null,
+//     uid: '1',
+//     address: '来自上海',
+//     content:
+//       '缘生缘灭，缘起缘落，我在看别人的故事，别人何尝不是在看我的故事?别人在演绎人生，我又何尝不是在这场戏里?谁的眼神沧桑了谁?我的眼神，只是沧桑了自己[喝酒]',
+//     likes: 2,
+//     contentImg: 'https://gitee.com/undraw/undraw-ui/raw/master/public/docs/normal.webp',
+//     createTime: dayjs().subtract(10, 'minute').toString(),
+//     user: {
+//       username: '落🤍尘',
+//       avatar:
+//         'https://static.juzicon.com/avatars/avatar-200602130320-HMR2.jpeg?x-oss-process=image/resize,w_100',
+//       level: 6,
+//       homeLink: '/1'
+//     }
+//   }
+// ]
 
 const { queryParams, comment } = toRefs(data)
 
@@ -365,7 +373,27 @@ async function getCatalog() {
   }))
 }
 
-onMounted(async () => {
+function getlistComment() {
+  getComment(route.params.id).then((res) => {
+    const array = res.data.data.commentTrees
+    for (let i = 0; i < array.length; i++) {
+      ;(array[i] as any).replyInputShow = false
+    }
+    config.value.dataList = array
+    config.value.disabled = true
+  })
+}
+function submitComments(val: any) {
+  const data: any = {
+    parentId: val.parentId,
+    articleId: val.articleId,
+    content: val.content
+  }
+  addComment(data).then((res: any) => {
+    getlistComment()
+  })
+}
+onBeforeMount(async () => {
   // 监听$route对象上的参数属性变化
   watch(
     () => route.params.id,
@@ -378,6 +406,7 @@ onMounted(async () => {
   )
   await getCatalog()
 })
+getlistComment()
 </script>
 
 <style scoped>

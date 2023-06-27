@@ -3,12 +3,19 @@
     <h3 class="flex-center">评论</h3>
     <div class="publishTop">
       <div class="headProtrait">
-        <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <img
+          :src="
+            store.avatar
+              ? store.avatar
+              : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+          "
+        />
       </div>
       <div style="width: 100%">
         <comments-input
-          :articleId="props.articleId"
+          :articleId="articleId"
           @getlistComment="getlistComment"
+          @submitComments="submitComments"
         ></comments-input>
       </div>
     </div>
@@ -23,7 +30,7 @@
             <div>{{ item.username }}</div>
             <!--          <div>来自上海</div>-->
           </div>
-          <div class="content" >
+          <div class="content">
             <span v-html="parseEmojis(item.content)"></span>
           </div>
           <div class="listOperation">
@@ -40,9 +47,10 @@
             v-if="item.replyInputShow"
             :placeholderValue="placeholderValue"
             :btnValue="btnValue"
-            :articleId="props.articleId"
+            :articleId="articleId"
             :parentId="item.id"
             @getlistComment="getlistComment"
+            @submitComments="submitComments"
           ></comments-input>
         </div>
         <div v-for="(i, k) in item.commentTrees" :key="k" class="commentTrees">
@@ -72,9 +80,10 @@
               v-if="i.replyInputShow"
               :placeholderValue="placeholderValue"
               :btnValue="btnValue"
-              :articleId="props.articleId"
+              :articleId="articleId"
               :parentId="i.id"
               @getlistComment="getlistComment"
+              @submitComments="submitComments"
             ></comments-input>
           </div>
         </div>
@@ -84,98 +93,106 @@
 </template>
 
 <script setup lang="ts">
-import CommentsInput from "@/components/comments/commentsInput.vue";
-import {ref} from "vue";
-import {getComment} from "@/api/show";
-import {allEmoji} from '@/components/emoji/emoji'
+import { ref, toRefs, watch } from 'vue'
+import CommentsInput from '@/components/comments/commentsInput.vue'
+import { allEmoji } from '@/components/emoji/emoji'
+import useStore from '@/store'
+
+const store = useStore()
 const placeholderValue = ref('')
 const btnValue = ref('发布')
-const dataList = ref([])
 const props = defineProps({
-  articleId:{
-    type:Number,
-    default:0
+  config: {
+    type: Object,
+    default: {}
   }
 })
+const emit = defineEmits(['getlistComment', 'submitComments'])
+const { config } = toRefs(props)
+const { dataList, articleId } = toRefs(props.config)
+watch(
+  () => config.value,
+  () => {
+    dataList.value = config.value.dataList
+  },
+  { deep: true }
+)
 
-function replyClick(item:any){
+function getlistComment() {
+  emit('getlistComment')
+}
+function submitComments(val: any) {
+  emit('submitComments', val)
+}
+function replyClick(item: any) {
   item.replyInputShow = !item.replyInputShow
   placeholderValue.value = `回复${item.username}`
 }
-function replyChildClick(item:any){
+function replyChildClick(item: any) {
   item.replyInputShow = !item.replyInputShow
   placeholderValue.value = `回复${item.username}`
 }
-function getlistComment(){
-  getComment(props.articleId).then(res=>{
-    dataList.value = res.data.data
-    for (let i=0;i<dataList.value.length;i++){
-        (dataList.value[i] as any).replyInputShow = false
+function parseEmojis(text: any) {
+  const emojiMap: any = allEmoji()
+  // 使用正则表达式匹配表情符号，并替换为对应的图片标签
+  return text.replace(/\[[^\[\]]+\]/g, (match: any) => {
+    const emojiImg = emojiMap[match]
+    if (emojiImg) {
+      return `<img src="${emojiImg}" alt="${match}" style="width: 20px;"/>`
     }
+    return match // 如果未找到对应的表情图片，则保留原始文本
   })
 }
-function parseEmojis(text:any) {
-  let emojiMap:any = allEmoji()
-  // 使用正则表达式匹配表情符号，并替换为对应的图片标签
-  return text.replace(/\[[^\[\]]+\]/g, (match:any) => {
-    const emojiImg = emojiMap[match];
-    if (emojiImg) {
-      return `<img src="${emojiImg}" alt="${match}" style="width: 20px;"/>`;
-    }
-    return match; // 如果未找到对应的表情图片，则保留原始文本
-  });
-}
-getlistComment()
 </script>
 
 <style scoped lang="scss">
-.publishTop{
+.publishTop {
   display: flex;
   justify-content: space-between;
 }
-.headProtrait{
+.headProtrait {
   width: 40px;
   height: 40px;
   margin-right: 20px;
-  img{
+  img {
     width: 100%;
     border-radius: 50%;
   }
 }
-.dataList{
+.dataList {
   display: flex;
   justify-content: space-between;
 }
-.dataListRight{
+.dataListRight {
   width: 100%;
 }
-.title{
+.title {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 
-  div:first-child{
+  div:first-child {
     margin-right: 10px;
     color: #303133;
     font-weight: 500;
     font-size: 15px;
   }
-  div:nth-child(2){
+  div:nth-child(2) {
     color: rgb(147, 147, 147);
     font-size: 12px;
   }
 }
-.content{
+.content {
   font-size: 14px;
   line-height: 20px;
 }
-.listOperation{
+.listOperation {
   display: flex;
   margin: 10px 0;
   line-height: 22px;
   font-size: 14px;
   color: #909399;
-  div{
+  div {
     display: flex;
     align-items: center;
     margin-right: 10px;
@@ -187,33 +204,33 @@ getlistComment()
 .replyBtn {
   cursor: pointer;
 }
-.replyBtn:hover{
+.replyBtn:hover {
   color: rgb(30, 128, 255);
 }
-.commentTrees{
+.commentTrees {
   display: flex;
-  .childImg{
+  .childImg {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    img{
+    img {
       width: 100%;
       border-radius: 50%;
     }
   }
-  .titleChild{
+  .titleChild {
     margin-right: 10px;
     color: #303133;
     font-size: 12px;
-    span:nth-of-type(2){
+    span:nth-of-type(2) {
       font-weight: 500;
     }
   }
-  .content{
+  .content {
     font-size: 12px;
     line-height: 20px;
   }
-  .listOperation{
+  .listOperation {
     font-size: 12px;
   }
 }
