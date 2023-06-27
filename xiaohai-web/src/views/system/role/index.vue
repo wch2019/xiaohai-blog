@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="角色名称" prop="dictName">
         <el-input
           v-model="queryParams.name"
@@ -16,16 +16,16 @@
           v-model="queryParams.status"
           placeholder="状态"
           clearable
-          @clear="queryParams.status = null"
           size="small"
           style="width: 240px"
+          @clear="queryParams.status = null"
         >
           <el-option
             v-for="dict in $store.getters.dict.sys_normal_disable"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -73,17 +73,17 @@
     </el-row>
 
     <el-table v-loading="loading" border style="margin-top: 10px" :data="roleList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="角色编码" align="center" prop="code" :show-overflow-tooltip="true"/>
-      <el-table-column label="角色名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="角色描述" align="center" prop="remarks" :show-overflow-tooltip="true"/>
+      <el-table-column type="selection" width="55" :selectable="judgeSelect" align="center" />
+      <el-table-column label="角色编码" align="center" prop="code" :show-overflow-tooltip="true" />
+      <el-table-column label="角色名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="角色描述" align="center" prop="remarks" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180"/>
-      <el-table-column label="更新时间" align="center" prop="updatedTime" width="180"/>
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
+      <el-table-column label="更新时间" align="center" prop="updatedTime" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -94,14 +94,17 @@
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
-          <el-button
-            v-if="$store.getters.permission.includes('system:role:delete')"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-          >删除
-          </el-button>
+          <template v-if="scope.row.code !== 'admin' && scope.row.code !== 'user'">
+            <el-button
+              v-if="$store.getters.permission.includes('system:role:delete')"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
+
         </template>
       </el-table-column>
     </el-table>
@@ -114,7 +117,7 @@
       @pagination="getList"
     />
 
-    <RoleDialog ref="userDialog" @closeDialog="closeDialog"/>
+    <RoleDialog ref="userDialog" @closeDialog="closeDialog" />
   </div>
 
 </template>
@@ -183,6 +186,10 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
+    },
+    /** 多选框可选择的判断*/
+    judgeSelect(row) {
+      return row.code !== 'admin' && row.code !== 'user' // 返回true该行可选，返回false则不可选
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

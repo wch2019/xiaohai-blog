@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.system.dao.MenuMapper;
@@ -61,6 +63,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(rollbackFor = Exception.class)
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
+            Role role = baseMapper.selectById(id);
+            if (role.getCode().equals(Constants.ADMIN)) {
+                throw new ServiceException("admin角色不能删除");
+            }
+            if(role.getCode().equals(Constants.USER)){
+                throw new ServiceException("user角色不能删除");
+            }
             Long codeCount = userRoleMapper.selectCount(new QueryWrapper<UserRole>().eq("role_id", id));
             Assert.isTrue(codeCount == 0, "当前角色存在用户，无法删除");
             roleMenuService.delete(Math.toIntExact(id));
@@ -72,11 +81,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateData(RoleVo vo) {
+        Role old = baseMapper.selectById(vo.getId());
+        if (old.getCode().equals(Constants.ADMIN) && !vo.getCode().equals(Constants.ADMIN)) {
+            throw new ServiceException("admin角色不能修改编码");
+        }
+        if (old.getCode().equals(Constants.USER) && !vo.getCode().equals(Constants.USER)) {
+            throw new ServiceException("user角色不能修改编码");
+        }
         Long codeCount = baseMapper.selectCount(new QueryWrapper<Role>().eq("code", vo.getCode()).ne("id", vo.getId()));
         Assert.isTrue(codeCount == 0, "更新角色：" + vo.getCode() + "失败，角色已存在");
         Role role = new Role();
         BeanUtils.copyProperties(vo, role);
-        roleMenuService.rewriteRoleMenu(vo.getMenuIds(),role.getId());
+        roleMenuService.rewriteRoleMenu(vo.getMenuIds(), role.getId());
         return baseMapper.updateById(role);
     }
 

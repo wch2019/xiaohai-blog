@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -70,7 +71,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //当前登录用户
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         //判断角色是否是管理员
-        if (StpUtil.hasRole("admin")) {
+        if (StpUtil.hasRole(Constants.ADMIN)) {
             query.setUserRole(true);
         }
         IPage<CommentDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());

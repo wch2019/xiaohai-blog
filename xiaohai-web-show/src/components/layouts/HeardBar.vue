@@ -54,10 +54,10 @@
           </div>
           <div class="menus-item">
             <el-dropdown>
-              <el-avatar
+              <el-image
                 v-if="!store.avatar"
                 size="default"
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                src="../../src/assets/icons/svg/avatar.svg"
               />
               <el-avatar size="default" :src="store.avatar" v-else />
 
@@ -66,21 +66,26 @@
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
-                  <div style="display: flex;flex-direction: column; ">
-                    <div style="display: flex;align-items: center; margin-left: 10px">
-                    <el-avatar  size="default" :src="store.avatar" />
-                      <div style="display: flex;flex-direction: column;margin-left: 20px;align-items: center;">
+                  <div style="display: flex; flex-direction: column">
+                    <div style="display: flex; align-items: center; margin-left: 10px">
+                      <el-avatar size="default" :src="store.avatar" />
+                      <div
+                        style="
+                          display: flex;
+                          flex-direction: column;
+                          margin-left: 20px;
+                          align-items: center;
+                        "
+                      >
                         <h3>{{ store.name }}</h3>
                         <div>{{ store.summary }}</div>
                       </div>
-
                     </div>
-                    <div style="display: flex;">
-                    <el-dropdown-item divided  @click="manageClick">后台管理</el-dropdown-item>
-                    <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
+                    <div style="display: flex">
+                      <el-dropdown-item divided @click="manageClick">后台管理</el-dropdown-item>
+                      <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
                     </div>
                   </div>
-
                 </el-dropdown-menu>
               </template>
             </el-dropdown>

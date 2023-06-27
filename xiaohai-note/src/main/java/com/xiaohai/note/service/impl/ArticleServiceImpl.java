@@ -143,7 +143,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
         Integer userId=null;
         //判断角色是否是管理员
-        if(!StpUtil.hasRole("admin")){
+        if(!StpUtil.hasRole(Constants.ADMIN)){
             //不是管理员只查询当前用户数据
             userId=Integer.valueOf((String)StpUtil.getLoginId());
         }
@@ -292,6 +292,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             list.add(articleSearchDto);
         }
         return list;
+    }
+
+    @Override
+    public UserBasicDto findShowBasic() {
+        return baseMapper.findShowBasic();
     }
 
 }

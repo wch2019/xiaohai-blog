@@ -82,8 +82,8 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" border style="margin-top: 10px" :data="roleList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" border style="margin-top: 10px" :data="roleList"  @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" :selectable="judgeSelect"  align="center" />
       <el-table-column label="头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
           <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)" />
@@ -127,14 +127,16 @@
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
-          <el-button
-            v-if="$store.getters.permission.includes('system:user:delete')"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-          >删除
-          </el-button>
+          <template v-if="scope.row.id!==1">
+            <el-button
+              v-if="$store.getters.permission.includes('system:user:delete')"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -227,6 +229,10 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
+    },
+    /** 多选框可选择的判断*/
+    judgeSelect(row) {
+      return row.id !== 1 // 返回true该行可选，返回false则不可选
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

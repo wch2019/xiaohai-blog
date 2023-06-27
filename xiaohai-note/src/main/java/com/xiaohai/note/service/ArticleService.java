@@ -2,10 +2,7 @@ package com.xiaohai.note.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.note.pojo.dto.ArticleDto;
-import com.xiaohai.note.pojo.dto.ArticleDtoAll;
-import com.xiaohai.note.pojo.dto.ArticleSearchDto;
-import com.xiaohai.note.pojo.dto.ArticleShowDto;
+import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
@@ -117,4 +114,10 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     List<ArticleSearchDto> searchArticle(String keywords);
+
+    /**
+     * 展示页信息展示
+     * @return
+     */
+    UserBasicDto findShowBasic();
 }
