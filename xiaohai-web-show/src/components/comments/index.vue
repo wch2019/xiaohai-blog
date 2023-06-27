@@ -3,13 +3,7 @@
     <h3 class="flex-center">评论</h3>
     <div class="publishTop">
       <div class="headProtrait">
-        <img
-          :src="
-            store.avatar
-              ? store.avatar
-              : 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
-          "
-        />
+        <img :src="store.avatar ? store.avatar : '../../src/assets/icons/svg/avatar.svg'" />
       </div>
       <div style="width: 100%">
         <comments-input

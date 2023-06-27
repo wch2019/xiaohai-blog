@@ -31,8 +31,8 @@
           <span class="text-sm font-number text-color">
             <svg-icon icon-class="eye-light" style="font-size: 15px" /> {{ articleOne.pageView }}
           </span>
-          <span class="text-sm font-number text-color"
-            ><svg-icon icon-class="message" style="font-size: 15px" /> 30
+          <span class="text-sm font-number text-color">
+            <svg-icon icon-class="message" style="font-size: 15px" /> {{ commentCount }}
           </span>
           <span class="text-sm font-number">
             <svg-icon icon-class="give-light" style="font-size: 15px" /> 20
@@ -92,11 +92,8 @@
     >
       <span style="display: flex; align-items: center">
         <el-space size="default">
-          <el-avatar
-            size="small"
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-          />
-          <span class="text-sm">xiaohai</span>
+          <el-avatar size="small" :src="image(userBasic.avatar)" />
+          <span class="text-sm">{{ userBasic.username }}</span>
         </el-space>
       </span>
       <el-space alignment="center" size="small">
@@ -106,7 +103,9 @@
         <span class="text-xs font-number text-color">
           <svg-icon icon-class="eye-light" /> {{ articleOne.pageView }}
         </span>
-        <span class="text-xs font-number text-color"><svg-icon icon-class="message" /> 30</span>
+        <span class="text-xs font-number text-color"
+          ><svg-icon icon-class="message" /> {{ commentCount }}</span
+        >
         <span class="text-xs font-number"><svg-icon icon-class="give-light" /> 20</span>
       </el-space>
     </span>
@@ -138,7 +137,12 @@
       <svg-icon icon-class="message"></svg-icon>
       <span>评论</span>
     </h3>
-    <el-empty description="暂无评论" />
+    <comments
+      v-if="config.disabled"
+      :config="config"
+      @getlistComment="getlistComment"
+      @submitComments="submitComments"
+    ></comments>
   </el-card>
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
@@ -221,6 +225,8 @@ const tags = ref([])
 const dataList = ref([])
 // 评论列表
 const commentList = ref([])
+
+const commentCount = ref([])
 
 const data = reactive({
   queryParams: {
@@ -375,6 +381,7 @@ async function getCatalog() {
 
 function getlistComment() {
   getComment(route.params.id).then((res) => {
+    commentCount.value = res.data.data.commentCount
     const array = res.data.data.commentTrees
     for (let i = 0; i < array.length; i++) {
       ;(array[i] as any).replyInputShow = false
