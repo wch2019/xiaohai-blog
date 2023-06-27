@@ -98,8 +98,8 @@ export default {
     return {
       imgSrc: require('@/assets/login/3.jpg'),
       loginForm: {
-        username: 'admin',
-        password: '123456',
+        username: '',
+        password: '',
         rememberMe: false
       },
       loginRules: {
