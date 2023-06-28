@@ -21,8 +21,8 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  // history: createWebHistory(), // 去掉地址栏里的#
+  // history: createWebHashHistory(),
+  history: createWebHistory(), // 去掉地址栏里的#
   routes
 })
 
