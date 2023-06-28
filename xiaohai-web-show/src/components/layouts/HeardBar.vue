@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card" shadow="hover" body-style="padding:10px">
-    <el-row :gutter="20">
+    <el-row :gutter="20" style="align-items: center">
       <el-col class="hidden-md-and-down" :lg="3" :xl="4"></el-col>
       <!--小于1200尺寸隐藏-->
       <el-col class="hidden-md-and-down" :md="16" :lg="14" :xl="11">
