@@ -45,8 +45,4 @@ public class CommentQuery implements Serializable {
 
     @Parameter(description = "评论类型 1:我的评论,2:回复我的")
     private Integer discussant;
-
-    @Parameter(description = "用户类型 管理员是true，其他是false")
-    @Hidden
-    private boolean userRole=false;
 }
