@@ -87,7 +87,17 @@
             @click="handleAdd(scope.row)"
           >回复
           </el-button>
-          <template v-if="$store.getters.name.includes(scope.row.username)">
+          <template v-if="$store.getters.name.includes(scope.row.username)&&$store.getters.roles.includes('user')">
+            <el-button
+              v-if="$store.getters.permission.includes('note:comment:delete')"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
+          <template v-if="$store.getters.roles.includes('admin')">
             <el-button
               v-if="$store.getters.permission.includes('note:comment:delete')"
               size="mini"
