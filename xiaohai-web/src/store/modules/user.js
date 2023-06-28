@@ -65,12 +65,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo().then(response => {
         const { data } = response
-        console.log(data,'data')
+        console.log(data, 'data')
         if (!data) {
           return reject('验证失败，请重新登录。')
         }
-        const { nickName, avatar, id } = data.info
-        commit('SET_NAME', nickName)
+        const { nickName, avatar, id, username } = data.info
+        commit('SET_NAME', nickName || username)
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API_FILE + avatar)
         commit('SET_MENU', data.menu)
         commit('SET_PERMISSION', data.permission)
