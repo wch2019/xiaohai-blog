@@ -5,21 +5,19 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import {resetRouter} from '@/router'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login', '/register'] // 无重定向白名单
-
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
-
   // set page title
   document.title = getPageTitle(to.meta.title)
 
   // 确定用户是否已登录
   const hasToken = getToken()
-  console.log(store,'store')
   if (hasToken) {
     if (to.path === '/login') {
       // 如果已登录，请重定向到主页
@@ -33,6 +31,7 @@ router.beforeEach(async(to, from, next) => {
         // 获取字典信息
         await store.dispatch('dict/setDictAll')
         const accessRoutes = await store.dispatch('permission/generateRoutes')
+        resetRouter()
         router.addRoutes(accessRoutes) // 动态添加可访问路由表
         next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
       } catch (error) {

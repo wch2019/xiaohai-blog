@@ -172,7 +172,6 @@ export default {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.show = this.$route.query.show
-            console.log(this.show)
             if (this.show) {
               window.open(process.env.VUE_APP_BLOG_WEB_API + this.show, '_self')
             } else {
