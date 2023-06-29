@@ -71,8 +71,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //当前登录用户
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         //判断角色是否是管理员
-        if (StpUtil.hasRole(Constants.ADMIN)) {
-            query.setUserRole(true);
+        if (!StpUtil.hasRole(Constants.ADMIN)&&query.getDiscussant()==null) {
+            query.setDiscussant(1);
         }
         IPage<CommentDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<CommentDto> iPage = baseMapper.findCommentListByPage(wherePage, query, userId);

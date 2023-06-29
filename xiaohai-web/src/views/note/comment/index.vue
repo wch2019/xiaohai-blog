@@ -58,26 +58,25 @@
         </el-button>
       </el-col>
     </el-row>
-
     <el-table v-loading="loading" border style="margin-top: 10px" :data="commentList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="评论人头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
-          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)"/>
+          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)" />
           <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="评论人" align="center" prop="username" :show-overflow-tooltip="true"/>
+      <el-table-column label="评论人" align="center" prop="username" :show-overflow-tooltip="true" />
       <el-table-column label="回复人头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
-          <el-avatar v-if="scope.row.replyAvatar" shape="square" :src="image(scope.row.replyAvatar)"/>
+          <el-avatar v-if="scope.row.replyAvatar" shape="square" :src="image(scope.row.replyAvatar)" />
           <el-avatar v-else shape="square"> {{ scope.row.replyUsername }}</el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true"/>
-      <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true"/>
-      <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true"/>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180"/>
+      <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true" />
+      <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true" />
+      <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true" />
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -88,14 +87,26 @@
             @click="handleAdd(scope.row)"
           >回复
           </el-button>
-          <el-button
-            v-if="$store.getters.permission.includes('note:comment:delete')"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-          >删除
-          </el-button>
+          <template v-if="$store.getters.name.includes(scope.row.username)&&$store.getters.roles.includes('user')">
+            <el-button
+              v-if="$store.getters.permission.includes('note:comment:delete')"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
+          <template v-if="$store.getters.roles.includes('admin')">
+            <el-button
+              v-if="$store.getters.permission.includes('note:comment:delete')"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -107,7 +118,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <CommentDialog ref="commentDialog" @closeDialog="closeDialog"/>
+    <CommentDialog ref="commentDialog" @closeDialog="closeDialog" />
   </div>
 </template>
 

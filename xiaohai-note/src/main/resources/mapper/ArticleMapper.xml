@@ -148,7 +148,7 @@
                  a.created_time DESC
     </select>
     <select id="findUserBasic" resultType="com.xiaohai.note.pojo.dto.UserBasicDto">
-        SELECT COALESCE(nick_name,username ) AS username,
+        SELECT CASE WHEN nick_name IS NULL || nick_name = '' THEN username ELSE nick_name END AS username,
                avatar,
                summary,
                (select count(*) from b_article a where  a.user_id=#{userId})as articleCount,
@@ -161,7 +161,7 @@
             id =#{userId}
     </select>
     <select id="findShowBasic" resultType="com.xiaohai.note.pojo.dto.UserBasicDto">
-        SELECT COALESCE(nick_name,username ) AS username,
+        SELECT CASE WHEN nick_name IS NULL || nick_name = '' THEN username ELSE nick_name END AS username,
                avatar,
                summary,
                (select count(*) from b_article)as articleCount,

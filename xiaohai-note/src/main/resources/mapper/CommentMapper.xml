@@ -44,7 +44,7 @@
                and u.username  like CONCAT(#{query.username},'%') or u.nick_name like CONCAT(#{query.username},'%')
             </if>
             <!--1:我的评论-->
-            <if test="(query.discussant != null and query.discussant == 1) or query.userRole == false">
+            <if test="(query.discussant != null and query.discussant == 1)">
                 and c.user_id = #{userId}
             </if>
             <!--2:回复我的-->
