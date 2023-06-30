@@ -208,6 +208,7 @@ export default {
           this.form = response.data
           this.form.cover = process.env.VUE_APP_BASE_API_FILE + this.form.cover
           this.title = this.form.title
+          this.form.text = this.form.text.replaceAll('../image', process.env.VUE_APP_BASE_API_FILE + '/image')
         })
       }
     },
