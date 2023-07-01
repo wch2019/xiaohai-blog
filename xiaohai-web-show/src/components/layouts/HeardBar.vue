@@ -145,11 +145,11 @@
     :with-header="false"
   >
     <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 10px">
-      <el-avatar
+      <el-image
         v-if="!store.avatar"
         @click="adminClick"
-        :size="100"
-        src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+        style="width: 100px; height: 100px"
+        src="../../src/assets/icons/svg/avatar.svg"
       />
       <el-avatar @click="manageClick" v-else :size="100" :src="store.avatar" />
       <h3>{{ store.name }}</h3>
