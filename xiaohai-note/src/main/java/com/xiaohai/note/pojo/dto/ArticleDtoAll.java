@@ -66,6 +66,9 @@ public class ArticleDtoAll implements Serializable {
     @Schema(description = "浏览量")
     private Integer pageView;
 
+    @Schema(description = "是否点赞(0未点赞，1已点赞)")
+    private Integer clickLike;
+
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
 

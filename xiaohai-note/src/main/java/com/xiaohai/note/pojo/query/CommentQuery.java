@@ -40,6 +40,7 @@ public class CommentQuery implements Serializable {
 
     @Parameter(description = "评论内容")
     private String content;
+
     @Parameter(description = "用户名")
     private String username;
 

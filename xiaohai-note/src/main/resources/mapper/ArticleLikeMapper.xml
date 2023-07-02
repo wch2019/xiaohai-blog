@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaohai.note.dao.ArticleLikeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xiaohai.note.pojo.entity.ArticleLike">
+        <id column="id" property="id" />
+        <result column="article_id" property="articleId" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, article_id, user_id
+    </sql>
+    <select id="selectArticleLikePage" resultType="com.xiaohai.note.pojo.dto.ArticleLikeDto">
+        SELECT
+        l.id,
+        a.id as articleId,
+        a.cover,
+        a.title,
+        a.category_id,
+        (select count(*) from b_article_like where article_id = a.id ) as likeCount,
+        a.page_view as pageView,
+        a.created_time as createdTime,
+        GROUP_CONCAT( DISTINCT t.tag_id ) as tags
+        FROM
+        b_article_like l
+        LEFT JOIN  b_article a ON l.article_id=a.id
+        LEFT JOIN b_article_tag t ON a.id = t.article_id
+        <where>
+            <if test="param.title != null and param.title != ''">
+                a.title like concat('%',#{param.title},'%')
+            </if>
+            <if test="param.categoryId != null and param.categoryId != ''">
+                and a.category_id=#{param.categoryId}
+            </if>
+            <if test="param.tagId != null and param.tagId != ''">
+                and a.id in (SELECT article_id FROM b_article_tag where tag_id=#{param.tagId})
+            </if>
+            <if test="param.userId != null and param.userId != ''">
+                and l.user_id=#{param.userId}
+            </if>
+        </where>
+        GROUP BY
+        l.id
+        ORDER BY
+        a.is_top DESC,
+        a.top_time DESC,
+        a.created_time DESC
+    </select>
+
+</mapper>
