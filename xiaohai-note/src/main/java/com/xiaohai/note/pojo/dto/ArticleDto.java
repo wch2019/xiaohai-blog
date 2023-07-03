@@ -25,6 +25,7 @@ public class ArticleDto implements Serializable {
 
     @Schema(description = "id")
     private Integer id;
+
     @Schema(description = "封面")
     private String cover;
 

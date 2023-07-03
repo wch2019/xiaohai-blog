@@ -4,10 +4,7 @@ import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.*;
-import com.xiaohai.note.service.ArticleService;
-import com.xiaohai.note.service.CategoryService;
-import com.xiaohai.note.service.CommentService;
-import com.xiaohai.note.service.TagsService;
+import com.xiaohai.note.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +30,7 @@ public class HomeShowController {
     private final CategoryService categoryService;
     private final ArticleService articleService;
     private final CommentService commentService;
+    private final FriendLinkService friendLinkService;
 
     @Operation(summary = "标签")
     @GetMapping("/tags")
@@ -84,6 +82,11 @@ public class HomeShowController {
     @GetMapping("/findShowBasic")
     public Response<UserBasicDto> findShowBasic() {
         return Response.success("站点信息展示成功！", articleService.findShowBasic());
+    }
+    @Operation(summary = "友链信息展示")
+    @GetMapping("/friendLink")
+    public Response<List<FriendLinkDto>> friendLink() {
+        return Response.success("友链信息展示成功！", friendLinkService.findList());
     }
 
 }

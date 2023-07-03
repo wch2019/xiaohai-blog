@@ -1,6 +1,7 @@
 package com.xiaohai.note.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -34,14 +35,16 @@ public class CommentController {
 
     @Operation(summary = "新增评论", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:comment:add")
+    @Log(title = "新增评论")
     @PostMapping()
     public Response<Integer> add(@Validated @RequestBody CommentVo vo) {
         return Response.success("评论成功！", commentService.add(vo));
     }
 
     @Operation(summary = "删除评论", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @DeleteMapping("{ids}")
     @SaCheckPermission("note:comment:delete")
+    @Log(title = "删除评论")
+    @DeleteMapping("{ids}")
     public Response<Integer> delete(@PathVariable Long[] ids) {
         return Response.success("删除评论成功！", commentService.delete(ids));
     }

@@ -133,10 +133,6 @@
       </div>
     </el-card>
     <hr class="divider" />
-    <h3 class="flex-center">
-      <svg-icon icon-class="message"></svg-icon>
-      <span>评论</span>
-    </h3>
     <comments
       v-if="config.disabled"
       :config="config"

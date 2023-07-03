@@ -61,6 +61,9 @@ public class ArticleShowDto {
     @Schema(description = "点赞数")
     private Integer likeCount;
 
+    @Schema(description = "是否点赞(0未点赞，1已点赞)")
+    private Integer clickLike;
+
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
 }

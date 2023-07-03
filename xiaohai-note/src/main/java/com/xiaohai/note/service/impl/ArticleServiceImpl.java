@@ -16,12 +16,10 @@ import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.ContributionUtils;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.PageUtils;
-import com.xiaohai.note.dao.ArticleMapper;
-import com.xiaohai.note.dao.ArticleTagMapper;
-import com.xiaohai.note.dao.CategoryMapper;
-import com.xiaohai.note.dao.TagsMapper;
+import com.xiaohai.note.dao.*;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
+import com.xiaohai.note.pojo.entity.ArticleLike;
 import com.xiaohai.note.pojo.entity.Category;
 import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.query.ArticleQuery;
@@ -64,6 +62,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final CategoryMapper categoryMapper;
 
     private final TagsMapper tagsMapper;
+
+    private final ArticleLikeMapper articleLikeMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -127,6 +127,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         BeanUtils.copyProperties(article, articleDtoAll);
         articleDtoAll.setCategoryName(categoryMapper.selectById(article.getCategoryId()).getName());
         articleDtoAll.setTags(articleTagMapper.searchAllByArticleId(id));
+        //获取登录用户是否点赞
+        if(StpUtil.isLogin()) {
+            long count = articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>()
+                    .eq("user_id", StpUtil.getLoginId())
+                    .eq("article_id", articleDtoAll.getId()));
+            if (count == 1) {
+                articleDtoAll.setClickLike(1);
+            } else {
+                articleDtoAll.setClickLike(0);
+            }
+        }
         //用户详情
         articleDtoAll.setUserBasic(baseMapper.findUserBasic(Long.valueOf(article.getUserId())));
         //更新浏览量
@@ -236,6 +247,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    @Transactional
     public ReturnPageData<ArticleShowDto> findShowListByPage(Integer type,Long id) {
         IPage<ArticleShowDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         //1:最新文章,2:最热文章,3:原创文章,4:转载文章,5:标签id,6:分类id
@@ -256,7 +268,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             category.setClick(categoryMapper.selectById(Math.toIntExact(id)).getClick()+1);
             categoryMapper.updateById(category);
         }
-
+        // 登录用户获取是否点赞
+        if(StpUtil.isLogin()){
+            for (ArticleShowDto showDto : iPage.getRecords()) {
+                long count=articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>().eq("user_id",StpUtil.getLoginId()).eq("article_id",showDto.getId()));
+                if(count==1){
+                    showDto.setClickLike(1);
+                }else {
+                    showDto.setClickLike(0);
+                }
+            }
+        }
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
     }
 
