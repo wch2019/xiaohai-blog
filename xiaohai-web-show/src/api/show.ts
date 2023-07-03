@@ -78,3 +78,10 @@ export const articleLike = (data: any) => {
     data
   })
 }
+// 友情链接
+export const friendLink = () => {
+  return request({
+    url: `${api}/friendLink`,
+    method: 'get'
+  })
+}

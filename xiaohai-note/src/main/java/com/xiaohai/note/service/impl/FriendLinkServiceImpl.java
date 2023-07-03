@@ -39,10 +39,11 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
         if(!StpUtil.hasRole(Constants.ADMIN)){
             vo.setSort(0);
             vo.setReason("");
-            vo.setStatus(0);
+            vo.setStatus("0");
         }
         FriendLink friendLink=new FriendLink();
         BeanUtils.copyProperties(vo,friendLink);
+        friendLink.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
         return baseMapper.insert(friendLink);
     }
 
@@ -78,6 +79,10 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
         FriendLink friendLink=new FriendLink();
         BeanUtils.copyProperties(query,friendLink);
         IPage<FriendLink> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
+        //不是管理员查询用户自己的
+        if(!StpUtil.hasRole(Constants.ADMIN)){
+            friendLink.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
+        }
         IPage<FriendLink> iPage = baseMapper.selectPage(wherePage,Wrappers.query(friendLink));
         List<FriendLinkDto> list=new ArrayList<>();
         for(FriendLink friendLinks:iPage.getRecords()){

@@ -110,8 +110,8 @@
         </template>
       </el-table-column>
       <el-table-column label="点赞量" align="center" prop="likeCount">
-        <template slot-scope="danger">
-          <el-tag type="info"> {{ scope.row.likeCount }}</el-tag>
+        <template slot-scope="scope">
+          <el-tag type="danger"> {{ scope.row.likeCount }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="写作时间" align="center" prop="createdTime" />

@@ -127,6 +127,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         BeanUtils.copyProperties(article, articleDtoAll);
         articleDtoAll.setCategoryName(categoryMapper.selectById(article.getCategoryId()).getName());
         articleDtoAll.setTags(articleTagMapper.searchAllByArticleId(id));
+        //当前文章点赞数
+        articleDtoAll.setLikeCount(articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>().eq("article_id", articleDtoAll.getId())));
         //获取登录用户是否点赞
         if(StpUtil.isLogin()) {
             long count = articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>()

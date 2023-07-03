@@ -31,6 +31,9 @@ public class FriendLinkDto implements Serializable {
     @Schema(description = "网站名称")
     private String name;
 
+    @Schema(description = "站长邮箱")
+    private String email;
+
     @Schema(description = "网站地址")
     private String url;
 
@@ -43,6 +46,6 @@ public class FriendLinkDto implements Serializable {
     @Schema(description = "下架原因")
     private String reason;
 
-    @Schema(description = "审核状态（0-待审核,1-通过）")
-    private Integer status;
+    @Schema(description = "审核状态（0-待审核,1-通过,2-未通过）")
+    private String status;
 }

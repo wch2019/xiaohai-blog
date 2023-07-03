@@ -18,13 +18,12 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.*;
 
 /**
-*
-* 用户文章点赞Controller
-*
-* @author xiaohai
-* @since 2023-07-01
-*/
-@Tag(name = "用户文章点赞",description = "用户文章点赞")
+ * 用户文章点赞Controller
+ *
+ * @author xiaohai
+ * @since 2023-07-01
+ */
+@Tag(name = "用户文章点赞", description = "用户文章点赞")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/note/article-like")
@@ -33,20 +32,20 @@ public class ArticleLikeController {
     private final ArticleLikeService articleLikeService;
 
 
-    @Operation(summary = "新增、删除用户文章点赞",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "新增、删除用户文章点赞", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:like:add")
     @Log(title = "新增、删除文章点赞")
     @PostMapping()
-    public Response<Integer> add(@RequestBody ArticleLikeVo vo){
-        return  Response.success("新增用户文章点赞成功！", articleLikeService.add(vo));
+    public Response<Integer> add(@RequestBody ArticleLikeVo vo) {
+        return Response.success("新增用户文章点赞成功！", articleLikeService.add(vo));
     }
 
-    @Operation(summary = "删除用户文章点赞",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "删除用户文章点赞", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:like:delete")
     @Log(title = "删除文章点赞")
     @DeleteMapping("{ids}")
-    public Response<Integer> delete(@PathVariable Long[] ids){
-        return  Response.success("删除用户文章点赞成功！",articleLikeService.delete(ids));
+    public Response<Integer> delete(@PathVariable Long[] ids) {
+        return Response.success("删除用户文章点赞成功！", articleLikeService.delete(ids));
     }
 
 //    @Operation(summary = "更新用户文章点赞",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -62,13 +61,13 @@ public class ArticleLikeController {
 //        return  Response.success("id查询用户文章点赞成功！",articleLikeService.findById(id));
 //    }
 
-    @Operation(summary = "查询用户文章点赞列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "查询用户文章点赞列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
     @SaCheckPermission("note:like:list")
     @GetMapping()
-    public Response<ReturnPageData<ArticleLikeDto>> findListByPage(@ParameterObject ArticleLikeQuery query){
-        return Response.success("查询用户文章点赞列表成功！",articleLikeService.findListByPage(query));
+    public Response<ReturnPageData<ArticleLikeDto>> findListByPage(@ParameterObject ArticleLikeQuery query) {
+        return Response.success("查询用户文章点赞列表成功！", articleLikeService.findListByPage(query));
     }
 
-    }
+}

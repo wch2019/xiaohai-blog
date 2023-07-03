@@ -5,19 +5,21 @@
       <el-form-item label="标签名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入标签名称" />
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
-        <el-input-number v-model="form.sort" controls-position="right" :min="0" />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-radio-group v-model="form.status">
-          <el-radio
-            v-for="dict in $store.getters.dict.sys_normal_disable"
-            :key="dict.dictValue"
-            :label="dict.dictValue"
-          >{{ dict.dictLabel }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
+      <template v-if="$store.getters.roles.includes('admin')">
+        <el-form-item label="排序" prop="sort">
+          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio
+              v-for="dict in $store.getters.dict.sys_normal_disable"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{ dict.dictLabel }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </template>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm">确 定</el-button>

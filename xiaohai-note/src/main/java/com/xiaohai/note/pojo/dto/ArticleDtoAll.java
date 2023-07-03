@@ -66,6 +66,9 @@ public class ArticleDtoAll implements Serializable {
     @Schema(description = "浏览量")
     private Integer pageView;
 
+    @Schema(description = "点赞数")
+    private long likeCount;
+
     @Schema(description = "是否点赞(0未点赞，1已点赞)")
     private Integer clickLike;
 

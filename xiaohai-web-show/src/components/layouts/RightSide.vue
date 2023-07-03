@@ -94,8 +94,8 @@
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="link"></svg-icon> 友链</h2>
       </template>
       <el-space wrap size="small">
-        <el-link v-for="o in 10" :key="o" href="https://element-plus.org" target="_blank"
-          >这是连接啊</el-link
+        <el-link v-for="link in friendLinkList" :key="link" :href="link.url" target="_blank"
+          >{{ link.name }}</el-link
         >
       </el-space>
     </el-card>
@@ -105,15 +105,17 @@
 <script setup lang="ts">
 import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { listArticles, listTag, findShowBasic } from '@/api/show'
+import {listArticles, listTag, findShowBasic, friendLink} from '@/api/show'
 
 const loading = ref(true)
 // 标签列表
 const tags = ref([])
 // 展示热门文章列表
 const dataList = ref([])
-
+// 网站信息
 const showBasic = ref({})
+// 友情链接
+const friendLinkList = ref({})
 
 const data = reactive({
   queryParams: {
@@ -160,9 +162,16 @@ function getList() {
     loading.value = false
   })
 }
+// 网站信息
 function getShowBasic() {
   findShowBasic().then((response) => {
     showBasic.value = response.data.data
+  })
+}
+// 友情链接
+function getFriendLink() {
+  friendLink().then((response) => {
+    friendLinkList.value = response.data.data
   })
 }
 /**
@@ -183,6 +192,7 @@ function cancelClick(path: any) {
   router.push(path)
 }
 getShowBasic()
+getFriendLink()
 getTags()
 getList()
 </script>
