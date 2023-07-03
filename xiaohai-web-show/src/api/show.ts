@@ -71,3 +71,10 @@ export const findShowBasic = () => {
     method: 'get'
   })
 }
+export const articleLike = (data: any) => {
+  return request({
+    url: `${comment}/article-like`,
+    method: 'post',
+    data
+  })
+}

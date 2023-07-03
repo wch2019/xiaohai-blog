@@ -97,10 +97,16 @@
                   <svg-icon icon-class="eye-light" style="font-size: 15px" /> {{ article.pageView }}
                 </span>
                 <span class="text-xs font-number text-color"
-                  ><svg-icon icon-class="message" style="font-size: 15px" /> {{ article.commentCount }}</span
+                  ><svg-icon icon-class="message" style="font-size: 15px" />
+                  {{ article.commentCount }}</span
                 >
-                <span class="text-xs font-number text-color"
-                  ><svg-icon icon-class="give-light" style="font-size: 15px" /> 20</span
+                <span class="text-xs font-number text-color" @click="clickLike(article)"
+                  ><svg-icon
+                    icon-class="give-light"
+                    style="font-size: 15px; cursor: pointer"
+                    :style="{ color: article.clickLike == 1 ? 'red' : '' }"
+                  />
+                  {{ article.likeCount }}</span
                 >
               </el-space>
             </span>
@@ -192,7 +198,7 @@
 import { ref, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
-import { listTag, listArticles } from '@/api/show'
+import { listTag, listArticles, articleLike } from '@/api/show'
 
 const loading = ref(true)
 // 展示文章列表
@@ -223,6 +229,7 @@ const { queryParams, form, rules } = toRefs(data)
 
 /** 查询展示文章列表 */
 function getList(type: any) {
+  console.log(type, 'type')
   queryParams.value.type = type
   queryParams.value.pageNum = 1
   queryParams.value.pageSize = 10
@@ -235,6 +242,28 @@ function getList(type: any) {
       loadMores.value = false
     }
     loading.value = false
+  })
+}
+function clickLike(val: any) {
+  const params: any = {
+    articleId: val.id,
+    clickLike: val.clickLike == null || val.clickLike === 0 ? 1 : 0
+  }
+  articleLike(params).then((res: any) => {
+    if (res.data.code === 200) {
+      for (let i = 0; i < dataList.value.length; i++) {
+        if (dataList.value[i].id === val.id) {
+          dataList.value[i].clickLike = dataList.value[i].clickLike === 1 ? 0 : 1
+          if (dataList.value[i].clickLike === 1) {
+            // 点赞
+            dataList.value[i].likeCount += 1
+          } else {
+            // 取消点赞
+            dataList.value[i].likeCount -= 1
+          }
+        }
+      }
+    }
   })
 }
 
@@ -250,7 +279,6 @@ function getCarouselList() {
     carouselList.value = response.data.data.records
   })
 }
-
 
 const router = useRouter()
 function getArticle(id: any) {
