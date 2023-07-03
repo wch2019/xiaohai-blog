@@ -102,9 +102,9 @@
                 >
                 <span class="text-xs font-number text-color" @click="clickLike(article)"
                   ><svg-icon
-                    icon-class="give-light"
+                    :icon-class="article.clickLike == 1 ? 'give-dark' : 'give-light'"
                     style="font-size: 15px; cursor: pointer"
-                    :style="{ color: article.clickLike == 1 ? 'red' : '' }"
+                    :style="{ color: article.clickLike == 1 ? '#fd5a5a' : '' }"
                   />
                   {{ article.likeCount }}</span
                 >

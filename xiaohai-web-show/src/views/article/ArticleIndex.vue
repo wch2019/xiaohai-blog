@@ -34,8 +34,13 @@
           <span class="text-sm font-number text-color">
             <svg-icon icon-class="message" style="font-size: 15px" /> {{ commentCount }}
           </span>
-          <span class="text-sm font-number">
-            <svg-icon icon-class="give-light" style="font-size: 15px" /> 20
+          <span class="text-sm font-number" @click="clickLike(articleOne)">
+            <svg-icon
+              :icon-class="articleOne.clickLike == 1 ? 'give-dark' : 'give-light'"
+              style="font-size: 15px; cursor: pointer"
+              :style="{ color: articleOne.clickLike == 1 ? '#fd5a5a' : '' }"
+            />
+            {{ articleOne.likeCount }}
           </span>
         </el-space>
       </span>
@@ -202,7 +207,7 @@ import { onMounted, reactive, ref, toRefs, watch, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { CommentApi, ConfigApi, SubmitParamApi, UToast, createObjectURL, dayjs } from 'undraw-ui'
 import { ElMessage } from 'element-plus'
-import { article, listArticles, listTag, getComment } from '@/api/show'
+import { article, listArticles, listTag, getComment, articleLike } from '@/api/show'
 import { addComment } from '@/api/user'
 import emoji from '@/components/emoji/emoji'
 import comments from '@/components/comments/index.vue'
@@ -317,7 +322,24 @@ function getArticleId(id: any) {
 function image(cover: any) {
   return import.meta.env.VITE_APP_BASE_API_FILE + cover
 }
-
+function clickLike(val: any) {
+  const params: any = {
+    articleId: val.id,
+    clickLike: val.clickLike == null || val.clickLike === 0 ? 1 : 0
+  }
+  articleLike(params).then((res: any) => {
+    if (res.data.code === 200) {
+      ;(articleOne.value as any).clickLike = (articleOne.value as any).clickLike === 1 ? 0 : 1
+      if ((articleOne.value as any).clickLike === 1) {
+        // 点赞
+        ;(articleOne.value as any).likeCount += 1
+      } else {
+        // 取消点赞
+        ;(articleOne.value as any).likeCount -= 1
+      }
+    }
+  })
+}
 // 获取文章详情
 const getArticle = async () => {
   await article(route.params.id).then((res: any) => {
