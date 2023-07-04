@@ -1,10 +1,10 @@
 <template>
   <el-form ref="form" :model="user" :rules="rules" label-width="80px">
     <el-form-item label="用户名" prop="nickName">
-      <el-input v-model="user.username" maxlength="30"/>
+      <el-input v-model="user.username" maxlength="30" />
     </el-form-item>
     <el-form-item label="用户昵称" prop="nickName">
-      <el-input v-model="user.nickName" maxlength="30"/>
+      <el-input v-model="user.nickName" maxlength="30" />
     </el-form-item>
     <el-form-item label="性别">
       <el-radio-group v-model="user.gender">
@@ -21,16 +21,16 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item label="手机" prop="mobile">
-      <el-input v-model="user.mobile" maxlength="11"/>
+      <el-input v-model="user.mobile" maxlength="11" />
     </el-form-item>
     <el-form-item label="QQ">
-      <el-input v-model="user.qqNumber"/>
+      <el-input v-model="user.qqNumber" />
     </el-form-item>
     <el-form-item label="微信">
-      <el-input v-model="user.weChat"/>
+      <el-input v-model="user.weChat" />
     </el-form-item>
     <el-form-item label="自我介绍">
-      <el-input v-model="user.summary"  type="textarea"/>
+      <el-input v-model="user.summary" type="textarea" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" size="mini" @click="submit">保存</el-button>
@@ -68,6 +68,9 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           updateUser(this.user).then(response => {
+            if (this.user.nickName) {
+              this.$store.commit('user/SET_NAME', this.user.nickName)
+            }
             this.$message.success(response.msg)
           })
         }
