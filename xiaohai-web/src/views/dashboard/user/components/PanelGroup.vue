@@ -15,14 +15,14 @@
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+        <div class="card-panel-icon-wrapper icon-star">
+          <svg-icon icon-class="star" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
             点赞数
           </div>
-          <count-to :start-val="0" :end-val="count.user" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="count.like" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -105,8 +105,8 @@ export default {
         color: #fff;
       }
 
-      .icon-people {
-        background: #40c9c6;
+      .icon-star {
+        background: #ecab28;
       }
 
       .icon-message {
@@ -122,8 +122,8 @@ export default {
       }
     }
 
-    .icon-people {
-      color: #40c9c6;
+    .icon-star {
+      color: #ecab28;
     }
 
     .icon-message {
