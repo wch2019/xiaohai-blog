@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole" v-if="roles" />
+    <component :is="currentRole" />
   </div>
 </template>
 
@@ -21,6 +21,13 @@ export default {
     ...mapGetters([
       'roles'
     ])
+  },
+  watch: {
+    '$route'() {
+      if (!this.roles.includes('admin')) {
+        this.currentRole = 'userDashboard'
+      }
+    }
   },
   created() {
     if (!this.roles.includes('admin')) {

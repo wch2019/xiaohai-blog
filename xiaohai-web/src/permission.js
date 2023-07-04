@@ -5,7 +5,6 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
-import {resetRouter} from '@/router'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -24,22 +23,26 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      next()
-      try {
-        // 获取用户信息
-        await store.dispatch('user/getInfo')
-        // 获取字典信息
-        await store.dispatch('dict/setDictAll')
-        const accessRoutes = await store.dispatch('permission/generateRoutes')
-        resetRouter()
-        router.addRoutes(accessRoutes) // 动态添加可访问路由表
-        next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
-      } catch (error) {
-        // 删除令牌并转到登录页面重新登录
-        await store.dispatch('user/resetToken')
-        Message.error(error || 'Has Error')
-        next(`/login?redirect=${to.path}`)
-        NProgress.done()
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      if (hasRoles) {
+        next()
+      } else {
+        try {
+          // 获取用户信息
+          await store.dispatch('user/getInfo')
+          // 获取字典信息
+          await store.dispatch('dict/setDictAll')
+          const accessRoutes = await store.dispatch('permission/generateRoutes')
+          // resetRouter()
+          router.addRoutes(accessRoutes) // 动态添加可访问路由表
+          next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+        } catch (error) {
+          // 删除令牌并转到登录页面重新登录
+          await store.dispatch('user/resetToken')
+          Message.error(error || 'Has Error')
+          next(`/login?redirect=${to.path}`)
+          NProgress.done()
+        }
       }
     }
   } else {

@@ -26,7 +26,7 @@ export default {
 
 .link--mallki {
   font-weight: 800;
-  color: #4dd9d5;
+  color: #e13838;
   font-family: 'Dosis', sans-serif;
   -webkit-transition: color 0.5s 0.25s;
   transition: color 0.5s 0.25s;
@@ -49,7 +49,7 @@ export default {
   width: 100%;
   height: 6px;
   margin: -3px 0 0 0;
-  background: #3888fa;
+  background: #f37373;
   position: absolute;
   left: 0;
   top: 50%;
@@ -81,7 +81,7 @@ export default {
   position: absolute;
   left: 0;
   width: 100%;
-  color: #3888fa;
+  color: #e13838;
   -webkit-transition: -webkit-transform 0.5s;
   transition: transform 0.5s;
 }
