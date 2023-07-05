@@ -25,6 +25,14 @@ export function getContribution() {
   })
 }
 
+// 获取最近一周访问量
+export function getVisitWeek() {
+  return request({
+    url: api + '/visit-week',
+    method: 'get'
+  })
+}
+
 // 随机输出毒鸡汤
 export function getWord() {
   return request({
