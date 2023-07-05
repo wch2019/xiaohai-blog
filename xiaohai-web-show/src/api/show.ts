@@ -85,3 +85,10 @@ export const friendLink = () => {
     method: 'get'
   })
 }
+// 删除评论
+export const deleteComment = (ids: any) => {
+  return request({
+    url: `${comment}/comment/${ids}`,
+    method: 'delete'
+  })
+}

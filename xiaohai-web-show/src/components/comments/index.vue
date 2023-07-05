@@ -36,6 +36,10 @@
               <el-icon><ChatDotRound /></el-icon>
               <span>回复</span>
             </div>
+            <div class="replyBtn" v-if="store.userId == item.userId" @click="deleteClick(item)">
+              <el-icon><Delete /></el-icon>
+              <span>删除</span>
+            </div>
           </div>
           <comments-input
             v-if="item.replyInputShow"
@@ -69,6 +73,10 @@
                 <el-icon><ChatDotRound /></el-icon>
                 <span>回复</span>
               </div>
+              <div class="replyBtn" v-if="store.userId == i.userId" @click="deleteClick(i)">
+                <el-icon><Delete /></el-icon>
+                <span>删除</span>
+              </div>
             </div>
             <comments-input
               v-if="i.replyInputShow"
@@ -101,7 +109,7 @@ const props = defineProps({
     default: {}
   }
 })
-const emit = defineEmits(['getlistComment', 'submitComments'])
+const emit = defineEmits(['getlistComment', 'submitComments', 'vanishDelete'])
 const { config } = toRefs(props)
 const { dataList, articleId } = toRefs(props.config)
 watch(
@@ -111,7 +119,9 @@ watch(
   },
   { deep: true }
 )
-
+function deleteClick(item: any) {
+  emit('vanishDelete', item)
+}
 function getlistComment() {
   emit('getlistComment')
 }

@@ -71,6 +71,7 @@
         :config="config"
         @getlistComment="getlistComment"
         @submitComments="submitComments"
+        @vanishDelete="vanishDelete"
       ></comments>
     </el-card>
   </el-col>
@@ -143,6 +144,7 @@
       :config="config"
       @getlistComment="getlistComment"
       @submitComments="submitComments"
+      @vanishDelete="vanishDelete"
     ></comments>
   </el-card>
   <!--右内容区-->
@@ -207,7 +209,7 @@ import { onMounted, reactive, ref, toRefs, watch, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { CommentApi, ConfigApi, SubmitParamApi, UToast, createObjectURL, dayjs } from 'undraw-ui'
 import { ElMessage } from 'element-plus'
-import { article, listArticles, listTag, getComment, articleLike } from '@/api/show'
+import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import emoji from '@/components/emoji/emoji'
 import comments from '@/components/comments/index.vue'
@@ -415,6 +417,11 @@ function submitComments(val: any) {
     content: val.content
   }
   addComment(data).then((res: any) => {
+    getlistComment()
+  })
+}
+function vanishDelete(val: any) {
+  deleteComment(val.id).then((res) => {
     getlistComment()
   })
 }
