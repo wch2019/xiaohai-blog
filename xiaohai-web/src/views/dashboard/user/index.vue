@@ -66,7 +66,6 @@
 
 <script>
 import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
 import PieChart from './components/PieChart'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 import 'vue-calendar-heatmap/dist/vue-calendar-heatmap.css'
@@ -77,7 +76,6 @@ export default {
   name: 'DashboardAdmin',
   components: {
     PanelGroup,
-    LineChart,
     Mallki,
     PieChart,
     CalendarHeatmap
@@ -87,12 +85,6 @@ export default {
       url: process.env.VUE_APP_BLOG_WEB_API,
       // 标签云
       hotTag: [],
-      // 流量线图
-      lineChartData: {
-        PVData: [100, 120, 161, 134, 105, 160, 165],
-        UVData: [120, 82, 91, 154, 162, 140, 145],
-        IPData: [110, 72, 81, 144, 162, 140, 135]
-      },
       // 分类饼状图
       pieChart: {},
       // 文章阅读量排行

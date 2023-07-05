@@ -48,7 +48,7 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <el-card class="box-card" style=" margin-bottom: 32px;">
           <div slot="header" class="clearfix">
-            <span>文章阅读量排行</span>
+            <span>最新文章</span>
           </div>
           <el-table :data="rank" style="width: 100%;padding-top: 15px;" height="400" max-height="400">
             <el-table-column label="标题">
@@ -57,6 +57,7 @@
               </template>
             </el-table-column>
             <el-table-column label="阅读量" prop="pageView" align="center" />
+            <el-table-column label="时间" prop="createdTime" align="center" />
           </el-table>
         </el-card>
       </el-col>
@@ -68,6 +69,12 @@
         </div>
         <line-chart :chart-data="lineChartData" />
       </el-card>
+      <el-card class="box-card" style=" margin-bottom: 32px;">
+        <div slot="header" class="clearfix">
+          <span>一周请求量</span>
+        </div>
+        <line-chart-request :chart-data="lineChartData" />
+      </el-card>
     </el-row>
   </div>
 </template>
@@ -75,17 +82,19 @@
 <script>
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
+import LineChartRequest from './components/LineChartRequest'
 import PieChart from './components/PieChart'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 import 'vue-calendar-heatmap/dist/vue-calendar-heatmap.css'
 import { CalendarHeatmap } from 'vue-calendar-heatmap/dist/vue-calendar-heatmap.common'
-import { getWord, getRank, getContribution } from '@/api/dashboard/index'
+import { getWord, getRank, getContribution, getVisitWeek } from '@/api/dashboard/index'
 
 export default {
   name: 'DashboardAdmin',
   components: {
     PanelGroup,
     LineChart,
+    LineChartRequest,
     Mallki,
     PieChart,
     CalendarHeatmap
@@ -97,9 +106,10 @@ export default {
       hotTag: [],
       // 流量线图
       lineChartData: {
-        PVData: [100, 120, 161, 134, 105, 160, 165],
-        UVData: [120, 82, 91, 154, 162, 140, 145],
-        IPData: [110, 72, 81, 144, 162, 140, 135]
+        date: ['2023-07-01', '2023-07-02', '2023-07-03', '2023-07-04', '2023-07-05', '2023-07-06', '2023-07-07'],
+        pv: [100, 120, 161, 134, 105, 160, 165],
+        uv: [120, 82, 91, 154, 162, 140, 145],
+        rc: [120, 82, 91, 154, 162, 140, 145]
       },
       // 分类饼状图
       pieChart: {},
@@ -130,6 +140,7 @@ export default {
     this.getWord()
     this.getRank()
     this.getContribution()
+    this.getVisitWeek()
   },
   methods: {
     getWord() {
@@ -150,6 +161,11 @@ export default {
         this.oneYear = response.data.oneYear
         this.longest = response.data.longest
         this.continuous = response.data.continuous
+      })
+    },
+    getVisitWeek() {
+      getVisitWeek().then(response => {
+        this.lineChartData = response.data
       })
     },
     greetings() {
