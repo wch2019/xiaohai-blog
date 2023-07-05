@@ -30,10 +30,10 @@ public interface ArticleMapper extends BaseMapper<Article> {
     IPage<ArticleDto> selectPageArticleQuery(@Param("page")IPage<ArticleDto> wherePage, @Param("param") ArticleQuery query,@Param("userId") Integer userId);
 
     /**
-     * 获取所有文章的阅读量
+     * 获取所有或指定用户文章的阅读量
      * @return
      */
-    Long getPageView();
+    Long getPageView(Integer userId);
 
     /**
      * 获取当前年所有文章时间用作统计贡献度

@@ -229,7 +229,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public Long getPageView() {
-        return baseMapper.getPageView();
+        Integer userId = null;
+        if (!StpUtil.hasRole(Constants.ADMIN)) {
+            userId = Integer.valueOf((String) StpUtil.getLoginId());
+        }
+        return baseMapper.getPageView(userId);
     }
 
     @Override

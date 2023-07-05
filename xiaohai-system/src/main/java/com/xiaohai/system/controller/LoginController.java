@@ -53,6 +53,7 @@ public class LoginController {
 
     @Operation(summary = "退出",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckLogin
+    @Log(title = "退出")
     @GetMapping("logout")
     public Response<Object> logout() {
         //去除redis在线用户

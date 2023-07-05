@@ -83,7 +83,7 @@ public interface ArticleService extends IService<Article> {
     Integer push(Long id);
 
     /**
-     * 获取所有文章的阅读量
+     * 获取所有或指定用户文章的阅读量
      * @return
      */
     Long getPageView();

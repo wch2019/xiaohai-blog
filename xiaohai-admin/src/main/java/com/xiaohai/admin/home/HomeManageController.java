@@ -1,17 +1,18 @@
 package com.xiaohai.admin.home;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.OnLineUser;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.OnLineUtils;
 import com.xiaohai.note.pojo.entity.Article;
-import com.xiaohai.note.service.ArticleService;
-import com.xiaohai.note.service.CategoryService;
-import com.xiaohai.note.service.CommentService;
-import com.xiaohai.note.service.TagsService;
+import com.xiaohai.note.pojo.entity.ArticleLike;
+import com.xiaohai.note.pojo.entity.Comment;
+import com.xiaohai.note.service.*;
 import com.xiaohai.system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -40,17 +41,20 @@ public class HomeManageController {
     private final TagsService tagsService;
     private final CategoryService categoryService;
     private final CommentService commentService;
+    private final ArticleLikeService articleLikeService;
 
     @Operation(summary = "文章数,用户数,评论数，浏览量", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("/count")
     public Response<Map<String, Long>> getCount() {
         Map<String, Long> map = new HashMap<>();
         //文章数
-        map.put("article", articleService.count());
+        map.put("article", articleService.count(new QueryWrapper<Article>().eq(!StpUtil.hasRole(Constants.ADMIN), "user_id", StpUtil.getLoginId())));
         //评论数
-        map.put("message", commentService.count());
+        map.put("message", commentService.count(new QueryWrapper<Comment>().eq(!StpUtil.hasRole(Constants.ADMIN), "user_id", StpUtil.getLoginId())));
         //用户数
         map.put("user", userService.count());
+        //点赞数
+        map.put("like", articleLikeService.count(new QueryWrapper<ArticleLike>().eq(!StpUtil.hasRole(Constants.ADMIN), "user_id", StpUtil.getLoginId())));
         //阅读量
         map.put("views", articleService.getPageView());
         return Response.success("获取文章数,用户数,评论数，浏览量成功！", map);
@@ -73,6 +77,7 @@ public class HomeManageController {
         //文章阅读量排行
         map.put("rank", articleService.list(new LambdaQueryWrapper<Article>()
                 .select(Article::getPageView,Article::getTitle,Article::getId)
+                .eq(!StpUtil.hasRole(Constants.ADMIN), Article::getUserId, StpUtil.getLoginId())
                 .eq(Article::getIsPush, 1)
                 .orderByDesc(Article::getPageView).last("limit 6"))
         );

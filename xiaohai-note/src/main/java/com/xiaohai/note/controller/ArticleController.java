@@ -76,7 +76,6 @@ public class ArticleController {
     }
 
     @Operation(summary = "获取随机图片必应", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Log(title = "获取随机图片(必应)")
     @GetMapping("/bing-wallpaper")
     public Response<String> wallpaper() {
         return Response.success("获取随机图片成功！", articleService.wallpaper());

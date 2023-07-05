@@ -161,7 +161,12 @@ public class LogOperationAop {
             UserAgent userAgent = IpUtils.getUserAgent(request);
             log.setOperOs(userAgent.getOperatingSystem().getName());
             log.setOperBrowser(userAgent.getBrowser().getName());
-            log.setOperParam(new JSONArray(joinPoint.getArgs()).toString());
+            if(log.getTitle().equals("登录")){
+                //如果是登录将去除密码信息记录日志
+                log.setOperParam(new JSONArray(joinPoint.getArgs()).getJSONObject(0).set("password","******").toString());
+            }else {
+                log.setOperParam(new JSONArray(joinPoint.getArgs()).toString());
+            }
             //异常
             if (e != null) {
                 log.setStatus("1");
