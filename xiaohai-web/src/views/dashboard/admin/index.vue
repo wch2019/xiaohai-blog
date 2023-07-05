@@ -18,7 +18,7 @@
           :end-date="new Date().toLocaleDateString()"
           :values="timeValue"
           :locale="locale"
-          tooltip-unit="文章数"
+          tooltip-unit="个贡献"
           :max="6"
           :range-color="[ '#efe8e8', '#f9c0c0', '#f37373', '#e13838', '#E32121FF']"
         />
@@ -92,6 +92,7 @@ export default {
   },
   data() {
     return {
+      url: process.env.VUE_APP_BLOG_WEB_API,
       // 标签云
       hotTag: [],
       // 流量线图
@@ -164,6 +165,9 @@ export default {
       } else if (date.getHours() >= 0 && date.getHours() < 6) {
         return '偷偷向银河要了一把碎星，只等你闭上眼睛撒入你的梦中，晚安🌛！'
       }
+    },
+    onClick(row) {
+      window.open(this.url + '/article/' + row.id)
     }
   }
 }
