@@ -81,7 +81,11 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="网站名称" align="center" prop="name" />
-      <el-table-column label="网站地址" align="center" prop="url" />
+      <el-table-column label="网站地址" align="center" prop="url">
+        <template slot-scope="scope">
+          <el-link :underline="false" :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="网站描述" align="center" prop="info" />
       <el-table-column label="站长邮箱" align="center" prop="email" />
       <el-table-column label="下架原因" align="center" prop="reason" />

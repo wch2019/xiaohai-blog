@@ -138,7 +138,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="文章标题" align="center" prop="title" />
+      <el-table-column label="文章标题" align="center" prop="title">
+        <template slot-scope="scope">
+          <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="分类" align="center" prop="categoryId">
         <template slot-scope="scope">
           <template v-for="(item,index) in CategoryList">
@@ -220,6 +224,7 @@ export default {
   name: 'Index',
   data() {
     return {
+      url: process.env.VUE_APP_BLOG_WEB_API,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -372,6 +377,10 @@ export default {
         this.$message.success(response.msg)
         this.getList()
       })
+    },
+    // 跳转展示文章页
+    onClick(row) {
+      window.open(this.url + '/article/' + row.id)
     }
   }
 }

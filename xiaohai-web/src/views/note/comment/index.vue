@@ -74,7 +74,11 @@
         </template>
       </el-table-column>
       <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true" />
-      <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true" />
+      <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -131,6 +135,7 @@ export default {
   components: { CommentDialog },
   data() {
     return {
+      url: process.env.VUE_APP_BLOG_WEB_API,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -215,6 +220,10 @@ export default {
     /** 回调*/
     closeDialog() {
       this.getList()
+    },
+    // 跳转展示文章页
+    onClick(row) {
+      window.open(this.url + '/article/' + row.articleId)
     }
   }
 }
