@@ -59,10 +59,10 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ UVData, PVData, IPData } = {}) {
+    setOptions({ date, pv, uv, rc } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: date,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -88,64 +88,29 @@ export default {
           }
         },
         legend: {
-          data: ['访问量(PV)', '独立用户(UV)', 'IP(独立IP)']
+          data: ['请求次数(RC)']
         },
-        series: [{
-          name: '访问量(PV)', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: PVData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: '独立用户(UV)',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: UVData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        },
-        {
-          name: 'IP(独立IP)',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#46c200',
-              lineStyle: {
+        series: [
+          {
+            name: '请求次数(RC)',
+            smooth: true,
+            type: 'line',
+            itemStyle: {
+              normal: {
                 color: '#46c200',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
+                lineStyle: {
+                  color: '#46c200',
+                  width: 2
+                },
+                areaStyle: {
+                  color: '#f3f8ff'
+                }
               }
-            }
-          },
-          data: IPData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+            },
+            data: rc,
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut'
+          }]
       })
     }
   }
