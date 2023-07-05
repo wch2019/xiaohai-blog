@@ -29,8 +29,8 @@
           </div>
           <div class="listOperation">
             <div>
-              <el-icon><PictureRounded /></el-icon>
-              <span>2</span>
+              <el-icon><Timer /></el-icon>
+              <span>{{ item.createdTime }}</span>
             </div>
             <div class="replyBtn" @click="replyClick(item)">
               <el-icon><ChatDotRound /></el-icon>
@@ -66,8 +66,8 @@
             </div>
             <div class="listOperation">
               <div>
-                <el-icon><PictureRounded /></el-icon>
-                <span>2</span>
+                <el-icon><Timer /></el-icon>
+                <span>{{ i.createdTime }}</span>
               </div>
               <div class="replyBtn" @click="replyChildClick(i)">
                 <el-icon><ChatDotRound /></el-icon>
