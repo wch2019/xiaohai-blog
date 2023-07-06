@@ -49,13 +49,19 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
             baseMapper.deleteById(id);
             //对应的评论一起删掉
-            // TODO 递归删除评论
-            baseMapper.delete(new QueryWrapper<Comment>().eq("parent_id",id));
+            List<Comment> commentList = baseMapper.selectList(new QueryWrapper<Comment>().select("id").eq("parent_id", id));
+            baseMapper.delete(new QueryWrapper<Comment>().eq("parent_id", id));
+            Long[] commentIds = new Long[commentList.size()];
+            for (int i = 0; i < commentList.size(); i++) {
+                Comment comment = commentList.get(i);
+                commentIds[i] = Long.valueOf(comment.getId());
+            }
+            delete(commentIds);
         }
         return ids.length;
     }
@@ -77,7 +83,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //当前登录用户
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         //判断角色是否是管理员
-        if (!StpUtil.hasRole(Constants.ADMIN)&&query.getDiscussant()==null) {
+        if (!StpUtil.hasRole(Constants.ADMIN) && query.getDiscussant() == null) {
             query.setDiscussant(1);
         }
         IPage<CommentDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
@@ -89,7 +95,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public CommentCountDto findByArticleId(Long id) {
-        CommentCountDto commentCountDto=new CommentCountDto();
+        CommentCountDto commentCountDto = new CommentCountDto();
         List<CommentTree> commentList = baseMapper.findCommentList(id);
         commentCountDto.setCommentCount(commentList.size());
         commentCountDto.setCommentTrees(TreeUtils.getCommentTree(commentList));

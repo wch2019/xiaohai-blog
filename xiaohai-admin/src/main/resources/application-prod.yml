@@ -83,20 +83,20 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     #正式改为false
-    enabled: true
+    enabled: false
   api-docs:
     path: /v3/api-docs
     #正式改为false
-    enabled: true
+    enabled: false
   group-configs:
     - group: '展示页'
       #组匹配的路径列表（逗号分隔）
       paths-to-match: '/**'
       #要扫描组的包列表（逗号分隔）
-      packages-to-scan: com.xiaohai.admin
+      packages-to-scan: com.xiaohai.admin.show
     - group: '管理页'
       paths-to-match: '/**'
-      packages-to-scan: com.xiaohai.system,com.xiaohai.admin,com.xiaohai.file,com.xiaohai.note
+      packages-to-scan: com.xiaohai.system,com.xiaohai.admin.confing,com.xiaohai.admin.home,com.xiaohai.admin.monitor,com.xiaohai.file,com.xiaohai.note
 #==============================系统文件存放配置=======================================
 file:
   profile: E:/xiaohai-blog/

@@ -89,6 +89,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
             //删除标签关联
