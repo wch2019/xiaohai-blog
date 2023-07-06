@@ -15,7 +15,6 @@
     "element-plus": "^2.3.3",
     "js-cookie": "^3.0.5",
     "pinia": "^2.0.35",
-    "undraw-ui": "^0.9.4",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vuex": "^4.0.2"

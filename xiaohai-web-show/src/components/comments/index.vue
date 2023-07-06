@@ -8,7 +8,7 @@
       <div style="width: 100%">
         <comments-input
           :articleId="articleId"
-          @getlistComment="getlistComment"
+          @getListComment="getListComment"
           @submitComments="submitComments"
         ></comments-input>
       </div>
@@ -21,24 +21,21 @@
       <div class="dataListRight">
         <div>
           <div class="title">
-            <div>{{ item.username }}</div>
-            <!--          <div>来自上海</div>-->
+            <span>{{ item.username }}</span>
+            <!--            <div>来自上海</div>-->
+            <span class="text-sm font-number text-color">
+              {{ item.createdTime }}
+            </span>
           </div>
           <div class="content">
             <span v-html="parseEmojis(item.content)"></span>
           </div>
           <div class="listOperation">
-            <div>
-              <el-icon><Timer /></el-icon>
-              <span>{{ item.createdTime }}</span>
-            </div>
             <div class="replyBtn" @click="replyClick(item)">
-              <el-icon><ChatDotRound /></el-icon>
-              <span>回复</span>
+              <span class="text-sm text-color"> 回复 </span>
             </div>
             <div class="replyBtn" v-if="store.userId == item.userId" @click="deleteClick(item)">
-              <el-icon><Delete /></el-icon>
-              <span>删除</span>
+              <span class="text-sm text-color replyBtn"> 删除 </span>
             </div>
           </div>
           <comments-input
@@ -47,7 +44,7 @@
             :btnValue="btnValue"
             :articleId="articleId"
             :parentId="item.id"
-            @getlistComment="getlistComment"
+            @getListComment="getListComment"
             @submitComments="submitComments"
           ></comments-input>
         </div>
@@ -60,15 +57,14 @@
               <span>{{ i.username }}</span
               >&nbsp; <span>回复</span>&nbsp;
               <span>{{ i.replyUsername }}</span>
+              <span class="text-sm font-number text-color">
+                {{ item.createdTime }}
+              </span>
             </div>
             <div class="content">
               {{ i.content }}
             </div>
             <div class="listOperation">
-              <div>
-                <el-icon><Timer /></el-icon>
-                <span>{{ i.createdTime }}</span>
-              </div>
               <div class="replyBtn" @click="replyChildClick(i)">
                 <el-icon><ChatDotRound /></el-icon>
                 <span>回复</span>
@@ -84,7 +80,7 @@
               :btnValue="btnValue"
               :articleId="articleId"
               :parentId="i.id"
-              @getlistComment="getlistComment"
+              @getListComment="getListComment"
               @submitComments="submitComments"
             ></comments-input>
           </div>
@@ -109,7 +105,7 @@ const props = defineProps({
     default: {}
   }
 })
-const emit = defineEmits(['getlistComment', 'submitComments', 'vanishDelete'])
+const emit = defineEmits(['getListComment', 'submitComments', 'vanishDelete'])
 const { config } = toRefs(props)
 const { dataList, articleId } = toRefs(props.config)
 watch(
@@ -122,8 +118,8 @@ watch(
 function deleteClick(item: any) {
   emit('vanishDelete', item)
 }
-function getlistComment() {
-  emit('getlistComment')
+function getListComment() {
+  emit('getListComment')
 }
 function submitComments(val: any) {
   emit('submitComments', val)
@@ -174,10 +170,11 @@ function parseEmojis(text: any) {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  justify-content: space-between;
 
   div:first-child {
     margin-right: 10px;
-    color: #303133;
+    //color: #303133;
     font-weight: 500;
     font-size: 15px;
   }
@@ -224,7 +221,7 @@ function parseEmojis(text: any) {
   }
   .titleChild {
     margin-right: 10px;
-    color: #303133;
+    //color: #303133;
     font-size: 12px;
     span:nth-of-type(2) {
       font-weight: 500;
@@ -235,7 +232,7 @@ function parseEmojis(text: any) {
     line-height: 20px;
   }
   .listOperation {
-    font-size: 12px;
+    //font-size: 12px;
   }
 }
 </style>

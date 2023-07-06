@@ -100,7 +100,7 @@
                   ><svg-icon icon-class="message" style="font-size: 15px" />
                   {{ article.commentCount }}</span
                 >
-                <span class="text-xs font-number text-color" @click="clickLike(article)"
+                <span class="text-xs font-number" @click="clickLike(article)"
                   ><svg-icon
                     :icon-class="article.clickLike == 1 ? 'give-dark' : 'give-light'"
                     style="font-size: 15px; cursor: pointer"
@@ -178,8 +178,13 @@
                 <span v-else class="text-xs">{{ article.username }}</span>
               </el-space>
             </span>
-            <span class="text-xs font-number">
-              <svg-icon icon-class="give-light" style="font-size: 15px" /> 20
+            <span class="text-xs font-number" @click="clickLike(article)">
+              <svg-icon
+                :icon-class="article.clickLike == 1 ? 'give-dark' : 'give-light'"
+                style="font-size: 15px; cursor: pointer"
+                :style="{ color: article.clickLike == 1 ? '#fd5a5a' : '' }"
+              />
+              {{ article.likeCount }}
             </span>
           </span>
         </div>

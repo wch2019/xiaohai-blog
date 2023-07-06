@@ -65,11 +65,10 @@
         </el-col>
       </el-row>
       <hr class="divider" />
-      <!--      <u-comment :config="config" @submit="submit" @like="like" relative-time></u-comment>-->
       <comments
         v-if="config.disabled"
         :config="config"
-        @getlistComment="getlistComment"
+        @getListComment="getListComment"
         @submitComments="submitComments"
         @vanishDelete="vanishDelete"
       ></comments>
@@ -112,7 +111,14 @@
         <span class="text-xs font-number text-color"
           ><svg-icon icon-class="message" /> {{ commentCount }}</span
         >
-        <span class="text-xs font-number"><svg-icon icon-class="give-light" /> 20</span>
+        <span class="text-xs font-number" @click="clickLike(articleOne)">
+          <svg-icon
+            :icon-class="articleOne.clickLike == 1 ? 'give-dark' : 'give-light'"
+            style="font-size: 15px; cursor: pointer"
+            :style="{ color: articleOne.clickLike == 1 ? '#fd5a5a' : '' }"
+          />
+          {{ articleOne.likeCount }}</span
+        >
       </el-space>
     </span>
     <hr class="divider" />
@@ -142,7 +148,7 @@
     <comments
       v-if="config.disabled"
       :config="config"
-      @getlistComment="getlistComment"
+      @getListComment="getListComment"
       @submitComments="submitComments"
       @vanishDelete="vanishDelete"
     ></comments>
@@ -205,13 +211,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, toRefs, watch, onBeforeMount } from 'vue'
+import { reactive, ref, toRefs, watch, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { CommentApi, ConfigApi, SubmitParamApi, UToast, createObjectURL, dayjs } from 'undraw-ui'
 import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
-import emoji from '@/components/emoji/emoji'
 import comments from '@/components/comments/index.vue'
 
 // 文章详情
@@ -226,9 +230,7 @@ const router = useRouter()
 const tags = ref([])
 // 展示文章列表
 const dataList = ref([])
-// 评论列表
-const commentList = ref([])
-
+// 评论数
 const commentCount = ref([])
 
 const data = reactive({
@@ -237,11 +239,6 @@ const data = reactive({
     pageSize: 3,
     type: 6,
     id: 0
-  },
-  comment: {
-    parentId: 0,
-    articleId: route.params.id,
-    content: ''
   }
 })
 const config = ref({
@@ -250,65 +247,13 @@ const config = ref({
   articleId: route.params.id
 })
 
-// const config = reactive<ConfigApi>({
-//   user: {
-//     id: 1,
-//     username: 'jack',
-//     avatar:
-//       'https://static.juzicon.com/avatars/avatar-200602130320-HMR2.jpeg?x-oss-process=image/resize,w_100',
-//     // 评论id数组 建议:存储方式用户uid和评论id组成关系,根据用户uid来获取对应点赞评论id,然后加入到数组中返回
-//     likeIds: [1, 2, 3]
-//   },
-//   emoji,
-//   comments: [],
-//   total: 10
-// })
-const temp_id = 100
-
-// config.comments = [
-//   {
-//     id: '1',
-//     parentId: null,
-//     uid: '1',
-//     address: '来自上海',
-//     content:
-//       '缘生缘灭，缘起缘落，我在看别人的故事，别人何尝不是在看我的故事?别人在演绎人生，我又何尝不是在这场戏里?谁的眼神沧桑了谁?我的眼神，只是沧桑了自己[喝酒]',
-//     likes: 2,
-//     contentImg: 'https://gitee.com/undraw/undraw-ui/raw/master/public/docs/normal.webp',
-//     createTime: dayjs().subtract(10, 'minute').toString(),
-//     user: {
-//       username: '落🤍尘',
-//       avatar:
-//         'https://static.juzicon.com/avatars/avatar-200602130320-HMR2.jpeg?x-oss-process=image/resize,w_100',
-//       level: 6,
-//       homeLink: '/1'
-//     }
-//   }
-// ]
-
-const { queryParams, comment } = toRefs(data)
+const { queryParams } = toRefs(data)
 
 /** 查询展示推荐列表 */
 function getList(categoryId: any) {
   queryParams.value.id = categoryId
   listArticles(queryParams.value).then((response) => {
     dataList.value = response.data.data.records
-  })
-}
-
-/**
- * 根据文章id获取评论列表
- */
-function getCommentList() {
-  getComment(route.params.id).then((response) => {
-    commentList.value = response.data.data.records
-  })
-}
-// 提交评论事件
-function addCommenta(categoryId: any) {
-  addComment(route.params.id).then((response) => {
-    commentList.value = response.data.data.records
-    ElMessage.info(response.msg)
   })
 }
 
@@ -321,9 +266,10 @@ function getArticleId(id: any) {
  * 图片地址拼接
  * @param cover
  */
-function image(cover: any) {
-  return import.meta.env.VITE_APP_BASE_API_FILE + cover
-}
+// function image(cover: any) {
+//   return import.meta.env.VITE_APP_BASE_API_FILE + cover
+// }
+
 function clickLike(val: any) {
   const params: any = {
     articleId: val.id,
@@ -352,8 +298,6 @@ const getArticle = async () => {
       '../image',
       `${import.meta.env.VITE_APP_BASE_API_FILE}/image`
     )
-    console.log(articleOne.value)
-    getCommentList()
     getList(res.data.data.categoryId)
   })
 }
@@ -399,7 +343,7 @@ async function getCatalog() {
   }))
 }
 
-function getlistComment() {
+function getListComment() {
   getComment(route.params.id).then((res) => {
     commentCount.value = res.data.data.commentCount
     const array = res.data.data.commentTrees
@@ -417,12 +361,14 @@ function submitComments(val: any) {
     content: val.content
   }
   addComment(data).then((res: any) => {
-    getlistComment()
+    getListComment()
+    ElMessage.success(res.data.msg)
   })
 }
 function vanishDelete(val: any) {
   deleteComment(val.id).then((res) => {
-    getlistComment()
+    getListComment()
+    ElMessage.success(res.data.msg)
   })
 }
 onBeforeMount(async () => {
@@ -438,7 +384,7 @@ onBeforeMount(async () => {
   )
   await getCatalog()
 })
-getlistComment()
+getListComment()
 </script>
 
 <style scoped>
@@ -481,11 +427,6 @@ getlistComment()
 
 /*样式穿透 md文件*/
 >>> .github-markdown-body {
-  padding: 0;
-}
-
->>> .u-comment {
-  background-color: transparent;
   padding: 0;
 }
 </style>

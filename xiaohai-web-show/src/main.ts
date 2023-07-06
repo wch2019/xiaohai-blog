@@ -6,8 +6,6 @@ import ElementPlus from 'element-plus'
 import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
 import hljs from 'highlight.js'
-// undraw
-import UndrawUi from 'undraw-ui'
 import App from './App.vue'
 
 import { image } from '@/utils/publicMethods'
@@ -24,8 +22,6 @@ import elementIcons from '@/components/SvgIcon/svgicon'
 // v-md-editor 预览组件
 import '@kangc/v-md-editor/lib/style/preview.css'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
-// undraw
-import 'undraw-ui/dist/style.css'
 
 // highlightjs
 VMdPreview.use(githubTheme, {
@@ -38,7 +34,6 @@ app.use(ElementPlus)
 app.component('SvgIcon', SvgIcon)
 app.use(elementIcons)
 app.use(VMdPreview)
-app.use(UndrawUi)
 
 app.config.globalProperties.image = image
 

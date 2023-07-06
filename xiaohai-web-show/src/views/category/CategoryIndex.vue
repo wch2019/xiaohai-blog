@@ -5,18 +5,22 @@
       <el-icon><Menu /></el-icon> 分类
     </h1>
     <el-card class="box-card" shadow="hover">
-      <el-space v-for="category in categories" :key="category.id" wrap size="large">
-        <el-button
-          text
-          bg
-          size="large"
-          @click="
-            cancelClick('/categorySearch/' + (category.id || '') + '?name=' + (category.name || ''))
-          "
-        >
-          <svg-icon icon-class="label-sign"></svg-icon> {{ category.name }}
-          <div class="tags">{{ category.count }}</div>
-        </el-button>
+      <el-space wrap size="large">
+        <div v-for="category in categories" :key="category.id">
+          <el-button
+            text
+            bg
+            size="large"
+            @click="
+              cancelClick(
+                '/categorySearch/' + (category.id || '') + '?name=' + (category.name || '')
+              )
+            "
+          >
+            <svg-icon icon-class="label-sign"></svg-icon> {{ category.name }}
+            <div class="tags">{{ category.count }}</div>
+          </el-button>
+        </div>
       </el-space>
     </el-card>
   </el-col>

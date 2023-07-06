@@ -4,10 +4,7 @@
     <div class="opertionBtn">
       <el-popover placement="bottom" :width="200" trigger="hover">
         <template #reference>
-          <div class="btnleft">
-            <el-icon><Sunny /></el-icon>
-            <span>表情</span>
-          </div>
+          <h3 class="btnleft"><svg-icon icon-class="face"></svg-icon></h3>
         </template>
         <div class="emojiDiv">
           <el-tabs v-model="activeName" class="demo-tabs">
@@ -24,7 +21,6 @@
           </el-tabs>
         </div>
       </el-popover>
-
       <el-button type="primary" @click="submit()">{{ btnValue }}</el-button>
     </div>
   </div>
@@ -54,7 +50,7 @@ const props = defineProps({
     default: ''
   }
 })
-const emit = defineEmits(['getlistComment', 'submitComments'])
+const emit = defineEmits(['getListComment', 'submitComments'])
 const { placeholderValue, btnValue, parentId, articleId } = toRefs(props)
 function selectEmoji(val: any) {
   content.value += val
@@ -85,8 +81,9 @@ function submit() {
   }
 }
 .btnleft {
-  display: flex;
-  align-items: center;
+  margin: 0 10px;
+  //display: flex;
+  //align-items: center;
 }
 .emojiImg {
   width: 18px;
