@@ -7,6 +7,8 @@ import com.xiaohai.system.pojo.query.LogQuery;
 import com.xiaohai.system.pojo.vo.LogVo;
 import com.xiaohai.system.pojo.dto.LogDto;
 
+import java.util.Map;
+
 /**
  *
  * 系统日志 服务类
@@ -63,4 +65,15 @@ public interface LogService extends IService<Log> {
     * @return Response
     */
     ReturnPageData<LogDto> findListByPage(LogQuery query);
+
+    /**
+     * 获取最近一周用户独立IP数和访问量
+     *
+     * @return {
+     * date: ['2023-07-01', '2023-07-02', '2023-07-03', '2023-07-04', '2023-07-05', '2023-07-06', '2023-07-07'],
+     * pv: [100, 120, 161, 134, 105, 160, 165],
+     * uv: [120, 82, 91, 154, 162, 140, 145]
+     * }
+     */
+    Map<String, Object> getVisitWeek(Integer count);
 }

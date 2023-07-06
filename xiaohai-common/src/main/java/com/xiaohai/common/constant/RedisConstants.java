@@ -28,4 +28,10 @@ public class RedisConstants {
      * 持续创作管理 cache key
      */
     public static final String CONTRIBUTION = "contribution:";
+
+
+    /**
+     * 一周访问量
+     */
+    public static final String WEEK_VISIT = "week_visit:";
 }

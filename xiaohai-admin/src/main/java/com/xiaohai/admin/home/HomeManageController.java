@@ -13,8 +13,10 @@ import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.ArticleLike;
 import com.xiaohai.note.pojo.entity.Comment;
 import com.xiaohai.note.service.*;
+import com.xiaohai.system.service.LogService;
 import com.xiaohai.system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,7 @@ public class HomeManageController {
     private final CategoryService categoryService;
     private final CommentService commentService;
     private final ArticleLikeService articleLikeService;
+    private final LogService logService;
 
     @Operation(summary = "文章数,用户数,评论数，浏览量", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("/count")
@@ -66,7 +69,7 @@ public class HomeManageController {
         return Response.success("获取近一年文章贡献度成功！", articleService.contribution());
     }
 
-    @Operation(summary = "分类，标签，文章阅读量排行", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "分类，标签，最新文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("/rank")
     public Response<Map<String, Object>> getRank() {
         Map<String, Object> map = new HashMap<>();
@@ -74,20 +77,20 @@ public class HomeManageController {
         map.put("category", categoryService.pieChart());
         //标签
         map.put("tags", tagsService.optionSelect());
-        //文章阅读量排行
+        //最新文章
         map.put("rank", articleService.list(new LambdaQueryWrapper<Article>()
-                .select(Article::getPageView,Article::getTitle,Article::getId)
-                .eq(!StpUtil.hasRole(Constants.ADMIN), Article::getUserId, StpUtil.getLoginId())
+                .select(Article::getCreatedTime,Article::getPageView,Article::getTitle,Article::getId)
                 .eq(Article::getIsPush, 1)
-                .orderByDesc(Article::getPageView).last("limit 6"))
+                .orderByDesc(Article::getCreatedTime).last("limit 6"))
         );
-        return Response.success("获取分类，标签，文章阅读量排行成功！", map);
+        return Response.success("获取分类，标签，最新文章成功！", map);
     }
 
-    @Operation(summary = "一周访问量", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @GetMapping("/pv")
-    public Response<ReturnPageData<OnLineUser>> getPv() {
-        return Response.success("获取一周访问量成功！", OnLineUtils.getOnLineUserList());
+    @Operation(summary = "获取最近一周访问量", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Parameter(name = "count", description = "0默认查询redis，1刷新redis数据")
+    @GetMapping("/visit-week")
+    public Response<Map<String, Object>> getVisitWeek(Integer count) {
+        return Response.success("获取一周访问量成功！", logService.getVisitWeek(count));
     }
 
     @Operation(summary = "随机输出毒鸡汤", security = {@SecurityRequirement(name = Constants.SESSION_ID)})

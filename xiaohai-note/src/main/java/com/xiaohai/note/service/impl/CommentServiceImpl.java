@@ -1,6 +1,7 @@
 package com.xiaohai.note.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -19,6 +20,7 @@ import com.xiaohai.note.pojo.vo.CommentVo;
 import com.xiaohai.note.service.CommentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,9 +49,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
+    @Transactional
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
             baseMapper.deleteById(id);
+            //对应的评论一起删掉
+            // TODO 递归删除评论
+            baseMapper.delete(new QueryWrapper<Comment>().eq("parent_id",id));
         }
         return ids.length;
     }

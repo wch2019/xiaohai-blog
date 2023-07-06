@@ -1,7 +1,6 @@
 package com.xiaohai.admin.home;
 
 import com.xiaohai.common.annotation.Log;
-import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.*;
@@ -98,5 +97,4 @@ public class HomeShowController {
     public Response<List<FriendLinkDto>> friendLink() {
         return Response.success("友链信息展示成功！", friendLinkService.findList());
     }
-
 }
