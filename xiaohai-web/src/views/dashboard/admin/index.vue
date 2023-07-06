@@ -62,19 +62,25 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-row>
-      <el-card class="box-card" style=" margin-bottom: 32px;">
-        <div slot="header" class="clearfix">
-          <span>一周访问量</span>
-        </div>
-        <line-chart :chart-data="lineChartData" />
-      </el-card>
-      <el-card class="box-card" style=" margin-bottom: 32px;">
-        <div slot="header" class="clearfix">
-          <span>一周请求量</span>
-        </div>
-        <line-chart-request :chart-data="lineChartData" />
-      </el-card>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="12">
+        <el-card class="box-card" style=" margin-bottom: 32px;">
+          <div slot="header" class="clearfix">
+            <span>一周访问量</span>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="getVisitWeek(1)"><i class="el-icon-refresh" /></el-button>
+          </div>
+          <line-chart :chart-data="lineChartData" />
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="12">
+        <el-card class="box-card" style=" margin-bottom: 32px;">
+          <div slot="header" class="clearfix">
+            <span>一周请求量</span>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="getVisitWeek(1)"><i class="el-icon-refresh" /></el-button>
+          </div>
+          <line-chart-request :chart-data="lineChartData" />
+        </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -140,7 +146,7 @@ export default {
     this.getWord()
     this.getRank()
     this.getContribution()
-    this.getVisitWeek()
+    this.getVisitWeek(0)
   },
   methods: {
     getWord() {
@@ -163,8 +169,8 @@ export default {
         this.continuous = response.data.continuous
       })
     },
-    getVisitWeek() {
-      getVisitWeek().then(response => {
+    getVisitWeek(count) {
+      getVisitWeek(count).then(response => {
         this.lineChartData = response.data
       })
     },

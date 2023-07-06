@@ -26,10 +26,11 @@ export function getContribution() {
 }
 
 // 获取最近一周访问量
-export function getVisitWeek() {
+export function getVisitWeek(count) {
   return request({
     url: api + '/visit-week',
-    method: 'get'
+    method: 'get',
+    params: { count: count }
   })
 }
 
