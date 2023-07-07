@@ -8,7 +8,6 @@ import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
 import hljs from 'highlight.js'
 import App from './App.vue'
 
-import { image } from '@/utils/publicMethods'
 // 挂载路由配置
 import router from './router/index'
 // 挂载 Element Plus
@@ -34,7 +33,5 @@ app.use(ElementPlus)
 app.component('SvgIcon', SvgIcon)
 app.use(elementIcons)
 app.use(VMdPreview)
-
-app.config.globalProperties.image = image
 
 app.mount('#app')

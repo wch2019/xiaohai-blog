@@ -1,23 +1,28 @@
 <template>
   <!--左内容区-->
   <el-col :lg="14" :xl="11">
-    <h1 class="flex-center"><svg-icon icon-class="tags"></svg-icon> 标签</h1>
-    <el-card class="box-card" shadow="hover">
+    {{ typeId }}
+    <h1 class="flex-center">
+      <svg-icon icon-class="tags" @click="typeId = 0"></svg-icon> {{ name }}
+    </h1>
+    <el-card v-if="typeId == 0" class="box-card" shadow="hover">
       <el-space size="large" wrap>
         <div v-for="tag in tags" :key="tag.id">
-          <el-button
-            text
-            bg
-            size="large"
-            @click="cancelClick('/tagSearch/' + tag.id + '?name=' + tag.name)"
-          >
+          <el-button text bg size="large" @click="cancelClick(tag)">
             <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
             <div class="tags">{{ tag.count }}</div>
           </el-button>
         </div>
       </el-space>
     </el-card>
+    <div v-else class="hidden-sm-and-down">
+      <articleList :articleType="articleType" :typeId="typeId" />
+    </div>
   </el-col>
+  <div v-if="typeId != 0" class="hidden-md-and-up">
+    <articleList :articleType="articleType" :typeId="typeId" />
+  </div>
+
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
     <RightSide></RightSide>
@@ -29,8 +34,15 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listTag } from '@/api/show'
+import articleList from '@/components/articleList/index.vue'
+// 标签名称
+const name = ref('标签')
 // 标签列表
 const tags = ref([])
+
+const articleType = ref(5)
+const typeId = ref(0)
+
 /**
  * 标签列表
  */
@@ -42,8 +54,10 @@ const getTags = async () => {
 }
 const router = useRouter()
 // 标签跳转
-function cancelClick(path: any) {
-  router.push(path)
+function cancelClick(tag: any) {
+  typeId.value = tag.id
+  name.value = tag.name
+  // router.push(path)
 }
 
 getTags()

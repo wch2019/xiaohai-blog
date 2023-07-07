@@ -112,7 +112,7 @@
 import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { listArticles, listTag, findShowBasic, friendLink } from '@/api/show'
-import {image} from "@/utils/publicMethods";
+import { getArticle, image } from '@/utils/publicMethods'
 
 const loading = ref(true)
 // 标签列表
@@ -120,7 +120,7 @@ const tags = ref([])
 // 展示热门文章列表
 const dataList = ref([])
 // 网站信息
-const showBasic = ref({})
+const showBasic = ref<any>({})
 // 友情链接
 const friendLinkList = ref({})
 
@@ -181,19 +181,8 @@ function getFriendLink() {
     friendLinkList.value = response.data.data
   })
 }
-/**
- * 图片地址拼接
- * @param cover
- */
-// function image(cover: any) {
-//   return import.meta.env.VITE_APP_BASE_API_FILE + cover
-// }
 
 const router = useRouter()
-// 路由跳转
-function getArticle(id: any) {
-  router.push({ path: `/article/${id}` })
-}
 // 标签跳转
 function cancelClick(path: any) {
   router.push(path)

@@ -31,5 +31,6 @@ module.exports = {
     'no-restricted-syntax':0,
     'quotes': ['error', 'single'], // 使用单引号
     'semi': ['error', 'never'], // 行尾不使用分号
+    "no-plusplus": "off" // 不会再收到关于一元操作符 ++ 的 ESLint 错误提示
   }
 }

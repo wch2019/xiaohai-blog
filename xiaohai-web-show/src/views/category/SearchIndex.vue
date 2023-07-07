@@ -101,11 +101,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, toRefs, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { reactive, ref, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listArticles, listTag } from '@/api/show'
-import {image} from "@/utils/publicMethods";
+import { getArticle, image } from '@/utils/publicMethods'
 
 const loading = ref(true)
 const route = useRoute()
@@ -138,11 +138,6 @@ function getList() {
   })
 }
 
-
-const router = useRouter()
-function getArticle(id: any) {
-  router.push({ path: `/article/${id}` })
-}
 /**
  * 标签列表
  */
