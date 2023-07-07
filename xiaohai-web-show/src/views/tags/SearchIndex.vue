@@ -103,6 +103,7 @@ import { onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listArticles, listTag } from '@/api/show'
+import {image} from "@/utils/publicMethods";
 
 const loading = ref(true)
 const route = useRoute()
@@ -127,7 +128,7 @@ const { queryParams } = toRefs(data)
 /** 查询展示文章列表 */
 function getList() {
   queryParams.value.id = Number(route.params.id)
-  name.value = route.query.name
+  name.value = <string>route.query.name
   loading.value = true
   listArticles(queryParams.value).then((response) => {
     dataList.value = response.data.data.records
@@ -139,9 +140,9 @@ function getList() {
  * 图片地址拼接
  * @param cover
  */
-function image(cover: any) {
+/*function image(cover: any) {
   return import.meta.env.VITE_APP_BASE_API_FILE + cover
-}
+}*/
 
 const router = useRouter()
 function getArticle(id: any) {

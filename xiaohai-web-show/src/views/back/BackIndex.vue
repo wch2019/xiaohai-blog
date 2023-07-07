@@ -47,6 +47,7 @@ import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listBack } from '@/api/show'
+import {image} from "@/utils/publicMethods";
 
 const router = useRouter()
 // 展示归档列表
@@ -79,9 +80,9 @@ function getArticleId(id: any) {
  * 图片地址拼接
  * @param cover
  */
-function image(cover: any) {
-  return import.meta.env.VITE_APP_BASE_API_FILE + cover
-}
+// function image(cover: any) {
+//   return import.meta.env.VITE_APP_BASE_API_FILE + cover
+// }
 const handleSizeChange = (val: number) => {
   queryParams.value.pageNum = val
   getList()

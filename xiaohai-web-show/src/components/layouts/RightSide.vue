@@ -8,7 +8,7 @@
     >
       <img src="../../assets/image/1.jpg" class="image" />
       <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-        <el-avatar :src="image(showBasic.avatar)" class="panThumb" />
+        <el-avatar v-if="showBasic.avatar" :src="image(showBasic.avatar)" class="panThumb" />
 
         <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
           <h3>{{ showBasic.username }}</h3>
@@ -112,6 +112,7 @@
 import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { listArticles, listTag, findShowBasic, friendLink } from '@/api/show'
+import {image} from "@/utils/publicMethods";
 
 const loading = ref(true)
 // 标签列表
@@ -184,9 +185,9 @@ function getFriendLink() {
  * 图片地址拼接
  * @param cover
  */
-function image(cover: any) {
-  return import.meta.env.VITE_APP_BASE_API_FILE + cover
-}
+// function image(cover: any) {
+//   return import.meta.env.VITE_APP_BASE_API_FILE + cover
+// }
 
 const router = useRouter()
 // 路由跳转

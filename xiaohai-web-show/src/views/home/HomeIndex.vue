@@ -204,6 +204,7 @@ import { ref, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
 import { listTag, listArticles, articleLike } from '@/api/show'
+import {image} from "@/utils/publicMethods";
 
 const loading = ref(true)
 // 展示文章列表

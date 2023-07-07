@@ -95,6 +95,7 @@ import { ref, toRefs, watch } from 'vue'
 import CommentsInput from '@/components/comments/commentsInput.vue'
 import { allEmoji } from '@/components/emoji/emoji'
 import useStore from '@/store'
+import {image} from "@/utils/publicMethods";
 
 const store = useStore()
 const placeholderValue = ref('')

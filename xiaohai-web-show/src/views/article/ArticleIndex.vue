@@ -217,6 +217,7 @@ import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import comments from '@/components/comments/index.vue'
+import {image} from "@/utils/publicMethods";
 
 // 文章详情
 const articleOne = ref({})
