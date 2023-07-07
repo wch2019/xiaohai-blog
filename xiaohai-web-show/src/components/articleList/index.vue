@@ -1,55 +1,21 @@
 <script setup lang="ts">
 import { ref, watch, reactive, toRefs } from 'vue'
-import { listTag, listArticles, articleLike } from '@/api/show'
+import {  listArticles, articleLike } from '@/api/show'
 import { getArticle, image } from '@/utils/publicMethods'
+import useStore from '@/store/index'
+const store = useStore()
+
 // 定义父组件传递的属性类型
 const props = defineProps({
-  articleType: {
-    type: Number,
-    default: 1
-  },
-  typeId: {
-    type: Number,
-    default: null
+  dataList:{
+    type: Object,
+    default: []
   }
 })
 
-const { typeId, articleType } = toRefs(props)
-
+const { dataList } = toRefs(props)
+// 加载
 const loading = ref(true)
-// 展示文章列表
-const dataList: any = ref([])
-// 标签列表
-const tags = ref([])
-// 总数
-const total = ref()
-// 是否展示加载更多
-const loadMores = ref(true)
-
-const data = reactive({
-  queryParams: {
-    pageNum: 1,
-    pageSize: 10,
-    id: typeId,
-    type: articleType
-  }
-})
-
-const { queryParams } = toRefs(data)
-
-/** 查询展示文章列表 */
-function getList() {
-  queryParams.value.pageNum = 1
-  queryParams.value.pageSize = 10
-  loading.value = true
-  listArticles(queryParams.value).then((response) => {
-    dataList.value = response.data.data.records
-    total.value = response.data.data.total
-    const a = Math.ceil(total.value / queryParams.value.pageSize)
-    loadMores.value = queryParams.value.pageNum + 1 <= a
-    loading.value = false
-  })
-}
 
 /**
  * 点赞
@@ -78,43 +44,14 @@ function clickLike(val: any) {
   })
 }
 
-/**
- * 标签列表
- */
-const getTags = async () => {
-  // 函解构用async和await包裹
-  const { data: res } = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
-  // 对data进行解构赋值 取出请求的结果res
-  tags.value = res.data
-  // data = res.data // 将请求结果的data值赋给data.list 方便表格table与之数据双向绑定
-}
-
-/**
- * 加载更多
- */
-function loadMore() {
-  const a = Math.ceil(total.value / queryParams.value.pageSize)
-  if (queryParams.value.pageNum + 1 >= a) {
-    loadMores.value = false
-  }
-  if (queryParams.value.pageNum + 1 <= a) {
-    queryParams.value.pageNum = 1 + queryParams.value.pageNum
-    listArticles(queryParams.value).then((response) => {
-      dataList.value = [...dataList.value, ...response.data.data.records]
-    })
-  }
-}
-// 监听数据变动
+ // 监听数据变动
 watch(
-  () => props.articleType || props.typeId,
+  () => dataList?.value,
   () => {
-    getList()
+    loading.value=false;
   }
 )
 
-// 调用函数
-getTags()
-getList()
 </script>
 
 <template>
@@ -169,7 +106,7 @@ getList()
                 <span v-if="article.nickName" class="text-xs">{{ article.nickName }}</span>
                 <span v-else class="text-xs">{{ article.username }}</span>
                 <el-tag size="small">{{ article.categoryName }}</el-tag>
-                <template v-for="(item, index) in tags">
+                <template v-for="(item, index) in store.tags">
                   <el-tag
                     v-if="article.tags && article.tags.includes(item.id)"
                     :key="index"
@@ -205,8 +142,6 @@ getList()
         </div>
       </div>
     </el-card>
-    <el-button v-if="loadMores" text type="primary" bg @click="loadMore">加载更多</el-button>
-    <el-button v-else text disabled>没有更多了</el-button>
   </el-space>
   <!--手机端-->
   <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
@@ -261,8 +196,6 @@ getList()
         </div>
       </div>
     </el-card>
-    <el-button v-if="loadMores" text type="primary" bg @click="loadMore">加载更多</el-button>
-    <el-button v-else text disabled>没有更多了</el-button>
   </el-space>
 </template>
 

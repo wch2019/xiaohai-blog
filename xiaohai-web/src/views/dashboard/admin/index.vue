@@ -56,7 +56,6 @@
                 <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
               </template>
             </el-table-column>
-            <el-table-column label="阅读量" prop="pageView" align="center" />
             <el-table-column label="时间" prop="createdTime" align="center" />
           </el-table>
         </el-card>

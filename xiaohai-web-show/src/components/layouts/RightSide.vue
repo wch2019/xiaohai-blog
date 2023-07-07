@@ -34,7 +34,7 @@
         </el-space>
       </div>
     </el-card>
-    <el-card class="box-card" shadow="hover" style="text-align: center"> {{ a }} </el-card>
+    <el-card class="box-card" shadow="hover" style="text-align: center"> {{ greetings() }} </el-card>
 
     <el-card class="box-card" shadow="hover">
       <template #header>
@@ -42,7 +42,7 @@
       </template>
       <div
         v-loading="loading"
-        v-for="article in dataList"
+        v-for="article in store.getHot()"
         :key="article"
         style="display: flex; margin-top: 16px; justify-content: space-between"
       >
@@ -81,7 +81,7 @@
         </div>
       </template>
       <el-space wrap size="small">
-        <div v-for="(tag, index) in tags" :key="tag.id">
+        <div v-for="(tag, index) in store.tags" :key="tag.id">
           <el-button
             v-if="index < 10"
             text
@@ -100,7 +100,7 @@
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="link"></svg-icon> 友链</h2>
       </template>
       <el-space wrap size="large">
-        <div v-for="link in friendLinkList" :key="link">
+        <div v-for="link in store.friendLinkList" :key="link">
           <el-link :href="link.url" target="_blank">{{ link.name }}</el-link>
         </div>
       </el-space>
@@ -109,29 +109,18 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, toRefs } from 'vue'
+import {ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { listArticles, listTag, findShowBasic, friendLink } from '@/api/show'
 import { getArticle, image } from '@/utils/publicMethods'
+import useStore from '@/store/index'
+const store = useStore()
+const router = useRouter()
 
 const loading = ref(true)
-// 标签列表
-const tags = ref([])
-// 展示热门文章列表
-const dataList = ref([])
-// 网站信息
-const showBasic = ref<any>({})
-// 友情链接
-const friendLinkList = ref({})
 
-const data = reactive({
-  queryParams: {
-    pageNum: 1,
-    pageSize: 5,
-    type: 2
-  }
-})
-const { queryParams } = toRefs(data)
+// 网站信息
+const showBasic = ref<any>(store.showBasic)
+
 function greetings() {
   const date = new Date()
   if (date.getHours() >= 6 && date.getHours() < 8) {
@@ -151,46 +140,11 @@ function greetings() {
   }
   return ''
 }
-const a = greetings()
-/**
- * 标签列表
- */
-const getTags = async () => {
-  // 函解构用async和await包裹
-  const { data: res } = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
-  // 对data进行解构赋值 取出请求的结果res
-  tags.value = res.data
-}
-/** 查询展示文章列表 */
-function getList() {
-  loading.value = true
-  listArticles(queryParams.value).then((response) => {
-    dataList.value = response.data.data.records
-    loading.value = false
-  })
-}
-// 网站信息
-function getShowBasic() {
-  findShowBasic().then((response) => {
-    showBasic.value = response.data.data
-  })
-}
-// 友情链接
-function getFriendLink() {
-  friendLink().then((response) => {
-    friendLinkList.value = response.data.data
-  })
-}
 
-const router = useRouter()
 // 标签跳转
 function cancelClick(path: any) {
   router.push(path)
 }
-getShowBasic()
-getFriendLink()
-getTags()
-getList()
 </script>
 
 <style scoped>

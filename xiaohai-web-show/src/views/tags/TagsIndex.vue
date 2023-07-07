@@ -1,13 +1,80 @@
+<script setup lang="ts">
+import {reactive, ref, toRefs} from 'vue'
+import { useRouter } from 'vue-router'
+import RightSide from '@/components/layouts/RightSide.vue'
+import {listArticles, listTag} from '@/api/show'
+import articleList from '@/components/articleList/index.vue'
+import useStore from '@/store/index'
+const store = useStore()
+// 标签名称
+const name = ref('标签')
+// 标签列表
+const tags = ref([])
+// 展示文章列表
+const dataList: any = ref([])
+// 总数
+const total = ref()
+// 是否展示加载更多
+const loadMores = ref(true)
+
+const data = reactive({
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    type: 5,
+    id:0
+  }
+})
+
+const { queryParams } = toRefs(data)
+
+const router = useRouter()
+// 标签跳转
+function cancelClick(tag: any) {
+  name.value = tag.name
+  getList(tag.id)
+}
+
+/** 查询展示文章列表 */
+function getList(val:any) {
+  queryParams.value.id = val
+  queryParams.value.pageNum = 1
+  queryParams.value.pageSize = 10
+  listArticles(queryParams.value).then((response) => {
+    dataList.value = response.data.data.records
+    total.value = response.data.data.total
+    const a = Math.ceil(total.value / queryParams.value.pageSize)
+    loadMores.value = queryParams.value.pageNum + 1 <= a
+  })
+}
+
+/**
+ * 加载更多
+ */
+function loadMore() {
+  const a = Math.ceil(total.value / queryParams.value.pageSize)
+  if (queryParams.value.pageNum + 1 >= a) {
+    loadMores.value = false
+  }
+  if (queryParams.value.pageNum + 1 <= a) {
+    queryParams.value.pageNum = 1 + queryParams.value.pageNum
+    listArticles(queryParams.value).then((response) => {
+      dataList.value = [...dataList.value, ...response.data.data.records]
+    })
+  }
+}
+</script>
+
 <template>
   <!--左内容区-->
-  <el-col :lg="14" :xl="11">
-    {{ typeId }}
+  <el-col  :lg="14" :xl="11">
     <h1 class="flex-center">
-      <svg-icon icon-class="tags" @click="typeId = 0"></svg-icon> {{ name }}
+      <svg-icon class="link" icon-class="tags" @click="queryParams.id = 0"></svg-icon>
+       {{ name }}
     </h1>
-    <el-card v-if="typeId == 0" class="box-card" shadow="hover">
+    <el-card v-if="queryParams.id == 0"  class="box-card" shadow="hover">
       <el-space size="large" wrap>
-        <div v-for="tag in tags" :key="tag.id">
+        <div v-for="tag in store.tags" :key="tag.id">
           <el-button text bg size="large" @click="cancelClick(tag)">
             <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
             <div class="tags">{{ tag.count }}</div>
@@ -15,13 +82,12 @@
         </div>
       </el-space>
     </el-card>
-    <div v-else class="hidden-sm-and-down">
-      <articleList :articleType="articleType" :typeId="typeId" />
-    </div>
+    <el-space v-else direction="vertical" fill size="large" style="display: flex">
+      <articleList :dataList="dataList"></articleList>
+      <el-button v-if="loadMores" text type="primary" bg @click="loadMore">加载更多</el-button>
+      <el-button v-else text disabled>没有更多了</el-button>
+    </el-space>
   </el-col>
-  <div v-if="typeId != 0" class="hidden-md-and-up">
-    <articleList :articleType="articleType" :typeId="typeId" />
-  </div>
 
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
@@ -29,44 +95,13 @@
   </el-col>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import RightSide from '@/components/layouts/RightSide.vue'
-import { listTag } from '@/api/show'
-import articleList from '@/components/articleList/index.vue'
-// 标签名称
-const name = ref('标签')
-// 标签列表
-const tags = ref([])
-
-const articleType = ref(5)
-const typeId = ref(0)
-
-/**
- * 标签列表
- */
-const getTags = async () => {
-  // 函解构用async和await包裹
-  const { data: res } = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
-  // 对data进行解构赋值 取出请求的结果res
-  tags.value = res.data
-}
-const router = useRouter()
-// 标签跳转
-function cancelClick(tag: any) {
-  typeId.value = tag.id
-  name.value = tag.name
-  // router.push(path)
-}
-
-getTags()
-</script>
-
 <style scoped>
 .box-card {
   padding: 0;
   border-radius: 10px;
   border: 1px solid transparent;
+}
+.link:hover{
+  cursor: pointer;
 }
 </style>

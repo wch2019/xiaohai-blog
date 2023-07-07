@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getToken, removeToken } from '@/utils/auth'
 import { getInfo, logout } from '@/api/user'
-
+import {findShowBasic, friendLink, hotArticles, listTag} from '@/api/show'
 const useStore = defineStore('user', {
   state: () => {
     return {
@@ -10,6 +10,10 @@ const useStore = defineStore('user', {
       summary: '',
       avatar: '',
       userId: '',
+      showBasic:'',
+      tags:[],
+      friendLinkList:[],
+      hotArticles:[],
       count: 0,
       app: 0
     }
@@ -48,6 +52,50 @@ const useStore = defineStore('user', {
           .catch((error) => {
             reject(error)
           })
+      })
+    },
+    // 获取系统信息
+    getSystem() {
+      return new Promise<void>((resolve, reject) => {
+        findShowBasic().then((response) => {
+          this.showBasic = response.data.data
+          resolve()
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+    // 获取标签信息
+    getTags() {
+      return new Promise<void>((resolve, reject) => {
+        listTag().then((response) => {
+          this.tags = response.data.data
+          resolve()
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+    // 获取友情链接
+    getFriendLink() {
+      return new Promise<void>((resolve, reject) => {
+        friendLink().then((response) => {
+          this.friendLinkList = response.data.data
+          resolve()
+        }).catch((error) => {
+          reject(error)
+        })
+      })
+    },
+    // 获取热门文章
+    getHot() {
+      return new Promise<void>((resolve, reject) => {
+        hotArticles().then((response) => {
+          this.hotArticles = response.data.data.records
+          resolve()
+        }).catch((error) => {
+          reject(error)
+        })
       })
     },
     // remove token

@@ -25,6 +25,18 @@ export const listArticles = (query: any) => {
     params: query
   })
 }
+// 查询热榜文章列表数据
+export const hotArticles = () => {
+  return request({
+    url: `${api}/articles`,
+    method: 'get',
+    params: {
+      pageNum: 1,
+      pageSize: 5,
+      type: 2
+    }
+  })
+}
 // 文章详情
 export const article = (id: any) => {
   return request({
