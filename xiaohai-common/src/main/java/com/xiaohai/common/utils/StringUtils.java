@@ -1,6 +1,7 @@
 package com.xiaohai.common.utils;
 
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * @author wangchenghai
@@ -65,5 +66,17 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static <T> T cast(Object obj)
     {
         return (T) obj;
+    }
+
+    /**
+     * 生成没有-的uuid
+     * @return java.lang.String
+     * @author xiaohai
+     * @since 2023/7/8 8:32
+     */
+    public static String generateUUIDWithoutHyphens() {
+        UUID uuid = UUID.randomUUID();
+        String uuidString = uuid.toString();
+        return uuidString.replace("-", "");
     }
 }

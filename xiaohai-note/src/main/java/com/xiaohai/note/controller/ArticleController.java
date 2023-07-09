@@ -17,8 +17,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文章表Controller
@@ -96,4 +98,14 @@ public class ArticleController {
     public Response<Integer> push(@PathVariable Long id) {
         return Response.success("调整成功！", articleService.push(id));
     }
+
+    @Operation(summary = "导入markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:article:import")
+    @Log(title = "导入markdown压缩文件")
+    @PostMapping(value = "/markdown", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Response<Integer> uploadCompressedFile(MultipartFile file) {
+        articleService.uploadCompressedFile(file);
+        return Response.success("解析markdown压缩文件成功！");
+    }
+
 }

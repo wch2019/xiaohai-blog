@@ -34,100 +34,83 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadAvatar(MultipartFile file) {
         //根据用户区分文件夹
-        String path = fileConfig.getAvatarPath() + StpUtil.getLoginId() + "/";
+        String path = fileConfig.getAvatarPath() + StpUtil.getLoginId() + File.separator;
         return addFile(path, file);
     }
 
     @Override
     public String uploadImage(MultipartFile file) {
         //指定markdown图片上传目录,根据用户区分文件夹
-        String path = fileConfig.getImagePath() + StpUtil.getLoginId() + "/";
+        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + StpUtil.getLoginId() + File.separator;
         return addFile(path, file);
     }
 
     @Override
     public Integer deleteImage(String pathName) {
-        String path = fileConfig.getImagePath() + StpUtil.getLoginId() + "/" + pathName;
+        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + StpUtil.getLoginId() + File.separator + pathName;
         boolean isTrue = FileUtils.deleteFile(path);
         Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
         return 1;
     }
 
     /**
-     * 图片文件上传
+     * 添加文件
      *
-     * @param path
-     * @param file
-     * @return
+     * @param path 文件保存路径
+     * @param file 要添加的文件
+     * @return 添加的文件路径
      */
     public String addFile(String path, MultipartFile file) {
-        //文件地址初始化
-        String filePath = "";
-        //首先判断不是空的文件
-        if (file == null || StringUtils.isBlank(file.getOriginalFilename())) {
+        // 判断文件是否为空
+        if (file == null || file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
-        var filename = file.getOriginalFilename();
-        //对文文件的全名进行截取然后在后缀名进行删选。
-        int begin = filename.indexOf(".");
-        int last = filename.length();
-        //获得文件后缀名
-        String a = filename.substring(begin + 1, last);
-        //判断指定文件后缀类型
-        if (Arrays.stream(Constants.IMAGE_EXTENSION).toList().contains(a.toLowerCase())) {
-            //为了不重复，时间戳作为图片名称
-            String fileNameString = System.currentTimeMillis() + "." + a;
-            File savedFile = new File(path, fileNameString);
-            try {
-                //去掉前缀
-                filePath = savedFile.getPath().replaceAll("\\\\", "/").replace(fileConfig.getProfile(), "");
-                log.info("保存图片--------->" + "/" + filePath);
-                FileUtils.copyInputStreamToFile(file.getInputStream(), savedFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
+
+        // 获取文件原始名称
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+
+        // 获取文件后缀名
+        String fileExtension = FileUtils.getFileExtension(originalFilename);
+
+        // 判断文件类型是否为图片
+        if (!FileUtils.isImageExtension(fileExtension)) {
             throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(Constants.IMAGE_EXTENSION));
         }
-        return "/" + filePath;
+
+        // 生成唯一的文件名
+        String fileName = FileUtils.generateUniqueFileName(fileExtension);
+
+        // 保存文件并返回文件路径
+        String filePath = FileUtils.saveFile(path, fileName, file);
+        filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
+        log.info("保存图片--------->{}", filePath);
+        //前端展示需要处理
+        return filePath.replace("\\", "/");
     }
 
     @Override
     public String upload(UploadVo vo) {
         MultipartFile file = vo.getFile();
-        String path = fileConfig.getFilePath()+ StpUtil.getLoginId() + "/" + vo.getPath();
-        //文件地址初始化
-        String filePath = "";
-        //首先判断不是空的文件
-        if (file == null || StringUtils.isBlank(file.getOriginalFilename())) {
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() +File.separator + vo.getPath();
+        // 判断文件是否为空
+        if (file == null || file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
-        //获取文件全名
-        file.getOriginalFilename();
-        //对文文件的全名进行截取然后在后缀名进行删选。
-        int begin = Objects.requireNonNull(file.getOriginalFilename()).indexOf(".");
-        int last = file.getOriginalFilename().length();
-        //获得文件后缀名
-        String a = file.getOriginalFilename().substring(begin, last);
-        //我这边需要的jpg文件所以说我这边直接判断就是了
-        if (a.endsWith(".jpg") || a.endsWith(".png")) {
-            //文件夹以年份/月份/分割
-            String folder = LocalDateTime.now().getYear() + "/" + LocalDateTime.now().getMonth() + "/";
-            //为了不重复，时间戳作为图片名称
-            String fileNameString = System.currentTimeMillis() + a;
-            File savedFile = new File(path + folder, fileNameString);
-            try {
-                //去掉前缀
-                filePath = savedFile.getPath().replaceAll("\\\\", "/").replace(fileConfig.getProfile(), "");
-                log.info("保存文件--------->" + filePath);
-                FileUtils.copyInputStreamToFile(file.getInputStream(), savedFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            throw new ServiceException("文件类型不对 *.jpg,*.png");
-        }
-        return filePath.replaceAll("\\\\", "/");
+
+        // 获取文件原始名称
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+        //文件夹以年份/月份/分割
+//        String folder = LocalDateTime.now().getYear() + "/" + LocalDateTime.now().getMonth() + "/";
+
+        // 保存文件并返回文件路径
+        String filePath = FileUtils.saveFile(path, originalFilename, file);
+
+        filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
+        log.info("保存图片--------->{}", filePath);
+        //前端展示需要处理
+        return  filePath.replace("\\", "/");
     }
 
     @Override

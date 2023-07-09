@@ -6,6 +6,7 @@ import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -120,4 +121,10 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     UserBasicDto findShowBasic();
+
+    /**
+     * 导入markdown压缩文件
+     * @param file 文件
+     */
+    void uploadCompressedFile(MultipartFile file);
 }

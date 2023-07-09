@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
 /**
  * @author wangchenghai
  * @date 2023/03/16 13:56:07
@@ -27,13 +29,13 @@ public class FileConfig {
     private String filePath;
 
     public String getImagePath() {
-        return this.profile+"image/";
+        return this.profile+"image"+ File.separator;
     }
 
     public String getAvatarPath() {
-        return this.profile+"avatar/";
+        return this.profile+"avatar"+ File.separator;
     }
     public String getFilePath() {
-        return this.profile+"files/";
+        return this.profile+"files"+ File.separator;
     }
 }

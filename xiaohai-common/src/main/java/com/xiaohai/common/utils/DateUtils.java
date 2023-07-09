@@ -80,6 +80,18 @@ public class DateUtils {
         }
         return recentDays;
     }
+    /**
+     * 字符串转LocalDateTime yyyy-MM-dd HH:mm:ss
+     * @param dateString
+     * @return java.time.LocalDateTime
+     * @author xiaohai
+     * @since 2023/7/9 15:56
+     */
+    public static LocalDateTime getLocalDateTimeToString(String dateString ){
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return LocalDateTime.parse(dateString, formatter);
+    }
 
     public static void main(String[] args) {
         System.out.println(millisToDateTime(1625686800000L));

@@ -46,6 +46,22 @@ public class Constants {
      * 图片后缀
      */
     public static final String[] IMAGE_EXTENSION = { "bmp", "gif", "jpg", "jpeg", "png" };
+    /**
+     * 压缩后缀
+     */
+    public static final String[] COMPRESS_EXTENSION = {"zip"};
+    /**
+     * markdown后缀
+     */
+    public static final String MARKDOWN_EXTENSION = "md";
+    /**
+     * 导入笔记临时目录
+     */
+    public static final String NOTE_FILE = "note";
+    /**
+     * 导入笔记图片临时目录
+     */
+    public static final String IMAGE_FILE = "image";
 
     /**
      * 文章内容高亮开始
@@ -55,4 +71,16 @@ public class Constants {
      * 文章内容高亮结束
      */
     public static final String POST_TAG = "</span>";
+    /**
+     * markdown目录
+     */
+    public static final String MARKDOWN_FILE = "markdown";
+    /**
+     * 必应图片路径
+     */
+    public static final String BING_FILE = "bing";
+    /**
+     * 文件临时路径
+     */
+    public static final String TEMPORARY_FILE = "temporary";
 }

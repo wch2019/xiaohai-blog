@@ -13,9 +13,8 @@ import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Contribution;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.common.utils.ContributionUtils;
-import com.xiaohai.common.utils.FileUtils;
-import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.common.exception.ServiceException;
+import com.xiaohai.common.utils.*;
 import com.xiaohai.note.dao.*;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
@@ -32,16 +31,22 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * 文章表 服务实现类
@@ -122,7 +127,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public ArticleDtoAll findById(Long id,int type) {
+    public ArticleDtoAll findById(Long id, int type) {
         ArticleDtoAll articleDtoAll = new ArticleDtoAll();
         Article article = baseMapper.selectById(id);
         BeanUtils.copyProperties(article, articleDtoAll);
@@ -131,7 +136,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //当前文章点赞数
         articleDtoAll.setLikeCount(articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>().eq("article_id", articleDtoAll.getId())));
         //获取登录用户是否点赞
-        if(StpUtil.isLogin()) {
+        if (StpUtil.isLogin()) {
             long count = articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>()
                     .eq("user_id", StpUtil.getLoginId())
                     .eq("article_id", articleDtoAll.getId()));
@@ -144,10 +149,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //用户详情
         articleDtoAll.setUserBasic(baseMapper.findUserBasic(Long.valueOf(article.getUserId())));
         //更新浏览量
-        if(type==0){
-            Article articleCount=new Article();
+        if (type == 0) {
+            Article articleCount = new Article();
             articleCount.setId(article.getId());
-            articleCount.setPageView(article.getPageView()+1);
+            articleCount.setPageView(article.getPageView() + 1);
             baseMapper.updateById(articleCount);
         }
         return articleDtoAll;
@@ -155,14 +160,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
-        Integer userId=null;
+        Integer userId = null;
         //判断角色是否是管理员
-        if(!StpUtil.hasRole(Constants.ADMIN)){
+        if (!StpUtil.hasRole(Constants.ADMIN)) {
             //不是管理员只查询当前用户数据
-            userId=Integer.valueOf((String)StpUtil.getLoginId());
+            userId = Integer.valueOf((String) StpUtil.getLoginId());
         }
         IPage<ArticleDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<ArticleDto> iPage = baseMapper.selectPageArticleQuery(wherePage, query,userId);
+        IPage<ArticleDto> iPage = baseMapper.selectPageArticleQuery(wherePage, query, userId);
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());
@@ -195,11 +200,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             throw new RuntimeException(e);
         }
         Assert.isTrue(!"https://cn.bing.com".equals(url), "获取图片失败");
-        //指定markdown图片上传目录,根据用户区分文件夹
-        String path = fileConfig.getImagePath() + StpUtil.getLoginId() + "/";
+        //指定公共markdown图片上传目录
+        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + Constants.BING_FILE + File.separator;
         FileUtils.download(url, path, name + ".jpg");
-        path = path.replaceAll("\\\\", "/").replace(fileConfig.getProfile(), "");
-        return "/" + path + name + ".jpg";
+        path = File.separator + path.replace(fileConfig.getProfile(), "") + name + ".jpg";
+        return path.replaceAll("\\\\", "/");
     }
 
     @Override
@@ -255,33 +260,33 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     @Transactional
-    public ReturnPageData<ArticleShowDto> findShowListByPage(Integer type,Long id) {
+    public ReturnPageData<ArticleShowDto> findShowListByPage(Integer type, Long id) {
         IPage<ArticleShowDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         //1:最新文章,2:最热文章,3:原创文章,4:转载文章,5:标签id,6:分类id
-        IPage<ArticleShowDto> iPage = baseMapper.findShowListByPage(wherePage,type,id);
+        IPage<ArticleShowDto> iPage = baseMapper.findShowListByPage(wherePage, type, id);
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         //标签
-        if(type==5){
-            Tags tag=new Tags();
+        if (type == 5) {
+            Tags tag = new Tags();
             tag.setId(Math.toIntExact(id));
-            tag.setClick(tagsMapper.selectById(Math.toIntExact(id)).getClick()+1);
+            tag.setClick(tagsMapper.selectById(Math.toIntExact(id)).getClick() + 1);
             tagsMapper.updateById(tag);
         }
         //分类
-        if(type==6){
-            Category category=new Category();
+        if (type == 6) {
+            Category category = new Category();
             category.setId(Math.toIntExact(id));
-            category.setClick(categoryMapper.selectById(Math.toIntExact(id)).getClick()+1);
+            category.setClick(categoryMapper.selectById(Math.toIntExact(id)).getClick() + 1);
             categoryMapper.updateById(category);
         }
         // 登录用户获取是否点赞
-        if(StpUtil.isLogin()){
+        if (StpUtil.isLogin()) {
             for (ArticleShowDto showDto : iPage.getRecords()) {
-                long count=articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>().eq("user_id",StpUtil.getLoginId()).eq("article_id",showDto.getId()));
-                if(count==1){
+                long count = articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>().eq("user_id", StpUtil.getLoginId()).eq("article_id", showDto.getId()));
+                if (count == 1) {
                     showDto.setClickLike(1);
-                }else {
+                } else {
                     showDto.setClickLike(0);
                 }
             }
@@ -302,15 +307,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public List<ArticleSearchDto> searchArticle(String keywords) {
         // 搜索文章
         List<Article> articles = baseMapper.selectList(new QueryWrapper<Article>()
-                .eq("is_push",1)
-                .like("title",keywords)
-                .or().like("summary",keywords).
+                .eq("is_push", 1)
+                .like("title", keywords)
+                .or().like("summary", keywords).
                 orderByDesc("is_top").
                 orderByDesc("top_time").
                 orderByDesc("created_time"));
-        List<ArticleSearchDto> list=new ArrayList<>();
-        for (Article article:articles){
-            ArticleSearchDto articleSearchDto=new ArticleSearchDto();
+        List<ArticleSearchDto> list = new ArrayList<>();
+        for (Article article : articles) {
+            ArticleSearchDto articleSearchDto = new ArticleSearchDto();
             // 文章标题高亮
             String articleTitle = article.getTitle().replaceAll(keywords, Constants.PRE_TAG + keywords + Constants.POST_TAG);
             // 文章简介高亮
@@ -328,4 +333,108 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return baseMapper.findShowBasic();
     }
 
+    @Override
+    @Transactional
+    public void uploadCompressedFile(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new ServiceException("文件为空");
+        }
+
+        // 获取上传文件的原始名称
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+
+        // 获取文件后缀名
+        String fileExtension = FileUtils.getFileExtension(originalFilename);
+
+        // 判断文件后缀名是否为压缩类型
+        if (!FileUtils.isCompressExtension(fileExtension)) {
+            throw new ServiceException("请查看压缩类型是否正确" + Arrays.toString(Constants.COMPRESS_EXTENSION));
+        }
+
+        String tempFile = StringUtils.generateUUIDWithoutHyphens();
+
+        //压缩文件临时路径
+        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + Constants.TEMPORARY_FILE + File.separator + tempFile;
+
+        // 保存文件并返回文件路径
+        String filePath = FileUtils.saveFile(path, file.getOriginalFilename(), file);
+        try {
+            // 解压缩文件到指定文件夹
+            MarkdownUtils.unZip(new File(filePath), path);
+
+            //获取解压后的markdown文件列表
+            List<String> list = MarkdownUtils.fileList(path + File.separator + Constants.NOTE_FILE);
+            if (list.isEmpty()) {
+                throw new ServiceException("没有可用markdown文件");
+            }
+            //图片文件新存放处
+            String newPath = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + StpUtil.getLoginId() + File.separator;
+
+            for (String mdFilePath : list) {
+                //获取markdown解析文件
+                Map<String, Object> postData = MarkdownUtils.parseHexoPost(mdFilePath);
+
+                // 打印博文数据
+                for (Map.Entry<String, Object> entry : postData.entrySet()) {
+                    Article article = new Article();
+                    if (entry.getKey().equals("title")) {
+                        //标题
+                        article.setTitle(entry.getValue().toString());
+                    }
+                    if (entry.getKey().equals("cover")) {
+                        //封面
+                        article.setCover(entry.getValue().toString());
+                    }
+                    if (entry.getKey().equals("categories")) {
+                        if (StringUtils.isNotBlank(entry.getValue().toString())) {
+                            //分类
+                            Category category = categoryMapper.selectOne(new QueryWrapper<Category>().eq("name", entry.getValue().toString()));
+                            if (category == null) {
+                                //不存在就创建
+                                category = new Category();
+                                category.setName(entry.getValue().toString());
+                                categoryMapper.insert(category);
+                            }
+                            article.setCategoryId(category.getId());
+                        }
+                    }
+                    if (entry.getKey().equals("date")) {
+                        //创建时间
+                        article.setCreatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
+                    }
+                    if (entry.getKey().equals("content")) {
+                        if (StringUtils.isNotBlank(entry.getValue().toString())) {
+                            //文章内容
+                            article.setText(entry.getValue().toString());
+                            List<String> photoList = MarkdownUtils.photoList(article.getText());
+                            for (String fileName : photoList) {
+                                //新图片位置
+                                String newPhotoPath = MarkdownUtils.copyImage(path + fileName.replace("..", ""), newPath);
+                                //去掉前缀
+                                newPhotoPath = "../" + newPhotoPath.replace("\\", "/").replace(fileConfig.getProfile(), "");
+                                article.setText(article.getText().replaceAll(fileName, newPhotoPath));
+                            }
+                            article.setSummary(MarkdownUtils.truncateText(article.getText(), 255));
+                        }
+                    }
+                    article.setUpdatedTime(LocalDateTime.now());
+                    //写入文章
+                    baseMapper.insert(article);
+                    if (entry.getKey().equals("tags")) {
+                        //标签
+                        List<String> tags = (List<String>) entry.getValue();
+                        //新增标签
+                        articleTagService.addTagName(tags, article.getId());
+                    }
+                }
+            }
+
+        } finally {
+            //都要执行删除临时文件
+//            FileUtils.deleteFiles(new File(path));
+            //删除当前目录
+//            FileUtils.deleteFile(path);
+        }
+    }
 }

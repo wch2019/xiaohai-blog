@@ -1,5 +1,9 @@
 package com.xiaohai.common.utils;
 
+import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.exception.ServiceException;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -10,6 +14,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -58,20 +63,18 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     /**
-     * 获取文件后缀
+     * 获取文件的后缀名
      *
-     * @param fileName
-     * @return
+     * @param fileName 文件名
+     * @return 文件后缀名
      */
     public static String getFileExtension(String fileName) {
-        String extension = "";
         int dotIndex = fileName.lastIndexOf(".");
         if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
-            extension = fileName.substring(dotIndex + 1);
+            return fileName.substring(dotIndex + 1).toLowerCase();
         }
-        return extension;
+        throw new ServiceException("无效的文件名");
     }
-
     /**
      * 删除文件或者目录
      *
@@ -90,7 +93,25 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
         return false;
     }
-
+    /**
+     * 删除指定目录下所有文件
+     * @param folder  文件
+     * @author xiaohai
+     * @since 2023/7/9 9:14
+     */
+    public static void deleteFiles(File folder) {
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteFiles(file); // 递归调用删除子目录中的文件
+                    file.delete();// 删除文件夹
+                } else {
+                    file.delete(); // 删除文件
+                }
+            }
+        }
+    }
     /**
      * 创建目录
      *
@@ -129,7 +150,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @param urlString 链接
      * @param savePath  保存路径
      * @param filename  文件名
-     * @throws Exception
      */
     public static void download(String urlString, String savePath, String filename) {
         try {
@@ -159,6 +179,55 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 判断文件后缀名是否为图片类型
+     *
+     * @param fileExtension 文件后缀名
+     * @return 是否为图片类型
+     */
+    public static  boolean isImageExtension(String fileExtension) {
+        return Arrays.asList(Constants.IMAGE_EXTENSION).contains(fileExtension);
+    }
+
+    /**
+     * 判断文件后缀名是否为压缩类型
+     * @param fileExtension 文件后缀名
+     * @return 是否为压缩类型
+     */
+    public static  boolean isCompressExtension(String fileExtension) {
+        return Arrays.asList(Constants.COMPRESS_EXTENSION).contains(fileExtension);
+    }
+
+    /**
+     * 生成唯一的文件名
+     *
+     * @param fileExtension 文件后缀名
+     * @return 唯一的文件名
+     */
+    public static  String generateUniqueFileName(String fileExtension) {
+        String fileName = StringUtils.generateUUIDWithoutHyphens();
+        return fileName + "." + fileExtension;
+    }
+
+    /**
+     * 保存文件到指定路径
+     *
+     * @param path     文件保存路径
+     * @param fileName 文件名
+     * @param file     要保存的文件
+     * @return 文件保存路径
+     */
+    public static  String saveFile(String path, String fileName, MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream()) {
+            File savedFile = new File(path, fileName);
+            FileUtils.copyInputStreamToFile(inputStream, savedFile);
+            return savedFile.getPath();
+        } catch (IOException e) {
+            throw new ServiceException("文件保存失败", e);
         }
     }
 

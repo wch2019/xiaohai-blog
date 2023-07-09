@@ -7,6 +7,8 @@ import com.xiaohai.note.pojo.query.ArticleTagQuery;
 import com.xiaohai.note.pojo.vo.ArticleTagVo;
 import com.xiaohai.note.pojo.dto.ArticleTagDto;
 
+import java.util.List;
+
 /**
  *
  * 文章标签关联 服务类
@@ -65,4 +67,12 @@ public interface ArticleTagService extends IService<ArticleTag> {
      * @param articleId 文章id
      */
     void rewriteArticleTag(Long[] ids, Integer articleId);
+
+    /**
+     * 添加文章标签关联
+     *
+     * @param names 标签名称
+     * @param articleId 文章id
+     */
+    void addTagName(List<String> names, Integer articleId);
 }
