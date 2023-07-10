@@ -34,15 +34,17 @@
         </el-space>
       </div>
     </el-card>
-    <el-card class="box-card" shadow="hover" style="text-align: center"> {{ greetings() }} </el-card>
+    <el-card class="box-card" shadow="hover" style="text-align: center">
+      {{ greetings() }}
+    </el-card>
 
     <el-card class="box-card" shadow="hover">
       <template #header>
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 热门</h2>
       </template>
       <div
-        v-loading="loading"
-        v-for="article in store.getHot()"
+        v-loading="store.hotArticles ? false : loading"
+        v-for="article in store.hotArticles"
         :key="article"
         style="display: flex; margin-top: 16px; justify-content: space-between"
       >
@@ -87,7 +89,7 @@
             text
             bg
             size="large"
-            @click="cancelClick('/tagSearch/' + tag.id + '?name=' + tag.name)"
+            @click="cancelClick('/tags?id' + tag.id + '&name=' + tag.name)"
           >
             <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
             <div class="tags">{{ tag.count }}</div>
@@ -109,10 +111,11 @@
 </template>
 
 <script setup lang="ts">
-import {ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getArticle, image } from '@/utils/publicMethods'
 import useStore from '@/store/index'
+
 const store = useStore()
 const router = useRouter()
 
