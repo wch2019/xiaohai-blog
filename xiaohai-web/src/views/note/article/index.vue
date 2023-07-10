@@ -117,6 +117,17 @@
         >删除
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          v-if="$store.getters.permission.includes('note:article:import')"
+          type="success"
+          plain
+          icon="el-icon-upload"
+          size="mini"
+          @click="handleImport"
+        >导入
+        </el-button>
+      </el-col>
     </el-row>
 
     <el-table
@@ -211,7 +222,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
+  <to-lead-into v-if="leadInfo.show" :leadInfo="leadInfo" @getList="getList"></to-lead-into>
   </div>
 </template>
 
@@ -219,9 +230,11 @@
 import { listArticle, delArticle, updatePush, updateTop } from '@/api/note/article'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
+import ToLeadInto from "@/views/note/article/components/toLeadInto.vue";
 
 export default {
   name: 'Index',
+  components: {ToLeadInto},
   data() {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,
@@ -251,7 +264,10 @@ export default {
         categoryId: null,
         tagId: null
       },
-      srcList: []
+      srcList: [],
+      leadInfo:{
+        show:false
+      }
     }
   },
   created() {
@@ -336,6 +352,10 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
+    },
+    // 导入
+    handleImport(){
+      this.leadInfo.show = true
     },
     // 顶置颜色样式添加
     tableRowClassName({ row, rowIndex }) {
