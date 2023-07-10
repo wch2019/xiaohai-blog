@@ -26,7 +26,7 @@
     <select id="selectTagsArticleCount" resultType="com.xiaohai.note.pojo.dto.TagsDto">
         SELECT t.id,
                t.`name`,
-               (SELECT count(1) FROM b_article_tag where tag_id=t.id) as count,
+               (SELECT count(1) FROM b_article_tag g LEFT JOIN b_article a on g.article_id=a.id where g.tag_id=t.id and a.is_push =1) as count,
                t.sort
         FROM
             `b_tags` t
