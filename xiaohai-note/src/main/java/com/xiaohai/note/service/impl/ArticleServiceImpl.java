@@ -374,17 +374,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             for (String mdFilePath : list) {
                 //获取markdown解析文件
                 Map<String, Object> postData = MarkdownUtils.parseHexoPost(mdFilePath);
-
+                Article article = new Article();
+                List<String> tags = new ArrayList<>();
                 // 打印博文数据
                 for (Map.Entry<String, Object> entry : postData.entrySet()) {
-                    Article article = new Article();
                     if (entry.getKey().equals("title")) {
                         //标题
                         article.setTitle(entry.getValue().toString());
                     }
                     if (entry.getKey().equals("cover")) {
-                        //封面
-                        article.setCover(entry.getValue().toString());
+                        if (StringUtils.isNotBlank(entry.getValue().toString())) {
+                            //新图片位置
+                            String newPhotoPath = MarkdownUtils.copyImage(path + entry.getValue().toString().replace("..", ""), newPath);
+                            //去掉前缀
+                            newPhotoPath = File.separator + newPhotoPath.replace(fileConfig.getProfile(), "");
+                            //封面
+                            article.setCover(newPhotoPath.replace("\\", "/"));
+                        }
                     }
                     if (entry.getKey().equals("categories")) {
                         if (StringUtils.isNotBlank(entry.getValue().toString())) {
@@ -412,29 +418,40 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                                 //新图片位置
                                 String newPhotoPath = MarkdownUtils.copyImage(path + fileName.replace("..", ""), newPath);
                                 //去掉前缀
-                                newPhotoPath = "../" + newPhotoPath.replace("\\", "/").replace(fileConfig.getProfile(), "");
-                                article.setText(article.getText().replaceAll(fileName, newPhotoPath));
+                                newPhotoPath = ".." + File.separator + newPhotoPath.replace(fileConfig.getProfile(), "");
+                                article.setText(article.getText().replaceAll(fileName, newPhotoPath.replace("\\", "/")));
                             }
                             article.setSummary(MarkdownUtils.truncateText(article.getText(), 255));
                         }
                     }
-                    article.setUpdatedTime(LocalDateTime.now());
-                    //写入文章
-                    baseMapper.insert(article);
                     if (entry.getKey().equals("tags")) {
                         //标签
-                        List<String> tags = (List<String>) entry.getValue();
-                        //新增标签
-                        articleTagService.addTagName(tags, article.getId());
+                        tags = (List<String>) entry.getValue();
                     }
                 }
+                //封面
+                if(StringUtils.isBlank(article.getCover())){
+                    //为空手动添加一个封面
+                    article.setCover(wallpaper());
+                }
+
+                //写入更新时间
+                article.setUpdatedTime(LocalDateTime.now());
+                //写入作者
+                article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
+                //写入文章
+                baseMapper.insert(article);
+                //新增标签
+                articleTagService.addTagName(tags, article.getId());
+                //统计持续创作天数
+                ContributionUtils.setContribution();
             }
 
         } finally {
             //都要执行删除临时文件
-//            FileUtils.deleteFiles(new File(path));
+            FileUtils.deleteFiles(new File(path));
             //删除当前目录
-//            FileUtils.deleteFile(path);
+            FileUtils.deleteFile(path);
         }
     }
 }
