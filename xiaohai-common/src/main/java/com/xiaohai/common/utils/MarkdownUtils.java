@@ -41,9 +41,7 @@ public class MarkdownUtils {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
-            boolean frontMatterStarted = false;
             int frontMatterCount = 0;
-            boolean frontMatterEnd = false;
             StringBuilder contentBuilder = new StringBuilder();
 
             // 逐行读取文件内容
