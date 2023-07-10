@@ -27,7 +27,7 @@
 
         SELECT c.id,
                c.`name`,
-               (SELECT count(1) FROM b_article where category_id=c.id) as count,
+               (SELECT count(1) FROM b_article where category_id=c.id and is_push =1) as count,
                c.sort
         FROM
             `b_category` c

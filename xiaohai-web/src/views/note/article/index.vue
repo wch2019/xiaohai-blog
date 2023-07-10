@@ -222,7 +222,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-  <to-lead-into v-if="leadInfo.show" :leadInfo="leadInfo" @getList="getList"></to-lead-into>
+    <to-lead-into v-if="leadInfo.show" :lead-info="leadInfo" @getList="getList" />
   </div>
 </template>
 
@@ -230,11 +230,11 @@
 import { listArticle, delArticle, updatePush, updateTop } from '@/api/note/article'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
-import ToLeadInto from "@/views/note/article/components/toLeadInto.vue";
+import ToLeadInto from '@/views/note/article/components/toLeadInto.vue'
 
 export default {
   name: 'Index',
-  components: {ToLeadInto},
+  components: { ToLeadInto },
   data() {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,
@@ -265,8 +265,8 @@ export default {
         tagId: null
       },
       srcList: [],
-      leadInfo:{
-        show:false
+      leadInfo: {
+        show: false
       }
     }
   },
@@ -354,7 +354,7 @@ export default {
       })
     },
     // 导入
-    handleImport(){
+    handleImport() {
       this.leadInfo.show = true
     },
     // 顶置颜色样式添加
