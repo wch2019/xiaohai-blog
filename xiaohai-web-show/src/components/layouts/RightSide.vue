@@ -43,8 +43,8 @@
         <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 热门</h2>
       </template>
       <div
-        v-loading="loading"
-        v-for="article in store.getHot()"
+        v-loading="store.hotArticles ? false : loading"
+        v-for="article in store.hotArticles"
         :key="article"
         style="display: flex; margin-top: 16px; justify-content: space-between"
       >
@@ -146,7 +146,7 @@ function greetings() {
 
 // 标签跳转
 function cancelClick(path: any) {
-  router.push(path).then(() => window.scrollTo(0, 0))
+  router.push(path)
 }
 </script>
 
