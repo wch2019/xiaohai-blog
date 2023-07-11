@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import {reactive, ref, toRefs} from 'vue'
+import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import RightSide from '@/components/layouts/RightSide.vue'
-import {listArticles, listTag} from '@/api/show'
+import { listArticles, listTag } from '@/api/show'
 import articleList from '@/components/articleList/index.vue'
 import useStore from '@/store/index'
+import { getQueryVariable } from '@/utils/publicMethods'
+
 const store = useStore()
 // 标签名称
 const name = ref('标签')
@@ -16,13 +18,12 @@ const dataList: any = ref([])
 const total = ref()
 // 是否展示加载更多
 const loadMores = ref(true)
-
 const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
     type: 5,
-    id:0
+    id: 0
   }
 })
 
@@ -36,7 +37,8 @@ function cancelClick(tag: any) {
 }
 
 /** 查询展示文章列表 */
-function getList(val:any) {
+function getList(val: any) {
+  console.log(val, 'val')
   queryParams.value.id = val
   queryParams.value.pageNum = 1
   queryParams.value.pageSize = 10
@@ -63,16 +65,20 @@ function loadMore() {
     })
   }
 }
+console.log(getQueryVariable('id'), 'getQueryVariable(\'id\')')
+if (getQueryVariable('id')) {
+  getList(getQueryVariable('id'))
+}
 </script>
 
 <template>
   <!--左内容区-->
-  <el-col  :lg="14" :xl="11">
+  <el-col :lg="14" :xl="11">
     <h1 class="flex-center">
       <svg-icon class="link" icon-class="tags" @click="queryParams.id = 0"></svg-icon>
-       {{ name }}
+      {{ name }}
     </h1>
-    <el-card v-if="queryParams.id == 0"  class="box-card" shadow="hover">
+    <el-card v-if="queryParams.id == 0" class="box-card" shadow="hover">
       <el-space size="large" wrap>
         <div v-for="tag in store.tags" :key="tag.id">
           <el-button text bg size="large" @click="cancelClick(tag)">
@@ -101,7 +107,7 @@ function loadMore() {
   border-radius: 10px;
   border: 1px solid transparent;
 }
-.link:hover{
+.link:hover {
   cursor: pointer;
 }
 </style>

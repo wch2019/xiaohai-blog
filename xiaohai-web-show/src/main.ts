@@ -26,6 +26,7 @@ import '@kangc/v-md-editor/lib/theme/style/github.css'
 VMdPreview.use(githubTheme, {
   Hljs: hljs
 })
+
 const app = createApp(App)
 app.use(router)
 app.use(createPinia())
