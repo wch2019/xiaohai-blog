@@ -2,7 +2,7 @@
   <div class="commentInput">
     <el-input v-model="content" :rows="4" type="textarea" :placeholder="placeholderValue" />
     <div class="opertionBtn">
-      <el-popover placement="bottom" :width="200" trigger="hover">
+      <el-popover placement="bottom" :width="340" trigger="hover">
         <template #reference>
           <h3 class="btnleft"><svg-icon icon-class="face"></svg-icon></h3>
         </template>
@@ -72,22 +72,23 @@ function submit() {
 }
 .opertionBtn {
   display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-  font-size: 14px;
+  justify-content: flex-end;
+  margin: 10px;
+  font-size: 18px;
   color: #909399;
   span {
     margin-left: 5px;
   }
 }
 .btnleft {
-  margin: 0 10px;
+  margin: 3px 40px;
   //display: flex;
   //align-items: center;
 }
 .emojiImg {
-  width: 18px;
-  height: 18px;
+  width: 25px;
+  height: 25px;
+  margin: 5px;
 }
 .emojiDiv {
   :deep(.el-tabs__nav) {
@@ -102,9 +103,9 @@ function submit() {
   }
 }
 .emojiBox {
-  width: 24px;
+  width: 34px;
   margin: 2px;
-  height: 24px;
+  height: 34px;
   text-align: center;
   line-height: 24px;
   display: inline-block;

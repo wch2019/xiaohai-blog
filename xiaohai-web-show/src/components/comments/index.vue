@@ -19,59 +19,50 @@
         <img :src="image(item.avatar)" />
       </div>
       <div class="dataListRight">
-        <div>
-          <div class="title">
-            <span>{{ item.username }}</span>
-            <!--            <div>来自上海</div>-->
-            <span class="text-sm font-number text-color">
-              {{ item.createdTime }}
-            </span>
-          </div>
-          <div class="content">
-            <span v-html="parseEmojis(item.content)"></span>
-          </div>
-          <div class="listOperation">
-            <div class="replyBtn" @click="replyClick(item)">
-              <span class="text-sm text-color"> 回复 </span>
-            </div>
-            <div class="replyBtn" v-if="store.userId == item.userId" @click="deleteClick(item)">
-              <span class="text-sm text-color replyBtn"> 删除 </span>
-            </div>
-          </div>
-          <comments-input
-            v-if="item.replyInputShow"
-            :placeholderValue="placeholderValue"
-            :btnValue="btnValue"
-            :articleId="articleId"
-            :parentId="item.id"
-            @getListComment="getListComment"
-            @submitComments="submitComments"
-          ></comments-input>
+        <div class="title">
+          <h4>{{ item.username }}</h4>
+          <span class="text-sm font-number text-color"> {{ item.createdTime }}</span>
         </div>
-        <div v-for="(i, k) in item.commentTrees" :key="k" class="commentTrees">
-          <div class="childImg">
+        <div class="content">
+          <p v-html="parseEmojis(item.content)"></p>
+        </div>
+        <div class="listOperation">
+          <div class="replyBtn" @click="replyClick(item)"><span class="text-sm"> 回复 </span></div>
+          <div class="replyBtn" v-if="store.userId === item.userId" @click="deleteClick(item)">
+            <span class="text-sm"> 删除 </span>
+          </div>
+        </div>
+        <comments-input
+          v-if="item.replyInputShow"
+          :placeholderValue="placeholderValue"
+          :btnValue="btnValue"
+          :articleId="articleId"
+          :parentId="item.id"
+          @getListComment="getListComment"
+          @submitComments="submitComments"
+        ></comments-input>
+
+        <div v-for="(i, k) in item.commentTrees" :key="k" class="dataList">
+          <div class="headProtrait">
             <img :src="image(i.avatar)" />
           </div>
           <div class="dataListRight">
             <div class="titleChild">
-              <span>{{ i.username }}</span
-              >&nbsp; <span>回复</span>&nbsp;
-              <span>{{ i.replyUsername }}</span>
-              <span class="text-sm font-number text-color">
-                {{ item.createdTime }}
-              </span>
+              <div class="title">
+                <h4>{{ i.username }}</h4>
+                <span class="text-sm font-number text-color"> {{ i.createdTime }}</span>
+              </div>
             </div>
             <div class="content">
+              <span>@{{ i.replyUsername }}</span>
               {{ i.content }}
             </div>
             <div class="listOperation">
               <div class="replyBtn" @click="replyChildClick(i)">
-                <el-icon><ChatDotRound /></el-icon>
-                <span>回复</span>
+                <span class="text-sm">回复</span>
               </div>
-              <div class="replyBtn" v-if="store.userId == i.userId" @click="deleteClick(i)">
-                <el-icon><Delete /></el-icon>
-                <span>删除</span>
+              <div class="replyBtn" v-if="store.userId === i.userId" @click="deleteClick(i)">
+                <span class="text-sm">删除</span>
               </div>
             </div>
             <comments-input
@@ -95,7 +86,7 @@ import { ref, toRefs, watch } from 'vue'
 import CommentsInput from '@/components/comments/commentsInput.vue'
 import { allEmoji } from '@/components/emoji/emoji'
 import useStore from '@/store'
-import {image} from "@/utils/publicMethods";
+import { image } from '@/utils/publicMethods'
 
 const store = useStore()
 const placeholderValue = ref('')
@@ -127,11 +118,11 @@ function submitComments(val: any) {
 }
 function replyClick(item: any) {
   item.replyInputShow = !item.replyInputShow
-  placeholderValue.value = `回复${item.username}`
+  placeholderValue.value = `回复 @${item.username}`
 }
 function replyChildClick(item: any) {
   item.replyInputShow = !item.replyInputShow
-  placeholderValue.value = `回复${item.username}`
+  placeholderValue.value = `回复 @${item.username}`
 }
 function parseEmojis(text: any) {
   const emojiMap: any = allEmoji()
@@ -154,7 +145,7 @@ function parseEmojis(text: any) {
 .headProtrait {
   width: 40px;
   height: 40px;
-  margin-right: 20px;
+  margin-right: 12px;
   img {
     width: 100%;
     border-radius: 50%;
@@ -168,25 +159,29 @@ function parseEmojis(text: any) {
   width: 100%;
 }
 .title {
+  height: 35px;
+  margin-bottom: 5px;
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
   justify-content: space-between;
-
-  div:first-child {
-    margin-right: 10px;
-    //color: #303133;
-    font-weight: 500;
-    font-size: 15px;
-  }
-  div:nth-child(2) {
-    color: rgb(147, 147, 147);
-    font-size: 12px;
-  }
+  //
+  //div:first-child {
+  //  margin-right: 10px;
+  //  //color: #303133;
+  //  font-weight: 500;
+  //  font-size: 15px;
+  //}
+  //div:nth-child(2) {
+  //  color: rgb(147, 147, 147);
+  //  font-size: 12px;
+  //}
 }
 .content {
-  font-size: 14px;
   line-height: 20px;
+  span {
+    color: #50cf97ff;
+  }
 }
 .listOperation {
   display: flex;
@@ -212,6 +207,7 @@ function parseEmojis(text: any) {
 .commentTrees {
   display: flex;
   .childImg {
+    margin: 10px;
     width: 25px;
     height: 25px;
     border-radius: 50%;
@@ -231,9 +227,6 @@ function parseEmojis(text: any) {
   .content {
     font-size: 12px;
     line-height: 20px;
-  }
-  .listOperation {
-    //font-size: 12px;
   }
 }
 </style>
