@@ -108,7 +108,7 @@ watch(
                 <el-tag size="small">{{ article.categoryName }}</el-tag>
                 <template v-for="(item, index) in store.tags">
                   <el-tag
-                    v-if="article.tags && article.tags.includes(item.id)"
+                    v-if="article.tags &&article.tags.split(',').map(Number).includes(item.id)"
                     :key="index"
                     style="margin-right: 4px"
                     type="success"

@@ -165,7 +165,7 @@
         <template slot-scope="scope">
           <template v-for="(item,index) in TagsList">
             <el-tag
-              v-if="scope.row.tags&&scope.row.tags.includes(item.id)"
+              v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
               :key="index"
               style="margin-right:4px"
               type="success"
