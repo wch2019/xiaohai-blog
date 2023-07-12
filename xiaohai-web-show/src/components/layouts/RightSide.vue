@@ -146,7 +146,7 @@ function greetings() {
 
 // 标签跳转
 function cancelClick(path: any) {
-  router.push(path)
+  router.push(path).then(() => window.scroll(0, 0))
 }
 </script>
 

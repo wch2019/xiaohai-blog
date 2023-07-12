@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import HeardBar from '@/components/layouts/HeardBar.vue'
 import FooterBar from '@/components/layouts/FooterBar.vue'
 import BackTop from '@/components/layouts/BackTop.vue'
 import { isDark } from '@/utils/dark'
+import router from '@/router'
 
 // 内容背景色根据主题色调整
 function isDarkBackground() {
@@ -11,6 +13,9 @@ function isDarkBackground() {
   }
   return ''
 }
+const key = computed(() => {
+  return router.currentRoute.value.fullPath
+})
 </script>
 
 <template>
@@ -22,7 +27,7 @@ function isDarkBackground() {
   <el-main :style="isDarkBackground()">
     <el-row :gutter="20" class="el-row-flex">
       <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
-      <router-view></router-view>
+      <router-view :key="key"></router-view>
       <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
     </el-row>
   </el-main>

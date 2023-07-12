@@ -65,7 +65,6 @@ function loadMore() {
     })
   }
 }
-console.log(getQueryVariable('id'), 'getQueryVariable(\'id\')')
 if (getQueryVariable('id')) {
   getList(getQueryVariable('id'))
 }
