@@ -5,9 +5,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/xiaohai_blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    url: jdbc:mysql://192.168.68.207:3308/xiaohai_blog_initial?characterEncoding=UTF-8&useUnicode=true&useSSL=false
     username: root
-    password: 123456
+    password: xiao=123
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   servlet:
@@ -17,13 +17,13 @@ spring:
     # redis配置
   redis:
     # Redis数据库索引（默认为0）
-    database: 1
+    database: 0
     # Redis服务器地址
-    host: 127.0.0.1
+    host: 192.168.68.207
     # Redis服务器连接端口
-    port: 6379
+    port: 6380
     # Redis服务器连接密码（默认为空）
-    password: 123456
+    password: xiao=123
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -99,4 +99,4 @@ springdoc:
       packages-to-scan: com.xiaohai.system,com.xiaohai.admin.confing,com.xiaohai.admin.home,com.xiaohai.admin.monitor,com.xiaohai.file,com.xiaohai.note
 #==============================系统文件存放配置=======================================
 file:
-  profile: E:/xiaohai-blog/
+  profile: /opt/xiaohai-blog/upload/
