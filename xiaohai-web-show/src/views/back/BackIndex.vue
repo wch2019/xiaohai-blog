@@ -30,7 +30,6 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :page-size="queryParams.pageSize"
-        :pager-count="10"
         layout="prev, pager, next"
         :total="total"
       />
@@ -76,13 +75,7 @@ function getList() {
 function getArticleId(id: any) {
   router.push({ path: `/article/${id}` })
 }
-/**
- * 图片地址拼接
- * @param cover
- */
-// function image(cover: any) {
-//   return import.meta.env.VITE_APP_BASE_API_FILE + cover
-// }
+
 const handleSizeChange = (val: number) => {
   queryParams.value.pageNum = val
   getList()

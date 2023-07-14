@@ -7,7 +7,7 @@
       <span style="display: flex; align-items: center; justify-content: space-between">
         <span style="display: flex; align-items: center">
           <el-space size="default">
-            <el-avatar size="default" :src="image(userBasic.avatar)" />
+            <el-avatar v-if="userBasic.avatar"  size="default" :src="image(userBasic.avatar)" />
             <span class="text-sm">{{ userBasic.username }}</span>
             <el-tag size="default">{{ articleOne.categoryName }}</el-tag>
             <template v-for="(item, index) in tags">
@@ -97,7 +97,7 @@
     >
       <span style="display: flex; align-items: center">
         <el-space size="default">
-          <el-avatar size="small" :src="image(userBasic.avatar)" />
+          <el-avatar v-if="userBasic.avatar" size="small" :src="image(userBasic.avatar)" />
           <span class="text-sm">{{ userBasic.username }}</span>
         </el-space>
       </span>
@@ -165,7 +165,7 @@
         <img src="../../assets/image/1.jpg" class="image" />
 
         <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-          <el-avatar :src="image(userBasic.avatar)" class="panThumb" />
+          <el-avatar  v-if="userBasic.avatar" :src="image(userBasic.avatar)" class="panThumb" />
 
           <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
             <h3>{{ userBasic.username }}</h3>
@@ -262,14 +262,6 @@ function getList(categoryId: any) {
 function getArticleId(id: any) {
   router.push({ path: `/article/${id}` })
 }
-
-/**
- * 图片地址拼接
- * @param cover
- */
-// function image(cover: any) {
-//   return import.meta.env.VITE_APP_BASE_API_FILE + cover
-// }
 
 function clickLike(val: any) {
   const params: any = {

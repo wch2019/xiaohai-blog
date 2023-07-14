@@ -54,11 +54,7 @@
           </div>
           <div class="menus-item">
             <el-dropdown>
-              <el-image
-                v-if="!store.avatar"
-                size="default"
-                src="../../src/assets/icons/svg/avatar.svg"
-              />
+              <el-image v-if="!store.avatar" size="default" src="../static/avatar.svg" />
               <el-avatar size="default" :src="store.avatar" v-else />
 
               <template #dropdown>
@@ -149,7 +145,7 @@
         v-if="!store.avatar"
         @click="adminClick"
         style="width: 100px; height: 100px"
-        src="../../src/assets/icons/svg/avatar.svg"
+        src="../static/avatar.svg"
       />
       <el-avatar @click="manageClick" v-else :size="100" :src="store.avatar" />
       <h3>{{ store.name }}</h3>
