@@ -101,4 +101,4 @@ springdoc:
       packages-to-scan: com.xiaohai.system,com.xiaohai.admin.confing,com.xiaohai.admin.home,com.xiaohai.admin.monitor,com.xiaohai.file,com.xiaohai.note
 #==============================系统文件存放配置=======================================
 file:
-  profile: E:/xiaohai-blog/
+  profile: /mnt/data/files/blog/dev/
