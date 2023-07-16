@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:prod": "vite build",
+    "build:stage": "vite build --mode staging",
     "preview": "vite preview"
   },
   "dependencies": {
