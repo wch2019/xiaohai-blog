@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, reactive, toRefs } from 'vue'
-import { listArticles, articleLike } from '@/api/show'
-import { getArticle, image } from '@/utils/publicMethods'
+import {ref, watch, reactive, toRefs} from 'vue'
+import {listArticles, articleLike} from '@/api/show'
+import {getArticle, image} from '@/utils/publicMethods'
 import useStore from '@/store/index'
 
 const store = useStore()
@@ -14,7 +14,7 @@ const props = defineProps({
   }
 })
 
-const { dataList } = toRefs(props)
+const {dataList} = toRefs(props)
 // 加载
 const loading = ref(true)
 
@@ -66,7 +66,7 @@ watch(
       shadow="hover"
     >
       <div style="display: flex; flex-direction: row">
-        <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)" />
+        <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)"/>
         <div
           style="
             margin-left: 18px;
@@ -85,10 +85,12 @@ watch(
                 -webkit-box-orient: vertical;
                 text-overflow: ellipsis;
                 white-space: normal;
+                word-wrap: break-word;
+                word-break: break-all;
               "
               @click="getArticle(article.id)"
             >
-              <svg-icon v-if="article.isTop == 1" icon-class="top" />
+              <svg-icon v-if="article.isTop == 1" icon-class="top"/>
               {{ article.title }}
             </h2>
           </el-link>
@@ -101,6 +103,8 @@ watch(
               -webkit-box-orient: vertical;
               text-overflow: ellipsis;
               white-space: normal;
+              word-wrap: break-word;
+              word-break: break-all;
             "
           >
             {{ article.summary }}
@@ -108,7 +112,7 @@ watch(
           <span style="display: flex; align-items: center; justify-content: space-between">
             <span style="display: flex; align-items: center">
               <el-space size="small">
-                <el-avatar size="small" :src="image(article.avatar)" />
+                <el-avatar size="small" :src="image(article.avatar)"/>
                 <span v-if="article.nickName" class="text-xs">{{ article.nickName }}</span>
                 <span v-else class="text-xs">{{ article.username }}</span>
                 <el-tag size="small">{{ article.categoryName }}</el-tag>
@@ -121,7 +125,7 @@ watch(
                     size="small"
                     :label="index"
                     border
-                    >{{ item.name }}
+                  >{{ item.name }}
                   </el-tag>
                 </template>
               </el-space>
@@ -129,18 +133,18 @@ watch(
 
             <el-space alignment="center" size="large">
               <span class="text-xs font-number text-color">
-                <svg-icon icon-class="eye-light" style="font-size: 15px" /> {{ article.pageView }}
+                <svg-icon icon-class="eye-light" style="font-size: 15px"/> {{ article.pageView }}
               </span>
               <span class="text-xs font-number text-color"
-                ><svg-icon icon-class="message" style="font-size: 15px" />
+              ><svg-icon icon-class="message" style="font-size: 15px"/>
                 {{ article.commentCount }}</span
               >
               <span class="text-xs font-number" @click="clickLike(article)"
-                ><svg-icon
-                  :icon-class="article.clickLike == 1 ? 'give-dark' : 'give-light'"
-                  style="font-size: 15px; cursor: pointer"
-                  :style="{ color: article.clickLike == 1 ? '#fd5a5a' : '' }"
-                />
+              ><svg-icon
+                :icon-class="article.clickLike == 1 ? 'give-dark' : 'give-light'"
+                style="font-size: 15px; cursor: pointer"
+                :style="{ color: article.clickLike == 1 ? '#fd5a5a' : '' }"
+              />
                 {{ article.likeCount }}</span
               >
             </el-space>
@@ -159,7 +163,7 @@ watch(
       :body-style="{ padding: '10px' }"
     >
       <div class="article-flex">
-        <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)" />
+        <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)"/>
         <div
           style="
             margin-left: 10px;
@@ -176,16 +180,20 @@ watch(
               display: -webkit-box;
               -webkit-line-clamp: 2;
               -webkit-box-orient: vertical;
+               text-overflow: ellipsis;
+               white-space: normal;
+               word-wrap: break-word;
+               word-break: break-all;
             "
             @click="getArticle(article.id)"
           >
-            <svg-icon v-if="article.isTop == 1" icon-class="top" />
+            <svg-icon v-if="article.isTop == 1" icon-class="top"/>
             {{ article.title }}
           </h2>
           <span style="display: flex; align-items: center; justify-content: space-between">
             <span style="display: flex; align-items: center">
               <el-space size="small">
-                <el-avatar size="small" :src="image(article.avatar)" />
+                <el-avatar size="small" :src="image(article.avatar)"/>
                 <span v-if="article.nickName" class="text-xs">{{ article.nickName }}</span>
                 <span v-else class="text-xs">{{ article.username }}</span>
               </el-space>
@@ -208,7 +216,7 @@ watch(
 <style scoped>
 .box-card {
   max-height: 180px;
-  padding: 4px;
+  padding: 20px 0px 20px 20px;
   border-radius: 10px;
   border: 1px solid transparent;
 }
