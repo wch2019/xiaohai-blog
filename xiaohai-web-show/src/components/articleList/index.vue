@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, watch, reactive, toRefs } from 'vue'
-import {  listArticles, articleLike } from '@/api/show'
+import { listArticles, articleLike } from '@/api/show'
 import { getArticle, image } from '@/utils/publicMethods'
 import useStore from '@/store/index'
+
 const store = useStore()
 
 // 定义父组件传递的属性类型
 const props = defineProps({
-  dataList:{
+  dataList: {
     type: Object,
     default: []
   }
@@ -44,20 +45,20 @@ function clickLike(val: any) {
   })
 }
 
- // 监听数据变动
+// 监听数据变动
 watch(
   () => dataList?.value,
   () => {
-    loading.value=false;
+    loading.value = false
   }
 )
-
 </script>
 
 <template>
   <!--电脑端-->
   <el-space class="hidden-sm-and-down" direction="vertical" fill size="large" style="display: flex">
     <el-card
+      :body-style="{ padding: '0px' }"
       v-loading="loading"
       v-for="article in dataList"
       :key="article"
@@ -82,6 +83,8 @@ watch(
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
+                text-overflow: ellipsis;
+                white-space: normal;
               "
               @click="getArticle(article.id)"
             >
@@ -91,10 +94,13 @@ watch(
           </el-link>
           <span
             style="
+              font-size: 14px;
               overflow: hidden;
               display: -webkit-box;
               -webkit-line-clamp: 2;
               -webkit-box-orient: vertical;
+              text-overflow: ellipsis;
+              white-space: normal;
             "
           >
             {{ article.summary }}
@@ -108,7 +114,7 @@ watch(
                 <el-tag size="small">{{ article.categoryName }}</el-tag>
                 <template v-for="(item, index) in store.tags">
                   <el-tag
-                    v-if="article.tags &&article.tags.split(',').map(Number).includes(item.id)"
+                    v-if="article.tags && article.tags.split(',').map(Number).includes(item.id)"
                     :key="index"
                     style="margin-right: 4px"
                     type="success"
@@ -202,7 +208,7 @@ watch(
 <style scoped>
 .box-card {
   max-height: 180px;
-  padding: 0;
+  padding: 4px;
   border-radius: 10px;
   border: 1px solid transparent;
 }

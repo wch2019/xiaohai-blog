@@ -233,6 +233,7 @@ store.getHot()
 
 <style scoped>
 .box-card {
+  height: 70px;
   /*去掉弧度*/
   border-radius: 0;
   border: 1px solid transparent;

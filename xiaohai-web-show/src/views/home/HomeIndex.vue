@@ -38,8 +38,9 @@ function getCarouselList() {
     carouselList.value = response.data.data.records
   })
 }
+
 /** 查询展示文章列表 */
-function getList(val:any) {
+function getList(val: any) {
   queryParams.value.type = val
   queryParams.value.pageNum = 1
   queryParams.value.pageSize = 10
@@ -66,6 +67,7 @@ function loadMore() {
     })
   }
 }
+
 getList(1)
 getCarouselList()
 </script>
@@ -105,7 +107,7 @@ getCarouselList()
       <el-button v-else text disabled>没有更多了</el-button>
     </el-space>
   </el-col>
-  <!--手机端-->
+  <!--  手机端-->
   <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
     <el-carousel :interval="4000" height="210px" style="border-radius: 10px">
       <el-carousel-item v-for="article in carouselList" :key="article">
@@ -143,9 +145,11 @@ getCarouselList()
   border-radius: 10px;
   border: 1px solid transparent;
 }
+
 .category {
   height: 40px;
 }
+
 .carousel-title {
   cursor: pointer;
   position: absolute;

@@ -13,31 +13,56 @@ function isDarkBackground() {
   }
   return ''
 }
+
 const key = computed(() => {
   return router.currentRoute.value.fullPath
 })
 </script>
 
 <template>
-  <!-- 导航栏 -->
-  <el-affix :offset="0.00001">
-    <HeardBar></HeardBar>
-  </el-affix>
-  <!--内容区-->
-  <el-main :style="isDarkBackground()">
-    <el-row :gutter="20" class="el-row-flex">
-      <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
-      <router-view :key="key"></router-view>
-      <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
-    </el-row>
-  </el-main>
-  <!-- 底部栏 -->
-  <FooterBar></FooterBar>
-  <!--返回顶部-->
-  <BackTop></BackTop>
+  <div class="common-layout">
+    <el-container>
+      <!-- 导航栏 -->
+      <el-header height="70px" style="padding: 0">
+        <el-affix>
+          <HeardBar></HeardBar>
+        </el-affix>
+      </el-header>
+      <!--内容区-->
+      <el-main :style="isDarkBackground()">
+        <el-row :gutter="20" class="el-row-flex">
+          <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
+          <router-view :key="key"></router-view>
+          <el-col class="hidden-md-and-down" :lg="2" :xl="4"></el-col>
+        </el-row>
+      </el-main>
+      <el-footer height="140px" style="padding: 0">
+        <!-- 底部栏 -->
+        <FooterBar></FooterBar>
+      </el-footer>
+      <!--返回顶部-->
+      <BackTop></BackTop>
+    </el-container>
+  </div>
 </template>
 
 <style scoped>
+.common-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.el-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.el-main {
+  /*flex: 1;*/
+  /*overflow: auto; !* 添加滚动条，如果需要 *!*/
+}
 .el-row-flex {
   display: flex;
   flex-wrap: wrap;
