@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="评论类型" prop="status">
+      <el-form-item label="评论类型" prop="discussant">
         <el-select
           v-model="queryParams.discussant"
           placeholder="评论类型"
@@ -28,7 +28,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="评论内容" prop="username">
+      <el-form-item label="评论内容" prop="content">
         <el-input
           v-model="queryParams.content"
           placeholder="请输入评论内容"
@@ -37,6 +37,23 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="评论来源" prop="source">
+        <el-select
+          v-model="queryParams.source"
+          placeholder="评论来源"
+          clearable
+          size="small"
+          style="width: 240px"
+          @clear="queryParams.source = 0"
+        >
+          <el-option
+            v-for="source in sourceList"
+            :key="source.value"
+            :label="source.label"
+            :value="source.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -73,8 +90,12 @@
           <el-avatar v-else shape="square"> {{ scope.row.replyUsername }}</el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true" />
-      <el-table-column label="文章" align="center" prop="title" :show-overflow-tooltip="true">
+      <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <div>{{ scope.row.replyUsername || '无' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="title" label="文章" align="center" prop="title" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
         </template>
@@ -150,13 +171,18 @@ export default {
       commentList: [],
       // 评论类型
       discussantList: [{ 'value': 1, 'label': '我的评论' }, { 'value': 2, 'label': '回复我的' }],
+      // 评论来源
+      sourceList: [{ 'value': 0, 'label': '全部' }, { 'value': 1, 'label': '文章' }, { 'value': 2, 'label': '留言' }],
+      // 是否展示文章标题
+      title: true,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         discussant: 1,
         username: null,
-        content: null
+        content: null,
+        source: 0
       }
     }
   },
@@ -167,6 +193,11 @@ export default {
     /** 查询留言列表 */
     getList() {
       this.loading = true
+      if (this.queryParams.source == 2) {
+        this.title = false
+      } else {
+        this.title = true
+      }
       listComment(this.queryParams).then(response => {
         this.commentList = response.data.records
         this.total = response.data.total
