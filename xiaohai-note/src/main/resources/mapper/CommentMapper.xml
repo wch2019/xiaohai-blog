@@ -51,6 +51,14 @@
             <if test="query.discussant != null and query.discussant ==2">
                 and c.reply_user_id = #{userId}
             </if>
+            <!--来源-留言-->
+            <if test="query.source != null and query.source ==2">
+                and c.article_id = 0
+            </if>
+            <!--来源-文章-->
+            <if test="query.source != null and query.source ==1">
+                and c.article_id != 0
+            </if>
         </where>
         ORDER BY
         c.created_time DESC
