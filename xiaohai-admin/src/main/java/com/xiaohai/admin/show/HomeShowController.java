@@ -5,6 +5,7 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.service.*;
+import com.xiaohai.system.service.ConfigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 展示页接口
@@ -31,6 +34,7 @@ public class HomeShowController {
     private final ArticleService articleService;
     private final CommentService commentService;
     private final FriendLinkService friendLinkService;
+    private final ConfigService configService;
 
     @Operation(summary = "标签")
     @Log(title = "标签")
@@ -88,8 +92,11 @@ public class HomeShowController {
     @Operation(summary = "站点信息展示")
     @Log(title = "站点信息展示")
     @GetMapping("/findShowBasic")
-    public Response<UserBasicDto> findShowBasic() {
-        return Response.success("站点信息展示成功！", articleService.findShowBasic());
+    public Response<Map<String,Object>> findShowBasic() {
+        Map<String,Object> map=new HashMap<>();
+        map.put("basic",articleService.findShowBasic());
+        map.put("website",configService.findByShowOne());
+        return Response.success("站点信息展示成功！", map);
     }
     @Operation(summary = "友链信息展示")
     @Log(title = "友链信息展示")

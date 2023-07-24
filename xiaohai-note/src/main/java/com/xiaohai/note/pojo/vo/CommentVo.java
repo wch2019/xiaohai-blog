@@ -26,7 +26,7 @@ public class CommentVo implements Serializable {
     @Schema(description = "父id")
     private Integer parentId;
 
-    @Schema(description = "文章id")
+    @Schema(description = "文章id(0 代表留言)")
     @NotNull(message = "文章id为空")
     private Integer articleId;
 

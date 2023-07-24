@@ -32,7 +32,7 @@ public class CommentQuery implements Serializable {
     @Parameter(description = "父id")
     private Integer parentId;
 
-    @Parameter(description = "文章id")
+    @Parameter(description = "文章id(0 代表留言)")
     private Integer articleId;
 
     @Parameter(description = "用户id")

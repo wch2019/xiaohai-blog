@@ -29,7 +29,7 @@ public class CommentTree {
     @Schema(description = "回复人用户名")
     private String replyUsername;
 
-    @Schema(description = "文章id")
+    @Schema(description = "文章id(0 代表留言)")
     private Integer articleId;
 
     @Schema(description = "用户id")

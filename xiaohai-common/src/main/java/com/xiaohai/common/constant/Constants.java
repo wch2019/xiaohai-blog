@@ -83,4 +83,8 @@ public class Constants {
      * 文件临时路径
      */
     public static final String TEMPORARY_FILE = "temporary";
+    /**
+     * 隐藏数据
+     */
+    public static final String CONCEAL = "******";
 }

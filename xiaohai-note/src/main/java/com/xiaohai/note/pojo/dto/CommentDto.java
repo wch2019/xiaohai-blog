@@ -29,7 +29,7 @@ public class CommentDto implements Serializable {
     @Schema(description = "父id")
     private Integer parentId;
 
-    @Schema(description = "文章id")
+    @Schema(description = "文章id(0 代表留言)")
     private Integer articleId;
 
     @Schema(description = "评论人id")

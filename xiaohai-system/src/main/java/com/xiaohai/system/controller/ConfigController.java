@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.vo.ConfigVo;
 import com.xiaohai.system.service.ConfigService;
@@ -30,7 +31,7 @@ public class ConfigController {
 
     @Operation(summary = "新增系统配置", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:config:save")
-    @Log(title = "新增系统配置")
+    @Log(title = "更改系统配置")
     @PostMapping()
     public Response<Integer> add(@RequestBody ConfigVo vo) {
         return Response.success("新增系统配置成功！", configService.add(vo));
@@ -38,7 +39,7 @@ public class ConfigController {
 
     @Operation(summary = "更新系统配置", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("system:config:save")
-    @Log(title = "更新系统配置")
+    @Log(title = "更改系统配置")
     @PutMapping()
     public Response<Integer> update(@RequestBody ConfigVo vo) {
         return Response.success("更新系统配置成功！", configService.updateData(vo));
@@ -49,7 +50,12 @@ public class ConfigController {
     @SaCheckPermission("system:config:select")
     @GetMapping()
     public Response<ConfigDto> findByOne() {
-        return Response.success("查询系统配置成功！", configService.findByOne());
+        ConfigDto configDto=configService.findByOne();
+        if(StringUtils.isNotEmpty(configDto.getEmailPassword())){
+            //维护密码隐藏
+            configDto.setEmailPassword(Constants.CONCEAL);
+        }
+        return Response.success("查询系统配置成功！", configDto);
     }
 
 }

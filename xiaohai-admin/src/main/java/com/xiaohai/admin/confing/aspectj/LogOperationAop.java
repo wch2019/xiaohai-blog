@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.xiaohai.common.annotation.Log;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.ip.IpUtils;
@@ -163,7 +164,10 @@ public class LogOperationAop {
             log.setOperBrowser(userAgent.getBrowser().getName());
             if(log.getTitle().equals("登录")||log.getTitle().equals("用户信息注册")){
                 //如果是登录将去除密码信息记录日志
-                log.setOperParam(new JSONArray(joinPoint.getArgs()).getJSONObject(0).set("password","******").toString());
+                log.setOperParam(new JSONArray(joinPoint.getArgs()).getJSONObject(0).set("password",Constants.CONCEAL).toString());
+            }else if(log.getTitle().equals("更改系统配置")){
+                //如果是将去除邮箱密码信息记录日志
+                log.setOperParam(new JSONArray(joinPoint.getArgs()).getJSONObject(0).set("emailPassword",Constants.CONCEAL).toString());
             }else {
                 log.setOperParam(new JSONArray(joinPoint.getArgs()).toString());
             }

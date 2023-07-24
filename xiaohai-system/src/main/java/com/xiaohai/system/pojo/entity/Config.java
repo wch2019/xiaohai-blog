@@ -25,13 +25,28 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_config")
 @Schema(name = "Config", description = "系统配置")
-public class Config extends BaseEntity  implements Serializable  {
+public class Config extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "id")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
+    @Schema(description = "网站logo")
+    private String logo;
+
+    @Schema(description = "网站名称")
+    private String name;
+
+    @Schema(description = "关键字")
+    private String keywords;
+
+    @Schema(description = "网站描述")
+    private String description;
+
+    @Schema(description = "备案号")
+    private String recordNum;
 
     @Schema(description = "邮箱地址")
     private String emailHost;
@@ -48,6 +63,6 @@ public class Config extends BaseEntity  implements Serializable  {
     @Schema(description = "本地文件地址")
     private String filePath;
 
-    @Schema(description = "系统通知")
+    @Schema(description = "关于介绍")
     private String content;
 }

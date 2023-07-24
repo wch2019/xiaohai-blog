@@ -9,6 +9,11 @@
         <result column="created_time" property="createdTime" />
         <result column="updated_by" property="updatedBy" />
         <result column="updated_time" property="updatedTime" />
+        <result column="logo" property="logo" />
+        <result column="name" property="name" />
+        <result column="keywords" property="keywords" />
+        <result column="description" property="description" />
+        <result column="record_num" property="recordNum" />
         <result column="email_host" property="emailHost" />
         <result column="email_username" property="emailUsername" />
         <result column="email_password" property="emailPassword" />
@@ -22,7 +27,7 @@
         created_time,
         updated_by,
         updated_time,
-        id, email_host, email_username, email_password, email_port, file_path
+        id, logo, name, keywords, description, recordNum, email_host, email_username, email_password, email_port, file_path
     </sql>
 
 </mapper>
