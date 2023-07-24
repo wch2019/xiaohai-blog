@@ -7,7 +7,7 @@
       <span style="display: flex; align-items: center; justify-content: space-between">
         <span style="display: flex; align-items: center">
           <el-space size="default">
-            <el-avatar v-if="userBasic.avatar"  size="default" :src="image(userBasic.avatar)" />
+            <el-avatar v-if="userBasic.avatar" size="default" :src="image(userBasic.avatar)" />
             <span class="text-sm">{{ userBasic.username }}</span>
             <el-tag size="default">{{ articleOne.categoryName }}</el-tag>
             <template v-for="(item, index) in tags">
@@ -165,7 +165,7 @@
         <img src="../../assets/image/1.jpg" class="image" />
 
         <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-          <el-avatar  v-if="userBasic.avatar" :src="image(userBasic.avatar)" class="panThumb" />
+          <el-avatar v-if="userBasic.avatar" :src="image(userBasic.avatar)" class="panThumb" />
 
           <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
             <h3>{{ userBasic.username }}</h3>
@@ -217,7 +217,7 @@ import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import comments from '@/components/comments/index.vue'
-import {image} from "@/utils/publicMethods";
+import { image } from '@/utils/publicMethods'
 
 // 文章详情
 const articleOne = ref({})

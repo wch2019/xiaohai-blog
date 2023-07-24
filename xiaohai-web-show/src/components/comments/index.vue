@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="flex-center">评论</h3>
+    <h3 class="flex-center">{{ headValue }}</h3>
     <div class="publishTop">
       <div class="headProtrait">
         <img :src="store.avatar ? store.avatar : '../static/avatar.svg'" />
@@ -13,7 +13,7 @@
         ></comments-input>
       </div>
     </div>
-    <h3 class="flex-center">全部评论</h3>
+    <h3 class="flex-center">{{ listValue }}</h3>
     <div class="dataList" v-for="(item, index) in dataList" :key="index">
       <div class="headProtrait">
         <img :src="image(item.avatar)" />
@@ -54,8 +54,7 @@
               </div>
             </div>
             <div class="content">
-              <span>@{{ i.replyUsername }}</span>
-              {{ i.content }}
+              <span>@{{ i.replyUsername }}</span> <span v-html="parseEmojis(i.content)"></span>
             </div>
             <div class="listOperation">
               <div class="replyBtn" @click="replyChildClick(i)">
@@ -95,6 +94,14 @@ const props = defineProps({
   config: {
     type: Object,
     default: {}
+  },
+  headValue: {
+    type: String,
+    default: '评论'
+  },
+  listValue: {
+    type: String,
+    default: '全部评论'
   }
 })
 const emit = defineEmits(['getListComment', 'submitComments', 'vanishDelete'])
@@ -179,7 +186,7 @@ function parseEmojis(text: any) {
 }
 .content {
   line-height: 20px;
-  span {
+  span:first-of-type {
     color: #50cf97ff;
   }
 }

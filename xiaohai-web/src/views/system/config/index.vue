@@ -15,16 +15,6 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="LOGO" prop="LOGO">
-                <el-upload
-                  class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                >
-                  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                  <i v-else class="el-icon-plus avatar-uploader-icon" />
-                </el-upload>
                 <el-input v-model="form.logo" placeholder="LOGO" />
               </el-form-item>
             </el-col>
@@ -39,14 +29,14 @@
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="关键字" prop="keywords">
-                <el-input v-model="form.keywords" placeholder="请输入关键字" />
+                <el-input v-model="form.keywords" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入关键字" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="网站描述" prop="description">
-                <el-input v-model="form.description" placeholder="请输入网站描述" />
+                <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入网站描述" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -174,6 +164,27 @@
               </el-form-item>
             </el-col>
           </el-row>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="关于信息">
+        <span slot="label">
+          <i class="el-icon-edit-outline" /> 关于信息
+        </span>
+        <el-form
+          ref="form"
+          style="margin-left: 20px;"
+          label-position="left"
+          :model="form"
+          label-width="100px"
+        >
+          <mavon-editor
+            ref="md"
+            v-model="form.content"
+            font-size="18px"
+            @save="submitForm"
+            @imgAdd="imgAdd"
+            @imgDel="imgDel"
+          />
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="系统通知">
