@@ -63,6 +63,7 @@ const useStore = defineStore('user', {
           .then((response) => {
             this.showBasic = response.data.data.basic
             this.website = response.data.data.website
+            document.title = response.data.data.website.title
             resolve()
           })
           .catch((error) => {

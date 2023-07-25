@@ -22,28 +22,35 @@
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="网站名称" prop="name">
-                <el-input v-model="form.name" placeholder="请输入网站名称" />
+                <el-input v-model="form.name" maxlength="8" show-word-limit placeholder="请输入网站名称" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :sm="12" :md="10" :lg="8" :xl="6">
+              <el-form-item label="标题" prop="title">
+                <el-input v-model="form.title" maxlength="20" show-word-limit placeholder="请输入网站标题" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="关键字" prop="keywords">
-                <el-input v-model="form.keywords" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入关键字" />
+                <el-input v-model="form.keywords" maxlength="255" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入关键字" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="网站描述" prop="description">
-                <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 4}" placeholder="请输入网站描述" />
+                <el-input v-model="form.description" maxlength="255" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入网站描述" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="备案号" prop="recordNum">
-                <el-input v-model="form.recordNum" placeholder="请输入备案号" />
+                <el-input v-model="form.recordNum" maxlength="50" show-word-limit placeholder="请输入备案号" />
               </el-form-item>
             </el-col>
           </el-row>

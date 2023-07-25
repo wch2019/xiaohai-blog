@@ -6,7 +6,7 @@
       <el-col class="hidden-md-and-down" :md="16" :lg="14" :xl="11">
         <div class="nav-title">
           <div class="blog-title">
-            <router-link to="/">DotCode</router-link>
+            <router-link to="/">{{ store.website.name }}</router-link>
           </div>
           <div class="menus-item">
             <router-link class="menu-btn" to="/"> 首页</router-link>
@@ -93,7 +93,7 @@
         <div class="nav-title">
           <el-col :span="15">
             <div class="blog-title">
-              <router-link to="/">DotCode</router-link>
+              <router-link to="/">{{ store.website.name }}</router-link>
             </div>
           </el-col>
           <el-col :span="9">
