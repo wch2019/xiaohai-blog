@@ -12,7 +12,7 @@ const useStore = defineStore('user', {
       avatar: '',
       userId: '',
       showBasic: '',
-      website: '',
+      website: {} as any,
       tags: [],
       friendLinkList: [],
       hotArticles: [],
@@ -63,7 +63,20 @@ const useStore = defineStore('user', {
           .then((response) => {
             this.showBasic = response.data.data.basic
             this.website = response.data.data.website
-            document.title = response.data.data.website.title
+            document.title = this.website.title
+            // 获取指定 meta 标签
+            const descriptionMeta = document.querySelector('meta[name="description"]')
+            if (descriptionMeta) {
+              // 修改 meta 标签的 content 属性
+              descriptionMeta.setAttribute('content', this.website.description)
+            }
+            // 获取其他 meta 标签
+            const keywordsMeta = document.querySelector('meta[name="keywords"]')
+            if (keywordsMeta) {
+              // 修改 meta 标签的 content 属性
+              keywordsMeta.setAttribute('content', this.website.keywords)
+            }
+
             resolve()
           })
           .catch((error) => {
