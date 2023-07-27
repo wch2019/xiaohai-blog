@@ -11,6 +11,7 @@
         <result column="updated_time" property="updatedTime" />
         <result column="logo" property="logo" />
         <result column="name" property="name" />
+        <result column="title" property="title" />
         <result column="keywords" property="keywords" />
         <result column="description" property="description" />
         <result column="record_num" property="recordNum" />
@@ -27,7 +28,7 @@
         created_time,
         updated_by,
         updated_time,
-        id, logo, name, keywords, description, recordNum, email_host, email_username, email_password, email_port, file_path
+        id, logo, name, title, keywords, description, recordNum, email_host, email_username, email_password, email_port, file_path
     </sql>
 
 </mapper>

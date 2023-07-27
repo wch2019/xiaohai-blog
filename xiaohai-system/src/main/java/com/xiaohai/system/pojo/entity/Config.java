@@ -39,6 +39,9 @@ public class Config extends BaseEntity implements Serializable {
     @Schema(description = "网站名称")
     private String name;
 
+    @Schema(description = "网站标题")
+    private String title;
+
     @Schema(description = "关键字")
     private String keywords;
 
