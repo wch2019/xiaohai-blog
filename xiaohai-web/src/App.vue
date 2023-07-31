@@ -5,6 +5,11 @@
 </template>
 
 <script>
+// 获取现有的或新建一个 favicon 链接元素
+const faviconLink = document.querySelector('link[rel="icon"]')
+if (faviconLink) {
+  faviconLink.href = process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico'
+}
 export default {
   name: 'App'
 }

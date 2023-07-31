@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { getToken, removeToken } from '@/utils/auth'
 import { getInfo, logout } from '@/api/user'
 import { findShowBasic, friendLink, hotArticles, listTag } from '@/api/show'
+import { image } from '@/utils/publicMethods'
 
 const useStore = defineStore('user', {
   state: () => {
@@ -76,7 +77,11 @@ const useStore = defineStore('user', {
               // 修改 meta 标签的 content 属性
               keywordsMeta.setAttribute('content', this.website.keywords)
             }
-
+            // 获取现有的或新建一个 favicon 链接元素
+            const faviconLink = document.querySelector('link[rel="icon"]') as HTMLLinkElement
+            if (faviconLink) {
+              faviconLink.href = image(this.website.logo)
+            }
             resolve()
           })
           .catch((error) => {

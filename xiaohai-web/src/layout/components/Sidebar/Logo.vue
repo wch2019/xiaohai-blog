@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import logoImg from '@/assets/logo/logo.png'
 import variables from '@/styles/variables.scss'
 export default {
   name: 'SidebarLogo',
@@ -24,18 +23,18 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      title: 'DotCode',
+      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico'
+    }
+  },
   computed: {
     variables() {
       return variables
     },
     sideTheme() {
       return this.$store.state.settings.sideTheme
-    }
-  },
-  data() {
-    return {
-      title: 'DotCode',
-      logo: logoImg
     }
   }
 }
