@@ -39,6 +39,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public String uploadLogo(MultipartFile file) {
+        String path = fileConfig.getSystemPath();
+        return addLogo(path, file);
+    }
+
+    @Override
     public String uploadImage(MultipartFile file) {
         //指定markdown图片上传目录,根据用户区分文件夹
         String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + StpUtil.getLoginId() + File.separator;
@@ -83,6 +89,38 @@ public class FileServiceImpl implements FileService {
 
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, fileName, file);
+        filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
+        log.info("保存图片--------->{}", filePath);
+        //前端展示需要处理
+        return filePath.replace("\\", "/");
+    }
+    /**
+     * 添加Logo
+     *
+     * @param path 文件保存路径
+     * @param file 要添加的文件
+     * @return 添加的文件路径
+     */
+    public String addLogo(String path, MultipartFile file) {
+        // 判断文件是否为空
+        if (file == null || file.isEmpty()) {
+            throw new ServiceException("文件为空");
+        }
+
+        // 获取文件原始名称
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+
+        // 获取文件后缀名
+        String fileExtension = FileUtils.getFileExtension(originalFilename);
+
+        // 判断文件类型是否为图片
+        if (!FileUtils.isImageExtension(fileExtension)) {
+            throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(Constants.IMAGE_EXTENSION));
+        }
+
+        // 保存文件并返回文件路径
+        String filePath = FileUtils.saveFile(path,Constants.LOGO, file);
         filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
         log.info("保存图片--------->{}", filePath);
         //前端展示需要处理

@@ -45,7 +45,7 @@ public class Constants {
     /**
      * 图片后缀
      */
-    public static final String[] IMAGE_EXTENSION = { "bmp", "gif", "jpg", "jpeg", "png" };
+    public static final String[] IMAGE_EXTENSION = { "bmp", "gif", "jpg", "jpeg", "png", "ico" };
     /**
      * 压缩后缀
      */
@@ -87,4 +87,8 @@ public class Constants {
      * 隐藏数据
      */
     public static final String CONCEAL = "******";
+    /**
+     * logo名称
+     */
+    public static final String LOGO = "favicon.ico";
 }
