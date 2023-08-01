@@ -51,14 +51,16 @@ export default {
     }
   },
   mounted() {
+    const random = new Date().getTime()
     setTimeout(() => {
-      this.imageUrlEcho = this.imageUrl ? process.env.VUE_APP_BASE_API_FILE + this.imageUrl : ''
+      this.imageUrlEcho = this.imageUrl ? process.env.VUE_APP_BASE_API_FILE + this.imageUrl + `?random=` + random : ''
     }, 500)
   },
   methods: {
     getToken,
     handleAvatarSuccess(res, file) {
-      this.imageUrlEcho = process.env.VUE_APP_BASE_API_FILE + res.data
+      const random = new Date().getTime()
+      this.imageUrlEcho = process.env.VUE_APP_BASE_API_FILE + res.data + `?random=` + random
       this.$emit('getImgUrl', res.data)
     },
     beforeAvatarUpload(file) {
