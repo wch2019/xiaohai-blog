@@ -15,7 +15,14 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="LOGO" prop="LOGO">
-                <el-input v-model="form.logo" placeholder="LOGO" />
+<!--                <el-input v-model="form.logo" placeholder="LOGO" />-->
+                <uploadImg
+                  actionUrl="/api/file/logo"
+                  :imgWidth="100"
+                  :imgHeight="100"
+                  fileName="logoFile"
+                  @getImgUrl="getImgUrl"
+                ></uploadImg>
               </el-form-item>
             </el-col>
           </el-row>
@@ -228,11 +235,13 @@
 <script>
 import { getConfig, addConfig, updateConfig } from '@/api/system/config'
 import { uploadImage, delImage } from '@/api/file/file'
+import uploadImg from '@/components/uploadImg'
 import { marked } from 'marked'
 import 'github-markdown-css'
 
 export default {
   name: 'Index',
+  components:{uploadImg},
   data() {
     return {
       form: {
@@ -283,6 +292,9 @@ export default {
       delImage(name[name.length - 1]).then(response => {
         this.$message.success(response.msg)
       })
+    },
+    getImgUrl(imgUrl){
+      this.form.logo = imgUrl
     },
     /** 提交按钮 */
     submitForm() {
