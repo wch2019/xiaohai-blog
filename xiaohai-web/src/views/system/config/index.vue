@@ -14,10 +14,11 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item label="LOGO" prop="LOGO">
+              <el-form-item label="LOGO" prop="logo">
 <!--                <el-input v-model="form.logo" placeholder="LOGO" />-->
                 <uploadImg
                   actionUrl="/api/file/logo"
+                  :imageUrl="form.logo"
                   :imgWidth="100"
                   :imgHeight="100"
                   fileName="logoFile"

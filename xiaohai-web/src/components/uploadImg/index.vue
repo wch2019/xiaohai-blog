@@ -47,10 +47,13 @@ export default {
   },
   data() {
     return {
-      imageUrlEcho: this.imageUrl
+      imageUrlEcho: ''
     }
   },
   mounted() {
+    setTimeout(() => {
+      this.imageUrlEcho = this.imageUrl ? process.env.VUE_APP_BASE_API_FILE + this.imageUrl : ''
+    }, 500)
   },
   methods: {
     getToken,
