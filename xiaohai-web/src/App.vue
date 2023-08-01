@@ -8,7 +8,8 @@
 // 获取现有的或新建一个 favicon 链接元素
 const faviconLink = document.querySelector('link[rel="icon"]')
 if (faviconLink) {
-  faviconLink.href = process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico'
+  const random = new Date().getTime()
+  faviconLink.href = process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico?random=' + random
 }
 export default {
   name: 'App'

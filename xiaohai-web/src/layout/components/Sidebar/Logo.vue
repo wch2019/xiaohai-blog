@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       title: 'DotCode',
-      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico'
+      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico?random=' + new Date().getTime()
     }
   },
   computed: {
