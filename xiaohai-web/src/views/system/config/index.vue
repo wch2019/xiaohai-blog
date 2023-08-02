@@ -17,6 +17,7 @@
               <el-form-item label="LOGO" prop="logo">
 <!--                <el-input v-model="form.logo" placeholder="LOGO" />-->
                 <uploadImg
+                  ref="uploadImg"
                   actionUrl="/api/file/logo"
                   :imageUrl="form.logo"
                   :imgWidth="100"
@@ -268,6 +269,7 @@ export default {
     getConfig() {
       getConfig().then(response => {
         this.form = response.data
+        this.$refs.uploadImg.getimgUrl(this.form.logo)
         this.form.content = this.form.content.replaceAll('../image', process.env.VUE_APP_BASE_API_FILE + '/image')
       })
     },
