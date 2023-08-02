@@ -80,7 +80,7 @@ const useStore = defineStore('user', {
             // 获取现有的或新建一个 favicon 链接元素
             const faviconLink = document.querySelector('link[rel="icon"]') as HTMLLinkElement
             if (faviconLink) {
-              faviconLink.href = image(this.website.logo)
+              faviconLink.href = image(this.website.logo+'?random=' + new Date().getTime())
             }
             resolve()
           })

@@ -17,6 +17,13 @@ public interface FileService {
      * @return
      */
     String uploadAvatar(MultipartFile file);
+
+    /**
+     * logo上传
+     * @param file
+     * @return
+     */
+    String uploadLogo(MultipartFile file);
     /**
      * markdown图片上传
      * @param file
