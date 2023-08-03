@@ -76,19 +76,13 @@ DotCode(点码），是一个前后分离的博客系统。
 - [x] 增加留言模块
 - [ ] 通过Jpom实现自动化部署
 - [x] 增加网站配置
-- [ ] 增加问题反馈管理
+- [x] 增加问题反馈管理
 - [ ] ...
 
 ## nginx配置
 
     server {
     listen       80;
- 
-
-
-
-
-
     server_name  localhost;
     
         location / {

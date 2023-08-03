@@ -2,24 +2,15 @@
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="网站名称" prop="name">
-        <el-input v-model="form.name" placeholder="请输入网站名称" />
+      <el-form-item label="标题名称" prop="title">
+        <el-input v-model="form.title" maxlength="20" show-word-limit placeholder="请输入标题名称" />
       </el-form-item>
-      <el-form-item label="网站地址" prop="url">
-        <el-input v-model="form.url" placeholder="请输入网站地址" />
-      </el-form-item>
-      <el-form-item label="站长邮箱" prop="email">
-        <el-input v-model="form.email" placeholder="请输入站长邮箱" />
-      </el-form-item>
-      <el-form-item label="网站描述" prop="info">
-        <el-input v-model="form.info" placeholder="请输入网站描述" />
+      <el-form-item label="反馈内容" prop="content">
+        <el-input v-model="form.content" maxlength="1000" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入反馈内容" />
       </el-form-item>
       <template v-if="$store.getters.roles.includes('admin')">
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
-        </el-form-item>
         <el-form-item label="审核回复" prop="reason">
-          <el-input v-model="form.reason" placeholder="请输入回复" />
+          <el-input v-model="form.reason" maxlength="255" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入回复" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -41,25 +32,11 @@
 </template>
 
 <script>
-import { addLink, updateLink } from '@/api/note/link'
+import { addFeedback, updateFeedback } from '@/api/system/feedback'
 
 export default {
-  name: 'CategoryDialog',
+  name: 'FeedbackDialog',
   data() {
-    // 邮箱验证
-    const validateEmail = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请正确填写邮箱'))
-      } else {
-        if (value !== '') {
-          var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-          if (!reg.test(value)) {
-            callback(new Error('请输入有效的邮箱'))
-          }
-        }
-        callback()
-      }
-    }
     return {
       // 是否显示弹出层
       open: false,
@@ -67,24 +44,18 @@ export default {
       title: '',
       form: {
         id: '',
-        name: '',
-        url: '',
-        email: '',
-        info: '',
-        sort: '0',
+        title: '',
+        content: '',
         reason: '',
         status: '0'
       },
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: '网站名称不能为空', trigger: 'blur' }
+        title: [
+          { required: true, message: '标题名称不能为空', trigger: 'blur' }
         ],
-        url: [
-          { required: true, message: '网站地址不能为空', trigger: 'blur' }
-        ],
-        email: [
-          { required: true, validator: validateEmail, trigger: 'blur' }
+        content: [
+          { required: true, message: '反馈内容不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -94,11 +65,8 @@ export default {
     reset() {
       this.form = {
         id: '',
-        name: '',
-        url: '',
-        email: '',
-        info: '',
-        sort: '0',
+        title: '',
+        content: '',
         reason: '',
         status: '0'
       }
@@ -113,14 +81,14 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== '') {
-            updateLink(this.form).then(response => {
+            updateFeedback(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
               // 回调父方法
               this.$emit('closeDialog')
             })
           } else {
-            addLink(this.form).then(response => {
+            addFeedback(this.form).then(response => {
               this.$message.success(response.msg)
               this.open = false
               // 回调父方法

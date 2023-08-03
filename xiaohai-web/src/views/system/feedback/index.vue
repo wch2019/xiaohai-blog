@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="网站名称" prop="name">
+      <el-form-item label="标题名称" prop="title">
         <el-input
-          v-model="queryParams.name"
-          placeholder="请输入网站名称"
+          v-model="queryParams.title"
+          placeholder="请输入标题名称"
           clearable
           size="small"
           style="width: 240px"
@@ -37,7 +37,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:link:add')"
+          v-if="$store.getters.permission.includes('system:feedback:add')"
           type="primary"
           plain
           icon="el-icon-plus"
@@ -48,7 +48,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:link:update')"
+          v-if="$store.getters.permission.includes('system:feedback:update')"
           type="success"
           plain
           icon="el-icon-edit"
@@ -60,7 +60,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:link:delete')"
+          v-if="$store.getters.permission.includes('system:feedback:delete')"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -80,16 +80,17 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="网站名称" align="center" prop="name" />
-      <el-table-column label="网站地址" align="center" prop="url">
+      <el-table-column label="反馈人头像" align="center" width="120" prop="avatar">
         <template slot-scope="scope">
-          <el-link :underline="false" :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
+          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)" />
+          <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="网站描述" align="center" prop="info" />
-      <el-table-column label="站长邮箱" align="center" prop="email" />
-      <el-table-column label="审核回复" align="center" prop="reason" />
-      <el-table-column label="审核状态" align="center" prop="status">
+      <el-table-column label="反馈人" align="center" prop="username" show-overflow-tooltip />
+      <el-table-column label="标题名称" align="center" prop="title" show-overflow-tooltip />
+      <el-table-column label="反馈内容" align="center" prop="content" show-overflow-tooltip />
+      <el-table-column label="回复" align="center" prop="reason" show-overflow-tooltip />
+      <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="$store.getters.dict.sys_check_state" :value="scope.row.status" />
         </template>
@@ -98,7 +99,7 @@
       <el-table-column v-if="$store.getters.roles.includes('admin')" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            v-if="$store.getters.permission.includes('note:link:update')"
+            v-if="$store.getters.permission.includes('system:feedback:update')"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -106,7 +107,7 @@
           >修改
           </el-button>
           <el-button
-            v-if="$store.getters.permission.includes('note:link:delete')"
+            v-if="$store.getters.permission.includes('system:feedback:delete')"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -125,17 +126,17 @@
       @pagination="getList"
     />
 
-    <LinkDialog ref="linkDialog" @closeDialog="closeDialog" />
+    <FeedbackDialog ref="feedbackDialog" @closeDialog="closeDialog" />
   </div>
 </template>
 
 <script>
-import LinkDialog from './componets/linkDialog.vue'
-import { listLink, delLink, getLink } from '@/api/note/link'
+import FeedbackDialog from './componets/FeedbackDialog.vue'
+import { listFeedback, delFeedback, getFeedback } from '@/api/system/feedback'
 
 export default {
   name: 'Index',
-  components: { LinkDialog },
+  components: { FeedbackDialog },
   data() {
     return {
       // 遮罩层
@@ -148,13 +149,13 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      // 友链表格数据
+      // 反馈表格数据
       linkList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
+        title: null,
         status: null
       }
     }
@@ -163,10 +164,10 @@ export default {
     this.getList()
   },
   methods: {
-    /** 查询友链数据列表 */
+    /** 查询反馈数据列表 */
     getList() {
       this.loading = true
-      listLink(this.queryParams).then(response => {
+      listFeedback(this.queryParams).then(response => {
         this.linkList = response.data.records
         this.total = response.data.total
         this.loading = false
@@ -184,9 +185,9 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.$refs.linkDialog.reset()
-      this.$refs.linkDialog.open = true
-      this.$refs.linkDialog.title = '添加友链数据'
+      this.$refs.feedbackDialog.reset()
+      this.$refs.feedbackDialog.open = true
+      this.$refs.feedbackDialog.title = '添加反馈数据'
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -197,31 +198,35 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const dictId = row.id || this.ids
-      getLink(dictId).then(response => {
-        if (this.$refs.linkDialog.$refs['form'] !== undefined) {
-          this.$refs.linkDialog.$refs['form'].resetFields()
+      getFeedback(dictId).then(response => {
+        if (this.$refs.feedbackDialog.$refs['form'] !== undefined) {
+          this.$refs.feedbackDialog.$refs['form'].resetFields()
         }
-        this.$refs.linkDialog.form = response.data
-        this.$refs.linkDialog.open = true
-        this.$refs.linkDialog.title = '修改友链数据'
+        this.$refs.feedbackDialog.form = response.data
+        this.$refs.feedbackDialog.open = true
+        this.$refs.feedbackDialog.title = '修改反馈数据'
       })
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids
-      this.$confirm('是否确认删除友链编码为"' + ids + '"的数据项？', '提示', {
+      this.$confirm('是否确认删除反馈编码为"' + ids + '"的数据项？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delLink(ids).then(response => {
+        delFeedback(ids).then(response => {
           this.$message.success(response.msg)
         })
         this.getList()
       }).catch(() => {
         this.$message.info('已取消删除')
       })
+    },
+    // 头像展示
+    image(avatar) {
+      return process.env.VUE_APP_BASE_API_FILE + avatar
     },
     /** 回调*/
     closeDialog() {

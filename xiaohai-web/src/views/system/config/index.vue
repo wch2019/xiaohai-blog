@@ -15,16 +15,15 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="LOGO" prop="logo">
-<!--                <el-input v-model="form.logo" placeholder="LOGO" />-->
                 <uploadImg
                   ref="uploadImg"
-                  actionUrl="/api/file/logo"
-                  :imageUrl="form.logo"
-                  :imgWidth="100"
-                  :imgHeight="100"
-                  fileName="logoFile"
+                  action-url="/api/file/logo"
+                  :image-url="form.logo"
+                  :img-width="100"
+                  :img-height="100"
+                  file-name="logoFile"
                   @getImgUrl="getImgUrl"
-                ></uploadImg>
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -243,7 +242,7 @@ import 'github-markdown-css'
 
 export default {
   name: 'Index',
-  components:{uploadImg},
+  components: { uploadImg },
   data() {
     return {
       form: {
@@ -296,7 +295,7 @@ export default {
         this.$message.success(response.msg)
       })
     },
-    getImgUrl(imgUrl){
+    getImgUrl(imgUrl) {
       this.form.logo = imgUrl
     },
     /** 提交按钮 */
