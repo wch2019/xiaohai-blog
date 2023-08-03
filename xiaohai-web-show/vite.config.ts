@@ -20,7 +20,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src') // 设置 `@` 指向 `src` 目录
     }
   },
-  base: './', // 设置打包路径
+  base: '/', // 设置打包路径
   server: {
     host: '0.0.0.0', // 设置host访问
     port: 4000, // 设置服务启动端口号
