@@ -46,9 +46,9 @@ public class FriendLinkQuery implements Serializable {
     @Parameter(description = "排序")
     private Integer sort;
 
-    @Parameter(description = "下架原因")
+    @Parameter(description = "审核回复")
     private String reason;
 
-    @Parameter(description = "审核状态（0-待审核,1-通过,2-未通过）")
+    @Parameter(description = "审核状态（0-待审核,1-已通过,2-未通过）")
     private String status;
 }

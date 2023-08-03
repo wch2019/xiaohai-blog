@@ -1,4 +1,4 @@
-package com.xiaohai.note.pojo.entity;
+package com.xiaohai.system.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -13,18 +13,18 @@ import lombok.Setter;
 
 /**
  * <p>
- * 友情链接表
+ * 用户反馈
  * </p>
  *
  * @author xiaohai
- * @since 2023-07-01
+ * @since 2023-08-03
  */
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@TableName("b_friend_link")
-@Schema(name = "FriendLink", description = "友情链接表")
-public class FriendLink extends BaseEntity  implements Serializable  {
+@TableName("sys_feedback")
+@Schema(name = "Feedback", description = "用户反馈")
+public class Feedback extends BaseEntity  implements Serializable  {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -35,24 +35,15 @@ public class FriendLink extends BaseEntity  implements Serializable  {
     @Schema(description = "用户id")
     private Integer userId;
 
-    @Schema(description = "网站名称")
-    private String name;
+    @Schema(description = "标题")
+    private String title;
 
-    @Schema(description = "站长邮箱")
-    private String email;
+    @Schema(description = "反馈内容")
+    private String content;
 
-    @Schema(description = "网站地址")
-    private String url;
-
-    @Schema(description = "描述")
-    private String info;
-
-    @Schema(description = "排序")
-    private Integer sort;
-
-    @Schema(description = "审核回复")
+    @Schema(description = "回复")
     private String reason;
 
-    @Schema(description = "审核状态（0-待审核,1-已通过,2-未通过）")
+    @Schema(description = "状态（0-待审核,1-已通过,2-未通过）")
     private String status;
 }
