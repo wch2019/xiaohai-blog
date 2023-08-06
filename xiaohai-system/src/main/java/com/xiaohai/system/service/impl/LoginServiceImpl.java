@@ -40,9 +40,8 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public String login(LoginVo vo) {
         User user = userMapper.selectOne(new QueryWrapper<User>()
-                .eq("username", vo.getUsername())
-                .or().eq("email", vo.getUsername()).
-                eq("password", EncryptUtils.aesEncrypt(vo.getPassword())));
+                .and(i -> i.eq("username", vo.getUsername()).or().eq("email", vo.getUsername()))
+                .eq("password", EncryptUtils.aesEncrypt(vo.getPassword())));
         Assert.isTrue(user != null, "用户帐号或者密码错误!");
         Assert.isTrue("0".equals(user.getStatus()), "账号停用，请联系管理员!");
 
