@@ -3,6 +3,7 @@ package com.xiaohai.file.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
@@ -34,7 +35,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadAvatar(MultipartFile file) {
         //根据用户区分文件夹
-        String path = fileConfig.getAvatarPath() + StpUtil.getLoginId() + File.separator;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.AVATAR_FILE;
         return addFile(path, file);
     }
 
@@ -47,13 +48,13 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadImage(MultipartFile file) {
         //指定markdown图片上传目录,根据用户区分文件夹
-        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + StpUtil.getLoginId() + File.separator;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
         return addFile(path, file);
     }
 
     @Override
     public Integer deleteImage(String pathName) {
-        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + StpUtil.getLoginId() + File.separator + pathName;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator +pathName;
         boolean isTrue = FileUtils.deleteFile(path);
         Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
         return 1;
@@ -81,7 +82,7 @@ public class FileServiceImpl implements FileService {
 
         // 判断文件类型是否为图片
         if (!FileUtils.isImageExtension(fileExtension)) {
-            throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(Constants.IMAGE_EXTENSION));
+            throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(FileConstants.IMAGE_EXTENSION));
         }
 
         // 生成唯一的文件名
@@ -94,6 +95,7 @@ public class FileServiceImpl implements FileService {
         //前端展示需要处理
         return filePath.replace("\\", "/");
     }
+
     /**
      * 添加Logo
      *
@@ -116,11 +118,11 @@ public class FileServiceImpl implements FileService {
 
         // 判断文件类型是否为图片
         if (!FileUtils.isImageExtension(fileExtension)) {
-            throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(Constants.IMAGE_EXTENSION));
+            throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(FileConstants.IMAGE_EXTENSION));
         }
 
         // 保存文件并返回文件路径
-        String filePath = FileUtils.saveFile(path,Constants.LOGO, file);
+        String filePath = FileUtils.saveFile(path, FileConstants.LOGO, file);
         filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
         log.info("保存图片--------->{}", filePath);
         //前端展示需要处理
@@ -130,7 +132,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String upload(UploadVo vo) {
         MultipartFile file = vo.getFile();
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() +File.separator + vo.getPath();
+        String path = fileConfig.getFilePath() + vo.getPath();
         // 判断文件是否为空
         if (file == null || file.isEmpty()) {
             throw new ServiceException("文件为空");
@@ -148,7 +150,7 @@ public class FileServiceImpl implements FileService {
         filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
         log.info("保存图片--------->{}", filePath);
         //前端展示需要处理
-        return  filePath.replace("\\", "/");
+        return filePath.replace("\\", "/");
     }
 
     @Override

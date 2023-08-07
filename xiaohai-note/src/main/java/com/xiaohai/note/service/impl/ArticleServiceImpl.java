@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.Contribution;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -201,7 +202,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         Assert.isTrue(!"https://cn.bing.com".equals(url), "获取图片失败");
         //指定公共markdown图片上传目录
-        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + Constants.BING_FILE + File.separator;
+        String path = fileConfig.getProfile() + FileConstants.IMAGE_FILE + File.separator + FileConstants.BING_FILE + File.separator;
         FileUtils.download(url, path, name + ".jpg");
         path = File.separator + path.replace(fileConfig.getProfile(), "") + name + ".jpg";
         return path.replaceAll("\\\\", "/");
@@ -349,14 +350,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 判断文件后缀名是否为压缩类型
         if (!FileUtils.isCompressExtension(fileExtension)) {
-            throw new ServiceException("请查看压缩类型是否正确" + Arrays.toString(Constants.COMPRESS_EXTENSION));
+            throw new ServiceException("请查看压缩类型是否正确" + Arrays.toString(FileConstants.COMPRESS_EXTENSION));
         }
 
         String tempFile = StringUtils.generateUUIDWithoutHyphens();
 
         //压缩文件临时路径
-        String path = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + Constants.TEMPORARY_FILE + File.separator + tempFile;
-
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE+ File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile;
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, file.getOriginalFilename(), file);
         try {
@@ -364,12 +364,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             MarkdownUtils.unZip(new File(filePath), path);
 
             //获取解压后的markdown文件列表
-            List<String> list = MarkdownUtils.fileList(path + File.separator + Constants.NOTE_FILE);
+            List<String> list = MarkdownUtils.fileList(path + File.separator + FileConstants.NOTE_FILE);
             if (list.isEmpty()) {
                 throw new ServiceException("没有可用markdown文件");
             }
             //图片文件新存放处
-            String newPath = fileConfig.getImagePath() + Constants.MARKDOWN_FILE + File.separator + StpUtil.getLoginId() + File.separator;
+            String newPath =  fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
 
             for (String mdFilePath : list) {
                 //获取markdown解析文件
@@ -430,7 +430,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     }
                 }
                 //封面
-                if(StringUtils.isBlank(article.getCover())){
+                if (StringUtils.isBlank(article.getCover())) {
                     //为空手动添加一个封面
                     article.setCover(wallpaper());
                 }

@@ -141,6 +141,7 @@ import { addArticle, updateArticle, getBingWallpaper, getArticle } from '@/api/n
 import { delImage, uploadImage } from '@/api/file/file'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
+import { markdownImageFile } from '@/utils'
 
 export default {
   name: 'Index',
@@ -208,7 +209,7 @@ export default {
           this.form = response.data
           this.form.cover = process.env.VUE_APP_BASE_API_FILE + this.form.cover
           this.title = this.form.title
-          this.form.text = this.form.text.replaceAll('../image', process.env.VUE_APP_BASE_API_FILE + '/image')
+          this.form.text = this.form.text.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
         })
       }
     },

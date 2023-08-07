@@ -149,3 +149,7 @@ export function deriveFile(name) {
   window.location.href = `${process.env.VUE_APP_BASE_API_FILE}/system/template/markdown/${name}`
   return
 }
+// 设置全局md编写图片路径
+export function markdownImageFile(name) {
+  return '../files'.replace(name, '')
+}

@@ -217,7 +217,7 @@ import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import comments from '@/components/comments/index.vue'
-import { image } from '@/utils/publicMethods'
+import {image, markdownImageFile} from '@/utils/publicMethods'
 
 // 文章详情
 const articleOne = ref({})
@@ -288,8 +288,8 @@ const getArticle = async () => {
     userBasic.value = res.data.data.userBasic
     // 文章内图片地址替换
     articleOne.value.text = articleOne.value.text.replaceAll(
-      '../image',
-      `${import.meta.env.VITE_APP_BASE_API_FILE}/image`
+      markdownImageFile(''),
+      `${import.meta.env.VITE_APP_BASE_API_FILE}`+ markdownImageFile('..')
     )
     getList(res.data.data.categoryId)
   })

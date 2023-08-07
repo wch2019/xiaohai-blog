@@ -239,6 +239,7 @@ import { uploadImage, delImage } from '@/api/file/file'
 import uploadImg from '@/components/uploadImg'
 import { marked } from 'marked'
 import 'github-markdown-css'
+import { markdownImageFile } from '@/utils'
 
 export default {
   name: 'Index',
@@ -269,7 +270,7 @@ export default {
       getConfig().then(response => {
         this.form = response.data
         this.$refs.uploadImg.getimgUrl(this.form.logo)
-        this.form.content = this.form.content.replaceAll('../image', process.env.VUE_APP_BASE_API_FILE + '/image')
+        this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
       })
     },
     // 绑定@imgAdd event
@@ -314,7 +315,7 @@ export default {
           }
         }
       })
-      this.form.content = this.form.content.replaceAll('../image', process.env.VUE_APP_BASE_API_FILE + '/image')
+      this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
     }
   }
 }

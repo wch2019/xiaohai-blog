@@ -27,3 +27,11 @@ export function getQueryVariable(variable: any) {
   }
   return false
 }
+
+/**
+ * 设置全局md编写图片路径
+ * @param replace
+ */
+export function markdownImageFile(replace: any) {
+  return '../files'.replace(replace, '')
+}

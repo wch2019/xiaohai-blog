@@ -1,6 +1,7 @@
 package com.xiaohai.common.utils;
 
 import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
@@ -144,7 +145,7 @@ public class MarkdownUtils {
                     String fileExtension = FileUtils.getFileExtension(entry.getName());
 
                     // 判断文件后缀名是否为图片类型类型
-                    if (!FileUtils.isImageExtension(fileExtension) && !fileExtension.equals(Constants.MARKDOWN_EXTENSION)) {
+                    if (!FileUtils.isImageExtension(fileExtension) && !fileExtension.equals(FileConstants.MARKDOWN_EXTENSION)) {
                         throw new ServiceException("请查看上传文件格式是否正确");
                     }
                     // 保证这个文件的父文件夹必须要存在
@@ -207,7 +208,7 @@ public class MarkdownUtils {
                     } else {
                         log.info("文件：" + file.getName());
                         // md文件才获取
-                        if (FileUtils.getFileExtension(file.getName()).equals(Constants.MARKDOWN_EXTENSION)) {
+                        if (FileUtils.getFileExtension(file.getName()).equals(FileConstants.MARKDOWN_EXTENSION)) {
                             list.add(file.getPath());
                         }
                     }

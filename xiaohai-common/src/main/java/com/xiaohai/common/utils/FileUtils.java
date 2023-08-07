@@ -1,6 +1,6 @@
 package com.xiaohai.common.utils;
 
-import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,6 +75,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
         throw new ServiceException("无效的文件名");
     }
+
     /**
      * 删除文件或者目录
      *
@@ -93,9 +94,11 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
         return false;
     }
+
     /**
      * 删除指定目录下所有文件
-     * @param folder  文件
+     *
+     * @param folder 文件
      * @author xiaohai
      * @since 2023/7/9 9:14
      */
@@ -112,6 +115,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             }
         }
     }
+
     /**
      * 创建目录
      *
@@ -129,6 +133,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 创建文件
+     *
      * @param filePath
      * @return
      */
@@ -144,6 +149,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
         return false;
     }
+
     /**
      * 文件下载到指定路径
      *
@@ -189,17 +195,18 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @param fileExtension 文件后缀名
      * @return 是否为图片类型
      */
-    public static  boolean isImageExtension(String fileExtension) {
-        return Arrays.asList(Constants.IMAGE_EXTENSION).contains(fileExtension);
+    public static boolean isImageExtension(String fileExtension) {
+        return Arrays.asList(FileConstants.IMAGE_EXTENSION).contains(fileExtension);
     }
 
     /**
      * 判断文件后缀名是否为压缩类型
+     *
      * @param fileExtension 文件后缀名
      * @return 是否为压缩类型
      */
-    public static  boolean isCompressExtension(String fileExtension) {
-        return Arrays.asList(Constants.COMPRESS_EXTENSION).contains(fileExtension);
+    public static boolean isCompressExtension(String fileExtension) {
+        return Arrays.asList(FileConstants.COMPRESS_EXTENSION).contains(fileExtension);
     }
 
     /**
@@ -208,7 +215,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @param fileExtension 文件后缀名
      * @return 唯一的文件名
      */
-    public static  String generateUniqueFileName(String fileExtension) {
+    public static String generateUniqueFileName(String fileExtension) {
         String fileName = StringUtils.generateUUIDWithoutHyphens();
         return fileName + "." + fileExtension;
     }
@@ -221,7 +228,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @param file     要保存的文件
      * @return 文件保存路径
      */
-    public static  String saveFile(String path, String fileName, MultipartFile file) {
+    public static String saveFile(String path, String fileName, MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             File savedFile = new File(path, fileName);
             FileUtils.copyInputStreamToFile(inputStream, savedFile);

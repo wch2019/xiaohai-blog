@@ -30,16 +30,15 @@ public class FileConfig {
 
     @Schema(description = "获取系统文件上传路径")
     private String systemPath;
-
-    public String getImagePath() {
-        return this.profile+"image"+ File.separator;
-    }
-
-    public String getAvatarPath() { return this.profile+"avatar"+ File.separator; }
-
     public String getFilePath() {
         return this.profile+"files"+ File.separator;
     }
+
+    public String getImagePath() {
+        return getFilePath()+"image"+ File.separator;
+    }
+
+    public String getAvatarPath() { return getFilePath()+"avatar"+ File.separator; }
 
     public String getSystemPath() { return this.profile+"system"+ File.separator;}
 
