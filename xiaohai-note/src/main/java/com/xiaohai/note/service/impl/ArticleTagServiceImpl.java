@@ -2,6 +2,7 @@ package com.xiaohai.note.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.note.dao.TagsMapper;
 import com.xiaohai.note.pojo.entity.ArticleTag;
 import com.xiaohai.note.dao.ArticleTagMapper;
@@ -95,17 +96,19 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, Article
     public void addTagName(List<String> names, Integer articleId) {
         //写入标签
         for (String name : names) {
-            Tags tags =tagsMapper.selectOne(new QueryWrapper<Tags>().eq("name",name));
-            //没有就新增
-            if(tags==null){
-                tags=new Tags();
-                tags.setName(name);
-                tagsMapper.insert(tags);
+            if(StringUtils.isNotBlank(name)){
+                Tags tags =tagsMapper.selectOne(new QueryWrapper<Tags>().eq("name",name));
+                //没有就新增
+                if(tags==null){
+                    tags=new Tags();
+                    tags.setName(name);
+                    tagsMapper.insert(tags);
+                }
+                ArticleTag articleTag=new ArticleTag();
+                articleTag.setArticleId(articleId);
+                articleTag.setTagId(tags.getId());
+                baseMapper.insert(articleTag);
             }
-            ArticleTag articleTag=new ArticleTag();
-            articleTag.setArticleId(articleId);
-            articleTag.setTagId(tags.getId());
-            baseMapper.insert(articleTag);
         }
     }
 }
