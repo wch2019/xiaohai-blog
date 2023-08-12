@@ -218,8 +218,8 @@ export default {
       }).then(() => {
         delFeedback(ids).then(response => {
           this.$message.success(response.msg)
+          this.getList()
         })
-        this.getList()
       }).catch(() => {
         this.$message.info('已取消删除')
       })

@@ -98,8 +98,8 @@ export default {
       }).then(() => {
         kickOut(ids).then(response => {
           this.$message.success(response.msg)
+          this.getList()
         })
-        this.getList()
       }).catch(() => {
         this.$message.info('已取消退出')
       })

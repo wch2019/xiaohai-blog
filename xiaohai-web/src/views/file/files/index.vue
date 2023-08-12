@@ -6,7 +6,7 @@
           <el-radio-group v-model="form.path" size="medium" @change="getList">
             <el-radio-button label="/">全部</el-radio-button>
             <el-radio-button label="/image/">图片</el-radio-button>
-            <el-radio-button label="/avatar/">头像</el-radio-button>
+            <el-radio-button label="/system/">系统</el-radio-button>
           </el-radio-group>
         </div>
         <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />

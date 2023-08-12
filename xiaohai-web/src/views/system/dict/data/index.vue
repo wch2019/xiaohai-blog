@@ -26,16 +26,16 @@
           v-model="queryParams.status"
           placeholder="状态"
           clearable
-          @clear="queryParams.status = null"
           size="small"
           style="width: 240px"
+          @clear="queryParams.status = null"
         >
           <el-option
             v-for="dict in $store.getters.dict.sys_normal_disable"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -259,8 +259,8 @@ export default {
       }).then(() => {
         delDictData(ids).then(response => {
           this.$message.success(response.msg)
+          this.getList()
         })
-        this.getList()
       }).catch(() => {
         this.$message.info('已取消删除')
       })
