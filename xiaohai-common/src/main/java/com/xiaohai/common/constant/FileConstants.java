@@ -9,7 +9,7 @@ public class FileConstants {
     /**
      * 图片后缀
      */
-    public static final String[] IMAGE_EXTENSION = {"bmp", "gif", "jpg", "jpeg", "png", "ico"};
+    public static final String[] IMAGE_EXTENSION = {"bmp", "gif", "jpg", "jpeg", "png", "ico","svg"};
     /**
      * 压缩后缀
      */

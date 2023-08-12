@@ -223,7 +223,7 @@ public class MarkdownUtils {
     }
 
     /**
-     * 获取markdown中图片地址
+     * 获取markdown中图片地址，将http网络数据排除
      *
      * @param markdown markdown文本
      * @return java.util.List<java.lang.String>
@@ -232,7 +232,8 @@ public class MarkdownUtils {
      */
     public static List<String> photoList(String markdown) {
         List<String> list = new ArrayList<>();
-        String pattern = "!\\[.*?\\]\\((.*?)\\)";
+//        String pattern = "!\\[.*?\\]\\((.*?)\\)";
+        String pattern = "!\\[.*?\\]\\((?!http)(.*?)\\)";
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(markdown);
         while (matcher.find()) {
@@ -287,7 +288,7 @@ public class MarkdownUtils {
     }
 
     public static void main(String[] args) {
-        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/1684113802808.jpg)";
+        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/16841138028.jpg)![1](https://raw.githubusercontent.com/xiaohai-store/notes-img/main/1.png)";
         System.out.println(photoList(markdown));
         String filePath = "C:\\Users\\Code01\\Desktop\\新建文件夹\\note\\Chrome书签手动同步方法.md";
         Map<String, Object> postData = parseHexoPost(filePath);

@@ -384,12 +384,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     }
                     if (entry.getKey().equals("cover")) {
                         if (StringUtils.isNotBlank(entry.getValue().toString())) {
-                            //新图片位置
-                            String newPhotoPath = MarkdownUtils.copyImage(path + entry.getValue().toString().replace("..", ""), newPath);
-                            //去掉前缀
-                            newPhotoPath = File.separator + newPhotoPath.replace(fileConfig.getProfile(), "");
-                            //封面
-                            article.setCover(newPhotoPath.replace("\\", "/"));
+                            if(entry.getValue().toString().startsWith("http")){
+                                //封面
+                                article.setCover(entry.getValue().toString());
+                            }else{
+                                //新图片位置
+                                String newPhotoPath = MarkdownUtils.copyImage(path + entry.getValue().toString().replace("..", ""), newPath);
+                                //去掉前缀
+                                newPhotoPath = File.separator + newPhotoPath.replace(fileConfig.getProfile(), "");
+                                //封面
+                                article.setCover(newPhotoPath.replace("\\", "/"));
+                            }
                         }
                     }
                     if (entry.getKey().equals("categories")) {

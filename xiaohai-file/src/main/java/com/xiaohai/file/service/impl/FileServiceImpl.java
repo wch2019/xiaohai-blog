@@ -164,7 +164,8 @@ public class FileServiceImpl implements FileService {
             for (File file : files) {
                 FileDto fileDto = new FileDto();
                 fileDto.setNameSuffix("");
-                fileDto.setPath(file.getPath().replaceAll("\\\\", "/").replace(fileConfig.getProfile(), ""));
+                fileDto.setPath(File.separator +file.getPath().replace(fileConfig.getProfile(), ""));
+                fileDto.setPath(fileDto.getPath().replace("\\" , "/"));
                 if (!file.isDirectory()) {
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));

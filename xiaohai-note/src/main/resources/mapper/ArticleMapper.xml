@@ -51,7 +51,7 @@
             <if test="param.tagId != null and param.tagId != ''">
                 and a.id in (SELECT article_id FROM b_article_tag where tag_id=#{param.tagId})
             </if>
-            <if test="param.isPush != null and param.isPush != ''">
+            <if test="param.isPush != null">
                 and a.is_push=#{param.isPush}
             </if>
             <if test="param.isOriginal != null and param.isOriginal != ''">
