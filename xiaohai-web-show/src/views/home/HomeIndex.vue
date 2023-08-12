@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, toRefs } from 'vue'
 import RightSide from '@/components/layouts/RightSide.vue'
-import { listArticles } from '@/api/show'
+import {listArticles, listCategory} from '@/api/show'
 
 import articleList from '@/components/articleList/index.vue'
 import { getArticle, image } from '@/utils/publicMethods'
@@ -15,12 +15,19 @@ const dataList: any = ref([])
 const total = ref()
 // 是否展示加载更多
 const loadMores = ref(true)
+// 是否展开分类
+const classify = ref(false)
+// 分类列表
+const categories = ref([])
+// 表示选中的全部按钮
+const selectedButton = ref(null)
 
 const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    type: 1
+    type: 1,
+    id:null
   }
 })
 
@@ -40,8 +47,9 @@ function getCarouselList() {
 }
 
 /** 查询展示文章列表 */
-function getList(val: any) {
+function getList(val: any, id:any) {
   queryParams.value.type = val
+  queryParams.value.id = id
   queryParams.value.pageNum = 1
   queryParams.value.pageSize = 10
   listArticles(queryParams.value).then((response) => {
@@ -50,6 +58,7 @@ function getList(val: any) {
     const a = Math.ceil(total.value / queryParams.value.pageSize)
     loadMores.value = queryParams.value.pageNum + 1 <= a
   })
+  selectedButton.value=id
 }
 
 /**
@@ -67,8 +76,20 @@ function loadMore() {
     })
   }
 }
+function classification(){
+  classify.value = !classify.value;
+}
+/**
+ * 分类
+ */
+function getCategory() {
+  listCategory().then((response) => {
+    categories.value = response.data.data
+  })
+}
 
-getList(1)
+getCategory()
+getList(1,null)
 getCarouselList()
 </script>
 
@@ -93,14 +114,26 @@ getCarouselList()
       </el-carousel>
 
       <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
-        <el-scrollbar>
-          <el-space wrap class="category">
-            <el-button round @click="getList(1)">最新文章</el-button>
-            <el-button round @click="getList(2)">最热文章</el-button>
-            <el-button round @click="getList(3)">原创文章</el-button>
-            <el-button round @click="getList(4)">转载文章</el-button>
+        <div class="card-header category" v-if="!classify">
+          <el-space wrap  size="default" >
+            <el-button style="border-radius: 10px;" :class="{'selected': null === selectedButton}" @click="getList(1,null)">全部</el-button>
+            <el-button style="border-radius: 10px;"  v-for="category in categories"  :class="{'selected': category.id === selectedButton}"  @click="getList(6,category.id)">
+              {{ category.name }}
+              <div class="tags">{{ category.count }}</div>
+            </el-button>
           </el-space>
-        </el-scrollbar>
+          <svg-icon icon-class="spread"   class="iconUnfold" @click="classification"></svg-icon>
+        </div>
+        <div class="card-header" v-else>
+          <el-space wrap size="default"  >
+            <el-button style="border-radius: 10px;" :class="{'selected': null === selectedButton}" @click="getList(1,null)">全部</el-button>
+            <el-button style="border-radius: 10px;"  v-for="category in categories" @click="getList(6,category.id)">
+              {{ category.name }}
+              <div class="tags">{{ category.count }}</div>
+            </el-button>
+          </el-space>
+          <svg-icon icon-class="pack-up"  class="iconUnfold" @click="classification"></svg-icon>
+        </div>
       </el-card>
       <articleList :dataList="dataList"></articleList>
       <el-button v-if="loadMores" text type="primary" bg @click="loadMore">加载更多</el-button>
@@ -119,14 +152,26 @@ getCarouselList()
     </el-carousel>
 
     <el-card class="box-card" shadow="hover" :body-style="{ padding: '10px' }">
-      <el-scrollbar>
-        <el-space wrap class="category">
-          <el-button round @click="getList(1)">最新文章</el-button>
-          <el-button round @click="getList(2)">最热文章</el-button>
-          <el-button round @click="getList(3)">原创文章</el-button>
-          <el-button round @click="getList(4)">转载文章</el-button>
+      <div class="card-header category" v-if="!classify">
+        <el-space wrap  size="default" >
+          <el-button style="border-radius: 10px;" :class="{'selected': null === selectedButton}" @click="getList(1,null)">全部</el-button>
+          <el-button style="border-radius: 10px;"  v-for="category in categories"  :class="{'selected': category.id === selectedButton}"  @click="getList(6,category.id)">
+            {{ category.name }}
+            <div class="tags">{{ category.count }}</div>
+          </el-button>
         </el-space>
-      </el-scrollbar>
+        <svg-icon icon-class="spread"  class="iconUnfold" @click="classification"></svg-icon>
+      </div>
+      <div class="card-header" v-else>
+        <el-space wrap size="default"  >
+          <el-button style="border-radius: 10px;" :class="{'selected': null === selectedButton}" @click="getList(1,null)">全部</el-button>
+          <el-button style="border-radius: 10px;"  v-for="category in categories" @click="getList(6,category.id)">
+            {{ category.name }}
+            <div class="tags">{{ category.count }}</div>
+          </el-button>
+        </el-space>
+        <svg-icon icon-class="pack-up" class="iconUnfold" @click="classification"></svg-icon>
+      </div>
     </el-card>
     <articleList :dataList="dataList"></articleList>
     <el-button v-if="loadMores" text type="primary" bg @click="loadMore">加载更多</el-button>
@@ -147,7 +192,7 @@ getCarouselList()
 }
 
 .category {
-  height: 40px;
+  height: 32px;
 }
 
 .carousel-title {
@@ -163,5 +208,27 @@ getCarouselList()
   font-size: 22px;
   color: #ecf8ff;
   font-weight: bold;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.selected {
+  color: var(--el-button-hover-text-color);
+  border-color: var(--el-button-hover-border-color);
+  background-color: var(--el-button-hover-bg-color);
+  outline: none;
+}
+.iconUnfold{
+  padding-top: 10px;
+}
+.iconUnfold:hover {
+  cursor: pointer;
+  display: block;
+  transition: all 0.2s;
+  color: #409eff;
+  text-shadow: 2px 2px 5px #409eff;
 }
 </style>

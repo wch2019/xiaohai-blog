@@ -23,9 +23,9 @@
           <div class="menus-item">
             <router-link class="menu-btn" to="/message"> 留言</router-link>
           </div>
-          <!--          <div class="menus-item">-->
-          <!--            <router-link class="menu-btn" to="/links"> 友链</router-link>-->
-          <!--          </div>-->
+<!--                    <div class="menus-item">-->
+<!--                      <router-link class="menu-btn" to="/links"> 友链</router-link>-->
+<!--                    </div>-->
           <div class="menus-item">
             <router-link class="menu-btn" to="/about"> 关于</router-link>
           </div>
@@ -157,7 +157,7 @@
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/tags')"> 标 签</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/back')"> 归 档</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/message')"> 留 言</el-card>
-    <!--    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>-->
+        <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/about')"> 关 于</el-card>
     <el-card v-if="store.token" class="drawer-menus">
       <div @click="exit">退出登录</div>

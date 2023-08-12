@@ -85,14 +85,14 @@ watch(
 
 <style scoped>
 .search-title {
-  color: #49b1f5;
+  color: #fd5a5a;
   font-size: 1.25rem;
   line-height: 1;
 }
 .search-input-wrapper {
   display: flex;
   padding: 5px;
-  border: 2px solid #8e8cd8;
+  border: 2px solid #fcbfbf;
   border-radius: 2rem;
   align-items: center;
 }
