@@ -3,7 +3,7 @@
     <el-card
       class="box-card"
       shadow="hover"
-      :body-style="{ padding: '0px', height: '380px' }"
+      :body-style="{ padding: '0px', height: '440px' }"
       style="position: relative"
     >
       <img src="../../assets/image/1.jpg" class="image" />
@@ -11,8 +11,32 @@
         <el-avatar v-if="showBasic.avatar" :src="image(showBasic.avatar)" class="panThumb" />
 
         <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
-          <h3>{{ showBasic.username }}</h3>
+          <h2 style="margin-bottom: 0px;">{{ showBasic.username }}</h2>
           <div>{{ showBasic.summary }}</div>
+          <div style="padding-top: 20px">
+            <el-space wrap size="default">
+              <a href="https://gitee.com/wch2019" target="_blank" >
+               <div class="diamond-clip-path diamond-icon">
+                 <svg-icon icon-class="gitee"></svg-icon>
+               </div>
+              </a>
+              <a href="https://github.com/wch2019" target="_blank" >
+                <div class="diamond-clip-path diamond-icon">
+              <svg-icon icon-class="github"></svg-icon>
+                </div>
+              </a>
+              <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1372195290" target="_blank" >
+                <div class="diamond-clip-path diamond-icon">
+              <svg-icon icon-class="qq"></svg-icon>
+                </div>
+              </a>
+              <a href="https://github.com/wch2019" target="_blank" >
+                <div class="diamond-clip-path diamond-icon">
+                  <svg-icon icon-class="wechat"></svg-icon>
+                </div>
+              </a>
+            </el-space>
+          </div>
           <div style="display: inline-flex; vertical-align: top; justify-content: space-between">
             <el-space fill direction="vertical">
               <div class="text-sm text-color">文章</div>
@@ -210,5 +234,20 @@ function cancelClick(path: any) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.diamond-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.diamond-clip-path {
+  -webkit-clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%);
+  clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%);
+  background: rgba(0,0,0,0.05);
 }
 </style>
