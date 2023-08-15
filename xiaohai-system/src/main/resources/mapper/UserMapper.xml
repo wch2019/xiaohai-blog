@@ -15,9 +15,11 @@
         <result column="gender" property="gender"/>
         <result column="avatar" property="avatar"/>
         <result column="email" property="email"/>
+        <result column="mobile" property="mobile"/>
+        <result column="gitee" property="gitee"/>
+        <result column="github" property="github"/>
         <result column="qq_number" property="qqNumber"/>
         <result column="we_chat" property="weChat"/>
-        <result column="mobile" property="mobile"/>
         <result column="summary" property="summary"/>
         <result column="status" property="status"/>
         <result column="login_count" property="loginCount"/>
@@ -35,7 +37,7 @@
         created_time,
         updated_by,
         updated_time,
-        id, username, password, nick_name, gender, avatar, email, qq_number, we_chat, mobile, summary, status,login_count, login_ip, login_source,login_date,login_os,login_browser
+        id, username, password, nick_name, gender, avatar, email, qq_number, we_chat, mobile, gitee, github, summary, status,login_count, login_ip, login_source,login_date,login_os,login_browser
     </sql>
 
 </mapper>

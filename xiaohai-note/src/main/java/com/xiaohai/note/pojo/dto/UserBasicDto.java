@@ -30,4 +30,16 @@ public class UserBasicDto {
     @Schema(description = "自我介绍")
     private String summary;
 
+    @Schema(description = "gitee")
+    private String gitee;
+
+    @Schema(description = "github")
+    private String github;
+
+    @Schema(description = "qq号")
+    private String qqNumber;
+
+    @Schema(description = "微信号")
+    private String weChat;
+
 }

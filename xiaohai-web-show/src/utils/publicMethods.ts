@@ -1,4 +1,5 @@
 import router from '@/router'
+import {ElMessageBox} from "element-plus";
 
 /**
  * 图片地址拼接
@@ -34,4 +35,17 @@ export function getQueryVariable(variable: any) {
  */
 export function markdownImageFile(replace: any) {
   return '../files'.replace(replace, '')
+}
+
+/**
+ * 展示型弹窗
+ * @param number
+ */
+export function open(number: any){
+  ElMessageBox.alert(number, {
+    showConfirmButton:false,
+    closeOnClickModal:true,
+    showClose:false,
+    center: true,
+  })
 }

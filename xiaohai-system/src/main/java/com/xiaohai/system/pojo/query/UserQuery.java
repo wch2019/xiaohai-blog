@@ -46,14 +46,20 @@ public class UserQuery implements Serializable {
     @Parameter(description = "用户邮箱")
     private String email;
 
+    @Schema(description = "手机号")
+    private String mobile;
+
+    @Schema(description = "gitee")
+    private String gitee;
+
+    @Schema(description = "github")
+    private String github;
+
     @Parameter(description = "qq号")
     private String qqNumber;
 
     @Parameter(description = "微信号")
     private String weChat;
-
-    @Parameter(description = "手机号")
-    private String mobile;
 
     @Parameter(description = "自我介绍")
     private String summary;

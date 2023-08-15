@@ -46,14 +46,20 @@ public class UserDto implements Serializable {
     @Schema(description = "用户邮箱")
     private String email;
 
+    @Schema(description = "手机号")
+    private String mobile;
+
+    @Schema(description = "gitee")
+    private String gitee;
+
+    @Schema(description = "github")
+    private String github;
+
     @Schema(description = "qq号")
     private String qqNumber;
 
     @Schema(description = "微信号")
     private String weChat;
-
-    @Schema(description = "手机号")
-    private String mobile;
 
     @Schema(description = "自我介绍")
     private String summary;

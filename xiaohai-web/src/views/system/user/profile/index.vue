@@ -8,12 +8,12 @@
           </div>
           <div>
             <div class="text-center">
-              <userAvatar :user="user"/>
+              <userAvatar :user="user" />
               {{ user.username }}
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
-                <svg-icon icon-class="user"/>
+                <svg-icon icon-class="user" />
                 昵称
                 <div class="pull-right">{{ user.nickName }}</div>
               </li>
@@ -25,26 +25,36 @@
                 </template>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="email"/>
+                <svg-icon icon-class="email" />
                 邮箱
                 <div class="pull-right">{{ user.email }}</div>
               </li>
-              <li class="list-group-item" >
+              <li class="list-group-item">
                 <i class="el-icon-phone" />
                 手机
                 <div class="pull-right">{{ user.mobile }}</div>
               </li>
-              <li class="list-group-item" >
+              <li class="list-group-item">
+                <svg-icon icon-class="gitee" />
+                gitee
+                <div class="pull-right">{{ user.gitee }}</div>
+              </li>
+              <li class="list-group-item">
+                <svg-icon icon-class="github" />
+                github
+                <div class="pull-right">{{ user.github }}</div>
+              </li>
+              <li class="list-group-item">
                 <svg-icon icon-class="wechat" />
                 微信
                 <div class="pull-right">{{ user.weChat }}</div>
               </li>
-              <li class="list-group-item" >
-                <svg-icon icon-class="qq"/>
+              <li class="list-group-item">
+                <svg-icon icon-class="qq" />
                 QQ
                 <div class="pull-right">{{ user.qqNumber }}</div>
               </li>
-              <li class="list-group-item" v-if="user.summary">
+              <li v-if="user.summary" class="list-group-item">
                 {{ user.summary }}
               </li>
             </ul>
@@ -58,13 +68,13 @@
           </div>
           <el-tabs v-model="activeTab">
             <el-tab-pane label="基本资料" name="userinfo">
-              <userInfo :user="user"/>
+              <userInfo :user="user" />
             </el-tab-pane>
             <el-tab-pane label="修改邮箱" name="resetEmail">
-              <resetEmail :user="user"/>
+              <resetEmail :user="user" />
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="resetPwd">
-              <resetPwd :user="user"/>
+              <resetPwd :user="user" />
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -100,7 +110,7 @@ export default {
   },
   methods: {
     getUser() {
-      console.log(this.$store.getters.userId,'this.$store.getters.userId')
+      console.log(this.$store.getters.userId, 'this.$store.getters.userId')
       getUser(this.$store.getters.userId).then(response => {
         this.user = response.data
       })

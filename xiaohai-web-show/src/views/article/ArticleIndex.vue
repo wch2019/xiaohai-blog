@@ -159,7 +159,7 @@
       <el-card
         class="box-card"
         shadow="hover"
-        :body-style="{ padding: '0px', height: '380px' }"
+        :body-style="{ padding: '0px', height: '440px' }"
         style="position: relative"
       >
         <img src="../../assets/image/1.jpg" class="image" />
@@ -168,8 +168,33 @@
           <el-avatar v-if="userBasic.avatar" :src="image(userBasic.avatar)" class="panThumb" />
 
           <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
-            <h3>{{ userBasic.username }}</h3>
+            <h2 style="margin-bottom: 0px;">{{ userBasic.username }}</h2>
             <div>{{ userBasic.summary }}</div>
+            <div style="padding-top: 20px">
+              <el-space wrap size="default">
+                <a href="https://gitee.com/wch2019" target="_blank" >
+                  <div class="diamond-clip-path diamond-icon">
+                    <svg-icon icon-class="gitee"></svg-icon>
+                  </div>
+                </a>
+                <a href="https://github.com/wch2019" target="_blank" >
+                  <div class="diamond-clip-path diamond-icon">
+                    <svg-icon icon-class="github"></svg-icon>
+                  </div>
+                </a>
+                <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1372195290" target="_blank" >
+                  <div class="diamond-clip-path diamond-icon">
+                    <svg-icon icon-class="qq"></svg-icon>
+                  </div>
+                </a>
+                <el-link :underline="false" @click="open(123456)">
+                  <div class="diamond-clip-path diamond-icon" >
+                    <svg-icon icon-class="wechat"></svg-icon>
+                  </div>
+               </el-link>
+              </el-space>
+            </div>
+
             <div style="display: inline-flex; vertical-align: top; justify-content: space-between">
               <el-space fill direction="vertical">
                 <div class="text-sm text-color">文章</div>
@@ -217,7 +242,7 @@ import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import comments from '@/components/comments/index.vue'
-import {image, markdownImageFile} from '@/utils/publicMethods'
+import {image, markdownImageFile,open} from '@/utils/publicMethods'
 
 // 文章详情
 const articleOne = ref({})

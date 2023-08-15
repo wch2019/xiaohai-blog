@@ -78,3 +78,20 @@ html,body {
 .bold-text {
   font-weight: bold;
 }
+//用户展示信息图标样式
+.diamond-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+//用户展示信息图标样式
+.diamond-clip-path {
+  -webkit-clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%);
+  clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%);
+  background: rgba(0,0,0,0.05);
+}

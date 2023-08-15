@@ -30,11 +30,11 @@
               <svg-icon icon-class="qq"></svg-icon>
                 </div>
               </a>
-              <a href="https://github.com/wch2019" target="_blank" >
-                <div class="diamond-clip-path diamond-icon">
+              <el-link :underline="false" @click="open(123456)">
+                <div class="diamond-clip-path diamond-icon" >
                   <svg-icon icon-class="wechat"></svg-icon>
                 </div>
-              </a>
+              </el-link>
             </el-space>
           </div>
           <div style="display: inline-flex; vertical-align: top; justify-content: space-between">
@@ -141,7 +141,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getArticle, image } from '@/utils/publicMethods'
+import {getArticle, image, open} from '@/utils/publicMethods'
 import useStore from '@/store/index'
 
 const store = useStore()
@@ -234,20 +234,5 @@ function cancelClick(path: any) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.diamond-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.5rem;
-  width: 2.5rem;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-.diamond-clip-path {
-  -webkit-clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%);
-  clip-path: polygon(50% 3%,91% 25%,91% 75%,50% 97%,9% 75%,9% 25%);
-  background: rgba(0,0,0,0.05);
 }
 </style>

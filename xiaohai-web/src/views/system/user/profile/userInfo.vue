@@ -23,6 +23,12 @@
     <el-form-item label="手机" prop="mobile">
       <el-input v-model="user.mobile" maxlength="11" />
     </el-form-item>
+    <el-form-item label="gitee">
+      <el-input v-model="user.gitee" />
+    </el-form-item>
+    <el-form-item label="github">
+      <el-input v-model="user.github" />
+    </el-form-item>
     <el-form-item label="QQ">
       <el-input v-model="user.qqNumber" />
     </el-form-item>
