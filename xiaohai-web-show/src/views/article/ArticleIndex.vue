@@ -172,22 +172,22 @@
             <div>{{ userBasic.summary }}</div>
             <div style="padding-top: 20px">
               <el-space wrap size="default">
-                <a href="https://gitee.com/wch2019" target="_blank" >
+                <a :href="userBasic.gitee" target="_blank" >
                   <div class="diamond-clip-path diamond-icon">
                     <svg-icon icon-class="gitee"></svg-icon>
                   </div>
                 </a>
-                <a href="https://github.com/wch2019" target="_blank" >
+                <a :href="userBasic.github" target="_blank" >
                   <div class="diamond-clip-path diamond-icon">
                     <svg-icon icon-class="github"></svg-icon>
                   </div>
                 </a>
-                <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1372195290" target="_blank" >
+                <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=" target="_blank" >
                   <div class="diamond-clip-path diamond-icon">
                     <svg-icon icon-class="qq"></svg-icon>
                   </div>
                 </a>
-                <el-link :underline="false" @click="open(123456)">
+                <el-link :underline="false" @click="open(userBasic.weChat)">
                   <div class="diamond-clip-path diamond-icon" >
                     <svg-icon icon-class="wechat"></svg-icon>
                   </div>
