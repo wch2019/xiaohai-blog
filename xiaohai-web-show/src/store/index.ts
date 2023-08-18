@@ -10,6 +10,10 @@ const useStore = defineStore('user', {
       token: getToken(),
       name: '',
       summary: '',
+      gitee: '',
+      github: '',
+      qqNumber: '',
+      weChat: '',
       avatar: '',
       userId: '',
       showBasic: '',
@@ -31,11 +35,16 @@ const useStore = defineStore('user', {
             if (data == null) {
               return reject('验证失败，请重新登录。')
             }
-            const { username, nickName, avatar, id, summary } = data.info
+            const { username, nickName, avatar, id, summary, gitee, github, qqNumber, weChat } =
+              data.info
             this.name = nickName || username
             this.avatar = import.meta.env.VITE_APP_BASE_API_FILE + avatar
             this.userId = id
             this.summary = summary
+            this.gitee = gitee
+            this.github = github
+            this.qqNumber = qqNumber
+            this.weChat = weChat
             resolve(data)
           })
           .catch((error) => {
@@ -80,7 +89,7 @@ const useStore = defineStore('user', {
             // 获取现有的或新建一个 favicon 链接元素
             const faviconLink = document.querySelector('link[rel="icon"]') as HTMLLinkElement
             if (faviconLink) {
-              faviconLink.href = image(this.website.logo+'?random=' + new Date().getTime())
+              faviconLink.href = image(`${this.website.logo}?random=${new Date().getTime()}`)
             }
             resolve()
           })

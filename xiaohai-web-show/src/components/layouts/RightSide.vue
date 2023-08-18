@@ -11,27 +11,34 @@
         <el-avatar v-if="showBasic.avatar" :src="image(showBasic.avatar)" class="panThumb" />
 
         <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
-          <h2 style="margin-bottom: 0px;">{{ showBasic.username }}</h2>
+          <h2 style="margin-bottom: 0px">{{ showBasic.username }}</h2>
           <div>{{ showBasic.summary }}</div>
           <div style="padding-top: 20px">
             <el-space wrap size="default">
-              <a href="https://gitee.com/wch2019" target="_blank" >
-               <div class="diamond-clip-path diamond-icon">
-                 <svg-icon icon-class="gitee"></svg-icon>
-               </div>
-              </a>
-              <a href="https://github.com/wch2019" target="_blank" >
+              <a v-if="showBasic.gitee" :href="showBasic.gitee" target="_blank">
                 <div class="diamond-clip-path diamond-icon">
-              <svg-icon icon-class="github"></svg-icon>
+                  <svg-icon icon-class="gitee"></svg-icon>
                 </div>
               </a>
-              <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1372195290" target="_blank" >
+              <a v-if="showBasic.github" :href="showBasic.github" target="_blank">
                 <div class="diamond-clip-path diamond-icon">
-              <svg-icon icon-class="qq"></svg-icon>
+                  <svg-icon icon-class="github"></svg-icon>
                 </div>
               </a>
-              <el-link :underline="false" @click="open(123456)">
-                <div class="diamond-clip-path diamond-icon" >
+              <a
+                v-if="showBasic.qqNumber"
+                :href="
+                  'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1372195290' +
+                  showBasic.qqNumber
+                "
+                target="_blank"
+              >
+                <div class="diamond-clip-path diamond-icon">
+                  <svg-icon icon-class="qq"></svg-icon>
+                </div>
+              </a>
+              <el-link :underline="false" v-if="showBasic.weChat" @click="open(showBasic.weChat)">
+                <div class="diamond-clip-path diamond-icon">
                   <svg-icon icon-class="wechat"></svg-icon>
                 </div>
               </el-link>
@@ -141,7 +148,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {getArticle, image, open} from '@/utils/publicMethods'
+import { getArticle, image, open } from '@/utils/publicMethods'
 import useStore from '@/store/index'
 
 const store = useStore()

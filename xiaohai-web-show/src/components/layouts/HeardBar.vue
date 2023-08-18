@@ -23,9 +23,9 @@
           <div class="menus-item">
             <router-link class="menu-btn" to="/message"> 留言</router-link>
           </div>
-<!--                    <div class="menus-item">-->
-<!--                      <router-link class="menu-btn" to="/links"> 友链</router-link>-->
-<!--                    </div>-->
+          <!--                    <div class="menus-item">-->
+          <!--                      <router-link class="menu-btn" to="/links"> 友链</router-link>-->
+          <!--                    </div>-->
           <div class="menus-item">
             <router-link class="menu-btn" to="/about"> 关于</router-link>
           </div>
@@ -62,26 +62,26 @@
                   <el-dropdown-item @click="adminClick"> 登 录 </el-dropdown-item>
                 </el-dropdown-menu>
                 <el-dropdown-menu v-else>
-                  <div style="display: flex; flex-direction: column">
-                    <div style="display: flex; align-items: center; margin-left: 10px">
-                      <el-avatar size="default" :src="store.avatar" />
-                      <div
-                        style="
-                          display: flex;
-                          flex-direction: column;
-                          margin-left: 20px;
-                          align-items: center;
-                        "
-                      >
-                        <h3>{{ store.name }}</h3>
-                        <div>{{ store.summary }}</div>
-                      </div>
-                    </div>
-                    <div style="display: flex">
-                      <el-dropdown-item divided @click="manageClick">后台管理</el-dropdown-item>
-                      <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
-                    </div>
-                  </div>
+                  <!--                  <div style="display: flex; flex-direction: column">-->
+                  <!--                    <div style="display: flex; align-items: center; margin-left: 10px">-->
+                  <!--                      <el-avatar size="default" :src="store.avatar" />-->
+                  <!--                      <div-->
+                  <!--                        style="-->
+                  <!--                          display: flex;-->
+                  <!--                          flex-direction: column;-->
+                  <!--                          margin-left: 20px;-->
+                  <!--                          align-items: center;-->
+                  <!--                        "-->
+                  <!--                      >-->
+                  <!--                        <h3>{{ store.name }}</h3>-->
+                  <!--                        <div>{{ store.summary }}</div>-->
+                  <!--                      </div>-->
+                  <!--                    </div>-->
+                  <!--                    <div style="display: flex">-->
+                  <el-dropdown-item @click="manageClick">后台管理</el-dropdown-item>
+                  <el-dropdown-item divided @click="exit">退出登录</el-dropdown-item>
+                  <!--                    </div>-->
+                  <!--                  </div>-->
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -136,7 +136,7 @@
   <el-drawer
     v-model="drawer"
     direction="ltr"
-    size="40%"
+    size="80%"
     :style="isDarkBackground()"
     :with-header="false"
   >
@@ -148,8 +148,39 @@
         src="../static/avatar.svg"
       />
       <el-avatar @click="manageClick" v-else :size="100" :src="store.avatar" />
-      <h3>{{ store.name }}</h3>
+      <h2>{{ store.name }}</h2>
       <div>{{ store.summary }}</div>
+      <div style="padding-top: 20px">
+        <el-space wrap size="default">
+          <a v-if="store.gitee" :href="store.gitee" target="_blank">
+            <div class="diamond-clip-path diamond-icon">
+              <svg-icon icon-class="gitee"></svg-icon>
+            </div>
+          </a>
+          <a v-if="store.github" :href="store.github" target="_blank">
+            <div class="diamond-clip-path diamond-icon">
+              <svg-icon icon-class="github"></svg-icon>
+            </div>
+          </a>
+          <a
+            v-if="store.qqNumber"
+            :href="
+              'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1372195290' +
+              store.qqNumber
+            "
+            target="_blank"
+          >
+            <div class="diamond-clip-path diamond-icon">
+              <svg-icon icon-class="qq"></svg-icon>
+            </div>
+          </a>
+          <el-link :underline="false" v-if="store.weChat" @click="open(store.weChat)">
+            <div class="diamond-clip-path diamond-icon">
+              <svg-icon icon-class="wechat"></svg-icon>
+            </div>
+          </el-link>
+        </el-space>
+      </div>
     </div>
 
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/')"> 首 页</el-card>
@@ -157,7 +188,7 @@
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/tags')"> 标 签</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/back')"> 归 档</el-card>
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/message')"> 留 言</el-card>
-        <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>
+    <!--    <el-card class="drawer-menus" shadow="hover" @click="$router.push('/links')"> 友 链</el-card>-->
     <el-card class="drawer-menus" shadow="hover" @click="cancelClick('/about')"> 关 于</el-card>
     <el-card v-if="store.token" class="drawer-menus">
       <div @click="exit">退出登录</div>
@@ -171,6 +202,7 @@ import { ElMessageBox } from 'element-plus'
 import useStore from '@/store/index'
 import { toggleDark, isDark } from '@/utils/dark'
 import SearchModel from '@/components/seach/SearchModel.vue'
+import { open } from '@/utils/publicMethods'
 
 const store = useStore()
 const router = useRouter()

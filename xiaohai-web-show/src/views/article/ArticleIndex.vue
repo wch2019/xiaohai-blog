@@ -168,30 +168,37 @@
           <el-avatar v-if="userBasic.avatar" :src="image(userBasic.avatar)" class="panThumb" />
 
           <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
-            <h2 style="margin-bottom: 0px;">{{ userBasic.username }}</h2>
+            <h2 style="margin-bottom: 0px">{{ userBasic.username }}</h2>
             <div>{{ userBasic.summary }}</div>
             <div style="padding-top: 20px">
               <el-space wrap size="default">
-                <a :href="userBasic.gitee" target="_blank" >
+                <a v-if="userBasic.gitee" :href="userBasic.gitee" target="_blank">
                   <div class="diamond-clip-path diamond-icon">
                     <svg-icon icon-class="gitee"></svg-icon>
                   </div>
                 </a>
-                <a :href="userBasic.github" target="_blank" >
+                <a :href="userBasic.github" target="_blank">
                   <div class="diamond-clip-path diamond-icon">
                     <svg-icon icon-class="github"></svg-icon>
                   </div>
                 </a>
-                <a href="tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=" target="_blank" >
+                <a
+                  v-if="userBasic.qqNumber"
+                  :href="
+                    'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=' +
+                    userBasic.qqNumber
+                  "
+                  target="_blank"
+                >
                   <div class="diamond-clip-path diamond-icon">
                     <svg-icon icon-class="qq"></svg-icon>
                   </div>
                 </a>
-                <el-link :underline="false" @click="open(userBasic.weChat)">
-                  <div class="diamond-clip-path diamond-icon" >
+                <el-link :underline="false" v-if="userBasic.weChat" @click="open(userBasic.weChat)">
+                  <div class="diamond-clip-path diamond-icon">
                     <svg-icon icon-class="wechat"></svg-icon>
                   </div>
-               </el-link>
+                </el-link>
               </el-space>
             </div>
 
@@ -242,7 +249,7 @@ import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import comments from '@/components/comments/index.vue'
-import {image, markdownImageFile,open} from '@/utils/publicMethods'
+import { image, markdownImageFile, open } from '@/utils/publicMethods'
 
 // 文章详情
 const articleOne = ref({})
@@ -314,7 +321,7 @@ const getArticle = async () => {
     // 文章内图片地址替换
     articleOne.value.text = articleOne.value.text.replaceAll(
       markdownImageFile(''),
-      `${import.meta.env.VITE_APP_BASE_API_FILE}`+ markdownImageFile('..')
+      `${import.meta.env.VITE_APP_BASE_API_FILE}${markdownImageFile('..')}`
     )
     getList(res.data.data.categoryId)
   })
