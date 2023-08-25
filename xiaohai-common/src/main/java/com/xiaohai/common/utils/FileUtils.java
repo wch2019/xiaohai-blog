@@ -172,7 +172,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             }
             //jdk 1.7 新特性自动关闭
             try (InputStream in = con.getInputStream();
-                 OutputStream out = new FileOutputStream(sf.getPath() + "\\" + filename)) {
+                 OutputStream out = new FileOutputStream(sf.getPath() + File.separator + filename)) {
                 //创建缓冲区
                 byte[] buff = new byte[1024];
                 int n;

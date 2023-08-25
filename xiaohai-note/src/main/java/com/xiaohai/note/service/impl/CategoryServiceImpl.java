@@ -76,7 +76,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         Category category=new Category();
         BeanUtils.copyProperties(query,category);
         IPage<Category> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Category> iPage = baseMapper.selectPage(wherePage,Wrappers.query(category).orderByAsc("sort"));
+        IPage<Category> iPage = baseMapper.selectPage(wherePage,Wrappers.query(category).orderByAsc("sort")
+                .orderByAsc("id"));
         List<CategoryDto> list=new ArrayList<>();
         for(Category categorys:iPage.getRecords()){
             CategoryDto categoryDto=new CategoryDto();

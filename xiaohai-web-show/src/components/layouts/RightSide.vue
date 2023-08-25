@@ -28,7 +28,7 @@
               <a
                 v-if="showBasic.qqNumber"
                 :href="
-                  'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1372195290' +
+                  'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=' +
                   showBasic.qqNumber
                 "
                 target="_blank"
