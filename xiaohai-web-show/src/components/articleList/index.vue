@@ -66,7 +66,7 @@ watch(
       shadow="hover"
     >
       <div style="display: flex; flex-direction: row">
-        <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)"/>
+        <el-image  fit="cover" :src="image(article.cover)" class="image" @click="getArticle(article.id)"/>
         <div
           style="
             margin-left: 18px;
@@ -163,7 +163,7 @@ watch(
       :body-style="{ padding: '10px' }"
     >
       <div class="article-flex">
-        <el-image :src="image(article.cover)" class="image" @click="getArticle(article.id)"/>
+        <el-image fit="cover" :src="image(article.cover)" class="image" @click="getArticle(article.id)"/>
         <div
           style="
             margin-left: 10px;

@@ -184,10 +184,7 @@
                 </a>
                 <a
                   v-if="userBasic.qqNumber"
-                  :href="
-                    'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=' +
-                    userBasic.qqNumber
-                  "
+                  :href=openQQ(userBasic.qqNumber)
                   target="_blank"
                 >
                   <div class="diamond-clip-path diamond-icon">
@@ -249,7 +246,7 @@ import { ElMessage } from 'element-plus'
 import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
 import { addComment } from '@/api/user'
 import comments from '@/components/comments/index.vue'
-import { image, markdownImageFile, open } from '@/utils/publicMethods'
+import {image, markdownImageFile, open, openQQ} from '@/utils/publicMethods'
 
 // 文章详情
 const articleOne = ref({})

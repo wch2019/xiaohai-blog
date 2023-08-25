@@ -27,10 +27,7 @@
               </a>
               <a
                 v-if="showBasic.qqNumber"
-                :href="
-                  'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=' +
-                  showBasic.qqNumber
-                "
+                :href=openQQ(showBasic.qqNumber)
                 target="_blank"
               >
                 <div class="diamond-clip-path diamond-icon">
@@ -102,6 +99,7 @@
           </span>
         </div>
         <el-image
+          fit="cover"
           :src="image(article.cover)"
           style="margin-left: 10px; border-radius: 10px; height: 80px; min-width: 140px"
           class="image-hot"
@@ -148,7 +146,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getArticle, image, open } from '@/utils/publicMethods'
+import {getArticle, image, open, openQQ} from '@/utils/publicMethods'
 import useStore from '@/store/index'
 
 const store = useStore()
