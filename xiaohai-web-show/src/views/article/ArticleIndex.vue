@@ -55,7 +55,7 @@
       <el-row style="justify-content: center">
         <el-col v-for="(o, index) in dataList" :key="o" :span="7" :offset="index > 0 ? 1 : 0">
           <el-card :body-style="{ padding: '0px' }">
-            <img :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
+            <el-image fit="cover" :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
             <div style="padding: 14px; text-align: center">
               <el-link :underline="false" @click="getArticleId(o.id)">
                 <span>{{ o.title }} </span>
@@ -137,7 +137,7 @@
       :key="o"
       style="margin-bottom: 8px; position: relative"
     >
-      <img :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
+      <el-image fit="cover"  :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
       <div style="padding: 14px; text-align: center">
         <el-link :underline="false" @click="getArticleId(o.id)">
           <span>{{ o.title }} </span>

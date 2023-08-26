@@ -106,7 +106,7 @@ getCarouselList()
     >
       <el-carousel :interval="4000" height="370px" style="border-radius: 10px">
         <el-carousel-item v-for="article in carouselList" :key="article">
-          <el-image :src="image(article.cover)" @click="getArticle(article.id)" />
+          <el-image fit="cover" :src="image(article.cover)" @click="getArticle(article.id)" />
           <div class="carousel-title" @click="getArticle(article.id)">
             <span>{{ article.title }}</span>
           </div>
@@ -144,7 +144,7 @@ getCarouselList()
   <el-space class="hidden-md-and-up" direction="vertical" fill size="large">
     <el-carousel :interval="4000" height="210px" style="border-radius: 10px">
       <el-carousel-item v-for="article in carouselList" :key="article">
-        <el-image :src="image(article.cover)" @click="getArticle(article.id)" />
+        <el-image fit="cover" :src="image(article.cover)" @click="getArticle(article.id)" />
         <div class="carousel-title" @click="getArticle(article.id)">
           <span>{{ article.title }}</span>
         </div>
