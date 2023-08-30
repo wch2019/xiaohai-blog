@@ -1,7 +1,9 @@
 package com.xiaohai.common.utils;
 
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
+import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -12,10 +14,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @description: 文件操作工具类
@@ -238,12 +241,83 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
     }
 
+    /**
+     * 提取文件 checksum
+     *
+     * @param fileOrPath      文件或文件全路径
+     * @param algorithm  算法名 例如 MD5、SHA-1、SHA-256等
+     * @return  checksum
+     */
+    public static String extractChecksum(Object fileOrPath, String algorithm){
+        try {
+            // 根据算法名称初始化摘要算法
+            MessageDigest digest = MessageDigest.getInstance(algorithm);
+            byte[] fileBytes;
+            if (fileOrPath instanceof MultipartFile multipartFile) {
+                // 如果输入是 MultipartFile
+                fileBytes = multipartFile.getBytes();
+            } else if (fileOrPath instanceof String filePath) {
+                // 如果输入是文件路径
+                fileBytes = Files.readAllBytes(Paths.get(filePath));
+            } else {
+                throw new IllegalArgumentException("不支持的文件类型");
+            }
+            // 摘要更新
+            digest.update(fileBytes);
+            //完成哈希摘要计算并返回特征值
+            byte[] digested = digest.digest();
+            // 进行十六进制的输出
+            return HexUtils.toHexString(digested);
+        } catch (NoSuchAlgorithmException | IOException e) {
+            throw new ServiceException("无法计算当前文件校验值", e);
+        }
+    }
+
+    /**
+     * 计算指定文件夹下所有文件的哈希值，并将结果存储在Map中。
+     *
+     * @param folderPath 要计算哈希值的文件夹路径
+     * @param algorithm  哈希算法
+     * @return 包含哈希值和文件路径映射关系的Map
+     */
+    public static Map<String, String> calculateHashesInFolder(String folderPath, String algorithm) {
+        Map<String, String> hashToPathMap = new HashMap<>();
+
+        // 创建指向指定文件夹的File对象
+        File folder = new File(folderPath);
+        if (folder.isDirectory()) {
+            // 获取文件夹中的所有文件
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        // 计算文件的哈希值
+                        String hash = extractChecksum(file.getPath(), algorithm);
+                        hashToPathMap.put(hash, file.getPath());
+                    }
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("指定路径不是一个文件夹");
+        }
+
+        return hashToPathMap;
+    }
+
     public static void main(String[] args) throws Exception {
-        String filePath = "C:\\Users\\Code01\\Pictures\\图层 1.png";
+        String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
+        String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";
         File file = new File(filePath);
         long fileSize = file.length();
         System.out.println("文件大小：" + formatFileSize(fileSize));
         System.out.println("文件创建时间：" + fileCreationTime(filePath));
-
+        String a=extractChecksum(filePath ,"SHA-256");
+        String b=extractChecksum(filePath1,"SHA-256");
+        if(a.equals(b)){
+            System.out.println("相同");
+        }else{
+            System.out.println("不同");
+        }
+        calculateHashesInFolder("Z:\\Linux\\blog\\dev\\files\\1\\markdown", Constants.MD5);
     }
 }

@@ -2,6 +2,7 @@ package com.xiaohai.common.constant;
 
 /**
  * 全局常用变量
+ *
  * @author wangchenghai
  * @date 2023/01/13 17:15:15
  */
@@ -30,15 +31,15 @@ public class Constants {
      */
     public static final String CURRENT_USER = "current_user";
     /**
-     *系统默认密码
+     * 系统默认密码
      */
     public static final String SYSTEM_PASSWORD = "123456";
     /**
-     *管理员角色
+     * 管理员角色
      */
     public static final String ADMIN = "admin";
     /**
-     *普通用户角色
+     * 普通用户角色
      */
     public static final String USER = "user";
     /**
@@ -53,4 +54,16 @@ public class Constants {
      * 隐藏数据
      */
     public static final String CONCEAL = "******";
+    /**
+     * MD5
+     */
+    public static final String MD5 = "MD5";
+    /**
+     * SHA-1
+     */
+    public static final String SHA_1 = "SHA-1";
+    /**
+     * SHA-256
+     */
+    public static final String SHA_256 = "SHA-256";
 }
