@@ -11,6 +11,15 @@ export function getFile(data) {
   })
 }
 
+// markdown图片列表
+export function markdownImage(data) {
+  return request({
+    url: api + '/markdownImage',
+    method: 'get',
+    params: data
+  })
+}
+
 // 头像上传
 export function uploadAvatar(data) {
   return request({

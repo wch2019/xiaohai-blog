@@ -108,7 +108,7 @@
                 :show-file-list="false"
                 :http-request="uploadSectionFile"
               >
-                <img v-if="form.cover" :src="form.cover" class="el-upload-dragger">
+                <el-image v-if="form.cover" fit="cover" :src="form.cover" class="el-upload-dragger" />
                 <i v-else class="el-icon-upload" />
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em>
 

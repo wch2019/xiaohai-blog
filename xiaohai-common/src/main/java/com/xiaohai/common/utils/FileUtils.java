@@ -18,7 +18,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @description: 文件操作工具类
@@ -244,11 +247,11 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 提取文件 checksum
      *
-     * @param fileOrPath      文件或文件全路径
+     * @param fileOrPath 文件或文件全路径
      * @param algorithm  算法名 例如 MD5、SHA-1、SHA-256等
-     * @return  checksum
+     * @return checksum
      */
-    public static String extractChecksum(Object fileOrPath, String algorithm){
+    public static String extractChecksum(Object fileOrPath, String algorithm) {
         try {
             // 根据算法名称初始化摘要算法
             MessageDigest digest = MessageDigest.getInstance(algorithm);
@@ -300,7 +303,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         } else {
             throw new IllegalArgumentException("指定路径不是一个文件夹");
         }
-
         return hashToPathMap;
     }
 
@@ -311,11 +313,11 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         long fileSize = file.length();
         System.out.println("文件大小：" + formatFileSize(fileSize));
         System.out.println("文件创建时间：" + fileCreationTime(filePath));
-        String a=extractChecksum(filePath ,"SHA-256");
-        String b=extractChecksum(filePath1,"SHA-256");
-        if(a.equals(b)){
+        String a = extractChecksum(filePath, "SHA-256");
+        String b = extractChecksum(filePath1, "SHA-256");
+        if (a.equals(b)) {
             System.out.println("相同");
-        }else{
+        } else {
             System.out.println("不同");
         }
         calculateHashesInFolder("Z:\\Linux\\blog\\dev\\files\\1\\markdown", Constants.MD5);
