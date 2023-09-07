@@ -2,14 +2,14 @@
   <div class="app-container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <div style="padding: 3px 0;float: right;">
-          <el-radio-group v-model="form.path" size="medium" @change="getList">
-            <el-radio-button label="/">全部</el-radio-button>
-            <el-radio-button label="/image/">图片</el-radio-button>
-            <el-radio-button label="/system/">系统</el-radio-button>
-          </el-radio-group>
-        </div>
-        <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />
+        <!--        <div style="padding: 3px 0;float: right;">-->
+        <!--          <el-radio-group v-model="form.path" size="medium" @change="getList">-->
+        <!--            <el-radio-button label="/">全部</el-radio-button>-->
+        <!--            <el-radio-button label="/image/">图片</el-radio-button>-->
+        <!--            <el-radio-button label="/system/">系统</el-radio-button>-->
+        <!--          </el-radio-group>-->
+        <!--        </div>-->
+        <!--        <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />-->
       </div>
       <div v-if="fileList.length==0">
         <el-empty :image-size="200" />
@@ -83,15 +83,12 @@
 </template>
 
 <script>
-import { getFile, markdownImage } from '@/api/file/file'
+import { markdownImage } from '@/api/file/file'
 
 export default {
   name: 'Index',
   data() {
     return {
-      form: {
-        path: '/'
-      },
       dialogVisible: false,
       fileList: [],
       // 预览图片列表
@@ -100,12 +97,11 @@ export default {
     }
   },
   created() {
-    this.getList('/files/1/markdown')
+    this.getList()
   },
   methods: {
-    getList(path) {
-      this.form.path = path
-      getFile(this.form).then(response => {
+    getList() {
+      markdownImage().then(response => {
         this.srcList = []
         for (let i = 0; i < response.data.length; i++) {
           if (this.picture(response.data[i].nameSuffix)) {
@@ -147,19 +143,19 @@ export default {
       }
     },
     // 返回上一级
-    goBack() {
-      const key = this.form.path
-      console.log(key)
-      const pathArray = key.split('/') // 将路径按照斜杠分割成数组
-      pathArray.pop() // 删除数组最后一个元素（即最后一个斜杠）
-      let path = '/'
-      for (let i = 0; i < pathArray.length; i++) {
-        if (pathArray[i]) {
-          path += pathArray[i] + '/'
-        }
-      }
-      this.getList(path.substring(0, path.length - 1))
-    },
+    // goBack() {
+    //   const key = this.form.path
+    //   console.log(key)
+    //   const pathArray = key.split('/') // 将路径按照斜杠分割成数组
+    //   pathArray.pop() // 删除数组最后一个元素（即最后一个斜杠）
+    //   let path = '/'
+    //   for (let i = 0; i < pathArray.length; i++) {
+    //     if (pathArray[i]) {
+    //       path += pathArray[i] + '/'
+    //     }
+    //   }
+    //   this.getList(path.substring(0, path.length - 1))
+    // },
     // 图片预览
     show(path) {
       const index = this.srcList.indexOf(path)

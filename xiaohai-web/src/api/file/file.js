@@ -12,11 +12,10 @@ export function getFile(data) {
 }
 
 // markdown图片列表
-export function markdownImage(data) {
+export function markdownImage() {
   return request({
     url: api + '/markdownImage',
-    method: 'get',
-    params: data
+    method: 'get'
   })
 }
 

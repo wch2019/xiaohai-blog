@@ -1,6 +1,7 @@
 package com.xiaohai.file.service;
 
 import com.xiaohai.file.pojo.dto.FileDto;
+import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +51,12 @@ public interface FileService {
      * @return
      */
     List<FileDto> getPathList(String path);
+
+    /**
+     * markdown图片列表
+     * @return
+     */
+    List<FileMarkdownDto> getMarkdownImage();
 
     /**
      * 删除文件

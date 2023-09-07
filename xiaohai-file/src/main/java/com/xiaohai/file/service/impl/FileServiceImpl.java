@@ -9,6 +9,7 @@ import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.file.pojo.dto.FileDto;
+import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Integer deleteImage(String pathName) {
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator +pathName;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + pathName;
         boolean isTrue = FileUtils.deleteFile(path);
         Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
         return 1;
@@ -164,8 +165,8 @@ public class FileServiceImpl implements FileService {
             for (File file : files) {
                 FileDto fileDto = new FileDto();
                 fileDto.setNameSuffix("");
-                fileDto.setPath(File.separator +file.getPath().replace(fileConfig.getProfile(), ""));
-                fileDto.setPath(fileDto.getPath().replace("\\" , "/"));
+                fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
+                fileDto.setPath(fileDto.getPath().replace("\\", "/"));
                 if (!file.isDirectory()) {
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));
@@ -178,6 +179,32 @@ public class FileServiceImpl implements FileService {
         }
 
         return list.stream().sorted(Comparator.comparing(FileDto::getNameSuffix)).toList();
+    }
+
+    @Override
+    public List<FileMarkdownDto> getMarkdownImage() {
+        List<FileMarkdownDto> list = new ArrayList<>();
+        // 指定文件夹路径
+        String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
+        File folder = new File(folderPath);
+        if (folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            assert files != null;
+            for (File file : files) {
+                if (!file.isDirectory()) {
+                    FileMarkdownDto fileDto = new FileMarkdownDto();
+                    fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
+                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
+                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
+                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
+                    fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
+                    fileDto.setName(file.getName());
+                    list.add(fileDto);
+                }
+            }
+        }
+
+        return list.stream().sorted(Comparator.comparing(FileMarkdownDto::getNameSuffix)).toList();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.xiaohai.file.controller;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.file.pojo.dto.FileDto;
+import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class FileController {
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<String> uploadAvatar(MultipartFile avatarFile) {
         return Response.success("头像上传成功！", fileService.uploadAvatar(avatarFile));
-    }
+     }
     @Operation(summary = "logo上传", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping(value = "/logo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<String> uploadLogo(MultipartFile logoFile) {
@@ -58,6 +59,11 @@ public class FileController {
     @GetMapping()
     public Response<List<FileDto>> getPathList(String path) {
         return Response.success("获取文件列表成功！", fileService.getPathList(path));
+    }
+    @Operation(summary = "markdown图片列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping(value = "/markdownImage")
+    public Response<List<FileMarkdownDto>> getMarkdownImage() {
+        return Response.success("获取markdown图片列表成功！", fileService.getMarkdownImage());
     }
     @Operation(summary = "文件删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "path", description = "路径", required = true)
