@@ -2,12 +2,11 @@ package com.xiaohai.file.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.confing.FileConfig;
-import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.FileConstants;
+import com.xiaohai.common.daomain.RcAttachmentInfo;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
-import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
@@ -19,9 +18,10 @@ import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author wangchenghai
@@ -192,10 +192,13 @@ public class FileServiceImpl implements FileService {
             assert files != null;
             for (File file : files) {
                 if (!file.isDirectory()) {
+                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
+                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
                     FileMarkdownDto fileDto = new FileMarkdownDto();
                     fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));
+                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
                     fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
                     fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
                     fileDto.setName(file.getName());
@@ -204,7 +207,7 @@ public class FileServiceImpl implements FileService {
             }
         }
 
-        return list.stream().sorted(Comparator.comparing(FileMarkdownDto::getNameSuffix)).toList();
+        return list.stream().sorted(Comparator.comparing(FileMarkdownDto::getCreateTime).reversed()).toList();
     }
 
     @Override

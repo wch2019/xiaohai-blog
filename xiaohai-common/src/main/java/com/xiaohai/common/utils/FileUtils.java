@@ -2,10 +2,13 @@ package com.xiaohai.common.utils;
 
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.FileConstants;
+import com.xiaohai.common.daomain.RcAttachmentInfo;
 import com.xiaohai.common.exception.ServiceException;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,6 +25,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static cn.dev33.satoken.SaManager.log;
 
 /**
  * @description: 文件操作工具类
@@ -304,6 +309,40 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             throw new IllegalArgumentException("指定路径不是一个文件夹");
         }
         return hashToPathMap;
+    }
+
+    /**
+     * 获取图片长宽
+     *
+     * @param fileOrPath 文件或文件全路径
+     * @param attachmentInfo 保存图片属性的对象
+     */
+    public static void imageProperty(Object fileOrPath, RcAttachmentInfo attachmentInfo) {
+        try {
+            FileInputStream fileInputStream;
+            if (fileOrPath instanceof MultipartFile multipartFile) {
+                // 如果输入是 MultipartFile
+                fileInputStream = (FileInputStream) multipartFile.getInputStream();
+            } else if (fileOrPath instanceof String filePath) {
+                // 如果输入是文件路径
+                fileInputStream = new FileInputStream(filePath);
+            } else {
+                throw new IllegalArgumentException("不支持的文件类型");
+            }
+            BufferedImage bufferedImage = ImageIO.read(fileInputStream);
+            fileInputStream.close(); // 记得关闭流
+
+            if (null == bufferedImage) {
+                // 证明文件不是图片，获取图片流失败，不进行下面的操作
+                attachmentInfo.setWidth(0);
+                attachmentInfo.setHeight(0);
+                return;
+            }
+            attachmentInfo.setWidth(bufferedImage.getWidth());
+            attachmentInfo.setHeight(bufferedImage.getHeight());
+        } catch (Exception e) {
+            log.warn("获取图片属性异常:", e);
+        }
     }
 
     public static void main(String[] args) throws Exception {
