@@ -1,26 +1,16 @@
 <template>
   <div class="app-container">
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <!--        <div style="padding: 3px 0;float: right;">-->
-        <!--          <el-radio-group v-model="form.path" size="medium" @change="getList">-->
-        <!--            <el-radio-button label="/">全部</el-radio-button>-->
-        <!--            <el-radio-button label="/image/">图片</el-radio-button>-->
-        <!--            <el-radio-button label="/system/">系统</el-radio-button>-->
-        <!--          </el-radio-group>-->
-        <!--        </div>-->
-        <!--        <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />-->
-      </div>
-      <div v-if="fileList.length==0">
+      <div v-if="fileList.length === 0">
         <el-empty :image-size="200" />
       </div>
-      <el-col
-        v-for="o in fileList"
-        :key="o"
-        :span="4"
-        style="height: 250px;"
-      >
-
+      <el-row :gutter="5">
+        <el-col
+          v-for="(o,index) in fileList"
+          :key="index"
+          :span="4"
+          style="height: 250px;"
+        >
         <el-card shadow="hover" :body-style="{ padding: '0px'}">
           <el-image v-if="o.nameSuffix" fit="cover" :src="trimmedValue(o.path)" class="image" />
           <el-tooltip :content="o.name" placement="top">
@@ -32,7 +22,8 @@
             </div>
           </el-tooltip>
         </el-card>
-      </el-col>
+        </el-col>
+      </el-row>
     </el-card>
 
     <el-dialog
@@ -51,14 +42,14 @@
           <h4>名称：</h4>
           <span class="title">{{ fileDocument.name }}</span>
           <el-divider />
-          <h4>创建时间：</h4>
-          <span class="title">{{ fileDocument.createTime }}</span>
-          <el-divider />
-          <h4>更新时间：</h4>
-          <span class="title">{{ fileDocument.updateTime }}</span>
-          <el-divider />
           <h4>类型：</h4>
           <span class="title">{{ fileDocument.nameSuffix }}</span>
+          <el-divider />
+          <h4>上传日期：</h4>
+          <span class="title">{{ fileDocument.createTime }}</span>
+          <el-divider />
+          <h4>图片尺寸：</h4>
+          <span class="title">{{ fileDocument.imageSize }}</span>
           <el-divider />
           <h4>文件大小：</h4>
           <span class="title">{{ fileDocument.size }}</span>
@@ -75,8 +66,8 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialog(null)">取 消</el-button>
-        <el-button type="primary" @click="dialog(null)">确 定</el-button>
+        <el-button @click="dialog('')">取 消</el-button>
+        <el-button type="primary" @click="dialog('')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -103,10 +94,10 @@ export default {
     getList() {
       markdownImage().then(response => {
         this.srcList = []
-        for (let i = 0; i < response.data.length; i++) {
-          if (this.picture(response.data[i].nameSuffix)) {
-            response.data[i].path = process.env.VUE_APP_BASE_API_FILE + response.data[i].path
-            this.srcList.push(response.data[i].path)
+        for (const element of response.data) {
+          if (this.picture(element.nameSuffix)) {
+            element.path = process.env.VUE_APP_BASE_API_FILE + element.path
+            this.srcList.push(element.path)
           }
         }
         this.fileList = response.data
@@ -126,10 +117,7 @@ export default {
     // 验证是否是图片类型
     picture(name) {
       const acceptedImageTypes = ['jpeg', 'png', 'gif', 'bmp', 'jpg']
-      if (acceptedImageTypes.indexOf(name) === -1) {
-        return false
-      }
-      return true
+      return !(acceptedImageTypes.indexOf(name) === -1);
     },
     // 双击行
     handle(row, column, event, cell) {
@@ -142,20 +130,6 @@ export default {
         this.show(row.path)
       }
     },
-    // 返回上一级
-    // goBack() {
-    //   const key = this.form.path
-    //   console.log(key)
-    //   const pathArray = key.split('/') // 将路径按照斜杠分割成数组
-    //   pathArray.pop() // 删除数组最后一个元素（即最后一个斜杠）
-    //   let path = '/'
-    //   for (let i = 0; i < pathArray.length; i++) {
-    //     if (pathArray[i]) {
-    //       path += pathArray[i] + '/'
-    //     }
-    //   }
-    //   this.getList(path.substring(0, path.length - 1))
-    // },
     // 图片预览
     show(path) {
       const index = this.srcList.indexOf(path)
