@@ -20,4 +20,11 @@ public interface TagsMapper extends BaseMapper<Tags> {
      * @return
      */
     List<TagsDto> selectTagsArticleCount();
+
+    /**
+     * 根据文章id获取标签名称列表
+     * @param articleId
+     * @return
+     */
+    List<String> searchAllByArticleId(Long articleId);
 }

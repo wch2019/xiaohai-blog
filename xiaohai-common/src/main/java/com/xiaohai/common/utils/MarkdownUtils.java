@@ -10,6 +10,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -233,7 +234,7 @@ public class MarkdownUtils {
      */
     public static List<String> photoList(String markdown) {
         List<String> list = new ArrayList<>();
-//        String pattern = "!\\[.*?\\]\\((.*?)\\)";
+        //        String pattern = "!\\[.*?\\]\\((.*?)\\)";
         String pattern = "!\\[.*?\\]\\((?!http)(.*?)\\)";
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(markdown);
@@ -284,7 +285,6 @@ public class MarkdownUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return newPath;
     }
 
@@ -298,8 +298,8 @@ public class MarkdownUtils {
      * @param categories 分类
      * @param cover      封面
      * @return java.lang.String
-     * @author: xiaohai
-     * @date: 2023/12/4 15:12
+     * @author xiaohai
+     * @date 2023/12/4 15:12
      */
     public static String buildMarkdownHeader(String title, LocalDateTime date, LocalDateTime updated, List<String> tags, String categories, String cover) {
         StringBuilder header = new StringBuilder();
@@ -326,16 +326,36 @@ public class MarkdownUtils {
         return header.toString();
     }
 
+    /**
+     * 创建一个MarkDown
+     *
+     * @param fileName 文件路径
+     * @param content  文本内容
+     * @author xiaohai
+     * @date 2023/12/04 17:54:58
+     */
+    public static void createMarkdownFile(String fileName, String content) {
+        try {
+            // Specify the file path
+            Path filePath = Paths.get(fileName);
+
+            // Write content to the file
+            Files.writeString(filePath, content);
+        } catch (IOException e) {
+            throw new ServiceException("Markdown文件创建失败", e);
+        }
+    }
+
     public static void main(String[] args) {
-//        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/16841138028.jpg)![1](https://raw.githubusercontent.com/xiaohai-store/notes-img/main/1.png)";
-//        System.out.println(photoList(markdown));
-//        String filePath = "C:\\Users\\Code01\\Desktop\\新建文件夹\\note\\Chrome书签手动同步方法.md";
-//        Map<String, Object> postData = parseHexoPost(filePath);
-//
-//        // 打印博文数据
-//        for (Map.Entry<String, Object> entry : postData.entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
+        //        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/16841138028.jpg)![1](https://raw.githubusercontent.com/xiaohai-store/notes-img/main/1.png)";
+        //        System.out.println(photoList(markdown));
+        //        String filePath = "C:\\Users\\Code01\\Desktop\\新建文件夹\\note\\Chrome书签手动同步方法.md";
+        //        Map<String, Object> postData = parseHexoPost(filePath);
+        //
+        //        // 打印博文数据
+        //        for (Map.Entry<String, Object> entry : postData.entrySet()) {
+        //            System.out.println(entry.getKey() + ": " + entry.getValue());
+        //        }
         String title = "Java单文件下载与打包zip文件下载";
         List<String> tags = List.of("Java", "SpringBoot");
         String categories = "Java技术";

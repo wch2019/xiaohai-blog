@@ -34,5 +34,13 @@
             status=0
         ORDER BY sort ASC
     </select>
+    <select id="searchAllByArticleId" resultType="java.lang.String">
+        SELECT
+                ( SELECT NAME FROM b_tags WHERE id = tag_id ) AS name
+        FROM
+            b_article_tag
+        WHERE
+            article_id =#{articleId}
+    </select>
 
 </mapper>

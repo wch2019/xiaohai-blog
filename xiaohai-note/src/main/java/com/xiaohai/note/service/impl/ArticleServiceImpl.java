@@ -332,7 +332,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void uploadCompressedFile(MultipartFile file) {
         if (file.isEmpty()) {
             throw new ServiceException("文件为空");
@@ -469,16 +469,26 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //压缩文件临时路径
         String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile;
         for (Article article : articles) {
-            //获取封面图片
-            String cover = article.getCover();
+            //图片路径
+            String image = fileConfig.getProfile() + article.getCover();
+            String newImage = path + File.separator + FileConstants.IMAGE_FILE;
+            //新图片位置
+            String newPhotoPath = MarkdownUtils.copyImage(image, newImage);
+            //封面图片
+            String cover = ".." + newPhotoPath.replace(fileConfig.getProfile(), File.separator);
             //获取分类名称
             Category category = categoryMapper.selectById(article.getCategoryId());
-            List<String> tags = new ArrayList<>();
+            //获取标签名称列表
+            List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
             //组装Front-matter头
-            String matter=MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover);
+            String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover);
+            //将文章里面的图片获取并存到临时位置，并替换路径
+            String text=matter+article.getText();
+            //md文件路径
+            String note = path + File.separator + FileConstants.NOTE_FILE+File.separator+article.getTitle()+"."+FileConstants.MARKDOWN_EXTENSION;
+            //本地创建md文件
+            MarkdownUtils.createMarkdownFile(note,text);
+
         }
-        //将封面获取存到临时位置
-        //将文章里面的图片获取并存到临时位置，并替换路径
-        //将文章存入md文件中
     }
 }
