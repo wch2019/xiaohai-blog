@@ -34,20 +34,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 /**
  * 文章表 服务实现类
@@ -356,7 +353,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String tempFile = StringUtils.generateUUIDWithoutHyphens();
 
         //压缩文件临时路径
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE+ File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile;
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, file.getOriginalFilename(), file);
         try {
@@ -369,7 +366,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 throw new ServiceException("没有可用markdown文件");
             }
             //图片文件新存放处
-            String newPath =  fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
+            String newPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
 
             for (String mdFilePath : list) {
                 //获取markdown解析文件
@@ -384,10 +381,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     }
                     if (entry.getKey().equals("cover")) {
                         if (StringUtils.isNotBlank(entry.getValue().toString())) {
-                            if(entry.getValue().toString().startsWith("http")){
+                            if (entry.getValue().toString().startsWith("http")) {
                                 //封面
                                 article.setCover(entry.getValue().toString());
-                            }else{
+                            } else {
                                 //新图片位置
                                 String newPhotoPath = MarkdownUtils.copyImage(path + entry.getValue().toString().replace("..", ""), newPath);
                                 //去掉前缀
@@ -458,5 +455,30 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             //删除当前目录
             FileUtils.deleteFile(path);
         }
+    }
+
+    @Override
+    public void downloadCompressedFile(HttpServletResponse response) {
+        List<Article> articles = baseMapper.selectList(new QueryWrapper<Article>().
+                eq("user_id", StpUtil.getLoginId()).
+                eq("is_push", 1).
+                orderByDesc("is_top").
+                orderByDesc("top_time").
+                orderByDesc("created_time"));
+        String tempFile = StringUtils.generateUUIDWithoutHyphens();
+        //压缩文件临时路径
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile;
+        for (Article article : articles) {
+            //获取封面图片
+            String cover = article.getCover();
+            //获取分类名称
+            Category category = categoryMapper.selectById(article.getCategoryId());
+            List<String> tags = new ArrayList<>();
+            //组装Front-matter头
+            String matter=MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover);
+        }
+        //将封面获取存到临时位置
+        //将文章里面的图片获取并存到临时位置，并替换路径
+        //将文章存入md文件中
     }
 }

@@ -22,6 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 文章表Controller
  *
@@ -107,5 +109,11 @@ public class ArticleController {
         articleService.uploadCompressedFile(file);
         return Response.success("解析markdown压缩文件成功！");
     }
-
+    @Operation(summary = "导出markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:article:download")
+    @Log(title = "导出markdown压缩文件")
+    @GetMapping(value = "/markdown", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void downloadCompressedFile(HttpServletResponse response) {
+        articleService.downloadCompressedFile(response);
+    }
 }

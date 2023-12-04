@@ -8,6 +8,7 @@ import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -127,4 +128,10 @@ public interface ArticleService extends IService<Article> {
      * @param file 文件
      */
     void uploadCompressedFile(MultipartFile file);
+
+    /**
+     * 导出markdown压缩文件
+     * @param response
+     */
+    void downloadCompressedFile(HttpServletResponse response);
 }

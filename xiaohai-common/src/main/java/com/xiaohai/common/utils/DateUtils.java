@@ -16,7 +16,7 @@ public class DateUtils {
      * 将毫秒数转换为年月日可以使用Java中的时间日期类，例如LocalDateTime、Instant、Date等
      *
      * @param millis 毫秒数
-     * @return  java.lang.String
+     * @return java.lang.String
      */
     public static String millisToDateTime(long millis) {
         // 转换为Instant对象
@@ -67,6 +67,7 @@ public class DateUtils {
 
     /**
      * 获取指定天数日期列表
+     *
      * @param days 天
      * @return java.util.List<java.lang.String>
      * @author xiaohai
@@ -81,14 +82,16 @@ public class DateUtils {
         }
         return recentDays;
     }
+
     /**
      * 字符串转LocalDateTime yyyy-MM-dd HH:mm:ss和yyyy.MM.dd HH:mm:ss
+     *
      * @param dateString
      * @return java.time.LocalDateTime
      * @author xiaohai
      * @since 2023/7/9 15:56
      */
-    public static LocalDateTime getLocalDateTimeToString(String dateString ){
+    public static LocalDateTime getLocalDateTimeToString(String dateString) {
         String[] patterns = {"yyyy-MM-dd HH:mm:ss", "yyyy.MM.dd HH:mm:ss"};
         for (String pattern : patterns) {
             try {
@@ -99,6 +102,19 @@ public class DateUtils {
             }
         }
         throw new IllegalArgumentException("Invalid date format: " + dateString);
+    }
+
+    /**
+     * 使用模式 "yyyy-MM-dd HH:mm:ss" 将 LocalDateTime 对象格式化为字符串。
+     *
+     * @param dateTime 要格式化的 LocalDateTime 对象。
+     * @return 表示输入 LocalDateTime 的格式化字符串。
+     * @author: xiaohai
+     * @date: 2023/12/4 15:21
+     */
+    public static String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return dateTime.format(formatter);
     }
 
     public static void main(String[] args) {

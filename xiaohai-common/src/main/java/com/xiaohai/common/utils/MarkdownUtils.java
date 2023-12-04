@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -287,15 +288,59 @@ public class MarkdownUtils {
         return newPath;
     }
 
-    public static void main(String[] args) {
-        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/16841138028.jpg)![1](https://raw.githubusercontent.com/xiaohai-store/notes-img/main/1.png)";
-        System.out.println(photoList(markdown));
-        String filePath = "C:\\Users\\Code01\\Desktop\\新建文件夹\\note\\Chrome书签手动同步方法.md";
-        Map<String, Object> postData = parseHexoPost(filePath);
+    /**
+     * 组装一个 Markdown 文件的描述头（Front Matter）
+     *
+     * @param title      标题
+     * @param date       建立日期
+     * @param updated    更新日期
+     * @param tags       标签
+     * @param categories 分类
+     * @param cover      封面
+     * @return java.lang.String
+     * @author: xiaohai
+     * @date: 2023/12/4 15:12
+     */
+    public static String buildMarkdownHeader(String title, LocalDateTime date, LocalDateTime updated, List<String> tags, String categories, String cover) {
+        StringBuilder header = new StringBuilder();
+        header.append("---\n");
+        header.append("title: ").append(title).append("\n");
+        header.append("date: ").append(DateUtils.formatDateTime(date)).append("\n");
+        header.append("updated: ").append(DateUtils.formatDateTime(updated)).append("\n");
 
-        // 打印博文数据
-        for (Map.Entry<String, Object> entry : postData.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+        if (tags != null && !tags.isEmpty()) {
+            header.append("tags: [");
+            for (int i = 0; i < tags.size(); i++) {
+                header.append(tags.get(i));
+                if (i < tags.size() - 1) {
+                    header.append(",");
+                }
+            }
+            header.append("]\n");
         }
+
+        header.append("categories: ").append(categories).append("\n");
+        header.append("cover: ").append(cover).append("\n");
+        header.append("---");
+
+        return header.toString();
+    }
+
+    public static void main(String[] args) {
+//        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/16841138028.jpg)![1](https://raw.githubusercontent.com/xiaohai-store/notes-img/main/1.png)";
+//        System.out.println(photoList(markdown));
+//        String filePath = "C:\\Users\\Code01\\Desktop\\新建文件夹\\note\\Chrome书签手动同步方法.md";
+//        Map<String, Object> postData = parseHexoPost(filePath);
+//
+//        // 打印博文数据
+//        for (Map.Entry<String, Object> entry : postData.entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+        String title = "Java单文件下载与打包zip文件下载";
+        List<String> tags = List.of("Java", "SpringBoot");
+        String categories = "Java技术";
+        String cover = "ccccccccccccccc";
+        String markdownHeader = buildMarkdownHeader(title, LocalDateTime.now(), LocalDateTime.now(), tags, categories, cover);
+        System.out.println(markdownHeader);
     }
 }
