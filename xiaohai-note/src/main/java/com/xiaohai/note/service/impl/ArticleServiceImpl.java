@@ -483,12 +483,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             //组装Front-matter头
             String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover);
             //将文章里面的图片获取并存到临时位置，并替换路径
+            List<String> photoList = MarkdownUtils.photoList(article.getText());
+            for (String fileName : photoList) {
+                //新图片位置
+                String notePhotoPath = MarkdownUtils.copyImage(path + fileName.replace("..", ""), newImage);
+                //去掉前缀
+                notePhotoPath = ".." + notePhotoPath.replace(fileConfig.getProfile(), File.separator);
+                article.setText(article.getText().replaceAll(fileName, notePhotoPath.replace("\\", "/")));
+            }
             String text=matter+article.getText();
             //md文件路径
             String note = path + File.separator + FileConstants.NOTE_FILE+File.separator+article.getTitle()+"."+FileConstants.MARKDOWN_EXTENSION;
             //本地创建md文件
             MarkdownUtils.createMarkdownFile(note,text);
-
         }
     }
 }
