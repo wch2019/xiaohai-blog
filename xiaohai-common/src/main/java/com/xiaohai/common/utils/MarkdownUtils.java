@@ -1,17 +1,12 @@
 package com.xiaohai.common.utils;
 
-import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -265,27 +260,27 @@ public class MarkdownUtils {
     /**
      * 将图片复制到指定位置并重命名
      *
-     * @param file    文件
-     * @param newPath 位置
+     * @param sourcePath    文件
+     * @param targetDirectory 位置
      * @return java.lang.String
      * @author xiaohai
      * @since 2023/7/9 15:01
      */
-    public static String copyImage(String file, String newPath) {
+    public static String copyImage(String sourcePath, String targetDirectory) {
         // 获取文件后缀名
-        String fileExtension = FileUtils.getFileExtension(file);
+        String fileExtension = FileUtils.getFileExtension(sourcePath);
         // 生成唯一的文件名
         String fileName = FileUtils.generateUniqueFileName(fileExtension);
-        newPath = newPath + fileName;
+        // 构建目标文件路径
+        String targetPath = Paths.get(targetDirectory, fileName).toString();
         try {
-            Path sourcePath = Path.of(file);
-            Path targetPath = Path.of(newPath);
             // 复制文件并重命名
-            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Paths.get(sourcePath), Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
+            log.info("文件复制成功。");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("复制文件时出错：" + e.getMessage(), e);
         }
-        return newPath;
+        return targetPath;
     }
 
     /**
@@ -321,7 +316,7 @@ public class MarkdownUtils {
 
         header.append("categories: ").append(categories).append("\n");
         header.append("cover: ").append(cover).append("\n");
-        header.append("---");
+        header.append("---\n");
 
         return header.toString();
     }
@@ -338,9 +333,9 @@ public class MarkdownUtils {
         try {
             // Specify the file path
             Path filePath = Paths.get(fileName);
-
-            // Write content to the file
-            Files.writeString(filePath, content);
+            // 如果文件已存在，替换文件
+            Files.writeString(filePath, content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            log.info("Markdown文件创建成功：" + fileName);
         } catch (IOException e) {
             throw new ServiceException("Markdown文件创建失败", e);
         }

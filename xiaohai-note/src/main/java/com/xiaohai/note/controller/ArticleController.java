@@ -112,7 +112,7 @@ public class ArticleController {
     @Operation(summary = "导出markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:download")
     @Log(title = "导出markdown压缩文件")
-    @GetMapping(value = "/markdown", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/markdown")
     public void downloadCompressedFile(HttpServletResponse response) {
         articleService.downloadCompressedFile(response);
     }

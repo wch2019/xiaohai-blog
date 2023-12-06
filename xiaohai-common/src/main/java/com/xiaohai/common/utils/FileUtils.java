@@ -4,6 +4,7 @@ import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.RcAttachmentInfo;
 import com.xiaohai.common.exception.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static cn.dev33.satoken.SaManager.log;
 
@@ -33,6 +36,7 @@ import static cn.dev33.satoken.SaManager.log;
  * @author: xiaohai
  * @date: 2023-03-18 09:39
  **/
+@Slf4j
 public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获取文件创建时间的方法
@@ -134,10 +138,16 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @return
      */
     public static boolean directory(String dir) {
-        File file = new File(dir);
-        //判断当前文件夹或文件是否存在
-        if (!file.exists()) {
-            return file.mkdir();
+        Path path = Path.of(dir);
+        try {
+            // 使用 createDirectories 方法创建目录及其所有不存在的父目录
+            Files.createDirectories(path);
+            log.info("目录创建成功。");
+            return true;
+        } catch (FileAlreadyExistsException e) {
+            log.error("目录已经存在。");
+        } catch (IOException e) {
+            log.error("创建目录时出错：" + e.getMessage());
         }
         return false;
     }
@@ -343,6 +353,31 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         } catch (Exception e) {
             log.warn("获取图片属性异常:", e);
         }
+    }
+
+    /**
+     * 对文件名进行修正，确保符合Windows文件命名规则。
+     * 如果文件名不符合规则，将不符合规则的字符替换为下划线。
+     *
+     * @param fileName 原文件名
+     * @return 修正后的文件名
+     */
+    public static String sanitizeFileName(String fileName) {
+        // 定义Windows文件命名规则的正则表达式
+        String regex = "^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:\"/\\\\|?*]+$";
+
+        // 编译正则表达式
+        Pattern pattern = Pattern.compile(regex);
+
+        // 验证文件名是否符合Windows文件命名规则
+        boolean isValid = pattern.matcher(fileName).matches();
+
+        if (!isValid) {
+            // 将不符合规则的字符替换为下划线
+            fileName = fileName.replaceAll("[<>:\"/\\\\|?*]", "_");
+        }
+
+        return fileName;
     }
 
     public static void main(String[] args) throws Exception {

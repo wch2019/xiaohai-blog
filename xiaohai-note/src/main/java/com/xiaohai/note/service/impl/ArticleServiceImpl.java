@@ -467,35 +467,48 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 orderByDesc("created_time"));
         String tempFile = StringUtils.generateUUIDWithoutHyphens();
         //压缩文件临时路径
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile;
-        for (Article article : articles) {
-            //图片路径
-            String image = fileConfig.getProfile() + article.getCover();
-            String newImage = path + File.separator + FileConstants.IMAGE_FILE;
-            //新图片位置
-            String newPhotoPath = MarkdownUtils.copyImage(image, newImage);
-            //封面图片
-            String cover = ".." + newPhotoPath.replace(fileConfig.getProfile(), File.separator);
-            //获取分类名称
-            Category category = categoryMapper.selectById(article.getCategoryId());
-            //获取标签名称列表
-            List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
-            //组装Front-matter头
-            String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover);
-            //将文章里面的图片获取并存到临时位置，并替换路径
-            List<String> photoList = MarkdownUtils.photoList(article.getText());
-            for (String fileName : photoList) {
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile + File.separator;
+        try {
+            for (Article article : articles) {
+                //图片路径
+                String image = fileConfig.getProfile() + article.getCover();
+                String newImage = path + FileConstants.IMAGE_FILE + File.separator;
+                //创建目录
+                FileUtils.directory(newImage);
                 //新图片位置
-                String notePhotoPath = MarkdownUtils.copyImage(path + fileName.replace("..", ""), newImage);
-                //去掉前缀
-                notePhotoPath = ".." + notePhotoPath.replace(fileConfig.getProfile(), File.separator);
-                article.setText(article.getText().replaceAll(fileName, notePhotoPath.replace("\\", "/")));
+                String newPhotoPath = MarkdownUtils.copyImage(image, newImage);
+                //封面图片
+                String cover = ".." + newPhotoPath.replace(path, File.separator);
+                //获取分类名称
+                Category category = categoryMapper.selectById(article.getCategoryId());
+                //获取标签名称列表
+                List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
+                //组装Front-matter头
+                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover);
+                //将文章里面的图片获取并存到临时位置，并替换路径
+                List<String> photoList = MarkdownUtils.photoList(article.getText());
+                for (String fileName : photoList) {
+                    //新图片位置
+                    String notePhotoPath = MarkdownUtils.copyImage(fileConfig.getProfile() + fileName.replace("..", ""), newImage);
+                    //去掉前缀
+                    notePhotoPath = ".." + notePhotoPath.replace(path, File.separator);
+                    article.setText(article.getText().replaceAll(fileName, notePhotoPath.replace("\\", "/")));
+                }
+                String text = matter + article.getText();
+                //md文件路径
+                String note = path + FileConstants.NOTE_FILE + File.separator;
+                //创建目录
+                FileUtils.directory(note);
+                note = note + FileUtils.sanitizeFileName(article.getTitle()) + "." + FileConstants.MARKDOWN_EXTENSION;
+                // 替换文件名中的不支持字符
+                //本地创建md文件
+                MarkdownUtils.createMarkdownFile(note, text);
             }
-            String text=matter+article.getText();
-            //md文件路径
-            String note = path + File.separator + FileConstants.NOTE_FILE+File.separator+article.getTitle()+"."+FileConstants.MARKDOWN_EXTENSION;
-            //本地创建md文件
-            MarkdownUtils.createMarkdownFile(note,text);
+        } finally {
+            //都要执行删除临时文件
+//            FileUtils.deleteFiles(new File(path));
+//            //删除当前目录
+//            FileUtils.deleteFile(path);
         }
     }
 }
