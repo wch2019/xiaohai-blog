@@ -44,6 +44,7 @@
                 <el-form-item label="标签" prop="tags">
                   <el-select
                     v-model="form.tags"
+                    :multiple-limit="3"
                     placeholder="标签"
                     clearable
                     size="small"
