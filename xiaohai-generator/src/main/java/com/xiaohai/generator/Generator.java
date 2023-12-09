@@ -23,9 +23,9 @@ import java.util.function.Consumer;
  */
 public class Generator {
     /**路径*/
-    private static final String PROJECT_PATH  = System.getProperty("user.dir")+"/xiaohai-system";
+    private static final String PROJECT_PATH  = System.getProperty("user.dir")+"/xiaohai-file";
     /** 自定义文件路径*/
-    private static final String OTHER_PATH = PROJECT_PATH + "/src/main/java/com/xiaohai/system";
+    private static final String OTHER_PATH = PROJECT_PATH + "/src/main/java/com/xiaohai/file";
     /**数据库地址*/
     private static final String URL = "jdbc:mysql://192.168.68.207:3308/xiaohai_blog?&characterEncoding=utf8&useSSL=false&serverTimezone=UTC";
     /** 数据库账号*/
@@ -35,7 +35,7 @@ public class Generator {
     /** 父包名 */
     private static final String PARENT_PACKAGE = "com.xiaohai";
     /**父包模块名*/
-    private static final String MODULE_NAME = "system";
+    private static final String MODULE_NAME = "file";
     /** 公共类 */
     private static final String COMMON_ENTITY = "com.xiaohai.common.daomain.BaseEntity";
     /** 公共字段*/
