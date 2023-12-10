@@ -37,8 +37,8 @@ public class FileManagerQuery implements Serializable {
     @Parameter(description = "文件地址")
     private String filePath;
 
-    @Parameter(description = "文件类型")
-    private String fileType;
+    @Schema(description = "文件类型(0文件，1文件夹)")
+    private Integer fileType;
 
     @Parameter(description = "文件大小")
     private Integer fileSize;

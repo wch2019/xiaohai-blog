@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 
 @SpringBootApplication
 @ComponentScan("com.xiaohai")
-@MapperScan({"com.xiaohai.system.dao","com.xiaohai.note.dao"})
+@MapperScan({"com.xiaohai.system.dao","com.xiaohai.note.dao","com.xiaohai.file.dao"})
 @Slf4j
 public class XiaohaiAdminApplication {
 

@@ -52,13 +52,6 @@ public class FileManagerController {
         return  Response.success("更新文件管理成功！",fileManagerService.updateData(vo));
     }
 
-
-    @Operation(summary = "id查询文件管理",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @GetMapping("{id}")
-    public Response<FileManager> findById(@PathVariable Long id){
-        return  Response.success("id查询文件管理成功！",fileManagerService.findById(id));
-    }
-
     @Operation(summary = "查询文件管理列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)

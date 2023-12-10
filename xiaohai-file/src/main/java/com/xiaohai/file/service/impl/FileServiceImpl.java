@@ -7,9 +7,13 @@ import com.xiaohai.common.daomain.RcAttachmentInfo;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
+import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileMarkdownDto;
+import com.xiaohai.file.pojo.entity.FileManager;
+import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.vo.UploadVo;
+import com.xiaohai.file.service.FileManagerService;
 import com.xiaohai.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static com.xiaohai.common.constant.Constants.SHA_256;
 
 /**
  * @author wangchenghai
@@ -31,13 +38,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class FileServiceImpl implements FileService {
+
     private final FileConfig fileConfig;
+
+    private final FileManagerService fileManagerService;
 
     @Override
     public String uploadAvatar(MultipartFile file) {
         //根据用户区分文件夹
         String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.AVATAR_FILE;
-        return addFile(path, file);
+        //计算hash
+        String hash = FileUtils.extractChecksum(file, SHA_256);
+        //验证是否存在当前文件
+        String url = getFile(path, hash);
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        }
+        return addFile(path, file, hash);
     }
 
     @Override
@@ -50,7 +67,14 @@ public class FileServiceImpl implements FileService {
     public String uploadImage(MultipartFile file) {
         //指定markdown图片上传目录,根据用户区分文件夹
         String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
-        return addFile(path, file);
+        //计算hash
+        String hash = FileUtils.extractChecksum(file, SHA_256);
+        //验证是否存在当前文件
+        String url = getFile(path, hash);
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        }
+        return addFile(path, file, hash);
     }
 
     @Override
@@ -68,7 +92,7 @@ public class FileServiceImpl implements FileService {
      * @param file 要添加的文件
      * @return 添加的文件路径
      */
-    public String addFile(String path, MultipartFile file) {
+    public String addFile(String path, MultipartFile file, String hash) {
         // 判断文件是否为空
         if (file == null || file.isEmpty()) {
             throw new ServiceException("文件为空");
@@ -91,8 +115,18 @@ public class FileServiceImpl implements FileService {
 
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, fileName, file);
-        filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
+        filePath = filePath.replace(fileConfig.getProfile(), File.separator);
         log.info("保存图片--------->{}", filePath);
+        FileManagerVo fileManagerVo = new FileManagerVo();
+        //查询父类
+        FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
+        fileManagerVo.setParentId(manager.getId());
+        fileManagerVo.setFilePath(filePath);
+        fileManagerVo.setFileName(fileName);
+        fileManagerVo.setFileSize((int) file.getSize());
+        fileManagerVo.setFileHash(hash);
+        fileManagerVo.setFileType(0);
+        fileManagerService.add(fileManagerVo);
         //前端展示需要处理
         return filePath.replace("\\", "/");
     }
@@ -192,13 +226,13 @@ public class FileServiceImpl implements FileService {
             assert files != null;
             for (File file : files) {
                 if (!file.isDirectory()) {
-                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
-                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
+//                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
+//                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
                     FileMarkdownDto fileDto = new FileMarkdownDto();
                     fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));
-                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
+//                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
                     fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
                     fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
                     fileDto.setName(file.getName());
@@ -218,5 +252,45 @@ public class FileServiceImpl implements FileService {
         return 1;
     }
 
+    /**
+     * 判断当前文件hash是否存在，存在返回路径，不存在创建文件路径
+     *
+     * @param path
+     * @param hash
+     * @return
+     */
+    public String getFile(String path, String hash) {
+        //获取相同的文件信息
+        FileManager fileManager = fileManagerService.findByHash(hash);
+        if (fileManager != null) {
+            return fileManager.getFilePath();
+        }
+        //判断当前文件夹是否存在，不存在就创建当前文件夹
+        path = path.replace(fileConfig.getProfile(), "");
+        // 使用 File.separator 进行分割
+        String[] listPatch = path.split(Pattern.quote(File.separator));
+        //父文件
+        StringBuilder parentPath = new StringBuilder();
+        //子文件
+        StringBuilder parent = new StringBuilder();
+        for (String patch : listPatch) {
+            parent.append(File.separator).append(patch);
+            FileManager manager = fileManagerService.findByPath(parent.toString());
+            if (manager == null) {
+                FileManagerVo fileManagerVo = new FileManagerVo();
+                //当前文件夹不存在，查询有没有父类文件夹
+                if (StringUtils.isNotBlank(parentPath.toString())) {
+                    manager = fileManagerService.findByPath(parentPath.toString());
+                    fileManagerVo.setParentId(manager.getId());
+                }
+                fileManagerVo.setFilePath(parent.toString());
+                fileManagerVo.setFileName(patch);
+                fileManagerVo.setFileType(1);
+                fileManagerService.add(fileManagerVo);
+            }
+            parentPath.append(File.separator).append(patch);
+        }
+        return null;
+    }
 
 }

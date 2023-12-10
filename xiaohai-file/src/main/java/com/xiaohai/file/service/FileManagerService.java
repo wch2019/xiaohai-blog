@@ -8,9 +8,7 @@ import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 
 /**
- *
  * 文件管理 服务类
- *
  *
  * @author xiaohai
  * @since 2023-12-09
@@ -43,18 +41,25 @@ public interface FileManagerService extends IService<FileManager> {
     Integer updateData(FileManagerVo vo);
 
     /**
-     * id查询数据
+     * 根据hash查询
      *
-     * @param id id
-     * @return   FileManager
-*/
-    FileManager findById(Long id);
+     * @param hash hash
+     * @return FileManager
+     */
+    FileManager findByHash(String hash);
 
     /**
-    * 查询文件管理列表数据
-    *
-    * @param query 文件管理 Query 数据查询对象
-    * @return Response
-    */
+     * 查询文件管理列表数据
+     *
+     * @param query 文件管理 Query 数据查询对象
+     * @return Response
+     */
     ReturnPageData<FileManagerDto> findListByPage(FileManagerQuery query);
+
+    /**
+     * 查询指定路径
+     * @param path
+     * @return
+     */
+    FileManager findByPath(String path);
 }

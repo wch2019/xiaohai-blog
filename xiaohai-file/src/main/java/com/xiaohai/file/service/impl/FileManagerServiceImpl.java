@@ -1,5 +1,6 @@
 package com.xiaohai.file.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.dao.FileManagerMapper;
@@ -52,8 +53,8 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     }
 
     @Override
-    public FileManager findById(Long id){
-        return baseMapper.selectById(id);
+    public FileManager findByHash(String hash){
+        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFileHash,hash));
     }
 
     @Override
@@ -71,5 +72,10 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         PageData pageData=new PageData();
         BeanUtils.copyProperties(iPage,pageData);
         return ReturnPageData.fillingData(pageData,list);
+    }
+
+    @Override
+    public FileManager findByPath(String path) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFilePath,path));
     }
 }
