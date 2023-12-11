@@ -60,7 +60,14 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadLogo(MultipartFile file) {
         String path = fileConfig.getSystemPath();
-        return addLogo(path, file);
+        //计算hash
+        String hash = FileUtils.extractChecksum(file, SHA_256);
+        //验证是否存在当前文件
+        String url = getFile(path, hash);
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        }
+        return addLogo(path, file, hash);
     }
 
     @Override
@@ -90,6 +97,7 @@ public class FileServiceImpl implements FileService {
      *
      * @param path 文件保存路径
      * @param file 要添加的文件
+     * @param hash hash
      * @return 添加的文件路径
      */
     public String addFile(String path, MultipartFile file, String hash) {
@@ -136,9 +144,10 @@ public class FileServiceImpl implements FileService {
      *
      * @param path 文件保存路径
      * @param file 要添加的文件
+     * @param hash hash
      * @return 添加的文件路径
      */
-    public String addLogo(String path, MultipartFile file) {
+    public String addLogo(String path, MultipartFile file, String hash) {
         // 判断文件是否为空
         if (file == null || file.isEmpty()) {
             throw new ServiceException("文件为空");
@@ -160,6 +169,16 @@ public class FileServiceImpl implements FileService {
         String filePath = FileUtils.saveFile(path, FileConstants.LOGO, file);
         filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
         log.info("保存图片--------->{}", filePath);
+        FileManagerVo fileManagerVo = new FileManagerVo();
+        //查询父类
+//        FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
+//        fileManagerVo.setParentId(manager.getId());
+//        fileManagerVo.setFilePath(filePath);
+//        fileManagerVo.setFileName(fileName);
+//        fileManagerVo.setFileSize((int) file.getSize());
+//        fileManagerVo.setFileHash(hash);
+//        fileManagerVo.setFileType(0);
+//        fileManagerService.add(fileManagerVo);
         //前端展示需要处理
         return filePath.replace("\\", "/");
     }
