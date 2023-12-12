@@ -31,6 +31,10 @@ public class FileConstants {
      */
     public static final String AVATAR_FILE = "avatar";
     /**
+     * 系统文件路径
+     */
+    public static final String SYSTEM_FILE = "system";
+    /**
      * markdown目录
      */
     public static final String MARKDOWN_FILE = "markdown";

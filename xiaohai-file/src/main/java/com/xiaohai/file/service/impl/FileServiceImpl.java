@@ -59,7 +59,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadLogo(MultipartFile file) {
-        String path = fileConfig.getSystemPath();
+        String path = fileConfig.getFilePath() + FileConstants.SYSTEM_FILE;
         //计算hash
         String hash = FileUtils.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
@@ -170,15 +170,23 @@ public class FileServiceImpl implements FileService {
         filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
         log.info("保存图片--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
-        //查询父类
-//        FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
-//        fileManagerVo.setParentId(manager.getId());
-//        fileManagerVo.setFilePath(filePath);
-//        fileManagerVo.setFileName(fileName);
-//        fileManagerVo.setFileSize((int) file.getSize());
-//        fileManagerVo.setFileHash(hash);
-//        fileManagerVo.setFileType(0);
-//        fileManagerService.add(fileManagerVo);
+        FileManager fileManager = fileManagerService.findByPath(filePath);
+        if (fileManager == null) {
+            //查询父类
+            FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
+            fileManagerVo.setParentId(manager.getId());
+            fileManagerVo.setFilePath(filePath);
+            fileManagerVo.setFileName(FileConstants.LOGO);
+            fileManagerVo.setFileSize((int) file.getSize());
+            fileManagerVo.setFileHash(hash);
+            fileManagerVo.setFileType(0);
+            fileManagerService.add(fileManagerVo);
+        } else {
+            fileManagerVo.setId(fileManager.getId());
+            fileManagerVo.setFileSize((int) file.getSize());
+            fileManagerVo.setFileHash(hash);
+            fileManagerService.updateData(fileManagerVo);
+        }
         //前端展示需要处理
         return filePath.replace("\\", "/");
     }
