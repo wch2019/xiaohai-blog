@@ -62,4 +62,11 @@ public interface FileManagerService extends IService<FileManager> {
      * @return
      */
     FileManager findByPath(String path);
+
+    /**
+     * 根据路径删除
+     * @param path
+     * @return
+     */
+    Integer deletePath(String path);
 }

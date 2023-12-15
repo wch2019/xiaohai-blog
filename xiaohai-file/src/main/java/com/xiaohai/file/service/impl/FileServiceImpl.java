@@ -73,7 +73,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadImage(MultipartFile file) {
         //指定markdown图片上传目录,根据用户区分文件夹
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE;
         //计算hash
         String hash = FileUtils.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
@@ -89,7 +89,8 @@ public class FileServiceImpl implements FileService {
         String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + pathName;
         boolean isTrue = FileUtils.deleteFile(path);
         Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
-        return 1;
+        path = path.replace(fileConfig.getProfile(), File.separator);
+        return fileManagerService.deletePath(path);
     }
 
     @Override
@@ -141,14 +142,13 @@ public class FileServiceImpl implements FileService {
         //查询父类
         FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
         fileManagerVo.setParentId(manager.getId());
-        fileManagerVo.setFilePath(filePath);
+        fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
         fileManagerVo.setFileName(fileName);
         fileManagerVo.setFileSize((int) file.getSize());
         fileManagerVo.setFileHash(hash);
         fileManagerVo.setFileType(0);
         fileManagerService.add(fileManagerVo);
-        //前端展示需要处理
-        return filePath.replace("\\", "/");
+        return fileManagerVo.getFilePath();
     }
 
     /**
@@ -187,14 +187,13 @@ public class FileServiceImpl implements FileService {
         //查询父类
         FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
         fileManagerVo.setParentId(manager.getId());
-        fileManagerVo.setFilePath(filePath);
+        fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
         fileManagerVo.setFileName(fileName);
         fileManagerVo.setFileSize((int) file.getSize());
         fileManagerVo.setFileHash(hash);
         fileManagerVo.setFileType(0);
         fileManagerService.add(fileManagerVo);
-        //前端展示需要处理
-        return filePath.replace("\\", "/");
+        return fileManagerVo.getFilePath();
     }
 
     /**
@@ -233,7 +232,7 @@ public class FileServiceImpl implements FileService {
             //查询父类
             FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
             fileManagerVo.setParentId(manager.getId());
-            fileManagerVo.setFilePath(filePath);
+            fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
             fileManagerVo.setFileName(FileConstants.LOGO);
             fileManagerVo.setFileSize((int) file.getSize());
             fileManagerVo.setFileHash(hash);
@@ -245,8 +244,7 @@ public class FileServiceImpl implements FileService {
             fileManagerVo.setFileHash(hash);
             fileManagerService.updateData(fileManagerVo);
         }
-        //前端展示需要处理
-        return filePath.replace("\\", "/");
+        return fileManagerVo.getFilePath();
     }
 
     @Override
@@ -334,7 +332,8 @@ public class FileServiceImpl implements FileService {
         path = fileConfig.getProfile() + path;
         boolean isTrue = FileUtils.deleteFile(path);
         Assert.isTrue(isTrue, "当前路径:" + path + ",删除失败");
-        return 1;
+        path = path.replace(fileConfig.getProfile(), File.separator);
+        return fileManagerService.deletePath(path);
     }
 
     /**

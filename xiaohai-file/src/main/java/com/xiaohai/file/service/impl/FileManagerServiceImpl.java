@@ -78,4 +78,9 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     public FileManager findByPath(String path) {
         return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFilePath,path));
     }
+
+    @Override
+    public Integer deletePath(String path) {
+        return baseMapper.delete(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFilePath,path));
+    }
 }
