@@ -43,6 +43,11 @@
             <groupId>com.xiaohai</groupId>
             <artifactId>xiaohai-note</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.xiaohai</groupId>
+            <artifactId>xiaohai-spider</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

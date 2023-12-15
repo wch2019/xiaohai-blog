@@ -16,6 +16,7 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.*;
+import com.xiaohai.file.service.FileService;
 import com.xiaohai.note.dao.*;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
@@ -67,6 +68,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final TagsMapper tagsMapper;
 
     private final ArticleLikeMapper articleLikeMapper;
+
+    private final FileService fileService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -198,11 +201,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             throw new RuntimeException(e);
         }
         Assert.isTrue(!"https://cn.bing.com".equals(url), "获取图片失败");
+        String fileName = name + ".jpg";
+        MultipartFile multipartFile = FileUtils.getFileFromUrl(url, fileName);
         //指定公共markdown图片上传目录
         String path = fileConfig.getProfile() + FileConstants.IMAGE_FILE + File.separator + FileConstants.BING_FILE + File.separator;
-        FileUtils.download(url, path, name + ".jpg");
-        path = File.separator + path.replace(fileConfig.getProfile(), "") + name + ".jpg";
-        return path.replaceAll("\\\\", "/");
+        return fileService.uploadBing(multipartFile, path, fileName);
     }
 
     @Override
@@ -506,9 +509,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             }
         } finally {
             //都要执行删除临时文件
-//            FileUtils.deleteFiles(new File(path));
-//            //删除当前目录
-//            FileUtils.deleteFile(path);
+            //            FileUtils.deleteFiles(new File(path));
+            //            //删除当前目录
+            //            FileUtils.deleteFile(path);
         }
     }
 }

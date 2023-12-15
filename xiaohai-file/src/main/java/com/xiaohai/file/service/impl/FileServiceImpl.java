@@ -54,7 +54,7 @@ public class FileServiceImpl implements FileService {
         if (StringUtils.isNotBlank(url)) {
             return url;
         }
-        return addFile(path, file, hash);
+        return addFileImage(path, file, hash);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FileServiceImpl implements FileService {
         if (StringUtils.isNotBlank(url)) {
             return url;
         }
-        return addFile(path, file, hash);
+        return addFileImage(path, file, hash);
     }
 
     @Override
@@ -92,15 +92,27 @@ public class FileServiceImpl implements FileService {
         return 1;
     }
 
+    @Override
+    public String uploadBing(MultipartFile file, String path, String fileName) {
+        //计算hash
+        String hash = FileUtils.extractChecksum(file, SHA_256);
+        //验证是否存在当前文件
+        String url = getFile(path, hash);
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        }
+        return addFile(path, file, fileName, hash);
+    }
+
     /**
-     * 添加文件
+     * 添加图片文件
      *
      * @param path 文件保存路径
      * @param file 要添加的文件
      * @param hash hash
      * @return 添加的文件路径
      */
-    public String addFile(String path, MultipartFile file, String hash) {
+    public String addFileImage(String path, MultipartFile file, String hash) {
         // 判断文件是否为空
         if (file == null || file.isEmpty()) {
             throw new ServiceException("文件为空");
@@ -125,6 +137,52 @@ public class FileServiceImpl implements FileService {
         String filePath = FileUtils.saveFile(path, fileName, file);
         filePath = filePath.replace(fileConfig.getProfile(), File.separator);
         log.info("保存图片--------->{}", filePath);
+        FileManagerVo fileManagerVo = new FileManagerVo();
+        //查询父类
+        FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
+        fileManagerVo.setParentId(manager.getId());
+        fileManagerVo.setFilePath(filePath);
+        fileManagerVo.setFileName(fileName);
+        fileManagerVo.setFileSize((int) file.getSize());
+        fileManagerVo.setFileHash(hash);
+        fileManagerVo.setFileType(0);
+        fileManagerService.add(fileManagerVo);
+        //前端展示需要处理
+        return filePath.replace("\\", "/");
+    }
+
+    /**
+     * 添加文件
+     *
+     * @param path     文件保存路径
+     * @param file     要添加的文件
+     * @param fileName 自定义文件名称
+     * @param hash     hash
+     * @return
+     */
+    public String addFile(String path, MultipartFile file, String fileName, String hash) {
+        // 判断文件是否为空
+        if (file == null || file.isEmpty()) {
+            throw new ServiceException("文件为空");
+        }
+
+        // 获取文件原始名称
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+
+        // 获取文件后缀名
+        String fileExtension = FileUtils.getFileExtension(originalFilename);
+
+        //没有传入
+        if (org.apache.commons.lang3.StringUtils.isBlank(fileName)) {
+            // 生成唯一的文件名
+            fileName = FileUtils.generateUniqueFileName(fileExtension);
+        }
+
+        // 保存文件并返回文件路径
+        String filePath = FileUtils.saveFile(path, fileName, file);
+        filePath = filePath.replace(fileConfig.getProfile(), File.separator);
+        log.info("保存文件--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
         FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
@@ -204,7 +262,7 @@ public class FileServiceImpl implements FileService {
         String originalFilename = file.getOriginalFilename();
         assert originalFilename != null;
         //文件夹以年份/月份/分割
-//        String folder = LocalDateTime.now().getYear() + "/" + LocalDateTime.now().getMonth() + "/";
+        //        String folder = LocalDateTime.now().getYear() + "/" + LocalDateTime.now().getMonth() + "/";
 
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, originalFilename, file);
@@ -253,13 +311,13 @@ public class FileServiceImpl implements FileService {
             assert files != null;
             for (File file : files) {
                 if (!file.isDirectory()) {
-//                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
-//                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
+                    //                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
+                    //                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
                     FileMarkdownDto fileDto = new FileMarkdownDto();
                     fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));
-//                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
+                    //                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
                     fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
                     fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
                     fileDto.setName(file.getName());

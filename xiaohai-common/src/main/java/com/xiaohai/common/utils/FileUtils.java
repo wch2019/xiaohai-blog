@@ -5,14 +5,23 @@ import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.RcAttachmentInfo;
 import com.xiaohai.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.buf.HexUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,8 +37,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import static cn.dev33.satoken.SaManager.log;
 
 /**
  * @description: 文件操作工具类
@@ -209,6 +216,57 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
     }
 
+    /**
+     * 通过URL直接转换成MutipartFile
+     * @param url
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public static MultipartFile getFileFromUrl(String url, String fileName) {
+        try {
+            // 根据URL创建资源
+            URL urlObj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(60000);
+            connection.setDoOutput(true);
+            DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
+            DiskFileItem fileItem = (DiskFileItem) fileItemFactory.createItem("file",
+                    MediaType.ALL_VALUE, true, fileName);
+            fileItem.getOutputStream().flush();
+            try (ReadableByteChannel readableByteChannel = Channels.newChannel(connection.getInputStream());
+                 OutputStream outputStream = fileItem.getOutputStream();
+                 WritableByteChannel writableByteChannel = Channels.newChannel(outputStream)) {
+                // 创建字节缓冲区以存储文件内容
+                ByteBuffer buffer = ByteBuffer.allocateDirect(1024 << 2);
+
+                // 将文件内容读入字节缓冲区
+                while (readableByteChannel.read(buffer) != -1) {
+                    // 准备字节缓冲区以进行再次读取
+                    buffer.flip();
+                    while (buffer.hasRemaining()) {
+                        writableByteChannel.write(buffer);
+                    }
+                    buffer.clear();
+                }
+            } catch (IOException e) {
+                // 在这里处理网络或文件IO异常
+                log.error("上传文件时发生错误", e);
+                // 根据需要处理或记录IOException
+            }
+            return new CommonsMultipartFile(fileItem);
+        } catch (Exception e) {
+            // 在这里处理其他异常
+            log.error("下载文件时发生错误", e);
+            // 根据需要处理或记录其他异常
+            return null; // 或者抛出自定义异常
+        }
+    }
+
+
+
 
     /**
      * 判断文件后缀名是否为图片类型
@@ -324,7 +382,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获取图片长宽
      *
-     * @param fileOrPath 文件或文件全路径
+     * @param fileOrPath     文件或文件全路径
      * @param attachmentInfo 保存图片属性的对象
      */
     public static void imageProperty(Object fileOrPath, RcAttachmentInfo attachmentInfo) {
@@ -376,7 +434,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             // 将不符合规则的字符替换为下划线
             fileName = fileName.replaceAll("[<>:\"/\\\\|?*]", "_");
         }
-
         return fileName;
     }
 

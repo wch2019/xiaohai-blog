@@ -14,6 +14,7 @@ import java.util.List;
 public interface FileService {
     /**
      * 头像上传
+     *
      * @param file
      * @return
      */
@@ -21,12 +22,15 @@ public interface FileService {
 
     /**
      * logo上传
+     *
      * @param file
      * @return
      */
     String uploadLogo(MultipartFile file);
+
     /**
      * markdown图片上传
+     *
      * @param file
      * @return
      */
@@ -34,12 +38,23 @@ public interface FileService {
 
     /**
      * markdown图片删除
+     *
      * @param path
      * @return
      */
     Integer deleteImage(String path);
+
+    /**
+     * Bing图片上传
+     *
+     * @param file
+     * @return
+     */
+    String uploadBing(MultipartFile file, String path, String fileName);
+
     /**
      * 上传文件
+     *
      * @param vo
      * @return
      */
@@ -47,6 +62,7 @@ public interface FileService {
 
     /**
      * 文件列表
+     *
      * @param path
      * @return
      */
@@ -54,12 +70,14 @@ public interface FileService {
 
     /**
      * markdown图片列表
+     *
      * @return
      */
     List<FileMarkdownDto> getMarkdownImage();
 
     /**
      * 删除文件
+     *
      * @param path
      * @return
      */
