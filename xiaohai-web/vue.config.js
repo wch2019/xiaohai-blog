@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'DotCode后台管理系统' // 网页标题
+const name = defaultSettings.title || 'DotCode\'s Blog' // 网页标题
 
 // 如果端口设置为 80，
 // 使用管理员权限执行命令行。

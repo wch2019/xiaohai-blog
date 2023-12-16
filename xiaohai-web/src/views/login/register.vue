@@ -8,7 +8,7 @@
         auto-complete="on"
         label-position="left"
       >
-        <h2>DotCode后台管理系统</h2>
+        <h2>DotCode's Blog</h2>
         <el-form-item prop="username" class="inputNew">
           <el-input
             ref="username"
@@ -37,7 +37,7 @@
             <template #prefix>
               <svg-icon icon-class="email" />
             </template>
-            <el-link v-if="captchaEnabled" slot="suffix"  :underline="false" type="warning" @click="getCode">发送验证码</el-link>
+            <el-link v-if="captchaEnabled" slot="suffix" :underline="false" type="warning" @click="getCode">发送验证码</el-link>
             <span v-else slot="suffix">{{ count }}s后重新获取</span>
           </el-input>
         </el-form-item>

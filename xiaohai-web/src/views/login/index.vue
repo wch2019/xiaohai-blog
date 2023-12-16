@@ -8,7 +8,7 @@
         auto-complete="on"
         label-position="left"
       >
-        <h2>DotCode后台管理系统</h2>
+        <h2>DotCode's Blog</h2>
         <el-form-item prop="username" class="inputNew">
 
           <el-input
