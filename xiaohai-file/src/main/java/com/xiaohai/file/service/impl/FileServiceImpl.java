@@ -3,11 +3,11 @@ package com.xiaohai.file.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.constant.FileConstants;
-import com.xiaohai.common.daomain.RcAttachmentInfo;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.file.dao.FileManagerMapper;
 import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.entity.FileManager;
@@ -42,6 +42,8 @@ public class FileServiceImpl implements FileService {
     private final FileConfig fileConfig;
 
     private final FileManagerService fileManagerService;
+
+    private final FileManagerMapper fileManagerMapper;
 
     @Override
     public String uploadAvatar(MultipartFile file) {
@@ -303,6 +305,10 @@ public class FileServiceImpl implements FileService {
         List<FileMarkdownDto> list = new ArrayList<>();
         // 指定文件夹路径
         String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
+        FileManager fileManager=fileManagerService.findByPath(folderPath.replace(fileConfig.getProfile(), File.separator));
+        if(fileManager==null){
+            throw new ServiceException("当前用户不存在markdown图片");
+        }
         File folder = new File(folderPath);
         if (folder.isDirectory()) {
             File[] files = folder.listFiles();
@@ -312,7 +318,7 @@ public class FileServiceImpl implements FileService {
                     //                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
                     //                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
                     FileMarkdownDto fileDto = new FileMarkdownDto();
-                    fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
+                    fileDto.setPath("");
                     fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
                     fileDto.setSize(FileUtils.formatFileSize(file.length()));
                     //                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());

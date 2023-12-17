@@ -7,6 +7,8 @@ import com.xiaohai.file.pojo.query.FileManagerQuery;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 
+import java.util.List;
+
 /**
  * 文件管理 服务类
  *
@@ -69,4 +71,12 @@ public interface FileManagerService extends IService<FileManager> {
      * @return
      */
     Integer deletePath(String path);
+
+
+    /**
+     * 根据parentId获取当前文件
+     * @param parentId
+     * @return
+     */
+    List<FileManager> getParentIdPath(String parentId);
 }

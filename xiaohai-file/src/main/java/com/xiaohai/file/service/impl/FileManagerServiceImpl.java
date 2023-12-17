@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 文件管理 服务实现类
  *
  * @author xiaohai
@@ -31,14 +30,14 @@ import java.util.List;
 public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileManager> implements FileManagerService {
 
     @Override
-    public Integer add(FileManagerVo vo){
-        FileManager fileManager=new FileManager();
-        BeanUtils.copyProperties(vo,fileManager);
+    public Integer add(FileManagerVo vo) {
+        FileManager fileManager = new FileManager();
+        BeanUtils.copyProperties(vo, fileManager);
         return baseMapper.insert(fileManager);
     }
 
     @Override
-    public Integer delete(Long[] ids){
+    public Integer delete(Long[] ids) {
         for (Long id : ids) {
             baseMapper.deleteById(id);
         }
@@ -46,41 +45,46 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     }
 
     @Override
-    public Integer updateData(FileManagerVo vo){
-        FileManager fileManager=new FileManager();
-        BeanUtils.copyProperties(vo,fileManager);
+    public Integer updateData(FileManagerVo vo) {
+        FileManager fileManager = new FileManager();
+        BeanUtils.copyProperties(vo, fileManager);
         return baseMapper.updateById(fileManager);
     }
 
     @Override
-    public FileManager findByHash(String hash){
-        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFileHash,hash));
+    public FileManager findByHash(String hash) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFileHash, hash));
     }
 
     @Override
-    public ReturnPageData<FileManagerDto> findListByPage(FileManagerQuery query){
-        FileManager fileManager=new FileManager();
-        BeanUtils.copyProperties(query,fileManager);
+    public ReturnPageData<FileManagerDto> findListByPage(FileManagerQuery query) {
+        FileManager fileManager = new FileManager();
+        BeanUtils.copyProperties(query, fileManager);
         IPage<FileManager> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<FileManager> iPage = baseMapper.selectPage(wherePage,Wrappers.query(fileManager));
-        List<FileManagerDto> list=new ArrayList<>();
-        for(FileManager fileManagers:iPage.getRecords()){
-            FileManagerDto fileManagerDto=new FileManagerDto();
-            BeanUtils.copyProperties(fileManagers,fileManagerDto);
+        IPage<FileManager> iPage = baseMapper.selectPage(wherePage, Wrappers.query(fileManager));
+        List<FileManagerDto> list = new ArrayList<>();
+        for (FileManager fileManagers : iPage.getRecords()) {
+            FileManagerDto fileManagerDto = new FileManagerDto();
+            BeanUtils.copyProperties(fileManagers, fileManagerDto);
             list.add(fileManagerDto);
         }
-        PageData pageData=new PageData();
-        BeanUtils.copyProperties(iPage,pageData);
-        return ReturnPageData.fillingData(pageData,list);
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, list);
     }
 
     @Override
     public FileManager findByPath(String path) {
-        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFilePath,path));
+        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFilePath, path));
     }
 
     @Override
     public Integer deletePath(String path) {
-        return baseMapper.delete(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFilePath,path));
+        return baseMapper.delete(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFilePath, path));
+    }
+
+    @Override
+    public List<FileManager> getParentIdPath(String parentId) {
+        return baseMapper.selectList(new LambdaQueryWrapper<FileManager>().like(FileManager::getParentId, parentId));
     }
 }

@@ -25,9 +25,6 @@ public class FileMarkdownDto {
     @Schema(description = "文件或目录的大小")
     private String size;
 
-    @Schema(description = "图片尺寸")
-    private String imageSize;
-
     @Schema(description = "文件或目录的创建时间")
     private String createTime;
 
