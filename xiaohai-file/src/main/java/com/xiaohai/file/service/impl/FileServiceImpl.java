@@ -3,12 +3,14 @@ package com.xiaohai.file.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.constant.FileConstants;
+import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.file.dao.FileManagerMapper;
 import com.xiaohai.file.pojo.dto.FileDto;
+import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
@@ -301,36 +303,36 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<FileMarkdownDto> getMarkdownImage() {
-        List<FileMarkdownDto> list = new ArrayList<>();
+    public ReturnPageData<FileManagerDto> getMarkdownImageListByPage() {
         // 指定文件夹路径
         String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
         FileManager fileManager=fileManagerService.findByPath(folderPath.replace(fileConfig.getProfile(), File.separator));
         if(fileManager==null){
-            throw new ServiceException("当前用户不存在markdown图片");
+            return new ReturnPageData<>();
         }
-        File folder = new File(folderPath);
-        if (folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            assert files != null;
-            for (File file : files) {
-                if (!file.isDirectory()) {
-                    //                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
-                    //                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
-                    FileMarkdownDto fileDto = new FileMarkdownDto();
-                    fileDto.setPath("");
-                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
-                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
-                    //                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
-                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
-                    fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
-                    fileDto.setName(file.getName());
-                    list.add(fileDto);
-                }
-            }
-        }
-
-        return list.stream().sorted(Comparator.comparing(FileMarkdownDto::getCreateTime).reversed()).toList();
+        return  fileManagerService.getParentIdPath(fileManager.getParentId());
+//        File folder = new File(folderPath);
+//        if (folder.isDirectory()) {
+//            File[] files = folder.listFiles();
+//            assert files != null;
+//            for (File file : files) {
+//                if (!file.isDirectory()) {
+//                    //                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
+//                    //                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
+//                    FileMarkdownDto fileDto = new FileMarkdownDto();
+//                    fileDto.setPath("");
+//                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
+//                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
+//                    //                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
+//                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
+//                    fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
+//                    fileDto.setName(file.getName());
+//                    list.add(fileDto);
+//                }
+//            }
+//        }
+//
+//        return list.stream().sorted(Comparator.comparing(FileMarkdownDto::getCreateTime).reversed()).toList();
     }
 
     @Override

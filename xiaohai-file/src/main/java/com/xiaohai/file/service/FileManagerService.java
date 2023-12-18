@@ -60,6 +60,7 @@ public interface FileManagerService extends IService<FileManager> {
 
     /**
      * 查询指定路径
+     *
      * @param path
      * @return
      */
@@ -67,6 +68,7 @@ public interface FileManagerService extends IService<FileManager> {
 
     /**
      * 根据路径删除
+     *
      * @param path
      * @return
      */
@@ -74,9 +76,10 @@ public interface FileManagerService extends IService<FileManager> {
 
 
     /**
-     * 根据parentId获取当前文件
+     * 根据parentId分页获取
+     *
      * @param parentId
      * @return
      */
-    List<FileManager> getParentIdPath(String parentId);
+    ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId);
 }

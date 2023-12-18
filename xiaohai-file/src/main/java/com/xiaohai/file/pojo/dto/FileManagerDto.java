@@ -38,8 +38,17 @@ public class FileManagerDto implements Serializable {
     private Integer fileType;
 
     @Schema(description = "文件大小")
-    private Integer fileSize;
+    private String fileSize;
 
-    @Schema(description = "文件内容哈希")
-    private String fileHash;
+    @Schema(description = "创建人", example = "创建人")
+    private Integer createdBy;
+
+    @Schema(description = "创建时间")
+    private LocalDateTime createdTime;
+
+    @Schema(description = "更新人", example = "更新人")
+    private Integer updatedBy;
+
+    @Schema(description = "更新时间")
+    private LocalDateTime updatedTime;
 }

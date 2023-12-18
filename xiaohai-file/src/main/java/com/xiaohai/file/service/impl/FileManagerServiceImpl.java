@@ -2,6 +2,7 @@ package com.xiaohai.file.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.dao.FileManagerMapper;
 import com.xiaohai.file.service.FileManagerService;
@@ -84,7 +85,18 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     }
 
     @Override
-    public List<FileManager> getParentIdPath(String parentId) {
-        return baseMapper.selectList(new LambdaQueryWrapper<FileManager>().like(FileManager::getParentId, parentId));
+    public ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId) {
+        IPage<FileManager> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
+        IPage<FileManager> iPage = baseMapper.selectPage(wherePage, new LambdaQueryWrapper<FileManager>().like(FileManager::getParentId, parentId));
+        List<FileManagerDto> list = new ArrayList<>();
+        for (FileManager fileManagers : iPage.getRecords()) {
+            FileManagerDto fileManagerDto = new FileManagerDto();
+            BeanUtils.copyProperties(fileManagers, fileManagerDto);
+            fileManagerDto.setFileSize(FileUtils.formatFileSize(fileManagers.getFileSize()));
+            list.add(fileManagerDto);
+        }
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, list);
     }
 }

@@ -1,6 +1,8 @@
 package com.xiaohai.file.service;
 
+import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.file.pojo.dto.FileDto;
+import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,7 +75,7 @@ public interface FileService {
      *
      * @return
      */
-    List<FileMarkdownDto> getMarkdownImage();
+    ReturnPageData<FileManagerDto> getMarkdownImageListByPage();
 
     /**
      * 删除文件

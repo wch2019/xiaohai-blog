@@ -2,7 +2,9 @@ package com.xiaohai.file.controller;
 
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.file.pojo.dto.FileDto;
+import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileService;
@@ -61,9 +63,11 @@ public class FileController {
         return Response.success("获取文件列表成功！", fileService.getPathList(path));
     }
     @Operation(summary = "markdown图片列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Parameter(name = "pageNum", description = "页码", required = true)
+    @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping(value = "/markdownImage")
-    public Response<List<FileMarkdownDto>> getMarkdownImage() {
-        return Response.success("获取markdown图片列表成功！", fileService.getMarkdownImage());
+    public  Response<ReturnPageData<FileManagerDto>> getMarkdownImageListByPage() {
+        return Response.success("获取markdown图片列表成功！", fileService.getMarkdownImageListByPage());
     }
     @Operation(summary = "文件删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "path", description = "路径", required = true)
