@@ -305,12 +305,12 @@ public class FileServiceImpl implements FileService {
     @Override
     public ReturnPageData<FileManagerDto> getMarkdownImageListByPage() {
         // 指定文件夹路径
-        String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
-        FileManager fileManager=fileManagerService.findByPath(folderPath.replace(fileConfig.getProfile(), File.separator));
+        String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE;
+        FileManager fileManager=fileManagerService.findByPath(FileUtils.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
         if(fileManager==null){
             return new ReturnPageData<>();
         }
-        return  fileManagerService.getParentIdPath(fileManager.getParentId());
+        return  fileManagerService.getParentIdPath(fileManager.getId());
 //        File folder = new File(folderPath);
 //        if (folder.isDirectory()) {
 //            File[] files = folder.listFiles();
