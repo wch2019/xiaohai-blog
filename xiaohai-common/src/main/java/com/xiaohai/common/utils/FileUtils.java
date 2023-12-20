@@ -451,6 +451,21 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             return "";
         }
     }
+
+    /**
+     * 使用replace方法将正斜杠替换为系统兼容的斜杠
+     * @param filePath
+     * @return
+     */
+    public static String systemFilePath(String filePath) {
+        if (filePath != null) {
+            // 使用replace方法将正斜杠替换为File.separator
+            return filePath.replace("/", File.separator);
+        } else {
+            // 如果输入为null，可以根据需要返回空字符串或者抛出异常
+            return "";
+        }
+    }
     public static void main(String[] args) throws Exception {
         String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
         String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";

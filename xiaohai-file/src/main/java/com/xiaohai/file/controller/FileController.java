@@ -73,6 +73,6 @@ public class FileController {
     @Parameter(name = "path", description = "路径", required = true)
     @DeleteMapping()
     public Response<Integer> deletePath(String path) {
-        return Response.success("获取文件列表成功！", fileService.deletePath(path));
+        return Response.success("删除成功！", fileService.deletePath(path));
     }
 }

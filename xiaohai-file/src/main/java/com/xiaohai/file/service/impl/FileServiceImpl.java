@@ -63,7 +63,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadLogo(MultipartFile file) {
-        String path = fileConfig.getFilePath() + FileConstants.SYSTEM_FILE;
+        String path = fileConfig.getProfile() + FileConstants.SYSTEM_FILE;
         //计算hash
         String hash = FileUtils.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
@@ -144,7 +144,7 @@ public class FileServiceImpl implements FileService {
         log.info("保存图片--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
-        FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
+        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
         fileManagerVo.setParentId(manager.getId());
         fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
         fileManagerVo.setFileName(fileName);
@@ -189,7 +189,7 @@ public class FileServiceImpl implements FileService {
         log.info("保存文件--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
-        FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
+        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
         fileManagerVo.setParentId(manager.getId());
         fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
         fileManagerVo.setFileName(fileName);
@@ -228,13 +228,13 @@ public class FileServiceImpl implements FileService {
 
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, FileConstants.LOGO, file);
-        filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
+        filePath = filePath.replace(fileConfig.getProfile(), File.separator );
         log.info("保存图片--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
-        FileManager fileManager = fileManagerService.findByPath(filePath);
+        FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(filePath));
         if (fileManager == null) {
             //查询父类
-            FileManager manager = fileManagerService.findByPath(path.replace(fileConfig.getProfile(), File.separator));
+            FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
             fileManagerVo.setParentId(manager.getId());
             fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
             fileManagerVo.setFileName(FileConstants.LOGO);
@@ -337,10 +337,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Integer deletePath(String path) {
-        path = fileConfig.getProfile() + path;
-        boolean isTrue = FileUtils.deleteFile(path);
+        String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + path);
+        boolean isTrue = FileUtils.deleteFile(pathFile);
         Assert.isTrue(isTrue, "当前路径:" + path + ",删除失败");
-        path = path.replace(fileConfig.getProfile(), File.separator);
         return fileManagerService.deletePath(path);
     }
 
@@ -367,15 +366,15 @@ public class FileServiceImpl implements FileService {
         StringBuilder parent = new StringBuilder();
         for (String patch : listPatch) {
             parent.append(File.separator).append(patch);
-            FileManager manager = fileManagerService.findByPath(parent.toString());
+            FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(parent.toString()));
             if (manager == null) {
                 FileManagerVo fileManagerVo = new FileManagerVo();
                 //当前文件夹不存在，查询有没有父类文件夹
                 if (StringUtils.isNotBlank(parentPath.toString())) {
-                    manager = fileManagerService.findByPath(parentPath.toString());
+                    manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(parentPath.toString()));
                     fileManagerVo.setParentId(manager.getId());
                 }
-                fileManagerVo.setFilePath(parent.toString());
+                fileManagerVo.setFilePath(FileUtils.normalizeFilePath(parent.toString()));
                 fileManagerVo.setFileName(patch);
                 fileManagerVo.setFileType(1);
                 fileManagerService.add(fileManagerVo);
