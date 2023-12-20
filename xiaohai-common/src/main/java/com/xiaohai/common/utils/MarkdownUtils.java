@@ -44,7 +44,6 @@ public class MarkdownUtils {
 
             // 逐行读取文件内容
             while ((line = reader.readLine()) != null) {
-                line = line.trim();
 
                 if (line.equals("---")) {
                     frontMatterCount++;
@@ -344,13 +343,13 @@ public class MarkdownUtils {
     public static void main(String[] args) {
         //        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/16841138028.jpg)![1](https://raw.githubusercontent.com/xiaohai-store/notes-img/main/1.png)";
         //        System.out.println(photoList(markdown));
-        //        String filePath = "C:\\Users\\Code01\\Desktop\\新建文件夹\\note\\Chrome书签手动同步方法.md";
-        //        Map<String, Object> postData = parseHexoPost(filePath);
-        //
-        //        // 打印博文数据
-        //        for (Map.Entry<String, Object> entry : postData.entrySet()) {
-        //            System.out.println(entry.getKey() + ": " + entry.getValue());
-        //        }
+        String filePath = "Y:\\files\\blog\\dev\\files\\1\\markdown\\temporary\\0b0329b2d35642f68f19d76cb50dfdce\\note\\Java针对MultipartFile上传图片获取宽、高.md";
+        Map<String, Object> postData = parseHexoPost(filePath);
+
+        // 打印博文数据
+        for (Map.Entry<String, Object> entry : postData.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
         String title = "Java单文件下载与打包zip文件下载";
         List<String> tags = List.of("Java", "SpringBoot");
         String categories = "Java技术";
