@@ -37,10 +37,10 @@ export function uploadImage(data) {
   })
 }
 
-// markdown图片上传
-export function delImage(data) {
+//文件删除
+export function delFile(data) {
   return request({
-    url: api + '/image',
+    url: api,
     method: 'delete',
     params: { path: data }
   })

@@ -139,7 +139,7 @@
 
 <script>
 import { addArticle, updateArticle, getBingWallpaper, getArticle } from '@/api/note/article'
-import { delImage, uploadImage } from '@/api/file/file'
+import {delFile, uploadImage} from '@/api/file/file'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 import { markdownImageFile } from '@/utils'
@@ -262,9 +262,9 @@ export default {
     },
     // 删除图片
     imgDel(filename) {
-      const name = filename[0].split('/')
-      console.log(name[name.length - 1])
-      delImage(name[name.length - 1]).then(response => {
+      const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE,"")
+      console.log(name)
+      delFile(name).then(response => {
         this.$message.success(response.msg)
       })
     },

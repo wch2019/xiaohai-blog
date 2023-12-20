@@ -235,7 +235,7 @@
 
 <script>
 import { getConfig, addConfig, updateConfig } from '@/api/system/config'
-import { uploadImage, delImage } from '@/api/file/file'
+import { uploadImage, delFile } from '@/api/file/file'
 import uploadImg from '@/components/uploadImg'
 import { marked } from 'marked'
 import 'github-markdown-css'
@@ -290,9 +290,9 @@ export default {
     },
     // 删除图片
     imgDel(filename) {
-      const name = filename[0].split('/')
-      console.log(name[name.length - 1])
-      delImage(name[name.length - 1]).then(response => {
+      const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE,"")
+      console.log(name)
+      delFile(name).then(response => {
         this.$message.success(response.msg)
       })
     },
