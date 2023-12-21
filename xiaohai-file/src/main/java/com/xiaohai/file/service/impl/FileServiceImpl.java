@@ -88,14 +88,14 @@ public class FileServiceImpl implements FileService {
         return addFileImage(path, file, hash);
     }
 
-    @Override
-    public Integer deleteImage(String pathName) {
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + pathName;
-        boolean isTrue = FileUtils.deleteFile(path);
-        Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
-        path = path.replace(fileConfig.getProfile(), File.separator);
-        return fileManagerService.deletePath(path);
-    }
+//    @Override
+//    public Integer deleteImage(String pathName) {
+//        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + pathName;
+//        boolean isTrue = FileUtils.deleteFile(path);
+//        Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
+//        path = path.replace(fileConfig.getProfile(), File.separator);
+//        return fileManagerService.deletePath(path);
+//    }
 
     @Override
     public String uploadBing(MultipartFile file, String path, String fileName) {
@@ -244,6 +244,7 @@ public class FileServiceImpl implements FileService {
             fileManagerService.add(fileManagerVo);
         } else {
             fileManagerVo.setId(fileManager.getId());
+            fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
             fileManagerVo.setFileSize((int) file.getSize());
             fileManagerVo.setFileHash(hash);
             fileManagerService.updateData(fileManagerVo);

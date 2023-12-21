@@ -45,12 +45,12 @@ public class FileController {
     public Response<String> uploadImage(MultipartFile file) {
         return Response.success("图片上传成功！", fileService.uploadImage(file));
     }
-    @Operation(summary = "markdown图片删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "path", description = "图片名称", required = true)
-    @DeleteMapping(value = "/image")
-    public Response<Integer> deleteImage(String path) {
-        return Response.success("图片删除成功！", fileService.deleteImage(path));
-    }
+//    @Operation(summary = "markdown图片删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+//    @Parameter(name = "path", description = "图片名称", required = true)
+//    @DeleteMapping(value = "/image")
+//    public Response<Integer> deleteImage(String path) {
+//        return Response.success("图片删除成功！", fileService.deleteImage(path));
+//    }
     @Operation(summary = "文件上传", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<String> upload(@ModelAttribute UploadVo vo) {

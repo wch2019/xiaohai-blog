@@ -38,13 +38,13 @@ public interface FileService {
      */
     String uploadImage(MultipartFile file);
 
-    /**
-     * markdown图片删除
-     *
-     * @param path
-     * @return
-     */
-    Integer deleteImage(String path);
+//    /**
+//     * markdown图片删除
+//     *
+//     * @param path
+//     * @return
+//     */
+//    Integer deleteImage(String path);
 
     /**
      * Bing图片上传
