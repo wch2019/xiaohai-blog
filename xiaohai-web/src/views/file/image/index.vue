@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card class="box-card">
       <div v-if="fileList.length === 0">
-        <el-empty :image-size="200"/>
+        <el-empty :image-size="200" />
       </div>
       <el-row :gutter="5">
         <el-col
@@ -13,7 +13,7 @@
         >
           <el-button type="text" @click="dialog(o)">
             <el-card shadow="hover" :body-style="{ padding: '0px'}">
-              <el-image v-if="o.suffix" fit="cover" :src="o.filePath" class="image"/>
+              <el-image v-if="o.suffix" fit="cover" :src="o.filePath" class="image" />
               <el-tooltip :content="o.fileName" placement="top">
                 <div style="padding: 14px;">
                   <span>{{ stateFormat(o.fileName) }}</span>
@@ -47,30 +47,36 @@
         <div style="width:45%;margin-left: 5%">
           <h4>名称：</h4>
           <span class="title">{{ fileDocument.fileName }}</span>
-          <el-divider/>
+          <el-divider />
           <h4>类型：</h4>
           <span class="title">{{ fileDocument.suffix }}</span>
-          <el-divider/>
+          <el-divider />
           <h4>上传日期：</h4>
           <span class="title">{{ fileDocument.createdTime }}</span>
 
-          <el-divider/>
+          <el-divider />
           <h4>文件大小：</h4>
           <span class="title">{{ fileDocument.fileSize }}</span>
-          <el-divider/>
+          <el-divider />
           <h4>普通链接：
-            <el-button class="el-icon-document-copy" type="text" @click="copy(fileDocument.filePath)"></el-button>
+            <el-button class="el-icon-document-copy" type="text" @click="copy(fileDocument.filePath)" />
           </h4>
-          <el-link :underline="false" type="primary" class="title" style="color: #409eff;" target="_blank"
-                   :href="fileDocument.filePath">
+          <el-link
+            :underline="false"
+            type="primary"
+            class="title"
+            style="color: #409eff;"
+            target="_blank"
+            :href="fileDocument.filePath"
+          >
             {{ fileDocument.filePath }}
           </el-link>
-          <el-divider/>
+          <el-divider />
           <h4>Markdown 格式：
-            <el-button class="el-icon-document-copy" type="text" @click="copy(getMarkdown(fileDocument.fileName, fileDocument.filePath))"></el-button>
+            <el-button class="el-icon-document-copy" type="text" @click="copy(getMarkdown(fileDocument.fileName, fileDocument.filePath))" />
           </h4>
           <span class="title">{{ getMarkdown(fileDocument.fileName, fileDocument.filePath) }}</span>
-          <el-divider/>
+          <el-divider />
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -82,8 +88,8 @@
 </template>
 
 <script>
-import {markdownImage} from '@/api/file/file'
-import {getFileExtension, getFileAddress, getMarkdownAddress} from '@/utils/common';
+import { markdownImage } from '@/api/file/file'
+import { getFileExtension, getFileAddress, getMarkdownAddress } from '@/utils/common'
 
 export default {
   name: 'Index',
@@ -100,7 +106,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10
-      },
+      }
     }
   },
   created() {
@@ -133,7 +139,7 @@ export default {
     // 验证是否是图片类型
     picture(name) {
       const acceptedImageTypes = ['jpeg', 'png', 'gif', 'bmp', 'jpg']
-      return !(acceptedImageTypes.indexOf(name) === -1);
+      return !(acceptedImageTypes.indexOf(name) === -1)
     },
     // 弹出窗
     dialog(o) {
@@ -144,7 +150,7 @@ export default {
         this.dialogVisible = true
       }
     },
-    //Markdown路径
+    // Markdown路径
     getMarkdown(name, path) {
       return getMarkdownAddress(name, path)
     },

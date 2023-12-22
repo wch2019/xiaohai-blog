@@ -84,4 +84,12 @@ public interface FileService {
      * @return
      */
     Integer deletePath(String path);
+
+    /**
+     * 将图片复制到指定位置并重命名
+     * @param sourcePath 文件
+     * @param newPath    新位置
+     * @return
+     */
+    String getCopyImage(String sourcePath, String newPath);
 }

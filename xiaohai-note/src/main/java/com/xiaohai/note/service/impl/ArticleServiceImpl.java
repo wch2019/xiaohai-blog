@@ -369,7 +369,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 throw new ServiceException("没有可用markdown文件");
             }
             //图片文件新存放处
-            String newPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
+            String newPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE;
 
             for (String mdFilePath : list) {
                 //获取markdown解析文件
@@ -388,12 +388,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                                 //封面
                                 article.setCover(entry.getValue().toString());
                             } else {
-                                //新图片位置
-                                String newPhotoPath = MarkdownUtils.copyImage(path + entry.getValue().toString().replace("..", ""), newPath);
-                                //去掉前缀
-                                newPhotoPath = File.separator + newPhotoPath.replace(fileConfig.getProfile(), "");
+                                String sourcePath = path + entry.getValue().toString().replace("..", "");
                                 //封面
-                                article.setCover(newPhotoPath.replace("\\", "/"));
+                                article.setCover(fileService.getCopyImage(sourcePath, newPath));
                             }
                         }
                     }
@@ -420,11 +417,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                             article.setText(entry.getValue().toString());
                             List<String> photoList = MarkdownUtils.photoList(article.getText());
                             for (String fileName : photoList) {
+                                String sourcePath = path + fileName.replace("..", "");
                                 //新图片位置
-                                String newPhotoPath = MarkdownUtils.copyImage(path + fileName.replace("..", ""), newPath);
-                                //去掉前缀
-                                newPhotoPath = ".." + File.separator + newPhotoPath.replace(fileConfig.getProfile(), "");
-                                article.setText(article.getText().replaceAll(fileName, newPhotoPath.replace("\\", "/")));
+                                String newPhotoPath = ".." + fileService.getCopyImage(sourcePath, newPath);
+                                article.setText(article.getText().replaceAll(fileName, newPhotoPath));
                             }
                             article.setSummary(MarkdownUtils.truncateText(article.getText(), 255));
                         }

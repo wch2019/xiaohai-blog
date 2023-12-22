@@ -7,11 +7,11 @@ import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
+import com.xiaohai.common.utils.MarkdownUtils;
 import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.file.dao.FileManagerMapper;
 import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
-import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.vo.UploadVo;
@@ -228,7 +228,7 @@ public class FileServiceImpl implements FileService {
 
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, FileConstants.LOGO, file);
-        filePath = filePath.replace(fileConfig.getProfile(), File.separator );
+        filePath = filePath.replace(fileConfig.getProfile(), File.separator);
         log.info("保存图片--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
         FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(filePath));
@@ -307,11 +307,11 @@ public class FileServiceImpl implements FileService {
     public ReturnPageData<FileManagerDto> getMarkdownImageListByPage() {
         // 指定文件夹路径
         String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE;
-        FileManager fileManager=fileManagerService.findByPath(FileUtils.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
-        if(fileManager==null){
+        FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
+        if (fileManager == null) {
             return new ReturnPageData<>();
         }
-        return  fileManagerService.getParentIdPath(fileManager.getId());
+        return fileManagerService.getParentIdPath(fileManager.getId());
 //        File folder = new File(folderPath);
 //        if (folder.isDirectory()) {
 //            File[] files = folder.listFiles();
@@ -383,6 +383,33 @@ public class FileServiceImpl implements FileService {
             parentPath.append(File.separator).append(patch);
         }
         return null;
+    }
+
+    @Override
+    public String getCopyImage(String sourcePath, String newPath) {
+        //计算hash
+        String hash = FileUtils.extractChecksum(sourcePath, SHA_256);
+        //验证是否存在当前文件
+        String url = getFile(newPath, hash);
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        }
+        //新图片位置
+        String filePath = MarkdownUtils.copyImage(sourcePath, newPath);
+        File file = new File(filePath);
+        //去掉前缀
+        filePath = filePath.replace(fileConfig.getProfile(), File.separator);
+        FileManagerVo fileManagerVo = new FileManagerVo();
+        //查询父类
+        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(newPath.replace(fileConfig.getProfile(), File.separator)));
+        fileManagerVo.setParentId(manager.getId());
+        fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
+        fileManagerVo.setFileName(file.getName());
+        fileManagerVo.setFileSize((int) file.length());
+        fileManagerVo.setFileHash(hash);
+        fileManagerVo.setFileType(0);
+        fileManagerService.add(fileManagerVo);
+        return fileManagerVo.getFilePath();
     }
 
 }
