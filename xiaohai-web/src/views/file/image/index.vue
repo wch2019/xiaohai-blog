@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-card class="box-card">
+      <el-button
+        v-if="$store.getters.permission.includes('note:article:import')"
+        type="success"
+        plain
+        icon="el-icon-upload"
+        size="mini"
+        @click="handleImport"
+      >上传
+      </el-button>
       <div v-if="fileList.length === 0">
         <el-empty :image-size="200" />
       </div>
@@ -84,15 +93,18 @@
         <el-button type="primary" @click="dialog('')">确 定</el-button>
       </span>
     </el-dialog>
+    <image-upload v-if="imageUpload.show" :image-upload="imageUpload" @getList="getList" />
   </div>
 </template>
 
 <script>
-import { markdownImage } from '@/api/file/file'
+import { markdownImage, delFileIds } from '@/api/file/file'
 import { getFileExtension, getFileAddress, getMarkdownAddress } from '@/utils/common'
+import ImageUpload from '@/views/file/image/components/imageUpload.vue'
 
 export default {
   name: 'Index',
+  components: { ImageUpload },
   data() {
     return {
       // 总条数
@@ -106,6 +118,9 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10
+      },
+      imageUpload: {
+        show: false
       }
     }
   },
@@ -161,6 +176,10 @@ export default {
       }).catch(() => {
         this.$message.error('复制失败')
       })
+    },
+    // 导入
+    handleImport() {
+      this.imageUpload.show = true
     }
   }
 }

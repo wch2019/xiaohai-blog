@@ -5,8 +5,8 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
-import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
+import com.xiaohai.file.service.FileManagerService;
 import com.xiaohai.file.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,6 +30,8 @@ import java.util.List;
 public class FileController {
 
     private final FileService fileService;
+
+    private final FileManagerService fileManagerService;
     @Operation(summary = "头像上传", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping(value = "/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<String> uploadAvatar(MultipartFile avatarFile) {
@@ -45,12 +47,6 @@ public class FileController {
     public Response<String> uploadImage(MultipartFile file) {
         return Response.success("图片上传成功！", fileService.uploadImage(file));
     }
-//    @Operation(summary = "markdown图片删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-//    @Parameter(name = "path", description = "图片名称", required = true)
-//    @DeleteMapping(value = "/image")
-//    public Response<Integer> deleteImage(String path) {
-//        return Response.success("图片删除成功！", fileService.deleteImage(path));
-//    }
     @Operation(summary = "文件上传", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<String> upload(@ModelAttribute UploadVo vo) {
@@ -74,5 +70,12 @@ public class FileController {
     @DeleteMapping()
     public Response<Integer> deletePath(String path) {
         return Response.success("删除成功！", fileService.deletePath(path));
+    }
+
+    @Operation(summary = "文件删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Parameter(name = "path", description = "路径", required = true)
+    @DeleteMapping("{ids}")
+    public Response<Integer> deleteFile(@PathVariable Long[] ids) {
+        return Response.success("删除成功！", fileManagerService.deleteFile(ids));
     }
 }

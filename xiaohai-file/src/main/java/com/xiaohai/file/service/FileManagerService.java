@@ -32,7 +32,7 @@ public interface FileManagerService extends IService<FileManager> {
      * @param ids 主键
      * @return Integer
      */
-    Integer delete(Long[] ids);
+    Integer deleteFile(Long[] ids);
 
     /**
      * 修改文件管理

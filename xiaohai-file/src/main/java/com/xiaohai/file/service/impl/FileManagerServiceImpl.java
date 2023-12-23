@@ -1,6 +1,7 @@
 package com.xiaohai.file.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.file.pojo.entity.FileManager;
@@ -12,11 +13,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xiaohai.common.utils.PageUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 import com.xiaohai.file.pojo.query.FileManagerQuery;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +33,11 @@ import java.util.List;
  * @since 2023-12-09
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileManager> implements FileManagerService {
+
+    private final FileConfig fileConfig;
 
     @Override
     public Integer add(FileManagerVo vo) {
@@ -38,8 +47,13 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     }
 
     @Override
-    public Integer delete(Long[] ids) {
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteFile(Long[] ids) {
         for (Long id : ids) {
+            FileManager fileManager = baseMapper.selectById(id);
+            String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + fileManager.getFilePath());
+            boolean isTrue = FileUtils.deleteFile(pathFile);
+            Assert.isTrue(isTrue, "当前路径:" + fileManager.getFilePath() + ",删除失败");
             baseMapper.deleteById(id);
         }
         return ids.length;
