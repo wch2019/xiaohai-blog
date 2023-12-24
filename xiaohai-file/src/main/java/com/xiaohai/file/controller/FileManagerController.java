@@ -40,12 +40,6 @@ public class FileManagerController {
         return  Response.success("新增文件管理成功！", fileManagerService.add(vo));
     }
 
-    @Operation(summary = "删除文件管理",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @DeleteMapping("{ids}")
-    public Response<Integer> delete(@PathVariable Long[] ids){
-        return  Response.success("删除文件管理成功！",fileManagerService.delete(ids));
-    }
-
     @Operation(summary = "更新文件管理",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PutMapping()
     public Response<Integer> update(@RequestBody FileManagerVo vo){
