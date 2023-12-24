@@ -37,11 +37,18 @@ export function uploadImage(data) {
   })
 }
 
-//文件删除
+// 文件删除
 export function delFile(data) {
   return request({
     url: api,
     method: 'delete',
     params: { path: data }
+  })
+}
+// 文件删除id
+export function delFileIds(data) {
+  return request({
+    url: api + '/' + data,
+    method: 'delete'
   })
 }

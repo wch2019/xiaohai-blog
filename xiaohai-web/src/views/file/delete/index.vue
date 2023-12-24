@@ -15,7 +15,7 @@
             <div style="padding: 14px;">
               <span>好吃的汉堡</span>
               <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
+                <time class="time">{{ 12344 }}</time>
                 <el-button type="text" class="button">操作按钮</el-button>
               </div>
             </div>
