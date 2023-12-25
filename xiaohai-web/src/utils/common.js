@@ -17,3 +17,25 @@ export function getFileAddress(inputValue) {
 export function getMarkdownAddress(fileName, filePath) {
   return '![' + fileName + '](' + filePath + ')'
 }
+
+export function createFileDownload(filename, content) {
+  const blob = new Blob([content], { type: 'application/octet-stream' })
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.style.display = 'none'
+  a.href = url
+  a.download = filename // 设置文件名
+  document.body.appendChild(a)
+  a.click()
+  window.URL.revokeObjectURL(url)
+}
+
+export function downloadFile(filename, fileURL) {
+  const link = document.createElement('a')
+  link.style.display = 'none'
+  link.href = fileURL
+  link.download = filename // 设置文件名
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
