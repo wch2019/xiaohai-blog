@@ -52,15 +52,14 @@ export default {
           <h4>名称：</h4>
           <span class="title">{{ fileDocument.fileName }}</span>
           <el-divider />
-          <h4>类型：</h4>
-          <span class="title">{{ fileDocument.suffix }}</span>
+          <h4>文件大小：</h4>
+          <span class="title">{{ fileDocument.fileSize }}</span>
           <el-divider />
           <h4>上传日期：</h4>
           <span class="title">{{ fileDocument.createdTime }}</span>
-
           <el-divider />
-          <h4>文件大小：</h4>
-          <span class="title">{{ fileDocument.fileSize }}</span>
+          <h4>更新日期：</h4>
+          <span class="title">{{ fileDocument.updatedTime }}</span>
           <el-divider />
           <h4>普通链接：
             <el-button class="el-icon-document-copy" type="text" @click="copy(fileDocument.filePath)" />
@@ -92,5 +91,18 @@ export default {
 </template>
 
 <style scoped>
+el-divider {
+  margin: 0;
+}
 
+h4 {
+  margin: 14px 0;
+}
+
+::v-deep .el-divider--horizontal {
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin: 15px 0;
+}
 </style>
