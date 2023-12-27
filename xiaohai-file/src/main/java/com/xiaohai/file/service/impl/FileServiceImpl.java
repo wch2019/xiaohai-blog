@@ -277,30 +277,41 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<FileDto> getPathList(String path) {
-        List<FileDto> list = new ArrayList<>();
+    public ReturnPageData<FileManagerDto> getPathList(String path) {
+        if(org.apache.commons.lang3.StringUtils.isBlank(path)){
+            return fileManagerService.getParentIdPath(0);
+        }
         // 指定文件夹路径
         String folderPath = fileConfig.getProfile() + path;
-        File folder = new File(folderPath);
-        if (folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            for (File file : files) {
-                FileDto fileDto = new FileDto();
-                fileDto.setNameSuffix("");
-                fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
-                fileDto.setPath(fileDto.getPath().replace("\\", "/"));
-                if (!file.isDirectory()) {
-                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
-                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
-                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
-                }
-                fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
-                fileDto.setName(file.getName());
-                list.add(fileDto);
-            }
+        FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
+        if (fileManager == null) {
+            return new ReturnPageData<>();
         }
+        return fileManagerService.getParentIdPath(fileManager.getId());
 
-        return list.stream().sorted(Comparator.comparing(FileDto::getNameSuffix)).toList();
+//        List<FileDto> list = new ArrayList<>();
+//        // 指定文件夹路径
+//        String folderPath = fileConfig.getProfile() + path;
+//        File folder = new File(folderPath);
+//        if (folder.isDirectory()) {
+//            File[] files = folder.listFiles();
+//            for (File file : files) {
+//                FileDto fileDto = new FileDto();
+//                fileDto.setNameSuffix("");
+//                fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
+//                fileDto.setPath(fileDto.getPath().replace("\\", "/"));
+//                if (!file.isDirectory()) {
+//                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
+//                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
+//                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
+//                }
+//                fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
+//                fileDto.setName(file.getName());
+//                list.add(fileDto);
+//            }
+//        }
+//
+//        return list.stream().sorted(Comparator.comparing(FileDto::getNameSuffix)).toList();
     }
 
     @Override
@@ -312,6 +323,7 @@ public class FileServiceImpl implements FileService {
             return new ReturnPageData<>();
         }
         return fileManagerService.getParentIdPath(fileManager.getId());
+
 //        File folder = new File(folderPath);
 //        if (folder.isDirectory()) {
 //            File[] files = folder.listFiles();

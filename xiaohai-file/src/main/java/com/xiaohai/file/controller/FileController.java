@@ -5,6 +5,7 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
+import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileManagerService;
 import com.xiaohai.file.service.FileService;
@@ -55,7 +56,7 @@ public class FileController {
     @Operation(summary = "文件列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "path", description = "路径", required = false)
     @GetMapping()
-    public Response<List<FileDto>> getPathList(String path) {
+    public Response<ReturnPageData<FileManagerDto>> getPathList(String path) {
         return Response.success("获取文件列表成功！", fileService.getPathList(path));
     }
     @Operation(summary = "markdown图片列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -71,11 +72,14 @@ public class FileController {
     public Response<Integer> deletePath(String path) {
         return Response.success("删除成功！", fileService.deletePath(path));
     }
-
-    @Operation(summary = "文件删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "path", description = "路径", required = true)
+    @Operation(summary = "根据id删除文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @DeleteMapping("{ids}")
     public Response<Integer> deleteFile(@PathVariable Long[] ids) {
         return Response.success("删除成功！", fileManagerService.deleteFile(ids));
+    }
+    @Operation(summary = "更新文件管理",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @PutMapping()
+    public Response<Integer> update(@RequestBody FileManagerVo vo){
+        return  Response.success("更新文件管理成功！",fileManagerService.updateData(vo));
     }
 }

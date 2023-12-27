@@ -46,7 +46,7 @@ export function delFile(data) {
     params: { path: data }
   })
 }
-// 文件删除id
+// 根据id删除文件
 export function delFileIds(data) {
   return request({
     url: api + '/' + data,

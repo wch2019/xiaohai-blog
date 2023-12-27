@@ -68,7 +68,7 @@ public interface FileService {
      * @param path
      * @return
      */
-    List<FileDto> getPathList(String path);
+    ReturnPageData<FileManagerDto> getPathList(String path);
 
     /**
      * markdown图片列表

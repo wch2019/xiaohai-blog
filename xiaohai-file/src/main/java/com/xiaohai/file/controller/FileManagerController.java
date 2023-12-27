@@ -40,12 +40,6 @@ public class FileManagerController {
         return  Response.success("新增文件管理成功！", fileManagerService.add(vo));
     }
 
-    @Operation(summary = "更新文件管理",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @PutMapping()
-    public Response<Integer> update(@RequestBody FileManagerVo vo){
-        return  Response.success("更新文件管理成功！",fileManagerService.updateData(vo));
-    }
-
     @Operation(summary = "查询文件管理列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
