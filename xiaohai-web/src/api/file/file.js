@@ -53,3 +53,19 @@ export function delFileIds(data) {
     method: 'delete'
   })
 }
+// 重命名文件
+export function renameFile(data) {
+  return request({
+    url: api + '/renameFile',
+    method: 'put',
+    data
+  })
+}
+// 新建文件夹
+export function newFolder(data) {
+  return request({
+    url: api + '/newFolder',
+    method: 'post',
+    data
+  })
+}

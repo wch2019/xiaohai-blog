@@ -2,28 +2,30 @@
   <div class="app-container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <div style="padding: 3px 0;float: right;">
-          <el-radio-group v-model="form.path" size="medium" @change="getList">
-            <el-radio-button label="/">全部</el-radio-button>
-            <el-radio-button label="/image/">图片</el-radio-button>
-            <el-radio-button label="/system/">系统</el-radio-button>
-          </el-radio-group>
-        </div>
+<!--        <div style="padding: 3px 0;float: right;">-->
+<!--          <el-radio-group v-model="form.path" size="medium" @change="getList">-->
+<!--            <el-radio-button label="">全部</el-radio-button>-->
+<!--            <el-radio-button label="/image">图片</el-radio-button>-->
+<!--            <el-radio-button label="/system">系统</el-radio-button>-->
+<!--          </el-radio-group>-->
+<!--        </div>-->
         <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />
       </div>
-      <el-table :data="fileList" style="width: 100%" @row-dblclick="handle">
-        <el-table-column prop="name" label="名称">
+      <el-table :data="fileList" style="width: 100%" @row-dblclick="handle"  height="250">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column prop="fileName" label="名称">
           <template slot-scope="scope">
-            <i v-if="!scope.row.nameSuffix" class="el-icon-folder-opened" />
-            <i v-else-if="picture(scope.row.nameSuffix)" class="el-icon-picture" />
+            <i v-if="!scope.row.suffix" class="el-icon-folder-opened" />
+            <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
             <i v-else class="el-icon-document" />
-            {{ scope.row.name }}
+            {{ scope.row.fileName }}
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" align="center" width="180" />
-        <el-table-column prop="updateTime" label="更新时间" align="center" width="180" />
-        <el-table-column prop="nameSuffix" label="类型" align="center" width="100" />
-        <el-table-column prop="size" label="文件大小" align="center" width="100" />
+        <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
+        <el-table-column prop="fileSize" label="文件大小" align="center" width="100" />
       </el-table>
       <!--      <div v-if="fileList.length==0">-->
       <!--        空屏展示-->
@@ -37,7 +39,7 @@
       <!--      >-->
       <!--        <el-tooltip :content="o.name" placement="top">-->
       <!--          <el-card :body-style="{ padding: '0px'}">-->
-      <!--            <img v-if="o.nameSuffix" :src="trimmedValue(o.name)" class="image">-->
+      <!--            <img v-if="o.suffix" :src="trimmedValue(o.name)" class="image">-->
       <!--            <img v-else src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">-->
       <!--            <div style="padding: 14px; text-align: center">-->
       <!--              <span>{{ stateFormat(o.name) }}</span>-->
@@ -46,18 +48,25 @@
       <!--        </el-tooltip>-->
       <!--      </el-col>-->
     </el-card>
+
+    <ImageUpload @getList="getList"></ImageUpload>
   </div>
 </template>
 
 <script>
 import { getFile } from '@/api/file/file'
+import {getFileAddress, getFileExtension, VerifyIsPictureType} from "@/utils/common";
+import ImageUpload from "@/views/file/files/components/imageUpload.vue";
 
 export default {
   name: 'Index',
+  components: {ImageUpload},
   data() {
     return {
       form: {
-        path: '/'
+        path: '',
+        pageNum: 1,
+        pageSize: 10
       },
       fileList: [],
       // 预览图片列表
@@ -65,20 +74,22 @@ export default {
     }
   },
   created() {
-    this.getList('/')
+    this.getList('')
   },
   methods: {
     getList(path) {
       this.form.path = path
       getFile(this.form).then(response => {
         this.srcList = []
-        for (let i = 0; i < response.data.length; i++) {
-          if (this.picture(response.data[i].nameSuffix)) {
-            response.data[i].path = process.env.VUE_APP_BASE_API_FILE + response.data[i].path
-            this.srcList.push(response.data[i].path)
+        for (const element of response.data.records) {
+          const suffix = getFileExtension(element.fileName)
+          element.suffix = suffix
+          if (VerifyIsPictureType(suffix)) {
+            element.filePath = getFileAddress(element.filePath)
+            this.srcList.push(element.filePath)
           }
         }
-        this.fileList = response.data
+        this.fileList = response.data.records
       })
     },
     trimmedValue(inputValue) {
@@ -92,23 +103,19 @@ export default {
       }
       return name
     },
-    // 验证是否是图片类型
+    // 验证是否是图片类型 VerifyIsPictureType
     picture(name) {
-      const acceptedImageTypes = ['jpeg', 'png', 'gif', 'bmp', 'jpg']
-      if (acceptedImageTypes.indexOf(name) === -1) {
-        return false
-      }
-      return true
+      return VerifyIsPictureType(name)
     },
     // 双击行
     handle(row, column, event, cell) {
       // 进入目录
-      if (!row.nameSuffix) {
-        this.getList(row.path)
+      if (row.fileType===1) {
+        this.getList(row.filePath)
       }
       // 查看照片
-      if (this.picture(row.nameSuffix)) {
-        this.show(row.path)
+      if (this.picture(row.suffix)) {
+        this.show(row.filePath)
       }
     },
     // 返回上一级

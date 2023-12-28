@@ -1,13 +1,18 @@
 <template>
   <div>
     <div class="fixed-button">
-      <el-button
-        style="width: 56px;height: 56px"
-        type="primary"
-        icon="el-icon-plus"
-        circle
-        @click="handleImport"
-      />
+      <el-dropdown trigger="click">
+        <el-button
+          style="width: 56px;height: 56px"
+          type="primary"
+          icon="el-icon-plus"
+          circle
+        />
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item ><i class="el-icon-upload2"></i>上传</el-dropdown-item>
+          <el-dropdown-item @click.native="addFolder()"><i class="el-icon-folder-add"></i>新建文件夹</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
 
     <el-dialog
@@ -30,7 +35,7 @@
   </div>
 </template>
 <script>
-import { uploadImage } from '@/api/file/file'
+import {newFolder, uploadImage} from '@/api/file/file'
 
 export default {
   name: 'ImageUpload',
@@ -71,6 +76,28 @@ export default {
         this.imageUpload.show = false
         this.$emit('getList')
       })
+    },
+    // 新建文件夹
+    addFolder(path) {
+      this.$prompt('', '重命名', {
+        iconClass:"el-icon-edit",
+        center: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
+        inputErrorMessage: '文件名格式不正确',
+        inputValue: o.fileName.replace(suffix, "")
+      }).then(({value}) => {
+        let data={}
+        newFolder(data).then(response => {
+          this.$message.success(response.msg)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      });
     }
   }
 }

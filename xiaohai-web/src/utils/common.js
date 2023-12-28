@@ -39,3 +39,9 @@ export function downloadFile(filename, fileURL) {
   link.click()
   document.body.removeChild(link)
 }
+
+// 验证是否是图片类型
+export function VerifyIsPictureType(name) {
+  const acceptedImageTypes = ['jpeg', 'png', 'gif', 'bmp', 'jpg']
+  return acceptedImageTypes.indexOf(name) !== -1
+}

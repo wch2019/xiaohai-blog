@@ -72,16 +72,6 @@
 
     </el-row>
 
-    <div class="fixed-button">
-      <el-button
-        v-if="$store.getters.permission.includes('note:article:import')"
-        style="width: 56px;height: 56px"
-        type="primary"
-        icon="el-icon-plus"
-        circle
-        @click="handleImport"
-      />
-    </div>
     <el-alert
       v-show="alertVisible"
       class="alert-button"
@@ -112,14 +102,14 @@
         </el-col>
       </el-row>
     </el-alert>
-    <image-upload v-if="imageUpload.show" :image-upload="imageUpload" @getList="getList"/>
+    <ImageUpload @getList="getList"></ImageUpload>
     <image-details v-if="imageDetails.show" :image-details="imageDetails"/>
   </div>
 </template>
 
 <script>
-import {markdownImage, delFileIds} from '@/api/file/file'
-import {getFileExtension, getFileAddress, downloadFile} from '@/utils/common'
+import {markdownImage, delFileIds,renameFile} from '@/api/file/file'
+import {getFileExtension, getFileAddress, downloadFile, VerifyIsPictureType} from '@/utils/common'
 import ImageUpload from '@/views/file/image/components/imageUpload.vue'
 import ImageDetails from '@/views/file/image/components/imageDetails.vue'
 
@@ -141,9 +131,6 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 6
-      },
-      imageUpload: {
-        show: false
       },
       imageDetails: {
         show: false,
@@ -170,7 +157,7 @@ export default {
         for (const element of response.data.records) {
           const suffix = getFileExtension(element.fileName)
           element.suffix = suffix
-          if (this.picture(suffix)) {
+          if (VerifyIsPictureType(suffix)) {
             element.filePath = getFileAddress(element.filePath)
           }
         }
@@ -190,19 +177,10 @@ export default {
         this.getList()
       }
     },
-    // 验证是否是图片类型
-    picture(name) {
-      const acceptedImageTypes = ['jpeg', 'png', 'gif', 'bmp', 'jpg']
-      return acceptedImageTypes.indexOf(name) !== -1
-    },
     // 弹出窗
     dialog(o) {
       this.imageDetails.fileDocument = o
       this.imageDetails.show = true
-    },
-    // 导入
-    handleImport() {
-      this.imageUpload.show = true
     },
     // 全选
     handleCheckAllChange(val) {
@@ -272,17 +250,22 @@ export default {
       if (o.suffix !== null) {
         suffix = "." + o.suffix
       }
-      this.$prompt('请输入文件名', '重命名', {
+      this.$prompt('', '重命名', {
+        iconClass:"el-icon-edit",
+        center: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
         inputErrorMessage: '文件名格式不正确',
         inputValue: o.fileName.replace(suffix, "")
       }).then(({value}) => {
-        this.$message({
-          type: 'success',
-          message: '你的邮箱是: ' + value + suffix
-        });
+        let data={}
+        data.fileName=value + suffix
+        data.id=o.id
+        renameFile(data).then(response => {
+          this.$message.success(response.msg)
+          o.fileName=data.fileName
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -307,7 +290,7 @@ export default {
 
 /* 设置标题的字体大小为13像素 */
 .title {
-  height: 16px;
+  height: 18px;
   margin: 10px;
   font-size: 16px;
 
@@ -407,14 +390,6 @@ export default {
   display: block;
 }
 
-
-/* 定义右下角按钮容器的样式 */
-.fixed-button {
-  position: fixed; /* 固定定位，使按钮保持在页面右下角 */
-  bottom: 80px; /* 距离底部的距离，根据需要调整 */
-  left: 95%;
-  transform: translateX(-95%);
-}
 
 .alert-button {
   background-color: #909399;
