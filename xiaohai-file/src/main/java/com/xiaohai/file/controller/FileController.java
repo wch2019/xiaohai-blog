@@ -3,9 +3,10 @@ package com.xiaohai.file.controller;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
+import com.xiaohai.file.pojo.vo.FileManagerNameVo;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
+import com.xiaohai.file.pojo.vo.FolderVO;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileManagerService;
 import com.xiaohai.file.service.FileService;
@@ -14,11 +15,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * @author wangchenghai
@@ -77,9 +78,17 @@ public class FileController {
     public Response<Integer> deleteFile(@PathVariable Long[] ids) {
         return Response.success("删除成功！", fileManagerService.deleteFile(ids));
     }
-    @Operation(summary = "更新文件管理",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @PutMapping()
-    public Response<Integer> update(@RequestBody FileManagerVo vo){
-        return  Response.success("更新文件管理成功！",fileManagerService.updateData(vo));
+    @Operation(summary = "重命名文件",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @PutMapping("/renameFile")
+    public Response<Integer> renameFile(@RequestBody @Validated FileManagerNameVo vo){
+        FileManagerVo fileManagerVo=new FileManagerVo();
+        BeanUtils.copyProperties(vo,fileManagerVo);
+        return  Response.success("重命名文件成功！",fileManagerService.updateData(fileManagerVo));
+    }
+    @Operation(summary = "新建文件夹", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @PostMapping(value = "/newFolder")
+    public Response<Integer> newFolder(@RequestBody @Validated FolderVO vo) {
+        fileService.createFolderIfNotExists(vo.getPath());
+        return Response.success("新建文件夹成功！", 1);
     }
 }

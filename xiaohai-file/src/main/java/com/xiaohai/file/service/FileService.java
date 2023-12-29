@@ -86,6 +86,13 @@ public interface FileService {
     Integer deletePath(String path);
 
     /**
+     * 如果文件夹不存在，则创建它，并存入数据库
+     * @param path
+     * @return
+     */
+    void createFolderIfNotExists(String path);
+
+    /**
      * 将图片复制到指定位置并重命名
      * @param sourcePath 文件
      * @param newPath    新位置
