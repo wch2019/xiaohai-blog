@@ -10,12 +10,12 @@
     </el-row>
     <div style="margin-top:10px">
       <div v-if="fileList.length === 0">
-        <el-empty :image-size="200"/>
+        <el-empty :image-size="200" />
       </div>
     </div>
     <el-row
-      :gutter="5"
       v-infinite-scroll="loadMore"
+      :gutter="5"
       infinite-scroll-disabled="loading"
       class="scroll"
     >
@@ -40,19 +40,21 @@
               ><br></el-checkbox>
               <div class="dropdown">
                 <el-dropdown trigger="click">
-                  <span style="width: 20px;background-color: rgba(255,255,255,0.78);border: 1px solid #DCDFE6;"
-                        class="el-dropdown-link">
-                  <i class="el-icon-more"></i>
+                  <span
+                    style="width: 20px;background-color: rgba(255,255,255,0.78);border: 1px solid #DCDFE6;"
+                    class="el-dropdown-link"
+                  >
+                    <i class="el-icon-more" />
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="renameFile(o)">重命名</el-dropdown-item>
                     <el-dropdown-item @click.native="downloadMultipleFiles(o)">下载</el-dropdown-item>
                     <el-dropdown-item @click.native="dialog(o)">查看详情</el-dropdown-item>
-                    <el-dropdown-item @click.native="handleDelete(o)" divided>删除</el-dropdown-item>
+                    <el-dropdown-item divided @click.native="handleDelete(o)">删除</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
-              <el-image v-if="o.suffix" fit="cover" :src="o.filePath" class="image"/>
+              <el-image v-if="o.suffix" fit="cover" :src="o.filePath" class="image" />
               <el-button type="text" @click="dialog(o)">
                 <el-tooltip :content="o.fileName" placement="top">
                   <div>
@@ -66,8 +68,8 @@
         </el-col>
       </el-checkbox-group>
       <el-col>
-        <p v-loading="loading"></p>
-        <p style=" bottom: 0; width: 100%; text-align: center;" v-if="noMore">没有更多了</p>
+        <p v-loading="loading" />
+        <p v-if="noMore" style=" bottom: 0; width: 100%; text-align: center;">没有更多了</p>
       </el-col>
 
     </el-row>
@@ -82,7 +84,7 @@
       <el-row :gutter="8" class="mb8">
         <el-col :span="1.5">
           <el-tooltip class="item" effect="dark" content="下载" placement="top">
-            <el-button type="info" icon="el-icon-download" size="mini" @click="downloadMultipleFiles"/>
+            <el-button type="info" icon="el-icon-download" size="mini" @click="downloadMultipleFiles" />
           </el-tooltip>
         </el-col>
         <el-col :span="1.5">
@@ -91,36 +93,37 @@
             class="item"
             effect="dark"
             content="删除"
-            placement="top">
-            <el-button type="info" icon="el-icon-delete" size="mini" @click="handleDelete"/>
+            placement="top"
+          >
+            <el-button type="info" icon="el-icon-delete" size="mini" @click="handleDelete" />
           </el-tooltip>
         </el-col>
         <el-col :span="1.5">
           <el-tooltip class="item" effect="dark" content="取消多选" placement="top">
-            <el-button type="info" icon="el-icon-circle-close" size="mini" @click="deselectAll"/>
+            <el-button type="info" icon="el-icon-circle-close" size="mini" @click="deselectAll" />
           </el-tooltip>
         </el-col>
       </el-row>
     </el-alert>
-    <ImageUpload @getList="getList"></ImageUpload>
-    <image-details v-if="imageDetails.show" :image-details="imageDetails"/>
+    <ImageUpload @getList="getList" />
+    <image-details v-if="imageDetails.show" :image-details="imageDetails" />
   </div>
 </template>
 
 <script>
-import {markdownImage, delFileIds,renameFile} from '@/api/file/file'
-import {getFileExtension, getFileAddress, downloadFile, VerifyIsPictureType} from '@/utils/common'
+import { markdownImage, delFileIds, renameFile } from '@/api/file/file'
+import { getFileExtension, getFileAddress, downloadFile, VerifyIsPictureType } from '@/utils/common'
 import ImageUpload from '@/views/file/image/components/imageUpload.vue'
 import ImageDetails from '@/views/file/image/components/imageDetails.vue'
 
 export default {
   name: 'Index',
-  components: {ImageUpload, ImageDetails},
+  components: { ImageUpload, ImageDetails },
   data() {
     return {
       // 总条数
       total: 0,
-      //加载
+      // 加载
       loading: false,
       noMore: false,
       // 文件列表
@@ -152,8 +155,8 @@ export default {
         this.total = response.data.total
         // 过滤出response.data.records中不包含在fileList中的元素
         const newRecords = response.data.records.filter(record => {
-          return !this.fileList.some(existingRecord => existingRecord.id === record.id);
-        });
+          return !this.fileList.some(existingRecord => existingRecord.id === record.id)
+        })
         for (const element of response.data.records) {
           const suffix = getFileExtension(element.fileName)
           element.suffix = suffix
@@ -162,7 +165,7 @@ export default {
           }
         }
         // 将新的记录添加到fileList中
-        this.fileList = [...this.fileList, ...newRecords];
+        this.fileList = [...this.fileList, ...newRecords]
         this.loading = false
       })
     },
@@ -229,7 +232,7 @@ export default {
       }).then(() => {
         delFileIds(ids).then(response => {
           this.$message.success(response.msg)
-          this.fileList = this.fileList.filter(element => !ids.includes(element.id));
+          this.fileList = this.fileList.filter(element => !ids.includes(element.id))
         })
       }).catch(() => {
         this.$message.info('已取消删除')
@@ -246,32 +249,32 @@ export default {
     },
     // 重命名
     renameFile(o) {
-      let suffix = "";
+      let suffix = ''
       if (o.suffix !== null) {
-        suffix = "." + o.suffix
+        suffix = '.' + o.suffix
       }
       this.$prompt('', '重命名', {
-        iconClass:"el-icon-edit",
+        iconClass: 'el-icon-edit',
         center: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
         inputErrorMessage: '文件名格式不正确',
-        inputValue: o.fileName.replace(suffix, "")
-      }).then(({value}) => {
-        let data={}
-        data.fileName=value + suffix
-        data.id=o.id
+        inputValue: o.fileName.replace(suffix, '')
+      }).then(({ value }) => {
+        const data = {}
+        data.fileName = value + suffix
+        data.id = o.id
         renameFile(data).then(response => {
           this.$message.success(response.msg)
-          o.fileName=data.fileName
+          o.fileName = data.fileName
         })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '取消输入'
-        });
-      });
+        })
+      })
     }
   }
 }
@@ -389,7 +392,6 @@ export default {
 .hover-element:hover .dropdown {
   display: block;
 }
-
 
 .alert-button {
   background-color: #909399;

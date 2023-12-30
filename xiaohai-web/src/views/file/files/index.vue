@@ -1,66 +1,59 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-<!--        <div style="padding: 3px 0;float: right;">-->
-<!--          <el-radio-group v-model="form.path" size="medium" @change="getList">-->
-<!--            <el-radio-button label="">全部</el-radio-button>-->
-<!--            <el-radio-button label="/image">图片</el-radio-button>-->
-<!--            <el-radio-button label="/system">系统</el-radio-button>-->
-<!--          </el-radio-group>-->
-<!--        </div>-->
-        <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />
-      </div>
-      <el-table :data="fileList" style="width: 100%" @row-dblclick="handle"  height="250">
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column prop="fileName" label="名称">
-          <template slot-scope="scope">
-            <i v-if="!scope.row.suffix" class="el-icon-folder-opened" />
-            <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
-            <i v-else class="el-icon-document" />
-            {{ scope.row.fileName }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
-        <el-table-column prop="fileSize" label="文件大小" align="center" width="100" />
-      </el-table>
-      <!--      <div v-if="fileList.length==0">-->
-      <!--        空屏展示-->
-      <!--      </div>-->
-      <!--      <el-col-->
-      <!--        v-for="(o, index) in fileList"-->
-      <!--        :key="o"-->
-      <!--        :span="3"-->
-      <!--        :offset="index/6 < 1 && index>6 ? 0 : 1"-->
-      <!--        style="margin-bottom: 20px;height: 220px"-->
-      <!--      >-->
-      <!--        <el-tooltip :content="o.name" placement="top">-->
-      <!--          <el-card :body-style="{ padding: '0px'}">-->
-      <!--            <img v-if="o.suffix" :src="trimmedValue(o.name)" class="image">-->
-      <!--            <img v-else src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">-->
-      <!--            <div style="padding: 14px; text-align: center">-->
-      <!--              <span>{{ stateFormat(o.name) }}</span>-->
-      <!--            </div>-->
-      <!--          </el-card>-->
-      <!--        </el-tooltip>-->
-      <!--      </el-col>-->
-    </el-card>
+    <!--    <div style="padding: 3px 0;float: right;">-->
+    <!--      <el-radio-group v-model="form.path" size="medium" @change="getList">-->
+    <!--        <el-radio-button label="">全部</el-radio-button>-->
+    <!--        <el-radio-button label="/image">图片</el-radio-button>-->
+    <!--        <el-radio-button label="/system">系统</el-radio-button>-->
+    <!--      </el-radio-group>-->
+    <!--    </div>-->
+    <!--    <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />-->
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+          <span v-if="selectedItems.length===0">共 {{ fileList.length }} 项</span>
+          <span v-else>已选 {{ selectedItems.length }} 项</span>
+        </el-checkbox>
+      </el-col>
+    </el-row>
+    <el-table
+      ref="multipleTable"
+      tooltip-effect="dark"
+      :data="fileList"
+      style="width: 100%"
+      header-cell-style="font-size: 12px"
+      height="250"
+      @row-dblclick="handle"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="50"
+      />
+      <el-table-column prop="fileName" label="名称">
+        <template slot-scope="scope">
+          <i v-if="!scope.row.suffix" class="el-icon-folder-opened" />
+          <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
+          <i v-else class="el-icon-document" />
+          {{ scope.row.fileName }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
+      <el-table-column prop="fileSize" label="文件大小" align="center" width="100" />
+    </el-table>
 
-    <ImageUpload @getList="getList"></ImageUpload>
+    <FileUpload :file-details="fileDetails" @getList="getList" />
   </div>
 </template>
 
 <script>
 import { getFile } from '@/api/file/file'
-import {getFileAddress, getFileExtension, VerifyIsPictureType} from "@/utils/common";
-import ImageUpload from "@/views/file/files/components/imageUpload.vue";
+import { getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
+import FileUpload from '@/views/file/files/components/fileUpload.vue'
 
 export default {
   name: 'Index',
-  components: {ImageUpload},
+  components: { FileUpload },
   data() {
     return {
       form: {
@@ -70,13 +63,45 @@ export default {
       },
       fileList: [],
       // 预览图片列表
-      srcList: []
+      srcList: [],
+      fileDetails: {},
+      // 选中的项
+      selectedItems: [],
+      checkAll: false,
+      isIndeterminate: false
     }
   },
   created() {
     this.getList('')
   },
   methods: {
+    handleSelectionChange(selection) {
+      console.log(selection)
+      const checkedCount = selection.length
+      // 处理行选择事件
+      this.selectedItems = selection
+      this.checkAll = checkedCount === this.selectedItems.length && checkedCount !== 0
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.fileList.length
+    },
+    handleCheckAllChange() {
+      // 处理全选事件
+      // 在这里可以根据 isSelectedAll 来控制表格中的行选择
+      if (this.checkAll) {
+        for (const element of this.fileList) {
+          this.$refs.multipleTable.toggleRowSelection(element)
+        }
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+      // console.log(rows)
+      // if (rows) {
+      //   rows.forEach(row => {
+      //     this.$refs.multipleTable.toggleRowSelection(row)
+      //   })
+      // } else {
+
+      // }
+    },
     getList(path) {
       this.form.path = path
       getFile(this.form).then(response => {
@@ -110,7 +135,7 @@ export default {
     // 双击行
     handle(row, column, event, cell) {
       // 进入目录
-      if (row.fileType===1) {
+      if (row.fileType === 1) {
         this.getList(row.filePath)
       }
       // 查看照片
@@ -153,5 +178,9 @@ export default {
   width: 100%;
   height: 100px;
   display: block;
+}
+
+::v-deep .el-table__header-wrapper .el-checkbox {
+  visibility: hidden;
 }
 </style>

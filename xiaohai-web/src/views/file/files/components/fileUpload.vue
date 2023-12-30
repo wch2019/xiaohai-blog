@@ -9,8 +9,8 @@
           circle
         />
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item ><i class="el-icon-upload2"></i>上传</el-dropdown-item>
-          <el-dropdown-item @click.native="addFolder()"><i class="el-icon-folder-add"></i>新建文件夹</el-dropdown-item>
+          <el-dropdown-item><i class="el-icon-upload2" />上传</el-dropdown-item>
+          <el-dropdown-item @click.native="addFolder()"><i class="el-icon-folder-add" />新建文件夹</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -35,10 +35,11 @@
   </div>
 </template>
 <script>
-import {newFolder, uploadImage} from '@/api/file/file'
+import { newFolder, uploadImage } from '@/api/file/file'
 
 export default {
-  name: 'ImageUpload',
+  name: 'FileUpload',
+  props: ['fileDetails'],
   data() {
     return {
       imageUpload: {
@@ -79,16 +80,16 @@ export default {
     },
     // 新建文件夹
     addFolder(path) {
-      this.$prompt('', '重命名', {
-        iconClass:"el-icon-edit",
+      this.$prompt('', '新建文件夹', {
+        iconClass: 'el-icon-folder-add',
         center: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
-        inputErrorMessage: '文件名格式不正确',
-        inputValue: o.fileName.replace(suffix, "")
-      }).then(({value}) => {
-        let data={}
+        inputErrorMessage: '文件名格式不正确'
+      }).then(({ value }) => {
+        const data = {}
+        data.path = path ? path + value : value
         newFolder(data).then(response => {
           this.$message.success(response.msg)
         })
@@ -96,8 +97,8 @@ export default {
         this.$message({
           type: 'info',
           message: '取消输入'
-        });
-      });
+        })
+      })
     }
   }
 }

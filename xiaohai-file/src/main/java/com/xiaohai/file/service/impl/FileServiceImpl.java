@@ -278,7 +278,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public ReturnPageData<FileManagerDto> getPathList(String path) {
-        if(org.apache.commons.lang3.StringUtils.isBlank(path)){
+        if (org.apache.commons.lang3.StringUtils.isBlank(path)) {
             return fileManagerService.getParentIdPath(0);
         }
         // 指定文件夹路径
@@ -375,9 +375,10 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 如果文件夹不存在，则创建它，并存入数据库
+     *
      * @param path
      */
-    public void createFolderIfNotExists(String path){
+    public void createFolderIfNotExists(String path) {
         //判断当前文件夹是否存在，不存在就创建当前文件夹
         path = path.replace(fileConfig.getProfile(), "");
         // 使用 File.separator 进行分割
@@ -403,6 +404,8 @@ public class FileServiceImpl implements FileService {
             }
             parentPath.append(File.separator).append(patch);
         }
+        //创建目录
+        FileUtils.directory(fileConfig.getProfile() + path);
     }
 
     @Override
