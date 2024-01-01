@@ -8,6 +8,15 @@
     <!--      </el-radio-group>-->
     <!--    </div>-->
     <!--    <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />-->
+    <el-breadcrumb
+      separator-class="el-icon-arrow-right"
+      style="padding-bottom: 20px;font-size: 18px;"
+    >
+      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item> <span style=" color: #97a8be;cursor: text;">活动管理</span></el-breadcrumb-item>
+      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
@@ -21,8 +30,7 @@
       tooltip-effect="dark"
       :data="fileList"
       style="width: 100%"
-      header-cell-style="font-size: 12px"
-      height="250"
+      height="550"
       @row-dblclick="handle"
       @selection-change="handleSelectionChange"
     >
@@ -36,6 +44,21 @@
           <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
           <i v-else class="el-icon-document" />
           {{ scope.row.fileName }}
+          <div class="dropdown">
+            <el-dropdown trigger="click">
+              <el-button
+                style="padding: 5px; border: none;"
+                class="el-icon-more"
+                size="mini"
+              />
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="renameFile(o)">重命名</el-dropdown-item>
+                <el-dropdown-item @click.native="downloadMultipleFiles(o)">下载</el-dropdown-item>
+                <el-dropdown-item @click.native="dialog(o)">查看详情</el-dropdown-item>
+                <el-dropdown-item divided @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
@@ -47,7 +70,7 @@
 </template>
 
 <script>
-import { getFile } from '@/api/file/file'
+import { delFileIds, getFile } from '@/api/file/file'
 import { getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 
@@ -93,14 +116,6 @@ export default {
       } else {
         this.$refs.multipleTable.clearSelection()
       }
-      // console.log(rows)
-      // if (rows) {
-      //   rows.forEach(row => {
-      //     this.$refs.multipleTable.toggleRowSelection(row)
-      //   })
-      // } else {
-
-      // }
     },
     getList(path) {
       this.form.path = path
@@ -167,6 +182,22 @@ export default {
           initialViewIndex: index
         }
       })
+    },
+    // 删除
+    handleDelete(o) {
+      const ids = [o.id] || this.selectedItems
+      this.$confirm('是否确认删除？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delFileIds(ids).then(response => {
+          this.$message.success(response.msg)
+          this.fileList = this.fileList.filter(element => !ids.includes(element.id))
+        })
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
     }
   }
 }
@@ -183,4 +214,16 @@ export default {
 ::v-deep .el-table__header-wrapper .el-checkbox {
   visibility: hidden;
 }
+.dropdown {
+  z-index: 1;
+  position: absolute;
+  top: 12px;
+  right: 5px;
+  //display: none;
+}
+
+.hover-element:hover .dropdown {
+  display: block;
+}
+
 </style>

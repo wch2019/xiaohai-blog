@@ -92,6 +92,7 @@ export default {
         data.path = path ? path + value : value
         newFolder(data).then(response => {
           this.$message.success(response.msg)
+          this.$emit('getList')
         })
       }).catch(() => {
         this.$message({

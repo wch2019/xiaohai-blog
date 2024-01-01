@@ -40,12 +40,10 @@
               ><br></el-checkbox>
               <div class="dropdown">
                 <el-dropdown trigger="click">
-                  <span
-                    style="width: 20px;background-color: rgba(255,255,255,0.78);border: 1px solid #DCDFE6;"
-                    class="el-dropdown-link"
-                  >
-                    <i class="el-icon-more" />
-                  </span>
+                  <el-button
+                    style="padding: 1px; border: none;"
+                    class="el-icon-more"
+                  />
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="renameFile(o)">重命名</el-dropdown-item>
                     <el-dropdown-item @click.native="downloadMultipleFiles(o)">下载</el-dropdown-item>
