@@ -1,21 +1,12 @@
 <template>
   <div class="app-container">
-    <!--    <div style="padding: 3px 0;float: right;">-->
-    <!--      <el-radio-group v-model="form.path" size="medium" @change="getList">-->
-    <!--        <el-radio-button label="">全部</el-radio-button>-->
-    <!--        <el-radio-button label="/image">图片</el-radio-button>-->
-    <!--        <el-radio-button label="/system">系统</el-radio-button>-->
-    <!--      </el-radio-group>-->
-    <!--    </div>-->
-    <!--    <el-page-header style="padding: 10px 0;" :content="form.path" @back="goBack" />-->
-    <el-breadcrumb
-      separator-class="el-icon-arrow-right"
-      style="padding-bottom: 20px;font-size: 18px;"
-    >
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item> <span style=" color: #97a8be;cursor: text;">活动管理</span></el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-bottom: 20px;font-size: 16px;font-weight: bold;">
+      <el-breadcrumb-item :to="{}"
+                          v-for="(item, index) in breadcrumb.pathList"
+                          :key="index"
+                          @click.native="getList(breadcrumb.pathMap.get(item))"
+      >
+        <span :class="{ 'bold-text': isLastBreadcrumb(index) }">{{ item }}</span></el-breadcrumb-item>
     </el-breadcrumb>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -40,9 +31,9 @@
       />
       <el-table-column prop="fileName" label="名称">
         <template slot-scope="scope">
-          <i v-if="!scope.row.suffix" class="el-icon-folder-opened" />
-          <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
-          <i v-else class="el-icon-document" />
+          <i v-if="!scope.row.suffix" class="el-icon-folder-opened"/>
+          <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture"/>
+          <i v-else class="el-icon-document"/>
           {{ scope.row.fileName }}
           <div class="dropdown">
             <el-dropdown trigger="click">
@@ -61,28 +52,33 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
-      <el-table-column prop="fileSize" label="文件大小" align="center" width="100" />
+      <el-table-column prop="createdTime" label="创建时间" align="center" width="180"/>
+      <el-table-column prop="fileSize" label="文件大小" align="center" width="100"/>
     </el-table>
 
-    <FileUpload :file-details="fileDetails" @getList="getList" />
+    <FileUpload :file-details="fileDetails" @getList="getList"/>
   </div>
 </template>
 
 <script>
-import { delFileIds, getFile } from '@/api/file/file'
-import { getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
+import {delFileIds, getFile} from '@/api/file/file'
+import {getFileAddress, getFileExtension, VerifyIsPictureType} from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 
 export default {
   name: 'Index',
-  components: { FileUpload },
+  components: {FileUpload},
   data() {
     return {
       form: {
         path: '',
         pageNum: 1,
         pageSize: 10
+      },
+      breadcrumb: {
+        text: "全部文件",
+        pathMap: {},
+        pathList: [],
       },
       fileList: [],
       // 预览图片列表
@@ -131,17 +127,33 @@ export default {
         }
         this.fileList = response.data.records
       })
+      this.getPathList()
     },
-    trimmedValue(inputValue) {
-      return process.env.VUE_APP_BASE_API_FILE + inputValue
+    //面包屑数据封装
+    getPathList() {
+      let map = new Map();
+      const pathSegments = this.form.path.split("/").map(segment => {
+        if (segment === "") {
+          return this.breadcrumb.text
+        }
+        return segment
+      });
+      this.breadcrumb.pathList = pathSegments
+      let currentPath = "";
+      pathSegments.map(segment => {
+        if (segment === this.breadcrumb.text) {
+          map.set(segment, "")
+        } else {
+          currentPath += "/" + segment;
+          map.set(segment, currentPath)
+        }
+        console.log(currentPath, segment)
+      });
+      this.breadcrumb.pathMap = map;
     },
-    // 内容过长隐藏展示
-    stateFormat(name) {
-      if (!name) return ''
-      if (name.length > 18) { // 超过长度10的内容隐藏
-        return name.slice(0, 18) + '...'
-      }
-      return name
+    //面包屑最后一个数据加粗
+    isLastBreadcrumb(index) {
+      return index === this.breadcrumb.pathList.length - 1;
     },
     // 验证是否是图片类型 VerifyIsPictureType
     picture(name) {
@@ -157,20 +169,6 @@ export default {
       if (this.picture(row.suffix)) {
         this.show(row.filePath)
       }
-    },
-    // 返回上一级
-    goBack() {
-      const key = this.form.path
-      console.log(key)
-      const pathArray = key.split('/') // 将路径按照斜杠分割成数组
-      pathArray.pop() // 删除数组最后一个元素（即最后一个斜杠）
-      let path = '/'
-      for (let i = 0; i < pathArray.length; i++) {
-        if (pathArray[i]) {
-          path += pathArray[i] + '/'
-        }
-      }
-      this.getList(path.substring(0, path.length - 1))
     },
     // 图片预览
     show(path) {
@@ -214,16 +212,20 @@ export default {
 ::v-deep .el-table__header-wrapper .el-checkbox {
   visibility: hidden;
 }
+
 .dropdown {
   z-index: 1;
   position: absolute;
   top: 12px;
   right: 5px;
-  //display: none;
+//display: none;
 }
 
 .hover-element:hover .dropdown {
   display: block;
 }
 
+.bold-text {
+  font-weight: bold;
+}
 </style>
