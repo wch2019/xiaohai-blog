@@ -123,6 +123,7 @@ public class AESUtil {
         // 使用AES解密
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
+
         byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
         // 将解密后的字节数组转换为字符串
         String decryptedText = new String(decryptedBytes, "UTF-8");
