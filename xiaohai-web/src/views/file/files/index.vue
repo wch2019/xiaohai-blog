@@ -1,10 +1,14 @@
 <template>
   <div class="app-container">
-    <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-bottom: 20px;font-size: 16px;font-weight: bold;">
-      <el-breadcrumb-item :to="{}"
-                          v-for="(item, index) in breadcrumb.pathList"
-                          :key="index"
-                          @click.native="getList(breadcrumb.pathMap.get(item))"
+    <el-breadcrumb
+      separator-class="el-icon-arrow-right"
+      style="padding-bottom: 20px;font-size: 16px;font-weight: bold;"
+    >
+      <el-breadcrumb-item
+        v-for="(item, index) in breadcrumb.pathList"
+        :key="index"
+        :to="{}"
+        @click.native="getList(breadcrumb.pathMap.get(item))"
       >
         <span :class="{ 'bold-text': isLastBreadcrumb(index) }">{{ item }}</span></el-breadcrumb-item>
     </el-breadcrumb>
@@ -31,9 +35,9 @@
       />
       <el-table-column prop="fileName" label="名称">
         <template slot-scope="scope">
-          <i v-if="!scope.row.suffix" class="el-icon-folder-opened"/>
-          <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture"/>
-          <i v-else class="el-icon-document"/>
+          <i v-if="!scope.row.suffix" class="el-icon-folder-opened" />
+          <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
+          <i v-else class="el-icon-document" />
           {{ scope.row.fileName }}
           <div class="dropdown">
             <el-dropdown trigger="click">
@@ -43,8 +47,8 @@
                 size="mini"
               />
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="renameFile(o)">重命名</el-dropdown-item>
-                <el-dropdown-item @click.native="downloadMultipleFiles(o)">下载</el-dropdown-item>
+                <el-dropdown-item @click.native="renameFile(scope.row)">重命名</el-dropdown-item>
+                <el-dropdown-item v-if="scope.row.fileType===0" @click.native="downloadMultipleFiles(scope.row)">下载</el-dropdown-item>
                 <el-dropdown-item @click.native="dialog(o)">查看详情</el-dropdown-item>
                 <el-dropdown-item divided @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
               </el-dropdown-menu>
@@ -52,22 +56,22 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdTime" label="创建时间" align="center" width="180"/>
-      <el-table-column prop="fileSize" label="文件大小" align="center" width="100"/>
+      <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
+      <el-table-column prop="fileSize" label="文件大小" align="center" width="100" />
     </el-table>
 
-    <FileUpload :file-details="fileDetails" @getList="getList"/>
+    <FileUpload :file-details="fileDetails" @getList="getList" />
   </div>
 </template>
 
 <script>
-import {delFileIds, getFile} from '@/api/file/file'
-import {getFileAddress, getFileExtension, VerifyIsPictureType} from '@/utils/common'
+import { delFileIds, getFile, renameFile } from '@/api/file/file'
+import { downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 
 export default {
   name: 'Index',
-  components: {FileUpload},
+  components: { FileUpload },
   data() {
     return {
       form: {
@@ -76,9 +80,9 @@ export default {
         pageSize: 10
       },
       breadcrumb: {
-        text: "全部文件",
+        text: '全部文件',
         pathMap: {},
-        pathList: [],
+        pathList: []
       },
       fileList: [],
       // 预览图片列表
@@ -129,31 +133,31 @@ export default {
       })
       this.getPathList()
     },
-    //面包屑数据封装
+    // 面包屑数据封装
     getPathList() {
-      let map = new Map();
-      const pathSegments = this.form.path.split("/").map(segment => {
-        if (segment === "") {
+      const map = new Map()
+      const pathSegments = this.form.path.split('/').map(segment => {
+        if (segment === '') {
           return this.breadcrumb.text
         }
         return segment
-      });
+      })
       this.breadcrumb.pathList = pathSegments
-      let currentPath = "";
+      let currentPath = ''
       pathSegments.map(segment => {
         if (segment === this.breadcrumb.text) {
-          map.set(segment, "")
+          map.set(segment, '')
         } else {
-          currentPath += "/" + segment;
+          currentPath += '/' + segment
           map.set(segment, currentPath)
         }
         console.log(currentPath, segment)
-      });
-      this.breadcrumb.pathMap = map;
+      })
+      this.breadcrumb.pathMap = map
     },
-    //面包屑最后一个数据加粗
+    // 面包屑最后一个数据加粗
     isLastBreadcrumb(index) {
-      return index === this.breadcrumb.pathList.length - 1;
+      return index === this.breadcrumb.pathList.length - 1
     },
     // 验证是否是图片类型 VerifyIsPictureType
     picture(name) {
@@ -178,6 +182,44 @@ export default {
         options: {
           toolbar: true,
           initialViewIndex: index
+        }
+      })
+    },
+    // 重命名
+    renameFile(o) {
+      let suffix = ''
+      if (o.suffix !== null) {
+        suffix = '.' + o.suffix
+      }
+      this.$prompt('', '重命名', {
+        iconClass: 'el-icon-edit',
+        center: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
+        inputErrorMessage: '文件名格式不正确',
+        inputValue: o.fileName.replace(suffix, '')
+      }).then(({ value }) => {
+        const data = {}
+        data.fileName = value + suffix
+        data.id = o.id
+        renameFile(data).then(response => {
+          this.$message.success(response.msg)
+          o.fileName = data.fileName
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    // 下载文件
+    downloadMultipleFiles(o) {
+      const ids = [o.id] || this.selectedItems
+      this.fileList.forEach(element => {
+        if (ids.includes(element.id)) {
+          downloadFile(element.fileName, window.location.origin + element.filePath)
         }
       })
     },
@@ -218,7 +260,7 @@ export default {
   position: absolute;
   top: 12px;
   right: 5px;
-//display: none;
+  //display: none;
 }
 
 .hover-element:hover .dropdown {
