@@ -155,7 +155,8 @@ const router = useRouter()
 const loading = ref(true)
 
 // 网站信息
-const showBasic = ref<any>(store.showBasic)
+console.log(store,'store')
+const showBasic = ref<any>(store?.showBasic)
 
 function greetings() {
   const date = new Date()

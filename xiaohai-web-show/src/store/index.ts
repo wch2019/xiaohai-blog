@@ -29,8 +29,7 @@ const useStore = defineStore('user', {
     // 获取用户登录信息
     getInfo() {
       return new Promise((resolve, reject) => {
-        getInfo()
-          .then((response) => {
+        getInfo().then((response) => {
             const { data } = response.data
             if (data == null) {
               return reject('验证失败，请重新登录。')
