@@ -256,6 +256,8 @@ function exit() {
 }
 if (store.token) {
   info()
+}else {
+  info()
 }
 store.getSystem()
 store.getTags()
