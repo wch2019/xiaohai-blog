@@ -26,7 +26,7 @@
       :data="fileList"
       style="width: 100%"
       height="550"
-      @row-dblclick="handle"
+      @row-click="handle"
       @selection-change="handleSelectionChange"
     >
       <el-table-column
@@ -36,6 +36,7 @@
       <el-table-column prop="fileName" label="名称">
         <template slot-scope="scope">
           <i v-if="!scope.row.suffix" class="el-icon-folder-opened" />
+          <svg-icon v-if="!scope.row.suffix" icon-class="folder" />
           <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
           <i v-else class="el-icon-document" />
           {{ scope.row.fileName }}
@@ -45,11 +46,13 @@
                 style="padding: 5px; border: none;"
                 class="el-icon-more"
                 size="mini"
+                @click.native.stop
               />
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="renameFile(scope.row)">重命名</el-dropdown-item>
-                <el-dropdown-item v-if="scope.row.fileType===0" @click.native="downloadMultipleFiles(scope.row)">下载</el-dropdown-item>
-                <el-dropdown-item @click.native="dialog(o)">查看详情</el-dropdown-item>
+                <el-dropdown-item v-if="scope.row.fileType===0" @click.native="downloadMultipleFiles(scope.row)">下载
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="dialog(scope.row)">查看详情</el-dropdown-item>
                 <el-dropdown-item divided @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -61,6 +64,7 @@
     </el-table>
 
     <FileUpload :file-details="fileDetails" @getList="getList" />
+    <FileDetails v-if="imageDetails.show" :image-details="imageDetails" />
   </div>
 </template>
 
@@ -68,10 +72,11 @@
 import { delFileIds, getFile, renameFile } from '@/api/file/file'
 import { downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
+import FileDetails from '@/views/file/files/components/fileDetails.vue'
 
 export default {
   name: 'Index',
-  components: { FileUpload },
+  components: { FileDetails, FileUpload },
   data() {
     return {
       form: {
@@ -83,6 +88,11 @@ export default {
         text: '全部文件',
         pathMap: {},
         pathList: []
+      },
+      imageDetails: {
+        show: false,
+        fileDocument: {},
+        breadcrumb: {}
       },
       fileList: [],
       // 预览图片列表
@@ -151,7 +161,6 @@ export default {
           currentPath += '/' + segment
           map.set(segment, currentPath)
         }
-        console.log(currentPath, segment)
       })
       this.breadcrumb.pathMap = map
     },
@@ -163,7 +172,7 @@ export default {
     picture(name) {
       return VerifyIsPictureType(name)
     },
-    // 双击行
+    // 单击行
     handle(row, column, event, cell) {
       // 进入目录
       if (row.fileType === 1) {
@@ -222,6 +231,12 @@ export default {
           downloadFile(element.fileName, window.location.origin + element.filePath)
         }
       })
+    },
+    // 详情
+    dialog(o) {
+      this.imageDetails.fileDocument = o
+      this.imageDetails.breadcrumb = this.breadcrumb
+      this.imageDetails.show = true
     },
     // 删除
     handleDelete(o) {

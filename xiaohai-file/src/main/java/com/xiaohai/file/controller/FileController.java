@@ -60,6 +60,12 @@ public class FileController {
     public Response<ReturnPageData<FileManagerDto>> getPathList(String path) {
         return Response.success("获取文件列表成功！", fileService.getPathList(path));
     }
+//    @Operation(summary = "文件夹详情", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+//    @Parameter(name = "path", description = "路径", required = false)
+//    @GetMapping()
+//    public Response<ReturnPageData<FileManagerDto>> getPathList(String path) {
+//        return Response.success("获取文件列表成功！", fileService.getPathList(path));
+//    }
     @Operation(summary = "markdown图片列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
