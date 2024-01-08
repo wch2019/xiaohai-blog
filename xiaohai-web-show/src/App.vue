@@ -5,7 +5,6 @@ import FooterBar from '@/components/layouts/FooterBar.vue'
 import BackTop from '@/components/layouts/BackTop.vue'
 import { isDark } from '@/utils/dark'
 import router from '@/router'
-import useStore from "@/store";
 
 // 内容背景色根据主题色调整
 function isDarkBackground() {
@@ -18,12 +17,6 @@ function isDarkBackground() {
 const key = computed(() => {
   return router.currentRoute.value.fullPath
 })
-const store = useStore()
-
-store.getSystem()
-store.getTags()
-store.getFriendLink()
-store.getHot()
 </script>
 
 <template>

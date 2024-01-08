@@ -257,6 +257,11 @@ function exit() {
 if (store.token) {
   info()
 }
+
+store.getSystem()
+store.getTags()
+store.getFriendLink()
+store.getHot()
 </script>
 
 <style scoped>
