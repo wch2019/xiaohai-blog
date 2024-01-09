@@ -15,8 +15,9 @@
   },
   "dependencies": {
     "axios": "0.18.1",
-    "core-js": "3.6.5",
+    "core-js": "^3.35.0",
     "echarts": "^5.4.2",
+    "el-table-infinite-scroll": "^2.0.0",
     "element-ui": "^2.15.13",
     "fuse.js": "3.4.4",
     "github-markdown-css": "^5.2.0",

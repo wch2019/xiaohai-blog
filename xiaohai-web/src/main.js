@@ -77,6 +77,9 @@ Vue.use(VueJsonp)
 // 标签云
 import tagCloud from '@/utils/tag-cloud'
 Vue.use(tagCloud)
+// el-table-infinite-scroll
+import ElTableInfiniteScroll from "el-table-infinite-scroll";
+Vue.directive("el-table-infinite-scroll", ElTableInfiniteScroll);
 
 Vue.config.productionTip = false
 

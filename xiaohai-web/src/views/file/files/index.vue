@@ -8,7 +8,7 @@
         v-for="(item, index) in breadcrumb.pathList"
         :key="index"
         :to="{}"
-        @click.native="getList(breadcrumb.pathMap.get(item))"
+        @click.native="getList(breadcrumb.pathMap.get(item),true)"
       >
         <span :class="{ 'bold-text': isLastBreadcrumb(index) }">{{ item }}</span></el-breadcrumb-item>
     </el-breadcrumb>
@@ -25,9 +25,11 @@
       tooltip-effect="dark"
       :data="fileList"
       style="width: 100%"
-      height="550"
+      height="calc(100vh - 150px)"
       @row-click="handle"
       @selection-change="handleSelectionChange"
+      v-el-table-infinite-scroll="loadMoreData"
+      :infinite-scroll-disabled="loading"
     >
       <el-table-column
         type="selection"
@@ -35,13 +37,12 @@
       />
       <el-table-column prop="fileName" label="名称">
         <template slot-scope="scope">
-          <i v-if="!scope.row.suffix" class="el-icon-folder-opened" />
-          <svg-icon v-if="!scope.row.suffix" icon-class="folder" />
-          <i v-else-if="picture(scope.row.suffix)" class="el-icon-picture" />
-          <i v-else class="el-icon-document" />
+          <el-image v-if="!scope.row.suffix" :src="require(`../../../assets/disk/folder.png`)" style="top: 3px;height:18px; width:23px"/>
+          <el-image v-else-if="picture(scope.row.suffix)" :src="require(`../../../assets/disk/image.png`)" style="top: 3px;height:18px; width:23px"/>
+          <el-image v-else :src="require('../../../assets/disk/document.png')" style="top: 3px;height:20px; width:20px" />
           {{ scope.row.fileName }}
-          <div class="dropdown">
-            <el-dropdown trigger="click">
+          <div class="dropdown" >
+            <el-dropdown trigger="click" @visible-change>
               <el-button
                 style="padding: 5px; border: none;"
                 class="el-icon-more"
@@ -59,26 +60,36 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
-      <el-table-column prop="fileSize" label="文件大小" align="center" width="100" />
+      <el-table-column prop="createdTime" label="创建时间" align="center" width="180"/>
+      <el-table-column prop="fileSize" label="文件大小" align="center" width="100"/>
+      <slot></slot>
+      <template slot="append">
+        <div class="no-more">
+          <p v-loading="loading" />
+          <p v-if="noMore" style="bottom: 0; width: 100%; text-align: center;">没有更多了</p>
+        </div>
+      </template>
     </el-table>
-
-    <FileUpload :file-details="fileDetails" @getList="getList" />
-    <FileDetails v-if="imageDetails.show" :image-details="imageDetails" />
+    <FileUpload :file-details="fileDetails" @getList="getList"/>
+    <FileDetails v-if="imageDetails.show" :image-details="imageDetails"/>
   </div>
 </template>
 
 <script>
-import { delFileIds, getFile, renameFile } from '@/api/file/file'
-import { downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
+import {delFileIds, getFile, renameFile} from '@/api/file/file'
+import {downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType} from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 import FileDetails from '@/views/file/files/components/fileDetails.vue'
 
+
 export default {
+
   name: 'Index',
-  components: { FileDetails, FileUpload },
+  components: {FileDetails, FileUpload},
   data() {
     return {
+      // 总条数
+      total: 0,
       form: {
         path: '',
         pageNum: 1,
@@ -101,11 +112,14 @@ export default {
       // 选中的项
       selectedItems: [],
       checkAll: false,
-      isIndeterminate: false
+      isIndeterminate: false,
+      // 加载
+      loading: false,
+      noMore: false,
     }
   },
   created() {
-    this.getList('')
+    this.getList('',true)
   },
   methods: {
     handleSelectionChange(selection) {
@@ -127,10 +141,28 @@ export default {
         this.$refs.multipleTable.clearSelection()
       }
     },
-    getList(path) {
-      this.form.path = path
-      getFile(this.form).then(response => {
+    loadMoreData() {
+      console.log(this.noMore)
+      const a = Math.ceil(this.total / this.form.pageSize)
+      if (this.form.pageNum + 1 >= a) {
+        this.noMore = true
+      }
+      if (this.form.pageNum + 1 <= a) {
+        this.form.pageNum = 1 + this.form.pageNum
+        this.getList()
+      }
+    },
+    getList(path,newFolder) {
+      this.loading = true
+      console.log("pathhhh",path,newFolder)
+      if(newFolder){
         this.srcList = []
+        this.fileList= []
+        this.form.path = path
+        this.form.pageNum = 1
+        this.form.pageSize = 10
+      }
+      getFile(this.form).then(response => {
         for (const element of response.data.records) {
           const suffix = getFileExtension(element.fileName)
           element.suffix = suffix
@@ -139,9 +171,12 @@ export default {
             this.srcList.push(element.filePath)
           }
         }
-        this.fileList = response.data.records
+        // 将新的记录添加到fileList中
+        this.fileList = [...this.fileList, ... response.data.records]
+        this.total =response.data.total
+        this.getPathList()
+        this.loading = false
       })
-      this.getPathList()
     },
     // 面包屑数据封装
     getPathList() {
@@ -176,7 +211,7 @@ export default {
     handle(row, column, event, cell) {
       // 进入目录
       if (row.fileType === 1) {
-        this.getList(row.filePath)
+        this.getList(row.filePath,true)
       }
       // 查看照片
       if (this.picture(row.suffix)) {
@@ -208,7 +243,7 @@ export default {
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
         inputErrorMessage: '文件名格式不正确',
         inputValue: o.fileName.replace(suffix, '')
-      }).then(({ value }) => {
+      }).then(({value}) => {
         const data = {}
         data.fileName = value + suffix
         data.id = o.id
@@ -275,7 +310,7 @@ export default {
   position: absolute;
   top: 12px;
   right: 5px;
-  //display: none;
+//display: none;
 }
 
 .hover-element:hover .dropdown {
@@ -284,5 +319,11 @@ export default {
 
 .bold-text {
   font-weight: bold;
+}
+
+.scroll-container {
+  overflow-y: auto; /* 启用垂直滚动条 */
+  /* 123 = navbar + tags-view +app-container+el-checkbox= 50 + 34+ 20+ 19 */
+  height: calc(100vh - 500px);
 }
 </style>
