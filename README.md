@@ -2,7 +2,7 @@
 
 <p align=center>
   <a href="https://gitee.com/wch2019/xiaohai-blog">
-    <img src="./doc/image/favicon.ico" alt="DotCode" style="border-radius: 50%">
+    <img src="./doc/docs/image/favicon.ico" alt="DotCode" style="border-radius: 50%">
   </a>
 </p>
 
@@ -120,7 +120,7 @@ DotCode(点码），是一个前后分离的博客系统。
 
 - 感谢 [JetBrains](https://jb.gg/OpenSourceSupport) 提供的免费开源 License：
 
-[<img src="./doc/image/jb_beam.png" width="100" />](https://www.jetbrains.com/?from=xiaohai_blog)
+[<img src="./doc/docs/image/jb_beam.png" width="100" />](https://www.jetbrains.com/?from=xiaohai_blog)
 
 ## 网站截图
 
@@ -128,23 +128,23 @@ DotCode(点码），是一个前后分离的博客系统。
 
 |                     web                      |                     web                     |
 |:--------------------------------------------:|:-------------------------------------------:|
-| ![image text](./doc/image/web/register.png)  |  ![image text](./doc/image/web/login.png)   |
-| ![image text](./doc/image/web/dashboard.png) | ![image text](./doc/image/web/article.png)  |
-|   ![image text](./doc/image/web/edit.png)    |   ![image text](./doc/image/web/tags.png)   |
-| ![image text](./doc/image/web/category.png)  | ![image text](./doc/image/web/comment.png)  |
-|   ![image text](./doc/image/web/user.png)    |   ![image text](./doc/image/web/role.png)   |
-|   ![image text](./doc/image/web/menu.png)    | ![image text](./doc/image/web/dictType.png) |
-| ![image text](./doc/image/web/dictData.png)  |   ![image text](./doc/image/web/log.png)    |
-| ![image text](./doc/image/web/log-view.png)  |  ![image text](./doc/image/web/online.png)  |
+| ![image text](./doc/docs/image/web/register.png)  |  ![image text](./doc/docs/image/web/login.png)   |
+| ![image text](./doc/docs/image/web/dashboard.png) | ![image text](./doc/docs/image/web/article.png)  |
+|   ![image text](./doc/docs/image/web/edit.png)    |   ![image text](./doc/docs/image/web/tags.png)   |
+| ![image text](./doc/docs/image/web/category.png)  | ![image text](./doc/docs/image/web/comment.png)  |
+|   ![image text](./doc/docs/image/web/user.png)    |   ![image text](./doc/docs/image/web/role.png)   |
+|   ![image text](./doc/docs/image/web/menu.png)    | ![image text](./doc/docs/image/web/dictType.png) |
+| ![image text](./doc/docs/image/web/dictData.png)  |   ![image text](./doc/docs/image/web/log.png)    |
+| ![image text](./doc/docs/image/web/log-view.png)  |  ![image text](./doc/docs/image/web/online.png)  |
 
 ### web-show
 
 | web-show                                               | web-show                                               |
 |--------------------------------------------------------|--------------------------------------------------------|
-| ![image text](./doc/image/web-show/index.png)          | ![image text](./doc/image/web-show/index-dark.png)     |
-| ![image text](./doc/image/web-show/article.png)        | ![image text](./doc/image/web-show/back.png)           |
-| ![image text](./doc/image/web-show/category.png)       | ![image text](./doc/image/web-show/search.png)         |
+| ![image text](./doc/docs/image/web-show/index.png)          | ![image text](./doc/docs/image/web-show/index-dark.png)     |
+| ![image text](./doc/docs/image/web-show/article.png)        | ![image text](./doc/docs/image/web-show/back.png)           |
+| ![image text](./doc/docs/image/web-show/category.png)       | ![image text](./doc/docs/image/web-show/search.png)         |
 | mobile                                                 |  mobile                                                       |
-| ![image text](./doc/image/web-show/mobile-index.png)   | ![image text](./doc/image/web-show/mobile-side.png)    |
-| ![image text](./doc/image/web-show/mobile-article.png) | ![image text](./doc/image/web-show/mobile-comment.png) |
+| ![image text](./doc/docs/image/web-show/mobile-index.png)   | ![image text](./doc/docs/image/web-show/mobile-side.png)    |
+| ![image text](./doc/docs/image/web-show/mobile-article.png) | ![image text](./doc/docs/image/web-show/mobile-comment.png) |
 
