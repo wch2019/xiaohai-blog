@@ -1,6 +1,8 @@
 server:
+  # 服务器的HTTP端口，默认为80
   port: 8089
   servlet:
+    # 应用的访问路径
     context-path: /api
 spring:
   datasource:

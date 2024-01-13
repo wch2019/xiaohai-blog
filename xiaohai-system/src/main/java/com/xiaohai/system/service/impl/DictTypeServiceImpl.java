@@ -156,9 +156,9 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
     /**
      * 项目启动时，初始化字典到缓存
      */
-    @PostConstruct
-    public void init() {
-        loadingDictCache();
-    }
+//    @PostConstruct
+//    public void init() {
+//        loadingDictCache();
+//    }
 
 }

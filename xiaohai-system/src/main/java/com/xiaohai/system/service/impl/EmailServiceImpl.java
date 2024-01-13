@@ -34,7 +34,6 @@ public class EmailServiceImpl implements EmailService {
     private  String form = "";
 
 
-    @PostConstruct
     @Override
     public void init() {
         ConfigDto systemConfig = configService.findByOne();
