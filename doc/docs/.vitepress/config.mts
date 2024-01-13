@@ -19,9 +19,9 @@ export default defineConfig({
                     {text: '介绍', link: '/介绍'},
                     {text: '安装指南',
                         items: [
+                            {text: '使用源码部署', link: '/使用源码部署'},
                             {text: '使用 Docker Compose 部署', link: '/使用 Docker Compose 部署'},
                             {text: '使用 Docker 部署', link: '/使用 Docker 部署'},
-                            {text: '使用源码部署', link: '/使用源码部署'},
                         ]
                     },
                 ]
