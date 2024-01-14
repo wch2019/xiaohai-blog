@@ -86,28 +86,29 @@ DotCode(点码），是一个前后分离的博客系统。
 
 ## nginx配置
 
-    server {
+```    
+server {
     listen       80;
     server_name  localhost;
     
         location / {
-            alias  D:/Project/gitee/xiaohai-blog/xiaohai-web-show/dist/;  #修改为自己路径
+            alias D:/bolg/xiaohai-web-show/;   #修改为xiaohai-web-show的打包路径
             try_files $uri $uri/ /index.html;
             index  index.html index.htm;
         }
     
         location /manage/ {
-            alias  E:/project/gitee/xiaohai-blog/xiaohai-web/dist/; #修改为自己路径
+            alias  D:/bolg/xiaohai-web/; #修改为xiaohai-web的打包路径
             try_files $uri $uri/ /manage/index.html;
             index  index.html index.htm;
         }
     
         location /prod-api/ {
-    		proxy_set_header Host $http_host;
-    		proxy_set_header X-Real-IP $remote_addr;
-    		proxy_set_header REMOTE-HOST $remote_addr;
-    		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    		proxy_pass http://localhost:8089/;
+    	    proxy_set_header Host $http_host;
+    	    proxy_set_header X-Real-IP $remote_addr;
+    	    proxy_set_header REMOTE-HOST $remote_addr;
+    	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    	    proxy_pass http://127.0.0.1:8089/prod-api/; #修改为后台请求地址
     	}
     
         error_page   500 502 503 504  /50x.html;
@@ -115,6 +116,8 @@ DotCode(点码），是一个前后分离的博客系统。
             root   html;
         }
     }
+    
+```
 
 ## 特别鸣谢
 
