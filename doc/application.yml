@@ -1,0 +1,26 @@
+server:
+  # 服务器的HTTP端口，默认为80
+  port: 8089
+  servlet:
+    # 应用的访问路径
+    context-path: /prod-api
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:/IP地址:端口号/数据库名?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    username: 数据库账号
+    password: 数据库密码
+  # redis配置
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 1
+    # Redis服务器地址
+    host: redis地址
+    # Redis服务器连接端口
+    port: redis端口
+    # Redis服务器连接密码（默认为空）
+    password: redis密码
+#==============================系统文件存放配置=======================================
+file:
+  #文件地址最后加斜杠
+  profile: \blog\prod\
