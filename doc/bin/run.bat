@@ -10,6 +10,9 @@ set JAR_FILE=D:\Project\gitee\xiaohai-blog\xiaohai-admin\target\xiaohai-blog.jar
 rem 设置日志文件夹路径
 set LOG_FOLDER=D:\Project\gitee\xiaohai-blog\xiaohai-admin\target\logs
 
+rem 设置YML配置文件路径
+set YML_FILE=--spring.config.additional-location=D:\Project\gitee\xiaohai-blog\doc\logsapplication.yml
+
 rem 设置 Java 启动参数 添加启动参数--initDatabase执行数据库初始化,注意进初始化使用该命令
 set JAVA_OPTS=
 
@@ -35,5 +38,5 @@ rem 执行自关闭窗口脚本
 %1 mshta vbscript:CreateObject("WScript.Shell").Run("%~s0 ::",0,FALSE)(window.close)&&exit
 
 rem 执行 Java 应用程序
-java -Dfile.encoding=UTF-8  -jar "%JAR_FILE%"  %JAVA_OPTS% > "%LOG_FILE%" 2>&1
+java -Dfile.encoding=UTF-8  -jar "%JAR_FILE%"  %YML_FILE%  %JAVA_OPTS% > "%LOG_FILE%" 2>&1
 
