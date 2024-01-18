@@ -22,5 +22,5 @@ spring:
     password: redis密码
 #==============================系统文件存放配置=======================================
 file:
-  #文件地址最后加斜杠
-  profile: \blog\prod\
+  #文件地址最后加斜杠,注意，示例：window是D:\blog\prod\而linux是/blog/prod/
+  profile: /blog/prod/
