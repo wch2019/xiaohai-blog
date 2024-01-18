@@ -282,36 +282,36 @@ public class FileServiceImpl implements FileService {
             return fileManagerService.getParentIdPath(0);
         }
         // 指定文件夹路径
-//        String folderPath = fileConfig.getProfile() + path;
+        //        String folderPath = fileConfig.getProfile() + path;
         FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path));
         if (fileManager == null) {
             return new ReturnPageData<>();
         }
         return fileManagerService.getParentIdPath(fileManager.getId());
 
-//        List<FileDto> list = new ArrayList<>();
-//        // 指定文件夹路径
-//        String folderPath = fileConfig.getProfile() + path;
-//        File folder = new File(folderPath);
-//        if (folder.isDirectory()) {
-//            File[] files = folder.listFiles();
-//            for (File file : files) {
-//                FileDto fileDto = new FileDto();
-//                fileDto.setNameSuffix("");
-//                fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
-//                fileDto.setPath(fileDto.getPath().replace("\\", "/"));
-//                if (!file.isDirectory()) {
-//                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
-//                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
-//                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
-//                }
-//                fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
-//                fileDto.setName(file.getName());
-//                list.add(fileDto);
-//            }
-//        }
-//
-//        return list.stream().sorted(Comparator.comparing(FileDto::getNameSuffix)).toList();
+        //        List<FileDto> list = new ArrayList<>();
+        //        // 指定文件夹路径
+        //        String folderPath = fileConfig.getProfile() + path;
+        //        File folder = new File(folderPath);
+        //        if (folder.isDirectory()) {
+        //            File[] files = folder.listFiles();
+        //            for (File file : files) {
+        //                FileDto fileDto = new FileDto();
+        //                fileDto.setNameSuffix("");
+        //                fileDto.setPath(File.separator + file.getPath().replace(fileConfig.getProfile(), ""));
+        //                fileDto.setPath(fileDto.getPath().replace("\\", "/"));
+        //                if (!file.isDirectory()) {
+        //                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
+        //                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
+        //                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
+        //                }
+        //                fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
+        //                fileDto.setName(file.getName());
+        //                list.add(fileDto);
+        //            }
+        //        }
+        //
+        //        return list.stream().sorted(Comparator.comparing(FileDto::getNameSuffix)).toList();
     }
 
     @Override
@@ -324,28 +324,28 @@ public class FileServiceImpl implements FileService {
         }
         return fileManagerService.getParentIdPath(fileManager.getId());
 
-//        File folder = new File(folderPath);
-//        if (folder.isDirectory()) {
-//            File[] files = folder.listFiles();
-//            assert files != null;
-//            for (File file : files) {
-//                if (!file.isDirectory()) {
-//                    //                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
-//                    //                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
-//                    FileMarkdownDto fileDto = new FileMarkdownDto();
-//                    fileDto.setPath("");
-//                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
-//                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
-//                    //                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
-//                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
-//                    fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
-//                    fileDto.setName(file.getName());
-//                    list.add(fileDto);
-//                }
-//            }
-//        }
-//
-//        return list.stream().sorted(Comparator.comparing(FileMarkdownDto::getCreateTime).reversed()).toList();
+        //        File folder = new File(folderPath);
+        //        if (folder.isDirectory()) {
+        //            File[] files = folder.listFiles();
+        //            assert files != null;
+        //            for (File file : files) {
+        //                if (!file.isDirectory()) {
+        //                    //                    RcAttachmentInfo attachmentInfo=new RcAttachmentInfo();
+        //                    //                    FileUtils.imageProperty(file.getPath(),attachmentInfo);
+        //                    FileMarkdownDto fileDto = new FileMarkdownDto();
+        //                    fileDto.setPath("");
+        //                    fileDto.setUpdateTime(DateUtils.millisToDateTime(file.lastModified()));
+        //                    fileDto.setSize(FileUtils.formatFileSize(file.length()));
+        //                    //                    fileDto.setImageSize(attachmentInfo.getWidth()+"x"+attachmentInfo.getHeight());
+        //                    fileDto.setNameSuffix(FileUtils.getFileExtension(file.getName()));
+        //                    fileDto.setCreateTime(FileUtils.fileCreationTime(file.getPath()));
+        //                    fileDto.setName(file.getName());
+        //                    list.add(fileDto);
+        //                }
+        //            }
+        //        }
+        //
+        //        return list.stream().sorted(Comparator.comparing(FileMarkdownDto::getCreateTime).reversed()).toList();
     }
 
     @Override
@@ -366,9 +366,9 @@ public class FileServiceImpl implements FileService {
     public String getFile(String path, String hash) {
         //判断路径
         FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
-        if(manager != null) {
+        if (manager != null) {
             //获取当前目录下相同的文件信息
-            FileManager fileManager = fileManagerService.findByHash(manager.getParentId(), hash);
+            FileManager fileManager = fileManagerService.findByHash(manager.getId(), hash);
             if (fileManager != null) {
                 return fileManager.getFilePath();
             }
