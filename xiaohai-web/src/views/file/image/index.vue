@@ -52,7 +52,7 @@
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
-              <el-image v-if="o.suffix" fit="cover" :src="o.filePath" class="image" />
+              <el-image v-if="o.suffix" fit="cover" :src="o.filePath"  :preview-src-list="[o.filePath]" class="image" />
               <el-button type="text" @click="dialog(o)">
                 <el-tooltip :content="o.fileName" placement="top">
                   <div>

@@ -364,10 +364,14 @@ public class FileServiceImpl implements FileService {
      * @return
      */
     public String getFile(String path, String hash) {
-        //获取相同的文件信息
-        FileManager fileManager = fileManagerService.findByHash(hash);
-        if (fileManager != null) {
-            return fileManager.getFilePath();
+        //判断路径
+        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
+        if(manager != null) {
+            //获取当前目录下相同的文件信息
+            FileManager fileManager = fileManagerService.findByHash(manager.getParentId(), hash);
+            if (fileManager != null) {
+                return fileManager.getFilePath();
+            }
         }
         createFolderIfNotExists(path);
         return null;

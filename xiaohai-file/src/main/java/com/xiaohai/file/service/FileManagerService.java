@@ -43,12 +43,12 @@ public interface FileManagerService extends IService<FileManager> {
     Integer updateData(FileManagerVo vo);
 
     /**
-     * 根据hash查询
+     * 根据hash和parentId查询
      *
      * @param hash hash
      * @return FileManager
      */
-    FileManager findByHash(String hash);
+    FileManager findByHash(Integer parentId, String hash);
 
     /**
      * 查询文件管理列表数据

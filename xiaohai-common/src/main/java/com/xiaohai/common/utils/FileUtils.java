@@ -22,10 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
@@ -466,6 +463,28 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             return "";
         }
     }
+
+    /**
+     * 重命名文件或目录路径
+     *
+     * @param originalPath 原始文件/目录路径
+     * @param newPath      新的文件/目录路径
+     */
+    public static void renamePath(String originalPath, String newPath) {
+        // 使用Path对象表示原始路径
+        Path original = Paths.get(originalPath);
+
+        // 使用Path对象表示新路径
+        Path destination = Paths.get(newPath);
+
+        // 执行路径重命名操作
+        try {
+            Files.move(original, destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("重命名时出错：" + e.getMessage(), e);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
         String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";

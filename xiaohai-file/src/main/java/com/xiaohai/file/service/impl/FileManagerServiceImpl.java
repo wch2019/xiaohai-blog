@@ -67,8 +67,8 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     }
 
     @Override
-    public FileManager findByHash(String hash) {
-        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getFileHash, hash));
+    public FileManager findByHash(Integer parentId,String hash) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId,parentId).eq(FileManager::getFileHash, hash));
     }
 
     @Override
