@@ -7,7 +7,7 @@
       <span style="display: flex; align-items: center; justify-content: space-between">
         <span style="display: flex; align-items: center">
           <el-space size="default">
-            <el-avatar v-if="userBasic.avatar" size="default" :src="image(userBasic.avatar)" />
+            <el-avatar v-if="userBasic.avatar" size="default" :src="image(userBasic.avatar)"/>
             <span class="text-sm">{{ userBasic.username }}</span>
             <el-tag size="default">{{ articleOne.categoryName }}</el-tag>
             <template v-for="(item, index) in tags">
@@ -19,20 +19,20 @@
                 size="default"
                 :label="index"
                 border
-                >{{ item.name }}
+              >{{ item.name }}
               </el-tag>
             </template>
           </el-space>
         </span>
         <el-space alignment="center" size="large">
           <span class="text-sm font-number text-color">
-            <svg-icon icon-class="time-light" />{{ articleOne.createdTime }}</span
+            <svg-icon icon-class="time-light"/>{{ articleOne.createdTime }}</span
           >
           <span class="text-sm font-number text-color">
-            <svg-icon icon-class="eye-light" style="font-size: 15px" /> {{ articleOne.pageView }}
+            <svg-icon icon-class="eye-light" style="font-size: 15px"/> {{ articleOne.pageView }}
           </span>
           <span class="text-sm font-number text-color">
-            <svg-icon icon-class="message" style="font-size: 15px" /> {{ commentCount }}
+            <svg-icon icon-class="message" style="font-size: 15px"/> {{ commentCount }}
           </span>
           <span class="text-sm font-number" @click="clickLike(articleOne)">
             <svg-icon
@@ -44,18 +44,18 @@
           </span>
         </el-space>
       </span>
-      <hr class="divider" />
+      <hr class="divider"/>
       <div v-if="articleOne.isOriginal == 0" class="tip">
-        原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
+        原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br/>
       </div>
-      <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
-      <v-md-preview :text="articleOne.text" ref="preview"></v-md-preview>
-      <hr class="divider" />
+      <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br/></div>
+      <v-md-preview :text="articleOne.text" ref="preview" @scroll="handlePreviewScroll"></v-md-preview>
+      <hr class="divider"/>
       <h3 class="flex-center">推荐</h3>
       <el-row style="justify-content: center">
         <el-col v-for="(o, index) in dataList" :key="o" :span="7" :offset="index > 0 ? 1 : 0">
           <el-card :body-style="{ padding: '0px' }">
-            <el-image fit="cover" :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
+            <el-image fit="cover" :src="image(o.cover)" class="image" @click="getArticleId(o.id)"/>
             <div style="padding: 14px; text-align: center">
               <el-link :underline="false" @click="getArticleId(o.id)">
                 <span>{{ o.title }} </span>
@@ -64,7 +64,7 @@
           </el-card>
         </el-col>
       </el-row>
-      <hr class="divider" />
+      <hr class="divider"/>
       <comments
         v-if="config.disabled"
         :config="config"
@@ -87,7 +87,7 @@
           size="small"
           :label="index"
           border
-          >{{ item.name }}
+        >{{ item.name }}
         </el-tag>
       </template>
     </el-space>
@@ -97,19 +97,19 @@
     >
       <span style="display: flex; align-items: center">
         <el-space size="default">
-          <el-avatar v-if="userBasic.avatar" size="small" :src="image(userBasic.avatar)" />
+          <el-avatar v-if="userBasic.avatar" size="small" :src="image(userBasic.avatar)"/>
           <span class="text-sm">{{ userBasic.username }}</span>
         </el-space>
       </span>
       <el-space alignment="center" size="small">
         <span class="text-xs font-number text-color" v-if="articleOne.createdTime">
-          <svg-icon icon-class="time-light" /> {{ articleOne.createdTime.split(' ')[0] }}</span
+          <svg-icon icon-class="time-light"/> {{ articleOne.createdTime.split(' ')[0] }}</span
         >
         <span class="text-xs font-number text-color">
-          <svg-icon icon-class="eye-light" /> {{ articleOne.pageView }}
+          <svg-icon icon-class="eye-light"/> {{ articleOne.pageView }}
         </span>
         <span class="text-xs font-number text-color"
-          ><svg-icon icon-class="message" /> {{ commentCount }}</span
+        ><svg-icon icon-class="message"/> {{ commentCount }}</span
         >
         <span class="text-xs font-number" @click="clickLike(articleOne)">
           <svg-icon
@@ -121,15 +121,15 @@
         >
       </el-space>
     </span>
-    <hr class="divider" />
+    <hr class="divider"/>
 
     <div v-if="articleOne.isOriginal == 0" class="tip">
-      原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br />
+      原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br/>
     </div>
-    <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br /></div>
+    <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br/></div>
     <v-md-preview :text="articleOne.text"></v-md-preview>
 
-    <hr class="divider" />
+    <hr class="divider"/>
     <h3 class="flex-center">推荐</h3>
     <el-card
       :body-style="{ padding: '0px' }"
@@ -137,14 +137,14 @@
       :key="o"
       style="margin-bottom: 8px; position: relative"
     >
-      <el-image fit="cover"  :src="image(o.cover)" class="image" @click="getArticleId(o.id)" />
+      <el-image fit="cover" :src="image(o.cover)" class="image" @click="getArticleId(o.id)"/>
       <div style="padding: 14px; text-align: center">
         <el-link :underline="false" @click="getArticleId(o.id)">
           <span>{{ o.title }} </span>
         </el-link>
       </div>
     </el-card>
-    <hr class="divider" />
+    <hr class="divider"/>
     <comments
       v-if="config.disabled"
       :config="config"
@@ -155,17 +155,17 @@
   </el-card>
   <!--右内容区-->
   <el-col class="hidden-md-and-down" :lg="6" :xl="5">
-    <el-space direction="vertical" fill size="large" style="position: fixed; top: 90px">
+    <el-space direction="vertical" fill size="large" style="width: 100%">
       <el-card
         class="box-card"
         shadow="hover"
         :body-style="{ padding: '0px', height: '440px' }"
         style="position: relative"
       >
-        <img src="../../assets/image/1.jpg" class="image" />
+        <img src="../../assets/image/1.jpg" class="image"/>
 
         <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-          <el-avatar v-if="userBasic.avatar" :src="image(userBasic.avatar)" class="panThumb" />
+          <el-avatar v-if="userBasic.avatar" :src="image(userBasic.avatar)" class="panThumb"/>
 
           <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
             <h2 style="margin-bottom: 0px">{{ userBasic.username }}</h2>
@@ -220,31 +220,39 @@
           </el-space>
         </div>
       </el-card>
-      <el-card class="box-card" shadow="hover">
-        <template #header>
-          <h2 class="text-lg" style="margin: 0">
-            <svg-icon icon-class="tags"></svg-icon>
-            目录
-          </h2>
-        </template>
-        <div
-          v-for="anchor in titles"
-          :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
-          @click="handleAnchorClick(anchor)"
-        >
-          <el-link :underline="false">{{ anchor.title }}</el-link>
-        </div>
-      </el-card>
+
+      <div ref="header" :style="{ width: originalWidth + 'px' }" :class="{ 'fixed': isFixed }">
+        <el-card class="box-card" shadow="hover" style="width: 100% ;position: relative">
+          <template #header>
+            <h2 class="text-lg" style="margin: 0">
+              <svg-icon icon-class="tags"></svg-icon>
+              目录
+            </h2>
+          </template>
+          <div class="catalog">
+            <div
+              v-for="anchor in titles"
+              :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
+              @click="handleAnchorClick(anchor)"
+              :class="{ 'toc-item': true, 'active': anchor.highlight }"
+            >
+              <el-link :underline="false">{{ anchor.title }}</el-link>
+            </div>
+          </div>
+        </el-card>
+      </div>
+
+
     </el-space>
   </el-col>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, toRefs, watch, onBeforeMount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { article, listArticles, listTag, getComment, articleLike, deleteComment } from '@/api/show'
-import { addComment } from '@/api/user'
+import {reactive, ref, toRefs, watch, onBeforeMount, onMounted, onUnmounted, nextTick} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {ElMessage} from 'element-plus'
+import {article, listArticles, listTag, getComment, articleLike, deleteComment} from '@/api/show'
+import {addComment} from '@/api/user'
 import comments from '@/components/comments/index.vue'
 import {image, markdownImageFile, open, openQQ} from '@/utils/publicMethods'
 
@@ -277,7 +285,7 @@ const config = ref({
   articleId: route.params.id
 })
 
-const { queryParams } = toRefs(data)
+const {queryParams} = toRefs(data)
 
 /** 查询展示推荐列表 */
 function getList(categoryId: any) {
@@ -289,7 +297,7 @@ function getList(categoryId: any) {
 
 // 页面跳转
 function getArticleId(id: any) {
-  router.push({ path: `/article/${id}` })
+  router.push({path: `/article/${id}`})
 }
 
 function clickLike(val: any) {
@@ -310,6 +318,7 @@ function clickLike(val: any) {
     }
   })
 }
+
 // 获取文章详情
 const getArticle = async () => {
   await article(route.params.id).then((res: any) => {
@@ -329,7 +338,7 @@ const getArticle = async () => {
  */
 const getTags = async () => {
   // 函解构用async和await包裹
-  const { data: res } = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
+  const {data: res} = await listTag() // 获取接口调用函数getList中的值data 其中data是表单里的数据
   // 对data进行解构赋值 取出请求的结果res
   tags.value = res.data
 }
@@ -337,7 +346,7 @@ const getTags = async () => {
 getTags()
 // 跳转到指定位置
 const handleAnchorClick = (anchor: any) => {
-  const { lineIndex } = anchor
+  const {lineIndex} = anchor
   const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`)
   if (heading) {
     preview.value.scrollToTarget({
@@ -365,6 +374,40 @@ async function getCatalog() {
   }))
 }
 
+const activeIndex = ref(-1)
+const handlePreviewScroll = () => {
+  // 在滚动时更新当前高亮的标题索引
+  const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  // 初始化最近的元素和距离
+  let nearestElement = null;
+  let nearestDistance = Infinity;
+
+  anchors.forEach((anchor:any) => {
+    const rect = anchor.getBoundingClientRect();
+    const distanceToTop = rect.top;
+
+    // 检查是否在视口内
+    if (distanceToTop >= 80 && distanceToTop < nearestDistance) {
+      nearestElement = anchor;
+      nearestDistance = distanceToTop;
+    }
+  });
+  if (nearestElement) {
+    const lineValue = nearestElement.getAttribute('data-v-md-line');
+    // 在使用 titles 之前将所有元素的 highlight 属性设置为 false
+    titles.value.forEach((title:any) => title.highlight = false);
+    // 找到 lineIndex 等于 lineValue 的元素
+    const targetTitle = titles.value.find((title:any) => title.lineIndex == lineValue);
+
+    // 如果找到了符合条件的元素，设置其属性 highlight 为 true
+    if (targetTitle) {
+      targetTitle.highlight = true;
+    }
+
+    // console.log('Nearest Element with data-v-md-line:', titles.value);
+  }
+}
+
 function getListComment() {
   getComment(route.params.id).then((res) => {
     commentCount.value = res.data.data.commentCount
@@ -376,6 +419,7 @@ function getListComment() {
     config.value.disabled = true
   })
 }
+
 function submitComments(val: any) {
   const data: any = {
     parentId: val.parentId,
@@ -387,12 +431,14 @@ function submitComments(val: any) {
     ElMessage.success(res.data.msg)
   })
 }
+
 function vanishDelete(val: any) {
   deleteComment(val.id).then((res) => {
     getListComment()
     ElMessage.success(res.data.msg)
   })
 }
+
 onBeforeMount(async () => {
   // 监听$route对象上的参数属性变化
   watch(
@@ -406,6 +452,32 @@ onBeforeMount(async () => {
   )
   await getCatalog()
 })
+const header = ref(null);
+const isFixed = ref(false);
+const originalWidth = ref(0);
+const handleScroll = () => {
+  const scrollPosition = window.scrollY;
+  isFixed.value = scrollPosition > 400;
+};
+onMounted(() => {
+  // 获取 header 元素的初始宽度
+  // 使用 nextTick 来获取元素宽度，确保在 DOM 更新之后
+  nextTick(() => {
+    if (header.value) {
+      originalWidth.value = header.value.getBoundingClientRect().width;
+    }
+  });
+  // 监听滚动事件
+  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('scroll', handlePreviewScroll);
+});
+
+onUnmounted(() => {
+  // 在组件销毁时移除滚动事件监听器
+  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('scroll', handlePreviewScroll);
+});
+
 getListComment()
 </script>
 
@@ -451,4 +523,33 @@ getListComment()
 >>> .github-markdown-body {
   padding: 0;
 }
+
+.fixed {
+  position: fixed;
+  top: 90px;
+}
+.catalog{
+  overflow-y: auto;
+  height: calc(100vh - 400px);
+  /* 隐藏滚动条，但允许滑动 */
+  scrollbar-width: thin;
+  //scrollbar-color: transparent transparent;
+}
+/* 在滑动时显示滚动条 */
+.catalog:hover {
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.toc-item {
+  cursor: pointer;
+}
+
+.toc-item:hover {
+  background-color: #f0f0f0;
+}
+
+.active {
+  background-color: #f0f0f0;
+}
+
 </style>
