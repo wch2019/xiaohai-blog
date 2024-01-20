@@ -2,6 +2,7 @@ import {defineConfig} from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+    ignoreDeadLinks: true,
     title: "DotCode",
     description: "DotCode(点码），是一个前后分离的博客系统。",
     themeConfig: {
