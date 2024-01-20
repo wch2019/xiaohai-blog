@@ -381,13 +381,14 @@ const handlePreviewScroll = () => {
   // 初始化最近的元素和距离
   let nearestElement = null;
   let nearestDistance = Infinity;
+  console.log(nearestElement)
 
   anchors.forEach((anchor:any) => {
     const rect = anchor.getBoundingClientRect();
     const distanceToTop = rect.top;
-
+    nearestDistance = distanceToTop;
     // 检查是否在视口内
-    if (distanceToTop >= 80 && distanceToTop < nearestDistance) {
+    if (distanceToTop <= 90 && distanceToTop >= nearestDistance) {
       nearestElement = anchor;
       nearestDistance = distanceToTop;
     }
