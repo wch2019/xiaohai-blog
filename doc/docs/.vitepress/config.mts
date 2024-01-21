@@ -16,7 +16,7 @@ export default defineConfig({
         search: {
             provider: 'local'
         },
-        logo: './image/favicon.ico',
+        logo: '/favicon.ico',
         // https://vitepress.dev/reference/default-theme-config
         nav: [
             {text: '主页', link: '/'},
@@ -51,6 +51,10 @@ export default defineConfig({
         ],
         socialLinks: [
             {icon: 'github', link: 'https://github.com/wch2019/xiaohai-blog'}
-        ]
+        ],
+        footer: {
+            message: 'Released under the <a href="https://github.com/wch2019/xiaohai-blog/blob/master/LICENSE">Apache License 2.0',
+            copyright: 'Copyright © 2023-present xiaohai'
+        }
     }
 })
