@@ -2,10 +2,20 @@ import {defineConfig} from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+    // 忽略死链接
     ignoreDeadLinks: true,
+    // 更新时间
+    lastUpdated: true,
     title: "DotCode",
     description: "DotCode(点码），是一个前后分离的博客系统。",
     themeConfig: {
+        outline: {
+            level: [2, 6],
+            label: '目录'
+        },
+        search: {
+            provider: 'local'
+        },
         logo: './image/favicon.ico',
         // https://vitepress.dev/reference/default-theme-config
         nav: [
@@ -16,6 +26,7 @@ export default defineConfig({
         sidebar: [
             {
                 text: '简介',
+                collapsed: false,
                 items: [
                     {text: '介绍', link: '/介绍'},
                     {text: '安装指南',
@@ -38,9 +49,8 @@ export default defineConfig({
                 link: '/关于文档'
             }
         ],
-
         socialLinks: [
-            {icon: 'github', link: 'https://github.com/vuejs/vitepress'}
+            {icon: 'github', link: 'https://github.com/wch2019/xiaohai-blog'}
         ]
     }
 })
