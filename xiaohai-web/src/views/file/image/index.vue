@@ -251,7 +251,7 @@ export default {
       if (o.suffix !== null) {
         suffix = '.' + o.suffix
       }
-      this.$prompt('', '重命名', {
+      this.$prompt('会改变源文件名称，影响文章图片展示。请知晓后操作', '重命名', {
         iconClass: 'el-icon-edit',
         center: true,
         confirmButtonText: '确定',

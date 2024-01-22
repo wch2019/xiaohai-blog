@@ -38,6 +38,15 @@ export function uploadImage(data) {
   })
 }
 
+// 文件上传
+export function uploadFile(data) {
+  return request({
+    url: api + '/',
+    method: 'post',
+    data
+  })
+}
+
 // 文件删除
 export function delFile(data) {
   return request({

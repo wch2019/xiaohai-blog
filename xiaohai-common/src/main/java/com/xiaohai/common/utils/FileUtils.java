@@ -465,6 +465,23 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     /**
+     * 获取最后一个 "/" 前面的数据
+     * @param input
+     * @return
+     */
+    public static String getLastSegment(String input) {
+        int lastSlashIndex = input.lastIndexOf("/");
+
+        // 检查是否找到了 "/"
+        if (lastSlashIndex != -1) {
+            // 使用substring获取最后一个 "/" 前面的数据
+            return input.substring(0,lastSlashIndex+1);
+        } else {
+            // 如果没有找到 "/", 可以根据实际需求返回空字符串或整个输入字符串
+            return "";
+        }
+    }
+    /**
      * 重命名文件或目录路径
      *
      * @param originalPath 原始文件/目录路径
@@ -486,19 +503,23 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     public static void main(String[] args) throws Exception {
-        String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
-        String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";
-        File file = new File(filePath);
-        long fileSize = file.length();
-        System.out.println("文件大小：" + formatFileSize(fileSize));
-        System.out.println("文件创建时间：" + fileCreationTime(filePath));
-        String a = extractChecksum(filePath, "SHA-256");
-        String b = extractChecksum(filePath1, "SHA-256");
-        if (a.equals(b)) {
-            System.out.println("相同");
-        } else {
-            System.out.println("不同");
-        }
-        calculateHashesInFolder("Z:\\Linux\\blog\\dev\\files\\1\\markdown", Constants.MD5);
+//        String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
+//        String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";
+//        File file = new File(filePath);
+//        long fileSize = file.length();
+//        System.out.println("文件大小：" + formatFileSize(fileSize));
+//        System.out.println("文件创建时间：" + fileCreationTime(filePath));
+//        String a = extractChecksum(filePath, "SHA-256");
+//        String b = extractChecksum(filePath1, "SHA-256");
+//        if (a.equals(b)) {
+//            System.out.println("相同");
+//        } else {
+//            System.out.println("不同");
+//        }
+//        calculateHashesInFolder("Z:\\Linux\\blog\\dev\\files\\1\\markdown", Constants.MD5);
+        String input = "/files/1/markdown";
+        String result = getLastSegment(input);
+
+        System.out.println(result); // 输出: markdown
     }
 }

@@ -381,7 +381,6 @@ const handlePreviewScroll = () => {
   // 初始化最近的元素和距离
   let nearestElement = null;
   let nearestDistance = Infinity;
-  console.log(nearestElement)
 
   anchors.forEach((anchor:any) => {
     const rect = anchor.getBoundingClientRect();
@@ -405,7 +404,7 @@ const handlePreviewScroll = () => {
       targetTitle.highlight = true;
     }
 
-    // console.log('Nearest Element with data-v-md-line:', titles.value);
+    // console.log('Nearest Element with data-v-md-line:', nearestDistance);
   }
 }
 
@@ -530,15 +529,12 @@ getListComment()
   top: 90px;
 }
 .catalog{
-  overflow-y: auto;
-  height: calc(100vh - 400px);
-  /* 隐藏滚动条，但允许滑动 */
-  scrollbar-width: thin;
-  //scrollbar-color: transparent transparent;
+  overflow: hidden;
+  max-height: calc(100vh - 400px);
 }
 /* 在滑动时显示滚动条 */
 .catalog:hover {
-  scrollbar-color: #888 #f1f1f1;
+  overflow-y: auto;
 }
 
 .toc-item {

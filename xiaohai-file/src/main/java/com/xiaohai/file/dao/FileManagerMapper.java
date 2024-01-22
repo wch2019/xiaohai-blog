@@ -1,7 +1,9 @@
 package com.xiaohai.file.dao;
 
-import com.xiaohai.file.pojo.entity.FileManager;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xiaohai.file.pojo.entity.FileManager;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface FileManagerMapper extends BaseMapper<FileManager> {
 
+    List<FileManager> selectChildHierarchy(Integer id);
 }

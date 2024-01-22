@@ -1,13 +1,12 @@
 package com.xiaohai.file.service;
 
-import com.xiaohai.file.pojo.entity.FileManager;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.file.pojo.query.FileManagerQuery;
-import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
-
-import java.util.List;
+import com.xiaohai.file.pojo.entity.FileManager;
+import com.xiaohai.file.pojo.query.FileManagerQuery;
+import com.xiaohai.file.pojo.vo.FileManagerNameVo;
+import com.xiaohai.file.pojo.vo.FileManagerVo;
 
 /**
  * 文件管理 服务类
@@ -41,6 +40,14 @@ public interface FileManagerService extends IService<FileManager> {
      * @return Integer
      */
     Integer updateData(FileManagerVo vo);
+
+    /**
+     * 重命名文件
+     *
+     * @param vo 文件管理 VO（View Object）：显示层对象
+     * @return Integer
+     */
+    Integer renameFile(FileManagerNameVo vo);
 
     /**
      * 根据hash和parentId查询

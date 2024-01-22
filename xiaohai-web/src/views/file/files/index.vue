@@ -70,7 +70,7 @@
         </div>
       </template>
     </el-table>
-    <FileUpload :file-details="fileDetails" @getList="getList"/>
+    <FileUpload :file-upload="fileUpload" @getList="getList"/>
     <FileDetails v-if="imageDetails.show" :image-details="imageDetails"/>
   </div>
 </template>
@@ -108,7 +108,10 @@ export default {
       fileList: [],
       // 预览图片列表
       srcList: [],
-      fileDetails: {},
+      // 文件上传
+      fileUpload: {
+        path: ''
+      },
       // 选中的项
       selectedItems: [],
       checkAll: false,
@@ -175,6 +178,7 @@ export default {
         this.fileList = [...this.fileList, ... response.data.records]
         this.total =response.data.total
         this.getPathList()
+        this.fileUpload.path=this.form.path
         this.loading = false
       })
     },

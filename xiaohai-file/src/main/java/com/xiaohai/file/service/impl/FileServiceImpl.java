@@ -88,14 +88,14 @@ public class FileServiceImpl implements FileService {
         return addFileImage(path, file, hash);
     }
 
-//    @Override
-//    public Integer deleteImage(String pathName) {
-//        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + pathName;
-//        boolean isTrue = FileUtils.deleteFile(path);
-//        Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
-//        path = path.replace(fileConfig.getProfile(), File.separator);
-//        return fileManagerService.deletePath(path);
-//    }
+    //    @Override
+    //    public Integer deleteImage(String pathName) {
+    //        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + pathName;
+    //        boolean isTrue = FileUtils.deleteFile(path);
+    //        Assert.isTrue(isTrue, "当前图片:" + pathName + ",删除失败");
+    //        path = path.replace(fileConfig.getProfile(), File.separator);
+    //        return fileManagerService.deletePath(path);
+    //    }
 
     @Override
     public String uploadBing(MultipartFile file, String path, String fileName) {
@@ -254,26 +254,23 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String upload(UploadVo vo) {
+        var path = vo.getPath().replace("/", File.separator);
+
         MultipartFile file = vo.getFile();
-        String path = fileConfig.getFilePath() + vo.getPath();
         // 判断文件是否为空
-        if (file == null || file.isEmpty()) {
+        if (file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
-
-        // 获取文件原始名称
-        String originalFilename = file.getOriginalFilename();
-        assert originalFilename != null;
-        //文件夹以年份/月份/分割
-        //        String folder = LocalDateTime.now().getYear() + "/" + LocalDateTime.now().getMonth() + "/";
-
-        // 保存文件并返回文件路径
-        String filePath = FileUtils.saveFile(path, originalFilename, file);
-
-        filePath = File.separator + filePath.replace(fileConfig.getProfile(), "");
-        log.info("保存图片--------->{}", filePath);
-        //前端展示需要处理
-        return filePath.replace("\\", "/");
+        //根据用户区分文件夹
+        path = fileConfig.getProfile() + path.substring(1);
+        //计算hash
+        String hash = FileUtils.extractChecksum(file, SHA_256);
+        //验证是否存在当前文件
+        String url = getFile(path, hash);
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        }
+        return addFile(path, file, file.getOriginalFilename(), hash);
     }
 
     @Override

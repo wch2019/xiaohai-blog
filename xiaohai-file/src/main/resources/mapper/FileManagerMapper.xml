@@ -25,5 +25,19 @@
         updated_time,
         id, parent_id, file_name, file_path, file_type, file_size, file_hash
     </sql>
+    <select id="selectChildHierarchy" resultType="com.xiaohai.file.pojo.entity.FileManager">
+        WITH RECURSIVE ChildHierarchy AS (
+            SELECT id, parent_id, file_name, file_path
+            FROM file_manager
+            WHERE id = #{id}
+
+            UNION ALL
+
+            SELECT t.id, t.parent_id, t.file_name, t.file_path
+            FROM file_manager t
+                     JOIN ChildHierarchy ch ON t.parent_id = ch.id
+        )
+        SELECT * FROM ChildHierarchy;
+    </select>
 
 </mapper>

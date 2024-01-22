@@ -9,14 +9,15 @@
           circle
         />
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item><i class="el-icon-upload2" />上传</el-dropdown-item>
-          <el-dropdown-item @click.native="addFolder()"><i class="el-icon-folder-add" />新建文件夹</el-dropdown-item>
+          <el-dropdown-item @click.native="handleImport"><i class="el-icon-upload2"/>上传</el-dropdown-item>
+          <el-dropdown-item @click.native="addFolder(fileUpload.path)"><i class="el-icon-folder-add"/>新建文件夹
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
 
     <el-dialog
-      title="图片上传"
+      title="文件上传"
       :visible.sync="imageUpload.show"
       width="30%"
     >
@@ -27,7 +28,7 @@
         :show-file-list="false"
         :http-request="uploadSectionFile"
       >
-        <i class="el-icon-upload" />
+        <i class="el-icon-upload"/>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
 
@@ -35,11 +36,11 @@
   </div>
 </template>
 <script>
-import { newFolder, uploadImage } from '@/api/file/file'
+import {newFolder, uploadFile, uploadImage} from '@/api/file/file'
 
 export default {
   name: 'FileUpload',
-  props: ['fileDetails'],
+  props: ['fileUpload'],
   data() {
     return {
       imageUpload: {
@@ -56,23 +57,24 @@ export default {
     // 覆盖默认的上传行为
     uploadSectionFile(params) {
       const file = params.file
-      const fileType = file.type
-      const isImage = fileType.indexOf('image') !== -1
-      const isLt2M = file.size / 1024 / 1024 < 2
-      // 这里常规检验，看项目需求而定
-      if (!isImage) {
-        this.$message.error('只能上传图片格式png、jpg、gif!')
-        return
-      }
-      if (!isLt2M) {
-        this.$message.error('只能上传图片大小小于2M')
-        return
-      }
+      // const fileType = file.type
+      // const isImage = fileType.indexOf('image') !== -1
+      // const isLt2M = file.size / 1024 / 1024 < 2
+      // // 这里常规检验，看项目需求而定
+      // if (!isImage) {
+      //   this.$message.error('只能上传图片格式png、jpg、gif!')
+      //   return
+      // }
+      // if (!isLt2M) {
+      //   this.$message.error('只能上传图片大小小于2M')
+      //   return
+      // }
       // 根据后台需求数据格式
       const form = new FormData()
       // 文件对象
       form.append('file', file)
-      uploadImage(form).then(response => {
+      form.append('path', this.fileUpload.path)
+      uploadFile(form).then(response => {
         this.$message.success(response.msg)
         this.imageUpload.show = false
         this.$emit('getList')
@@ -87,12 +89,12 @@ export default {
         cancelButtonText: '取消',
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
         inputErrorMessage: '文件名格式不正确'
-      }).then(({ value }) => {
+      }).then(({value}) => {
         const data = {}
-        data.path = path ? path + value : value
+        data.path = path ? path + '/' + value : value
         newFolder(data).then(response => {
           this.$message.success(response.msg)
-          this.$emit('getList')
+          this.$emit('getList',path,true)
         })
       }).catch(() => {
         this.$message({

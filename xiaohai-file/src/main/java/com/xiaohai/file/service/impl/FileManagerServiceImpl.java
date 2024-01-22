@@ -1,29 +1,31 @@
 package com.xiaohai.file.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.daomain.PageData;
-import com.xiaohai.common.utils.FileUtils;
-import com.xiaohai.file.pojo.entity.FileManager;
-import com.xiaohai.file.dao.FileManagerMapper;
-import com.xiaohai.file.service.FileManagerService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.PageUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.xiaohai.file.dao.FileManagerMapper;
+import com.xiaohai.file.pojo.dto.FileManagerDto;
+import com.xiaohai.file.pojo.entity.FileManager;
+import com.xiaohai.file.pojo.query.FileManagerQuery;
+import com.xiaohai.file.pojo.vo.FileManagerNameVo;
+import com.xiaohai.file.pojo.vo.FileManagerVo;
+import com.xiaohai.file.service.FileManagerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
-import com.xiaohai.file.pojo.query.FileManagerQuery;
-import com.xiaohai.file.pojo.vo.FileManagerVo;
-import com.xiaohai.file.pojo.dto.FileManagerDto;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -51,13 +53,19 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     public Integer deleteFile(Long[] ids) {
         for (Long id : ids) {
             FileManager fileManager = baseMapper.selectById(id);
-            String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + fileManager.getFilePath());
-            boolean isTrue = FileUtils.deleteFile(pathFile);
-            Assert.isTrue(isTrue, "当前路径:" + fileManager.getFilePath() + ",删除失败");
-            baseMapper.deleteById(id);
+            List<FileManager> list=baseMapper.selectList(new LambdaQueryWrapper<FileManager>().likeRight(FileManager::getFilePath,fileManager.getFilePath()));
+           //根据目录的长度排序
+            list.sort(Comparator.comparing(FileManager::getFilePath).reversed());
+            for (FileManager file:list){
+                String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + file.getFilePath());
+                boolean isTrue = FileUtils.deleteFile(pathFile);
+                Assert.isTrue(isTrue, "当前路径:" + file.getFilePath() + ",删除失败");
+                baseMapper.deleteById(file.getId());
+            }
         }
         return ids.length;
     }
+
 
     @Override
     public Integer updateData(FileManagerVo vo) {
@@ -65,7 +73,20 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         BeanUtils.copyProperties(vo, fileManager);
         return baseMapper.updateById(fileManager);
     }
-
+    @Override
+    public Integer renameFile(FileManagerNameVo vo) {
+        FileManager fileManager=baseMapper.selectById(vo.getId());
+        List<FileManager> list=baseMapper.selectList(new LambdaQueryWrapper<FileManager>().likeRight(FileManager::getFilePath,fileManager.getFilePath()));
+        var newPath=FileUtils.getLastSegment(fileManager.getFilePath())+vo.getFileName();
+        FileUtils.renamePath(fileConfig.getProfile() + fileManager.getFilePath(),fileConfig.getProfile() + newPath);
+        fileManager.setFilePath(newPath);
+        BeanUtils.copyProperties(vo, fileManager);
+        return baseMapper.updateById(fileManager);
+    }
+    public void parentFile(FileManagerNameVo vo) {
+        FileManager fileManager=baseMapper.selectById(vo.getId());
+        List<FileManager> list=baseMapper.selectList(new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId,vo.getId()));
+    }
     @Override
     public FileManager findByHash(Integer parentId,String hash) {
         return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId,parentId).eq(FileManager::getFileHash, hash));
