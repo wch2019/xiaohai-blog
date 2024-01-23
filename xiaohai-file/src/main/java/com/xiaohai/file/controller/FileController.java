@@ -5,7 +5,6 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.vo.FileManagerNameVo;
-import com.xiaohai.file.pojo.vo.FileManagerVo;
 import com.xiaohai.file.pojo.vo.FolderVO;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileManagerService;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +72,7 @@ public class FileController {
     //    public Response<ReturnPageData<FileManagerDto>> getPathList(String path) {
     //        return Response.success("获取文件列表成功！", fileService.getPathList(path));
     //    }
+
     @Operation(summary = "markdown图片列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
@@ -82,11 +81,11 @@ public class FileController {
         return Response.success("获取markdown图片列表成功！", fileService.getMarkdownImageListByPage());
     }
 
-    @Operation(summary = "文件删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "仅支持markdown图片路径删除", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "path", description = "路径", required = true)
-    @DeleteMapping()
-    public Response<Integer> deletePath(String path) {
-        return Response.success("删除成功！", fileService.deletePath(path));
+    @DeleteMapping("/markdownImage")
+    public Response<Integer> deletePathMarkdownImage(String path) {
+        return Response.success("删除成功！", fileService.deletePathMarkdownImage(path));
     }
 
     @Operation(summary = "根据id删除文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})

@@ -47,10 +47,10 @@ export function uploadFile(data) {
   })
 }
 
-// 文件删除
+// 仅支持markdown图片路径删除
 export function delFile(data) {
   return request({
-    url: api,
+    url: api+'/markdownImage',
     method: 'delete',
     params: { path: data }
   })

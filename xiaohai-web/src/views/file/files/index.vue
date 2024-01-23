@@ -70,6 +70,37 @@
         </div>
       </template>
     </el-table>
+    <el-alert
+      v-show="alertVisible"
+      class="alert-button"
+      center
+      :closable="false"
+      :class="alertClass"
+    >
+      <el-row :gutter="8" class="mb8">
+<!--        <el-col :span="1.5">-->
+<!--          <el-tooltip class="item" effect="dark" content="下载" placement="top">-->
+<!--            <el-button type="info" icon="el-icon-download" size="mini" @click="downloadMultipleFiles" />-->
+<!--          </el-tooltip>-->
+<!--        </el-col>-->
+        <el-col :span="1.5">
+          <el-tooltip
+            v-if="$store.getters.permission.includes('note:article:delete')&&selectedItems.length!==0"
+            class="item"
+            effect="dark"
+            content="删除"
+            placement="top"
+          >
+            <el-button type="info" icon="el-icon-delete" size="mini" @click="handleDelete" />
+          </el-tooltip>
+        </el-col>
+        <el-col :span="1.5">
+          <el-tooltip class="item" effect="dark" content="取消多选" placement="top">
+            <el-button type="info" icon="el-icon-circle-close" size="mini" @click="handleCheckAllChange" />
+          </el-tooltip>
+        </el-col>
+      </el-row>
+    </el-alert>
     <FileUpload :file-upload="fileUpload" @getList="getList"/>
     <FileDetails v-if="imageDetails.show" :image-details="imageDetails"/>
   </div>
@@ -119,6 +150,9 @@ export default {
       // 加载
       loading: false,
       noMore: false,
+
+      alertVisible: false,
+      alertClass: ''
     }
   },
   created() {
@@ -126,12 +160,12 @@ export default {
   },
   methods: {
     handleSelectionChange(selection) {
-      console.log(selection)
       const checkedCount = selection.length
       // 处理行选择事件
       this.selectedItems = selection
       this.checkAll = checkedCount === this.selectedItems.length && checkedCount !== 0
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.fileList.length
+      this.showAlert(this.selectedItems.length)
     },
     handleCheckAllChange() {
       // 处理全选事件
@@ -143,6 +177,7 @@ export default {
       } else {
         this.$refs.multipleTable.clearSelection()
       }
+      this.showAlert(this.selectedItems.length)
     },
     loadMoreData() {
       console.log(this.noMore)
@@ -279,7 +314,8 @@ export default {
     },
     // 删除
     handleDelete(o) {
-      const ids = [o.id] || this.selectedItems
+      const ids = o.id ? [o.id] : this.selectedItems.map(item => item.id)
+      console.log(ids)
       this.$confirm('是否确认删除？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -292,7 +328,19 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
-    }
+    },
+    // 底部状态
+    showAlert(size) {
+      if (size === 0) {
+        this.alertClass = 'alert-slide-down'
+        setTimeout(() => {
+          this.alertVisible = false
+        }, 250) // 根据动画持续时间来调整延迟时间
+      } else {
+        this.alertVisible = true
+        this.alertClass = 'alert-slide-up'
+      }
+    },
   }
 }
 </script>
@@ -329,5 +377,40 @@ export default {
   overflow-y: auto; /* 启用垂直滚动条 */
   /* 123 = navbar + tags-view +app-container+el-checkbox= 50 + 34+ 20+ 19 */
   height: calc(100vh - 500px);
+}
+
+.alert-button {
+  background-color: #909399;
+  width: 250px;
+  position: fixed; /* 固定定位，使按钮保持在页面右下角 */
+  bottom: 80px; /* 距离底部的距离，根据需要调整 */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.alert-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(100%) translateX(-50%);
+  }
+  100% {
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
+.alert-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    transform: translateY(100%) translateX(-50%);
+  }
 }
 </style>

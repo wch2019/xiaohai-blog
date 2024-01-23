@@ -5,12 +5,10 @@ import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
-import com.xiaohai.common.utils.DateUtils;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.MarkdownUtils;
 import com.xiaohai.common.utils.StringUtils;
 import com.xiaohai.file.dao.FileManagerMapper;
-import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
@@ -24,10 +22,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.xiaohai.common.constant.Constants.SHA_256;
@@ -346,8 +341,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Integer deletePath(String path) {
-        String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + path);
+    public Integer deletePathMarkdownImage(String path) {
+        String pathFile = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
+        pathFile = FileUtils.systemFilePath(pathFile + path);
         boolean isTrue = FileUtils.deleteFile(pathFile);
         Assert.isTrue(isTrue, "当前路径:" + path + ",删除失败");
         return fileManagerService.deletePath(path);

@@ -91,10 +91,11 @@ export default {
         inputErrorMessage: '文件名格式不正确'
       }).then(({value}) => {
         const data = {}
-        data.path = path ? path + '/' + value : value
+        value = '/' + value
+        data.path = path ? path + value : value
         newFolder(data).then(response => {
           this.$message.success(response.msg)
-          this.$emit('getList',path,true)
+          this.$emit('getList', path, true)
         })
       }).catch(() => {
         this.$message({

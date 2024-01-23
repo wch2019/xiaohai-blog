@@ -53,9 +53,7 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     public Integer deleteFile(Long[] ids) {
         for (Long id : ids) {
             FileManager fileManager = baseMapper.selectById(id);
-            List<FileManager> list=baseMapper.selectList(new LambdaQueryWrapper<FileManager>().likeRight(FileManager::getFilePath,fileManager.getFilePath()));
-           //根据目录的长度排序
-            list.sort(Comparator.comparing(FileManager::getFilePath).reversed());
+            List<FileManager> list=baseMapper.selectChildHierarchy(fileManager.getId());
             for (FileManager file:list){
                 String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + file.getFilePath());
                 boolean isTrue = FileUtils.deleteFile(pathFile);
@@ -76,17 +74,19 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     @Override
     public Integer renameFile(FileManagerNameVo vo) {
         FileManager fileManager=baseMapper.selectById(vo.getId());
-        List<FileManager> list=baseMapper.selectList(new LambdaQueryWrapper<FileManager>().likeRight(FileManager::getFilePath,fileManager.getFilePath()));
+        List<FileManager> list=baseMapper.selectChildHierarchy(fileManager.getId());
         var newPath=FileUtils.getLastSegment(fileManager.getFilePath())+vo.getFileName();
         FileUtils.renamePath(fileConfig.getProfile() + fileManager.getFilePath(),fileConfig.getProfile() + newPath);
+        var path=fileManager.getFilePath();
+        for (FileManager file:list){
+            file.setFilePath(file.getFilePath().replace(path,newPath));
+            baseMapper.updateById(file);
+        }
         fileManager.setFilePath(newPath);
         BeanUtils.copyProperties(vo, fileManager);
         return baseMapper.updateById(fileManager);
     }
-    public void parentFile(FileManagerNameVo vo) {
-        FileManager fileManager=baseMapper.selectById(vo.getId());
-        List<FileManager> list=baseMapper.selectList(new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId,vo.getId()));
-    }
+
     @Override
     public FileManager findByHash(Integer parentId,String hash) {
         return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId,parentId).eq(FileManager::getFileHash, hash));

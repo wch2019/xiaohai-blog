@@ -78,12 +78,12 @@ public interface FileService {
     ReturnPageData<FileManagerDto> getMarkdownImageListByPage();
 
     /**
-     * 删除文件
+     * 仅支持markdown图片路径删除
      *
      * @param path
      * @return
      */
-    Integer deletePath(String path);
+    Integer deletePathMarkdownImage(String path);
 
     /**
      * 如果文件夹不存在，则创建它，并存入数据库

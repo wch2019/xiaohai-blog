@@ -142,7 +142,7 @@ import { addArticle, updateArticle, getBingWallpaper, getArticle } from '@/api/n
 import {delFile, uploadImage} from '@/api/file/file'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
-import { markdownImageFile } from '@/utils'
+import {getLastSegment, markdownImageFile} from '@/utils'
 
 export default {
   name: 'Index',
@@ -263,8 +263,7 @@ export default {
     // 删除图片
     imgDel(filename) {
       const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE,"")
-      console.log(name)
-      delFile(name).then(response => {
+      delFile(getLastSegment(name)).then(response => {
         this.$message.success(response.msg)
       })
     },

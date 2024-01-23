@@ -15,5 +15,10 @@ import java.util.List;
  */
 public interface FileManagerMapper extends BaseMapper<FileManager> {
 
+    /**
+     * 根据id往下递归
+     * @param id
+     * @return
+     */
     List<FileManager> selectChildHierarchy(Integer id);
 }
