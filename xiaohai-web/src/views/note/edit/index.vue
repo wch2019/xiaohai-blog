@@ -2,7 +2,7 @@
   <div class="app-container" style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span style="font-weight: 600;font-size: 20px;">{{ title }}</span>
+        <span style="font-weight: 600;font-size: 20px;">{{ form.title ? form.title : title }}</span>
         <el-button size="small" style="float: right; " type="primary" @click="submitForm">保 存</el-button>
       </div>
       <!-- 添加或修改参数配置对话框 -->
@@ -12,12 +12,14 @@
             <el-row>
               <el-col :span="8">
                 <el-form-item label="标题" prop="title">
-                  <el-input v-model="form.title" style="width: 100%" placeholder="请输入标题" />
+                  <el-input v-model="form.title" maxlength="100" show-word-limit style="width: 100%"
+                            placeholder="请输入标题"/>
                 </el-form-item>
               </el-col>
               <el-col :span="15">
                 <el-form-item label="简介" prop="summary">
-                  <el-input v-model="form.summary" style="width: 100%" placeholder="请输入简介" />
+                  <el-input v-model="form.summary" maxlength="250" show-word-limit style="width: 100%"
+                            placeholder="请输入简介"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -62,30 +64,36 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="顶置" prop="isTop">
-                  <el-radio v-for="(item,index) in isTop" :key="index" v-model="form.isTop" size="small" :label="index" border>{{ item }}</el-radio>
+                  <el-radio v-for="(item,index) in isTop" :key="index" v-model="form.isTop" size="small" :label="index"
+                            border>{{ item }}
+                  </el-radio>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
                 <el-form-item label="发布" prop="isPush">
-                  <el-radio v-for="(item,index) in isPush" :key="index" v-model="form.isPush" size="small" :label="index" border>{{ item }}</el-radio>
+                  <el-radio v-for="(item,index) in isPush" :key="index" v-model="form.isPush" size="small"
+                            :label="index" border>{{ item }}
+                  </el-radio>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="类型" prop="isOriginal">
-                  <el-radio v-for="(item,index) in isOriginal" :key="index" v-model="form.isOriginal" size="small" :label="index" border>{{ item }}</el-radio>
+                  <el-radio v-for="(item,index) in isOriginal" :key="index" v-model="form.isOriginal" size="small"
+                            :label="index" border>{{ item }}
+                  </el-radio>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item v-if="form.isOriginal===1" label="转载地址" prop="originalUrl">
-                  <el-input v-model="form.originalUrl" placeholder="请输入转载地址" />
+                  <el-input v-model="form.originalUrl" placeholder="请输入转载地址"/>
                 </el-form-item>
               </el-col>
             </el-row>
           </el-col>
           <el-col :span="8">
-            <el-form-item />
+            <el-form-item/>
             <el-form-item prop="cover">
               <template #label>
                 封面
@@ -98,7 +106,7 @@
                     随机获取一张图片
                     <el-button type="text" size="mini" @click="randomImg()">确定</el-button>
                   </div>
-                  <i slot="reference" class="el-icon-question" />
+                  <i slot="reference" class="el-icon-question"/>
                 </el-popover>
               </template>
 
@@ -109,8 +117,8 @@
                 :show-file-list="false"
                 :http-request="uploadSectionFile"
               >
-                <el-image v-if="form.cover" fit="cover" :src="form.cover" class="el-upload-dragger" />
-                <i v-else class="el-icon-upload" />
+                <el-image v-if="form.cover" fit="cover" :src="form.cover" class="el-upload-dragger"/>
+                <i v-else class="el-icon-upload"/>
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em>
 
                 </div>
@@ -129,7 +137,26 @@
             @save="submitForm"
             @imgAdd="imgAdd"
             @imgDel="imgDel"
-          />
+          >
+            <template slot="left-toolbar-after">
+              <span data-v-548e2160="" class="op-icon-divider"></span>
+              <button
+                type="button"
+                @click="triggerFileInput"
+                class="op-icon fa el-icon-document-add"
+                aria-hidden="true"
+                title="导入md文档"
+              ></button>
+              <input id="upload" type="file" accept=".md" @change="importMd($event)" v-show="false"/>
+<!--              <button-->
+<!--                type="button"-->
+<!--                @click="triggerFileInput"-->
+<!--                class="op-icon fa el-icon-document-add"-->
+<!--                aria-hidden="true"-->
+<!--                title="其他图片链接"-->
+<!--              ></button>-->
+            </template>
+          </mavon-editor>
         </div>
       </el-form>
     </el-card>
@@ -138,11 +165,11 @@
 </template>
 
 <script>
-import { addArticle, updateArticle, getBingWallpaper, getArticle } from '@/api/note/article'
+import {addArticle, updateArticle, getBingWallpaper, getArticle} from '@/api/note/article'
 import {delFile, uploadImage} from '@/api/file/file'
-import { optionSelectCategory } from '@/api/note/category'
-import { optionSelectTags } from '@/api/note/tags'
-import {getLastSegment, markdownImageFile} from '@/utils'
+import {optionSelectCategory} from '@/api/note/category'
+import {optionSelectTags} from '@/api/note/tags'
+import {getLastSegment, markdownImageFile, findImg, truncateString} from '@/utils'
 
 export default {
   name: 'Index',
@@ -159,17 +186,18 @@ export default {
       CategoryList: [],
       // 表单校验
       rules: {
-        title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
-        summary: [{ required: true, message: '请输入简介', trigger: 'blur' }],
-        categoryId: [{ required: true, message: '分类不能为空', trigger: 'blur' }],
-        tags: [{ required: true, message: '标签不能为空', trigger: 'blur' }],
-        isTop: [{ required: true, message: '顶置不能为空', trigger: 'blur' }],
-        isPush: [{ required: true, message: '发布不能为空', trigger: 'blur' }],
-        isOriginal: [{ required: true, message: '类型不能为空', trigger: 'blur' }]
+        title: [{required: true, message: '标题不能为空', trigger: 'blur'}],
+        summary: [{required: true, message: '请输入简介', trigger: 'blur'}],
+        categoryId: [{required: true, message: '分类不能为空', trigger: 'blur'}],
+        tags: [{required: true, message: '标签不能为空', trigger: 'blur'}],
+        isTop: [{required: true, message: '顶置不能为空', trigger: 'blur'}],
+        isPush: [{required: true, message: '发布不能为空', trigger: 'blur'}],
+        isOriginal: [{required: true, message: '类型不能为空', trigger: 'blur'}]
       },
       form: {
         id: '',
         title: '',
+        summary:'',
         cover: '',
         text: '',
         categoryId: '',
@@ -211,8 +239,27 @@ export default {
           this.form.cover = process.env.VUE_APP_BASE_API_FILE + this.form.cover
           this.title = this.form.title
           this.form.text = this.form.text.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
+          let imgData = findImg(this.form.text);
+          imgData.forEach(item => {
+            this.imgRecurrent(item.text, item.url)
+          })
         })
       }
+    },
+    //将解析到图片名字和地址添加到控制列表(具体为什么要填这些参数，是因为mavon-editor插件中要使用到这些内容)
+    imgRecurrent(name, url) {
+      this.$refs.md.$refs.toolbar_left.$imgAddByFilename(
+        //markdown模板图片地址
+        url,
+        {
+          // 图片控制列表图片链接
+          miniurl: url,
+          // 图片控制列表名字
+          name: name,
+          //markdown模板图片名称
+          _name: name
+        }
+      )
     },
     // 随机照片
     randomImg() {
@@ -245,6 +292,34 @@ export default {
         this.$message.success(response.msg)
       })
     },
+    triggerFileInput() {
+      const fileInput = document.getElementById('upload');
+      fileInput.click();
+    },
+    //导入md文档
+    importMd(e) {
+      const file = e.target.files[0];
+      if (!file.name.endsWith(".md")) {
+        this.$message.warning("文件扩展名必须为.md！")
+        return;
+      }
+      let fileName = file.name.substring(0, file.name.length - 3)
+      const reader = new FileReader;
+      reader.readAsText(file);
+      reader.onload = (res) => {
+        this.form.text = res.target.result;
+        this.form.summary = truncateString(res.target.result.trim(),100)
+      }
+      this.form.title = fileName
+      this.$emit('loadTitle', fileName)
+      this.$notify({
+        title: '导入成功',
+        message: '若文章包含本地图片，需要手动导入',
+        type: 'success'
+      });
+
+      e.target.value = null;
+    },
     // 绑定@imgAdd event
     imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
@@ -262,7 +337,7 @@ export default {
     },
     // 删除图片
     imgDel(filename) {
-      const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE,"")
+      const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE, "")
       delFile(getLastSegment(name)).then(response => {
         this.$message.success(response.msg)
       })

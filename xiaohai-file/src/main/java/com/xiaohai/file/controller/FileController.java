@@ -76,6 +76,7 @@ public class FileController {
     @Operation(summary = "markdown图片列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
+//    @SaCheckPermission("file:image:list")
     @GetMapping(value = "/markdownImage")
     public Response<ReturnPageData<FileManagerDto>> getMarkdownImageListByPage() {
         return Response.success("获取markdown图片列表成功！", fileService.getMarkdownImageListByPage());

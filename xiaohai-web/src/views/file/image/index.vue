@@ -7,6 +7,7 @@
           <span v-else>已选 {{ selectedItems.length }} 项</span>
         </el-checkbox>
       </el-col>
+<!--      <el-progress :percentage="50"></el-progress>-->
     </el-row>
     <div style="margin-top:10px">
       <div v-if="fileList.length === 0">

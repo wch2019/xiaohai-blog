@@ -192,7 +192,6 @@ export default {
     },
     getList(path,newFolder) {
       this.loading = true
-      console.log("pathhhh",path,newFolder)
       if(newFolder){
         this.srcList = []
         this.fileList= []

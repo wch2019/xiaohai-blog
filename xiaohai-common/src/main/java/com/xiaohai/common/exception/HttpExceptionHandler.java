@@ -68,7 +68,7 @@ public class HttpExceptionHandler {
     @ResponseBody
     public Response<Object> notPermissionExceptionHandler(NotPermissionException ex) {
         log.error(ex.getMessage(), ex);
-        return Response.failure(HttpStatus.FORBIDDEN,"无此权限：" + ex.getCode());
+        return Response.failure(HttpStatus.FORBIDDEN,ex.getMessage());
     }
 
     /**

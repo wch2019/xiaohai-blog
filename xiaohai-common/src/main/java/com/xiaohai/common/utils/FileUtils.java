@@ -7,6 +7,7 @@ import com.xiaohai.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
@@ -305,13 +306,46 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @return 文件保存路径
      */
     public static String saveFile(String path, String fileName, MultipartFile file) {
-        try (InputStream inputStream = file.getInputStream()) {
-            File savedFile = new File(path, fileName);
-            FileUtils.copyInputStreamToFile(inputStream, savedFile);
-            return savedFile.getPath();
-        } catch (IOException e) {
-            throw new ServiceException("文件保存失败", e);
+        // 参数检查
+        if (path == null || fileName == null || file == null) {
+            throw new IllegalArgumentException("参数不能为空");
         }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            Path savedFilePath = Paths.get(path, fileName);
+
+            // 使用 Files.copy 替代 FileUtils.copyInputStreamToFile
+            Files.copy(inputStream, savedFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // 返回保存的文件路径
+            return savedFilePath.toString();
+        } catch (IOException e) {
+            // 捕获并重新抛出异常，添加更多上下文信息
+            throw new ServiceException("文件保存失败: " + fileName, e);
+        }
+    }
+
+    /**
+     * 当前目录下是否存在重名文件，并使用其他名称
+     *
+     * @param path     路径
+     * @param fileName 名称
+     * @return
+     */
+    public static String getUniqueFileName(String path, String fileName) {
+        // 获取文件名和扩展名
+        String baseName = FilenameUtils.getBaseName(fileName);
+        String extension = FilenameUtils.getExtension(fileName);
+
+        // 构造新的文件名
+        int counter = 1;
+        String uniqueFileName = fileName;
+        while (Files.exists(Paths.get(path, uniqueFileName))) {
+            // 如果文件已存在，则在文件名末尾添加计数器
+            uniqueFileName = String.format("%s_%d.%s", baseName, counter++, extension);
+        }
+
+        return uniqueFileName;
     }
 
     /**

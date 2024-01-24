@@ -131,7 +131,9 @@ public class FileServiceImpl implements FileService {
         }
 
         // 生成唯一的文件名
-        String fileName = FileUtils.generateUniqueFileName(fileExtension);
+//        String fileName = FileUtils.generateUniqueFileName(fileExtension);
+        //验证当前目录文件名是否唯一
+        String fileName = FileUtils.getUniqueFileName(path, originalFilename);
 
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, fileName, file);
@@ -176,6 +178,9 @@ public class FileServiceImpl implements FileService {
         if (org.apache.commons.lang3.StringUtils.isBlank(fileName)) {
             // 生成唯一的文件名
             fileName = FileUtils.generateUniqueFileName(fileExtension);
+        } else {
+            //验证当前目录文件名是否唯一
+            fileName = FileUtils.getUniqueFileName(path, originalFilename);
         }
 
         // 保存文件并返回文件路径
@@ -345,6 +350,9 @@ public class FileServiceImpl implements FileService {
         String pathFile = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
         pathFile = FileUtils.systemFilePath(pathFile + path);
         boolean isTrue = FileUtils.deleteFile(pathFile);
+        pathFile = FileUtils.normalizeFilePath(pathFile);
+        var profile = FileUtils.normalizeFilePath(fileConfig.getProfile());
+        path = pathFile.replace(profile, "/");
         Assert.isTrue(isTrue, "当前路径:" + path + ",删除失败");
         return fileManagerService.deletePath(path);
     }

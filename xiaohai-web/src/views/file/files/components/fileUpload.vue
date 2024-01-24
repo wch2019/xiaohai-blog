@@ -57,18 +57,6 @@ export default {
     // 覆盖默认的上传行为
     uploadSectionFile(params) {
       const file = params.file
-      // const fileType = file.type
-      // const isImage = fileType.indexOf('image') !== -1
-      // const isLt2M = file.size / 1024 / 1024 < 2
-      // // 这里常规检验，看项目需求而定
-      // if (!isImage) {
-      //   this.$message.error('只能上传图片格式png、jpg、gif!')
-      //   return
-      // }
-      // if (!isLt2M) {
-      //   this.$message.error('只能上传图片大小小于2M')
-      //   return
-      // }
       // 根据后台需求数据格式
       const form = new FormData()
       // 文件对象

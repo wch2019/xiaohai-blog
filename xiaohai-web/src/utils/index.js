@@ -167,3 +167,23 @@ export function getLastSegment(input) {
     return input;
   }
 }
+
+// 查找模板中已存在图片的名字和地址，返回的格式为[{text:'xxx',url: 'xxx.png'}]
+export function findImg(str){
+  const regex = /!\[(.*?)\]\((.*?)\)/g
+  const matches = [];
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    const [, text, url] = match;
+    matches.push({ text, url });
+  }
+  return matches
+}
+// 字符截取长度，如果超过长度返回原数据
+export function truncateString(str, maxLength) {
+  if (str.length <= maxLength) {
+    return str;
+  } else {
+    return str.substring(0, maxLength);
+  }
+}
