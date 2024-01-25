@@ -53,8 +53,8 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     public Integer deleteFile(Long[] ids) {
         for (Long id : ids) {
             FileManager fileManager = baseMapper.selectById(id);
-            List<FileManager> list=baseMapper.selectChildHierarchy(fileManager.getId());
-            for (FileManager file:list){
+            List<FileManager> list = baseMapper.selectChildHierarchy(fileManager.getId());
+            for (FileManager file : list) {
                 String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + file.getFilePath());
                 boolean isTrue = FileUtils.deleteFile(pathFile);
                 Assert.isTrue(isTrue, "当前路径:" + file.getFilePath() + ",删除失败");
@@ -71,19 +71,23 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         BeanUtils.copyProperties(vo, fileManager);
         return baseMapper.updateById(fileManager);
     }
+
     @Override
     public String renameFile(FileManagerNameVo vo) {
-        FileManager fileManager=baseMapper.selectById(vo.getId());
-        List<FileManager> list=baseMapper.selectChildHierarchy(fileManager.getId());
-        var newPath=FileUtils.getLastSegmentStart(fileManager.getFilePath())+vo.getFileName();
+        FileManager fileManager = baseMapper.selectById(vo.getId());
+        if (fileManager.getFileName().equals(vo.getFileName())) {
+            return fileManager.getFileName();
+        }
+        List<FileManager> list = baseMapper.selectChildHierarchy(fileManager.getId());
+        var newPath = FileUtils.getLastSegmentStart(fileManager.getFilePath()) + vo.getFileName();
         //获取唯一名称
-        var targetPath =FileUtils.renameFile(fileConfig.getProfile() + newPath);
-        newPath=FileUtils.normalizeFilePath(targetPath.replace(fileConfig.getProfile(),""));
+        var targetPath = FileUtils.renameFile(fileConfig.getProfile() + newPath);
+        newPath = FileUtils.normalizeFilePath(targetPath.replace(fileConfig.getProfile(), ""));
 
-        FileUtils.renamePath(fileConfig.getProfile() + fileManager.getFilePath(),fileConfig.getProfile() + newPath);
-        var path=fileManager.getFilePath();
-        for (FileManager file:list){
-            file.setFilePath(file.getFilePath().replace(path,newPath));
+        FileUtils.renamePath(fileConfig.getProfile() + fileManager.getFilePath(), fileConfig.getProfile() + newPath);
+        var path = fileManager.getFilePath();
+        for (FileManager file : list) {
+            file.setFilePath(file.getFilePath().replace(path, newPath));
             baseMapper.updateById(file);
         }
         fileManager.setFilePath(newPath);
@@ -94,8 +98,8 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     }
 
     @Override
-    public FileManager findByHash(Integer parentId,String hash) {
-        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId,parentId).eq(FileManager::getFileHash, hash));
+    public FileManager findByHash(Integer parentId, String hash) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId, parentId).eq(FileManager::getFileHash, hash));
     }
 
     @Override
@@ -133,7 +137,7 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         for (FileManager fileManagers : iPage.getRecords()) {
             FileManagerDto fileManagerDto = new FileManagerDto();
             BeanUtils.copyProperties(fileManagers, fileManagerDto);
-            fileManagerDto.setFileSize(fileManagers.getFileSize()==0?"":FileUtils.formatFileSize(fileManagers.getFileSize()));
+            fileManagerDto.setFileSize(fileManagers.getFileSize() == 0 ? "" : FileUtils.formatFileSize(fileManagers.getFileSize()));
             list.add(fileManagerDto);
         }
         PageData pageData = new PageData();

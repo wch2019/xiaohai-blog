@@ -65,7 +65,7 @@ export default {
       uploadFile(form).then(response => {
         this.$message.success(response.msg)
         this.imageUpload.show = false
-        this.$emit('getList',this.fileUpload.path, true)
+        this.$emit('getList')
       })
     },
     // 新建文件夹
@@ -83,7 +83,7 @@ export default {
         data.path = path ? path + value : value
         newFolder(data).then(response => {
           this.$message.success(response.msg)
-          this.$emit('getList', path, true)
+          this.$emit('getList')
         })
       }).catch(() => {
         this.$message({

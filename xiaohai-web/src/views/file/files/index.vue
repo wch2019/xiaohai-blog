@@ -197,9 +197,13 @@ export default {
         this.fileList= []
         this.form.path = path
         this.form.pageNum = 1
-        this.form.pageSize = 10
+        this.form.pageSize = 15
       }
       getFile(this.form).then(response => {
+        // 过滤出response.data.records中不包含在fileList中的元素
+        const newRecords = response.data.records.filter(record => {
+          return !this.fileList.some(existingRecord => existingRecord.id === record.id)
+        })
         for (const element of response.data.records) {
           const suffix = getFileExtension(element.fileName)
           element.suffix = suffix
@@ -209,7 +213,7 @@ export default {
           }
         }
         // 将新的记录添加到fileList中
-        this.fileList = [...this.fileList, ... response.data.records]
+        this.fileList = [...this.fileList, ... newRecords]
         this.total =response.data.total
         this.getPathList()
         this.fileUpload.path=this.form.path
