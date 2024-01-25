@@ -72,10 +72,14 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         return baseMapper.updateById(fileManager);
     }
     @Override
-    public Integer renameFile(FileManagerNameVo vo) {
+    public String renameFile(FileManagerNameVo vo) {
         FileManager fileManager=baseMapper.selectById(vo.getId());
         List<FileManager> list=baseMapper.selectChildHierarchy(fileManager.getId());
-        var newPath=FileUtils.getLastSegment(fileManager.getFilePath())+vo.getFileName();
+        var newPath=FileUtils.getLastSegmentStart(fileManager.getFilePath())+vo.getFileName();
+        //获取唯一名称
+        var targetPath =FileUtils.renameFile(fileConfig.getProfile() + newPath);
+        newPath=FileUtils.normalizeFilePath(targetPath.replace(fileConfig.getProfile(),""));
+
         FileUtils.renamePath(fileConfig.getProfile() + fileManager.getFilePath(),fileConfig.getProfile() + newPath);
         var path=fileManager.getFilePath();
         for (FileManager file:list){
@@ -83,8 +87,10 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
             baseMapper.updateById(file);
         }
         fileManager.setFilePath(newPath);
-        BeanUtils.copyProperties(vo, fileManager);
-        return baseMapper.updateById(fileManager);
+        fileManager.setFileName(FileUtils.getLastSegmentEnd(newPath));
+        fileManager.setId(vo.getId());
+        baseMapper.updateById(fileManager);
+        return fileManager.getFileName();
     }
 
     @Override

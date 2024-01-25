@@ -97,7 +97,7 @@ public class FileController {
 
     @Operation(summary = "重命名文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PutMapping("/renameFile")
-    public Response<Integer> renameFile(@RequestBody @Validated FileManagerNameVo vo) {
+    public Response<String> renameFile(@RequestBody @Validated FileManagerNameVo vo) {
         return Response.success("重命名文件成功！", fileManagerService.renameFile(vo));
     }
 

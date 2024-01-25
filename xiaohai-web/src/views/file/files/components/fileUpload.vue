@@ -65,7 +65,7 @@ export default {
       uploadFile(form).then(response => {
         this.$message.success(response.msg)
         this.imageUpload.show = false
-        this.$emit('getList')
+        this.$emit('getList',this.fileUpload.path, true)
       })
     },
     // 新建文件夹

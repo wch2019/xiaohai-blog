@@ -1,9 +1,10 @@
 package com.xiaohai.common.utils;
 
-import com.xiaohai.common.constant.Constants;
+import cn.hutool.core.util.NumberUtil;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.RcAttachmentInfo;
 import com.xiaohai.common.exception.ServiceException;
+import com.xiaohai.common.server.Disk;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -348,6 +349,40 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         return uniqueFileName;
     }
 
+
+    /**
+     * 重命名文件路径，如果目标路径已存在则生成新的唯一名称。
+     *
+     * @param targetPath 要重命名的目标路径
+     * @return 返回新的唯一目标路径
+     */
+    public static String renameFile(String targetPath){
+        Path target = Paths.get(targetPath);
+
+        if (Files.exists(target)) {
+            // 如果目标名称已存在，生成新的唯一名称
+            int counter = 1;
+            String newTargetPath;
+            do {
+                String fileName = target.getFileName().toString();
+                String fileExtension = "";
+                int dotIndex = fileName.lastIndexOf(".");
+                if (dotIndex != -1) {
+                    fileExtension = fileName.substring(dotIndex);
+                    fileName = fileName.substring(0, dotIndex);
+                }
+                // 构造新的唯一文件名
+                newTargetPath = fileName + "_" + counter++ + fileExtension;
+                // 生成新的路径对象
+                target = target.resolveSibling(newTargetPath);
+            } while (Files.exists(target));
+            // 更新目标路径为新的唯一名称
+            targetPath= target.toString();
+        }
+        // 返回新的目标路径
+        return targetPath;
+    }
+
     /**
      * 提取文件 checksum
      *
@@ -503,7 +538,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @param input
      * @return
      */
-    public static String getLastSegment(String input) {
+    public static String getLastSegmentStart(String input) {
         int lastSlashIndex = input.lastIndexOf("/");
 
         // 检查是否找到了 "/"
@@ -515,6 +550,26 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             return "";
         }
     }
+
+    /**
+     * 获取路径中最后一个 "/" 后的数据
+     *
+     * @param path 输入路径
+     * @return 最后一个 "/" 后的数据，如果没有 "/" 则返回整个路径
+     */
+    public static String getLastSegmentEnd(String path) {
+        // 使用路径分隔符来查找最后一个斜杠的索引
+        int lastSlashIndex = path.lastIndexOf("/");
+
+        if (lastSlashIndex != -1) {
+            // 使用substring获取最后一个 "/" 后的数据
+            return path.substring(lastSlashIndex + 1);
+        } else {
+            // 如果没有找到 "/", 返回整个路径
+            return path;
+        }
+    }
+
     /**
      * 重命名文件或目录路径
      *
@@ -536,6 +591,47 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         }
     }
 
+    /**
+     * 获取硬盘使用量
+     * @param path 路径
+     * @return
+     */
+    public static Disk getSystemDiskSize(String path){
+        Disk disk=new Disk();
+        try {
+            Path diskPath = FileSystems.getDefault().getPath(path);
+            FileStore fileStore = Files.getFileStore(diskPath);
+
+            long free = fileStore.getUsableSpace();
+            long total =fileStore.getTotalSpace();
+            long used = total - free;
+
+            disk.setTotal(formatFileSize(total));
+            disk.setFree(formatFileSize(free));
+            disk.setUsed(formatFileSize(used));
+            disk.setUsage(NumberUtil.mul(NumberUtil.div(used, total, 4), 100));
+        } catch (IOException e) {
+            throw new ServiceException("获取磁盘信息出错", e);
+        }
+        return disk;
+    }
+
+    /**
+     * 计算硬盘使用量
+     * @param total 总容量
+     * @param free 使用容量
+     * @return
+     */
+    public static Disk getUserDiskSize(long total, long free) {
+        Disk disk = new Disk();
+        long used = total - free;
+        disk.setTotal(formatFileSize(total));
+        disk.setFree(formatFileSize(free));
+        disk.setUsed(formatFileSize(used));
+        disk.setUsage(NumberUtil.mul(NumberUtil.div(used, total, 4), 100));
+        return disk;
+    }
+
     public static void main(String[] args) throws Exception {
 //        String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
 //        String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";
@@ -552,8 +648,11 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 //        }
 //        calculateHashesInFolder("Z:\\Linux\\blog\\dev\\files\\1\\markdown", Constants.MD5);
         String input = "/files/1/markdown";
-        String result = getLastSegment(input);
+        String result = getLastSegmentStart(input);
 
         System.out.println(result); // 输出: markdown
+
+        String path = "D:\\blog\\dev\\files\\1\\markdown";  // 指定硬盘路径
+
     }
 }

@@ -47,7 +47,7 @@ public interface FileManagerService extends IService<FileManager> {
      * @param vo 文件管理 VO（View Object）：显示层对象
      * @return Integer
      */
-    Integer renameFile(FileManagerNameVo vo);
+    String renameFile(FileManagerNameVo vo);
 
     /**
      * 根据hash和parentId查询

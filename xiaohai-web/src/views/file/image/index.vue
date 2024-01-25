@@ -266,7 +266,7 @@ export default {
         data.id = o.id
         renameFile(data).then(response => {
           this.$message.success(response.msg)
-          o.fileName = data.fileName
+          o.fileName = response.data
         })
       }).catch(() => {
         this.$message({
