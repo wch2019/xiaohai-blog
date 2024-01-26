@@ -2,6 +2,7 @@
   <div>
     <div class="fixed-button">
       <el-button
+        v-if="$store.getters.permission.includes('file:image:upload')"
         style="width: 56px;height: 56px"
         type="primary"
         icon="el-icon-plus"

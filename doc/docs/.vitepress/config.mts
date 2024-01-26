@@ -40,12 +40,14 @@ export default defineConfig({
             },
             {
                 text: '用户指南',
+                collapsed: false,
                 items: [
                     {text: '基础说明', link: '/基础说明'},
                 ]
             },
             {
                 text: '关于文档',
+                collapsed: false,
                 link: '/关于文档'
             }
         ],

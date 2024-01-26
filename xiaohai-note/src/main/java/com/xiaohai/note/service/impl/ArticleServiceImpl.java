@@ -356,7 +356,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String tempFile = StringUtils.generateUUIDWithoutHyphens();
 
         //压缩文件临时路径
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE;
+        fileService.createFolderIfNotExists(path);
+        path = path + File.separator + tempFile;
+        FileUtils.directory(path);
         // 保存文件并返回文件路径
         String filePath = FileUtils.saveFile(path, file.getOriginalFilename(), file);
         try {

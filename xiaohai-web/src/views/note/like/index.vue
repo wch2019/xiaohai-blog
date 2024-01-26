@@ -71,7 +71,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="封面" align="center" prop="cover" :render-header="renderHeader">
+      <el-table-column label="封面" align="center" prop="cover">
         <template slot-scope="scope">
           <div style="position: relative">
             <el-image :src="scope.row.cover" :preview-src-list="srcList" />

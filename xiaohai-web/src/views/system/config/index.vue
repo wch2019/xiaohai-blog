@@ -195,6 +195,7 @@
           <mavon-editor
             ref="md"
             v-model="form.content"
+            placeholder="输入内容..."
             font-size="18px"
             @save="submitForm"
             @imgAdd="imgAdd"
@@ -219,6 +220,7 @@
           <mavon-editor
             ref="md"
             v-model="form.content"
+            placeholder="输入内容..."
             font-size="18px"
             @save="submitForm"
             @imgAdd="imgAdd"
@@ -239,7 +241,7 @@ import { uploadImage, delFile } from '@/api/file/file'
 import uploadImg from '@/components/uploadImg'
 import { marked } from 'marked'
 import 'github-markdown-css'
-import {getLastSegment, markdownImageFile} from '@/utils'
+import {findImg, getLastSegment, markdownImageFile} from '@/utils'
 
 export default {
   name: 'Index',
@@ -271,7 +273,26 @@ export default {
         this.form = response.data
         this.$refs.uploadImg.getimgUrl(this.form.logo)
         this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
+        let imgData = findImg(this.form.content);
+        imgData.forEach(item => {
+          this.imgRecurrent(item.text, item.url)
+        })
       })
+    },
+    //将解析到图片名字和地址添加到控制列表(具体为什么要填这些参数，是因为mavon-editor插件中要使用到这些内容)
+    imgRecurrent(name, url) {
+      this.$refs.md.$refs.toolbar_left.$imgAddByFilename(
+        //markdown模板图片地址
+        url,
+        {
+          // 图片控制列表图片链接
+          miniurl: url,
+          // 图片控制列表名字
+          name: name,
+          //markdown模板图片名称
+          _name: name
+        }
+      )
     },
     // 绑定@imgAdd event
     imgAdd(pos, $file) {

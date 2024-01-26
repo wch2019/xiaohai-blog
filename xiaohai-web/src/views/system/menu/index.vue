@@ -66,7 +66,7 @@
       :default-expand-all="expansion"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="menuName" label="菜单名称" align="center" width="130" />
+      <el-table-column prop="menuName" label="菜单名称" align="center" width="150" />
       <el-table-column prop="icon" label="菜单图标" align="center" width="90">
         <template slot-scope="scope">
           <svg-icon

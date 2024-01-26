@@ -3,14 +3,15 @@
     <div class="fixed-button">
       <el-dropdown trigger="click">
         <el-button
+          v-if="$store.getters.permission.includes('file:files:file')||$store.getters.permission.includes('file:files:folder')"
           style="width: 56px;height: 56px"
           type="primary"
           icon="el-icon-plus"
           circle
         />
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="handleImport"><i class="el-icon-upload2"/>上传</el-dropdown-item>
-          <el-dropdown-item @click.native="addFolder(fileUpload.path)"><i class="el-icon-folder-add"/>新建文件夹
+          <el-dropdown-item v-if="$store.getters.permission.includes('file:files:file')" @click.native="handleImport"><i class="el-icon-upload2"/>上传文件</el-dropdown-item>
+          <el-dropdown-item v-if="$store.getters.permission.includes('file:files:folder')" @click.native="addFolder(fileUpload.path)"><i class="el-icon-folder-add"/>新建文件夹
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

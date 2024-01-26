@@ -63,11 +63,11 @@
                 @click.native.stop
               />
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="renameFile(scope.row)">重命名</el-dropdown-item>
+                <el-dropdown-item v-if="$store.getters.permission.includes('file:files:update')" @click.native="renameFile(scope.row)">重命名</el-dropdown-item>
                 <el-dropdown-item v-if="scope.row.fileType===0" @click.native="downloadMultipleFiles(scope.row)">下载
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="dialog(scope.row)">查看详情</el-dropdown-item>
-                <el-dropdown-item divided @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
+                <el-dropdown-item  v-if="$store.getters.permission.includes('file:files:delete')" divided @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -98,7 +98,7 @@
 <!--        </el-col>-->
         <el-col :span="1.5">
           <el-tooltip
-            v-if="$store.getters.permission.includes('note:article:delete')&&selectedItems.length!==0"
+            v-if="$store.getters.permission.includes('file:files:delete')&&selectedItems.length!==0"
             class="item"
             effect="dark"
             content="删除"

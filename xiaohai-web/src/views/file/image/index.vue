@@ -52,10 +52,12 @@
                     class="el-icon-more"
                   />
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="renameFile(o)">重命名</el-dropdown-item>
+                    <el-dropdown-item v-if="$store.getters.permission.includes('file:image:update')" @click.native="renameFile(o)">重命名
+                    </el-dropdown-item>
                     <el-dropdown-item @click.native="downloadMultipleFiles(o)">下载</el-dropdown-item>
                     <el-dropdown-item @click.native="dialog(o)">查看详情</el-dropdown-item>
-                    <el-dropdown-item divided @click.native="handleDelete(o)">删除</el-dropdown-item>
+                    <el-dropdown-item v-if="$store.getters.permission.includes('file:image:delete')" divided @click.native="handleDelete(o)">删除
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
@@ -94,7 +96,7 @@
         </el-col>
         <el-col :span="1.5">
           <el-tooltip
-            v-if="$store.getters.permission.includes('note:article:delete')&&selectedItems.length!==0"
+            v-if="$store.getters.permission.includes('file:image:delete')&&selectedItems.length!==0"
             class="item"
             effect="dark"
             content="删除"
@@ -117,7 +119,7 @@
 </template>
 
 <script>
-import {markdownImage, delFileIds, renameFile, delFile} from '@/api/file/file'
+import {markdownImage, renameFile, delFile} from '@/api/file/file'
 import {getFileExtension, getFileAddress, downloadFile, VerifyIsPictureType} from '@/utils/common'
 import ImageUpload from '@/views/file/image/components/imageUpload.vue'
 import ImageDetails from '@/views/file/image/components/imageDetails.vue'
@@ -151,7 +153,7 @@ export default {
       isIndeterminate: false,
       alertVisible: false,
       alertClass: '',
-      diskDetails:{
+      diskDetails: {
         show: false
       }
     }
@@ -164,19 +166,21 @@ export default {
       this.loading = true
       markdownImage(this.queryParams).then(response => {
         this.total = response.data.total
-        // 过滤出response.data.records中不包含在fileList中的元素
-        const newRecords = response.data.records.filter(record => {
-          return !this.fileList.some(existingRecord => existingRecord.id === record.id)
-        })
-        for (const element of response.data.records) {
-          const suffix = getFileExtension(element.fileName)
-          element.suffix = suffix
-          if (VerifyIsPictureType(suffix)) {
-            element.filePath = getFileAddress(element.filePath)
+        if (this.total !== 0) {
+          // 过滤出response.data.records中不包含在fileList中的元素
+          const newRecords = response.data.records.filter(record => {
+            return !this.fileList.some(existingRecord => existingRecord.id === record.id)
+          })
+          for (const element of response.data.records) {
+            const suffix = getFileExtension(element.fileName)
+            element.suffix = suffix
+            if (VerifyIsPictureType(suffix)) {
+              element.filePath = getFileAddress(element.filePath)
+            }
           }
+          // 将新的记录添加到fileList中
+          this.fileList = [...this.fileList, ...newRecords]
         }
-        // 将新的记录添加到fileList中
-        this.fileList = [...this.fileList, ...newRecords]
         this.loading = false
       })
     },

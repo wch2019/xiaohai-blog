@@ -148,13 +148,6 @@
                 title="导入md文档"
               ></button>
               <input id="upload" type="file" accept=".md" @change="importMd($event)" v-show="false"/>
-<!--              <button-->
-<!--                type="button"-->
-<!--                @click="triggerFileInput"-->
-<!--                class="op-icon fa el-icon-document-add"-->
-<!--                aria-hidden="true"-->
-<!--                title="其他图片链接"-->
-<!--              ></button>-->
             </template>
           </mavon-editor>
         </div>
