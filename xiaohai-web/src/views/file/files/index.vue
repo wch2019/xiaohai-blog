@@ -1,25 +1,38 @@
 <template>
   <div class="app-container">
-    <el-breadcrumb
-      separator-class="el-icon-arrow-right"
-      style="padding-bottom: 20px;font-size: 16px;font-weight: bold;"
-    >
-      <el-breadcrumb-item
-        v-for="(item, index) in breadcrumb.pathList"
-        :key="index"
-        :to="{}"
-        @click.native="getList(breadcrumb.pathMap.get(item),true)"
-      >
-        <span :class="{ 'bold-text': isLastBreadcrumb(index) }">{{ item }}</span></el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
-          <span v-if="selectedItems.length===0">共 {{ fileList.length }} 项</span>
-          <span v-else>已选 {{ selectedItems.length }} 项</span>
-        </el-checkbox>
-      </el-col>
+    <el-row :gutter="10" class="mb8" >
+      <div style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">
+        <div style="display: flex;justify-content: space-between;flex-direction: column;align-items: center;">
+          <el-col :span="1.5">
+            <el-breadcrumb
+              separator-class="el-icon-arrow-right"
+              style="padding-bottom: 20px;font-size: 16px;font-weight: bold;"
+            >
+              <el-breadcrumb-item
+                v-for="(item, index) in breadcrumb.pathList"
+                :key="index"
+                :to="{}"
+                @click.native="getList(breadcrumb.pathMap.get(item),true)"
+              >
+                <span :class="{ 'bold-text': isLastBreadcrumb(index) }">{{ item }}</span></el-breadcrumb-item>
+            </el-breadcrumb>
+          </el-col>
+          <el-col :span="1.5">
+            <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
+              <span v-if="selectedItems.length===0">共 {{ fileList.length }} 项</span>
+              <span v-else>已选 {{ selectedItems.length }} 项</span>
+            </el-checkbox>
+          </el-col>
+        </div>
+        <div  style="float: right;width: 20%; max-width: 280px;font-size: 15px;color: #999;">
+        <span style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">100 GB / 200 GB
+          <el-button  type="text" @click="diskDetails.show=true">查看</el-button></span>
+          <el-progress  :percentage="50" :stroke-width="14"  :show-text="false" color="#6f7ad3"></el-progress>
+        </div>
+      </div>
     </el-row>
+
+
     <el-table
       ref="multipleTable"
       tooltip-effect="dark"
@@ -103,6 +116,7 @@
     </el-alert>
     <FileUpload :file-upload="fileUpload" @getList="getList"/>
     <FileDetails v-if="imageDetails.show" :image-details="imageDetails"/>
+    <disk-details v-if="diskDetails.show" :disk-details="diskDetails"/>
   </div>
 </template>
 
@@ -111,12 +125,13 @@ import {delFileIds, getFile, renameFile} from '@/api/file/file'
 import {downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType} from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 import FileDetails from '@/views/file/files/components/fileDetails.vue'
+import DiskDetails from "@/views/file/image/components/diskDetails.vue";
 
 
 export default {
 
   name: 'Index',
-  components: {FileDetails, FileUpload},
+  components: {DiskDetails, FileDetails, FileUpload},
   data() {
     return {
       // 总条数
@@ -152,7 +167,10 @@ export default {
       noMore: false,
 
       alertVisible: false,
-      alertClass: ''
+      alertClass: '',
+      diskDetails:{
+        show: false
+      }
     }
   },
   created() {
@@ -302,7 +320,7 @@ export default {
     },
     // 下载文件
     downloadMultipleFiles(o) {
-      const ids = [o.id] || this.selectedItems
+      const ids = o.id ? [o.id] : this.selectedItems.map(item => item.id)
       this.fileList.forEach(element => {
         if (ids.includes(element.id)) {
           downloadFile(element.fileName, window.location.origin + element.filePath)
@@ -344,6 +362,9 @@ export default {
         this.alertClass = 'alert-slide-up'
       }
     },
+    format(percentage) {
+      return  '100 GB / 200 GB' ;
+    }
   }
 }
 </script>

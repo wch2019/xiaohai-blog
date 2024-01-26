@@ -55,6 +55,7 @@ export function delFile(data) {
     params: { path: data }
   })
 }
+
 // 根据id删除文件
 export function delFileIds(data) {
   return request({
