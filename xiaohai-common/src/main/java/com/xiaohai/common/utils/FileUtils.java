@@ -109,6 +109,8 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             //判断当前文件夹或文件是否存在
             if (file.exists()) {
                 return file.delete();
+            }else{
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();

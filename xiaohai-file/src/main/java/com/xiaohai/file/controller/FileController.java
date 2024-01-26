@@ -2,6 +2,7 @@ package com.xiaohai.file.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -112,7 +113,11 @@ public class FileController {
     @SaCheckPermission("file:files:folder")
     @PostMapping(value = "/newFolder")
     public Response<Integer> newFolder(@RequestBody @Validated FolderVO vo) {
+        var userPath = fileService.userPath().replace("/", File.separator);
         var path = vo.getPath().replace("/", File.separator);
+        if (!path.contains(userPath)&&!StpUtil.hasRole(Constants.ADMIN)) {
+            path=userPath+path;
+        }
         fileService.createFolderIfNotExists(path.substring(1));
         return Response.success("新建文件夹成功！", 1);
     }

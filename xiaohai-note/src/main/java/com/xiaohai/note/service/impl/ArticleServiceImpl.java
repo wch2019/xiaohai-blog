@@ -425,7 +425,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                                 String newPhotoPath = ".." + fileService.getCopyImage(sourcePath, newPath);
                                 article.setText(article.getText().replaceAll(fileName, newPhotoPath));
                             }
-                            article.setSummary(MarkdownUtils.truncateText(article.getText(), 255));
+                            article.setSummary(MarkdownUtils.truncateText(article.getText(), 250));
                         }
                     }
                     if (entry.getKey().equals("tags")) {

@@ -63,6 +63,12 @@ public interface FileService {
     String upload(UploadVo vo);
 
     /**
+     * 获取用户路径
+     * @return
+     */
+    String userPath();
+
+    /**
      * 文件列表
      *
      * @param path

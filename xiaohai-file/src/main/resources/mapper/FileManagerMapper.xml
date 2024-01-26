@@ -31,7 +31,8 @@
                 id,
                 parent_id,
                 file_name,
-                file_path
+                file_path,
+                created_by
             FROM
                 file_manager
             WHERE
@@ -41,7 +42,8 @@
                 t.id,
                 t.parent_id,
                 t.file_name,
-                t.file_path
+                t.file_path,
+                t.created_by
             FROM
                 file_manager t
                     JOIN ChildHierarchy ch ON t.parent_id = ch.id

@@ -1,5 +1,6 @@
 package com.xiaohai.file.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.file.dao.FileManagerMapper;
@@ -53,8 +55,15 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     public Integer deleteFile(Long[] ids) {
         for (Long id : ids) {
             FileManager fileManager = baseMapper.selectById(id);
+            Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+            if (!fileManager.getCreatedBy().equals(userId)) {
+                throw new ServiceException("非当前用户数据无法删除");
+            }
             List<FileManager> list = baseMapper.selectChildHierarchy(fileManager.getId());
             for (FileManager file : list) {
+                if (!file.getCreatedBy().equals(userId)) {
+                    throw new ServiceException("非当前用户数据无法删除");
+                }
                 String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + file.getFilePath());
                 boolean isTrue = FileUtils.deleteFile(pathFile);
                 Assert.isTrue(isTrue, "当前路径:" + file.getFilePath() + ",删除失败");
@@ -77,6 +86,10 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         FileManager fileManager = baseMapper.selectById(vo.getId());
         if (fileManager.getFileName().equals(vo.getFileName())) {
             return fileManager.getFileName();
+        }
+        Integer userId =Integer.valueOf((String)StpUtil.getLoginId());
+        if(!fileManager.getCreatedBy().equals(userId)){
+            throw new ServiceException("非当前用户数据无法重命名");
         }
         List<FileManager> list = baseMapper.selectChildHierarchy(fileManager.getId());
         var newPath = FileUtils.getLastSegmentStart(fileManager.getFilePath()) + vo.getFileName();

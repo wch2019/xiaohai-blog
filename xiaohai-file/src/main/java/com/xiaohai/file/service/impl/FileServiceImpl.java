@@ -2,6 +2,7 @@ package com.xiaohai.file.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.confing.FileConfig;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
@@ -131,7 +132,7 @@ public class FileServiceImpl implements FileService {
         }
 
         // 生成唯一的文件名
-//        String fileName = FileUtils.generateUniqueFileName(fileExtension);
+        //        String fileName = FileUtils.generateUniqueFileName(fileExtension);
         //验证当前目录文件名是否唯一
         String fileName = FileUtils.getUniqueFileName(path, originalFilename);
 
@@ -254,7 +255,12 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String upload(UploadVo vo) {
-        var path = vo.getPath().replace("/", File.separator);
+        var userPath = userPath();
+        var path = vo.getPath();
+        if (!path.contains(userPath) && !StpUtil.hasRole(Constants.ADMIN)) {
+            path = userPath + path;
+        }
+        path = path.replace("/", File.separator);
 
         MultipartFile file = vo.getFile();
         // 判断文件是否为空
@@ -274,10 +280,24 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public String userPath(){
+        var userPath = fileConfig.getFilePath() + StpUtil.getLoginId();
+        return FileUtils.normalizeFilePath(userPath.replace(fileConfig.getProfile(), File.separator));
+    }
+
+    @Override
     public ReturnPageData<FileManagerDto> getPathList(String path) {
+        var userPath = userPath();
         if (org.apache.commons.lang3.StringUtils.isBlank(path)) {
-            return fileManagerService.getParentIdPath(0);
+            if (StpUtil.hasRole(Constants.ADMIN)) {
+                return fileManagerService.getParentIdPath(0);
+            }
+            path = userPath;
         }
+        if (!path.contains(userPath)&&!StpUtil.hasRole(Constants.ADMIN)) {
+            throw new ServiceException("没有查看权限");
+        }
+
         // 指定文件夹路径
         //        String folderPath = fileConfig.getProfile() + path;
         FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path));

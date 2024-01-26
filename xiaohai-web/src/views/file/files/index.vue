@@ -126,6 +126,7 @@ import {downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType} fro
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 import FileDetails from '@/views/file/files/components/fileDetails.vue'
 import DiskDetails from "@/views/file/image/components/diskDetails.vue";
+import {mapGetters} from "vuex";
 
 
 export default {
@@ -172,6 +173,10 @@ export default {
         show: false
       }
     }
+  },computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   created() {
     this.getList('',true)
@@ -241,13 +246,22 @@ export default {
     // 面包屑数据封装
     getPathList() {
       const map = new Map()
+      let a=1
       const pathSegments = this.form.path.split('/').map(segment => {
         if (segment === '') {
           return this.breadcrumb.text
         }
+        a++
+        // 非管理员用户
+        if(!this.roles.includes('admin')){
+          if(a<=3){
+            return
+          }
+        }
+
         return segment
       })
-      this.breadcrumb.pathList = pathSegments
+      this.breadcrumb.pathList =  pathSegments.filter(segment => segment !== undefined);
       let currentPath = ''
       pathSegments.map(segment => {
         if (segment === this.breadcrumb.text) {
