@@ -6,6 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.server.Disk;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.vo.FileManagerNameVo;
 import com.xiaohai.file.pojo.vo.FolderVO;
@@ -120,5 +121,10 @@ public class FileController {
         }
         fileService.createFolderIfNotExists(path.substring(1));
         return Response.success("新建文件夹成功！", 1);
+    }
+    @Operation(summary = "获取当前系统硬盘使用情况", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping(value = "/hardDiskSize")
+    public Response<Disk> getHardDiskSize() {
+        return Response.success("获取当前系统硬盘使用情况！", fileManagerService.getHardDiskSize());
     }
 }

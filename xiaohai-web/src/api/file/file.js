@@ -79,3 +79,12 @@ export function newFolder(data) {
     data
   })
 }
+
+// 获取当前系统硬盘使用情况
+export function hardDiskSize(data) {
+  return request({
+    url: api + '/hardDiskSize',
+    method: 'get',
+    params: data
+  })
+}

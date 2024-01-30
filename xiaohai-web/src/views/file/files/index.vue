@@ -25,9 +25,9 @@
           </el-col>
         </div>
         <div  style="float: right;width: 20%; max-width: 280px;font-size: 15px;color: #999;">
-        <span style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">100 GB / 200 GB
+        <span style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">{{hardDisk.used}} / {{hardDisk.total}}
           <el-button  type="text" @click="diskDetails.show=true">查看</el-button></span>
-          <el-progress  :percentage="50" :stroke-width="14"  :show-text="false" color="#6f7ad3"></el-progress>
+          <el-progress  :percentage="hardDisk.usage" :stroke-width="14"  :show-text="false" color="#6f7ad3"></el-progress>
         </div>
       </div>
     </el-row>
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import {delFileIds, getFile, renameFile} from '@/api/file/file'
+import {delFileIds, getFile, hardDiskSize, renameFile} from '@/api/file/file'
 import {downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType} from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 import FileDetails from '@/views/file/files/components/fileDetails.vue'
@@ -171,6 +171,12 @@ export default {
       alertClass: '',
       diskDetails:{
         show: false
+      },
+      hardDisk:{
+        total: "",
+        free: "",
+        used: "",
+        usage: 0
       }
     }
   },computed: {
@@ -179,6 +185,7 @@ export default {
     ])
   },
   created() {
+    this.hardDiskSize()
     this.getList('',true)
   },
   methods: {
@@ -376,8 +383,11 @@ export default {
         this.alertClass = 'alert-slide-up'
       }
     },
-    format(percentage) {
-      return  '100 GB / 200 GB' ;
+    //硬盘使用情况
+    hardDiskSize() {
+      hardDiskSize().then(response => {
+        this.hardDisk=response.data
+      })
     }
   }
 }

@@ -1,5 +1,6 @@
 package com.xiaohai.common.server;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -8,23 +9,16 @@ import lombok.Data;
  */
 @Data
 public class Disk {
-    /**
-     * 总大小
-     */
+
+    @Schema(description = "总大小")
     private String total;
 
-    /**
-     * 剩余大小
-     */
+    @Schema(description = "剩余大小")
     private String free;
 
-    /**
-     * 已经使用量
-     */
+    @Schema(description = "已经使用量")
     private String used;
 
-    /**
-     * 资源的使用率
-     */
+    @Schema(description = "资源的使用率")
     private double usage;
 }

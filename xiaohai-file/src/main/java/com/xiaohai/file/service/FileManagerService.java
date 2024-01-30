@@ -2,6 +2,7 @@ package com.xiaohai.file.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.server.Disk;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.pojo.query.FileManagerQuery;
@@ -89,4 +90,10 @@ public interface FileManagerService extends IService<FileManager> {
      * @return
      */
     ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId);
+
+    /**
+     * 获取当前系统硬盘使用情况
+     * @return
+     */
+    Disk getHardDiskSize();
 }

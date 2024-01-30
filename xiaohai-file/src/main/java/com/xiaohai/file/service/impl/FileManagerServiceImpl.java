@@ -10,6 +10,7 @@ import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
+import com.xiaohai.common.server.Disk;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.file.dao.FileManagerMapper;
@@ -156,5 +157,10 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, list);
+    }
+
+    @Override
+    public Disk getHardDiskSize() {
+        return FileUtils.getSystemDiskSize(fileConfig.getProfile());
     }
 }
