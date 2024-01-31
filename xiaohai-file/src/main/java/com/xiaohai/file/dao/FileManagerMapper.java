@@ -17,8 +17,33 @@ public interface FileManagerMapper extends BaseMapper<FileManager> {
 
     /**
      * 根据id往下递归
+     *
      * @param id
      * @return
      */
     List<FileManager> selectChildHierarchy(Integer id);
+
+    /**
+     * 获取所有文件数据信息
+     *
+     * @return
+     */
+    Long selectAllFileSize();
+
+    /**
+     * 获取指定用户总容量
+     *
+     * @param userId
+     * @return
+     */
+    Long getTotalDiskSizeByUserId(Integer userId);
+
+    /**
+     * 获取指定用户文件数据信息
+     * @param userId
+     * @return
+     */
+    Long getUsedDiskSizeByUserId(Integer userId);
+
+
 }

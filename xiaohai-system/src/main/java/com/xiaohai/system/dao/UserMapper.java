@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    /**
+     * 获取排除指定用户所有总容量
+     * @param userId
+     * @return
+     */
+    Long getTotalDiskSizeExcludeUserId(Integer userId);
+
 }

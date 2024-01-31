@@ -11,7 +11,7 @@ rem 设置日志文件夹路径
 set LOG_FOLDER=D:\Project\gitee\xiaohai-blog\xiaohai-admin\target\logs
 
 rem 设置YML配置文件路径
-set YML_FILE=--spring.config.additional-location=D:\Project\gitee\xiaohai-blog\doc\logsapplication.yml
+set YML_FILE=--spring.config.additional-location=D:\Project\gitee\xiaohai-blog\doc\logs\application.yml
 
 rem 设置 Java 启动参数 添加启动参数--initDatabase执行数据库初始化,注意进初始化使用该命令
 set JAVA_OPTS=

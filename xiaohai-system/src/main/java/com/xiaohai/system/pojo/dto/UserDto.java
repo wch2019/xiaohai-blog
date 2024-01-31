@@ -1,17 +1,14 @@
 package com.xiaohai.system.pojo.dto;
 
-import java.io.Serializable;
-import java.io.Serial;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.xiaohai.common.server.Disk;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
 * <p>
@@ -83,6 +80,9 @@ public class UserDto implements Serializable {
 
     @Schema(description = "浏览器")
     private String loginBrowser;
+
+    @Schema(description = "存储容量")
+    private Disk disk;
 
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;

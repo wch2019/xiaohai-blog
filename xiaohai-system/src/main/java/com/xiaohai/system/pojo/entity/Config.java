@@ -66,6 +66,9 @@ public class Config extends BaseEntity implements Serializable {
     @Schema(description = "本地文件地址")
     private String filePath;
 
+    @Schema(description = "存储容量")
+    private Long diskSize;
+
     @Schema(description = "关于介绍")
     private String content;
 }

@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -162,5 +161,26 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     @Override
     public Disk getHardDiskSize() {
         return FileUtils.getSystemDiskSize(fileConfig.getProfile());
+    }
+
+    @Override
+    public Disk getUserHardDiskSize() {
+        Integer userId =Integer.valueOf((String)StpUtil.getLoginId());
+//        if(StpUtil.hasRole(Constants.ADMIN)){
+//            baseMapper.selectAllFileSize();
+//        }
+        Long total=baseMapper.getTotalDiskSizeByUserId(userId);
+        Long used=baseMapper.getUsedDiskSizeByUserId(userId);
+        Disk disk=FileUtils.getUserDiskSize(total, used);
+        return disk;
+    }
+    @Override
+    public Disk getUserHardDiskSize(Integer userId) {
+        Long total=baseMapper.getTotalDiskSizeByUserId(userId);
+        Long used=baseMapper.getUsedDiskSizeByUserId(userId);
+        if(used==null){
+            used=0L;
+        }
+        return FileUtils.getUserDiskSize(total, used);
     }
 }

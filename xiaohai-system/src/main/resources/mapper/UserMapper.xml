@@ -39,5 +39,16 @@
         updated_time,
         id, username, password, nick_name, gender, avatar, email, qq_number, we_chat, mobile, gitee, github, summary, status,login_count, login_ip, login_source,login_date,login_os,login_browser
     </sql>
+    <select id="getTotalDiskSizeExcludeUserId" resultType="java.lang.Long">
+        SELECT
+            SUM( disk_size )
+        FROM
+            sys_user
+        <where>
+        <if test="userId != null and userId != ''">
+            id != #{userId}
+        </if>
+        </where>
+    </select>
 
 </mapper>

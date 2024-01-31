@@ -6,21 +6,27 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.server.Disk;
 import com.xiaohai.common.utils.EncryptUtils;
+import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
+import com.xiaohai.file.service.FileManagerService;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserMapper;
+import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.dto.UserDto;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.query.UserQuery;
 import com.xiaohai.system.pojo.vo.EmailVo;
 import com.xiaohai.system.pojo.vo.PasswordVo;
 import com.xiaohai.system.pojo.vo.UserVo;
+import com.xiaohai.system.service.ConfigService;
 import com.xiaohai.system.service.MenuService;
 import com.xiaohai.system.service.UserRoleService;
 import com.xiaohai.system.service.UserService;
@@ -45,17 +51,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final RoleMapper roleMapper;
     private final UserRoleService userRoleService;
     private final MenuService menuService;
+    private final ConfigService configService;
+    private final FileConfig fileConfig;
+    private final FileManagerService fileManagerService;
 
     @Override
-    public Map<String,Object> findByInfo() {
-        Map<String,Object> map=new HashMap<>(1);
+    public Map<String, Object> findByInfo() {
+        Map<String, Object> map = new HashMap<>(1);
         // 获取：当前账号所拥有的角色集合
         map.put("role", StpUtil.getRoleList());
         // 获取：当前账号所拥有的权限集合
-        map.put("permission",StpUtil.getPermissionList());
+        map.put("permission", StpUtil.getPermissionList());
         //获取当前用户菜单
         map.put("menu", menuService.routers());
-        User user=baseMapper.selectById((Serializable) StpUtil.getLoginId());
+        User user = baseMapper.selectById((Serializable) StpUtil.getLoginId());
         user.setPassword(null);
         //获取当前用户信息
         map.put("info", user);
@@ -71,10 +80,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.isTrue(countUser == 0, "新增用户：" + vo.getUsername() + "失败，账号已存在");
         User user = new User();
         BeanUtils.copyProperties(vo, user);
+        user.setDiskSize(disk(null, vo.getDiskSize()));
         var count = baseMapper.insert(user);
         //新增角色
         userRoleService.add(vo.getRoleIds(), user.getId());
         return count;
+    }
+
+    /**
+     * 根据硬盘容量和分配情况判断是否分配
+     *
+     * @param userId
+     * @param diskSize
+     * @return
+     */
+    private Long disk(Integer userId, Long diskSize) {
+        Long newDiskSize = null;
+        Long free = FileUtils.getSystemDiskSizeFree(fileConfig.getProfile());
+        Long size = baseMapper.getTotalDiskSizeExcludeUserId(userId);
+        if (diskSize != 0) {
+            if (free > size + diskSize) {
+                newDiskSize = diskSize;
+            }
+            return newDiskSize;
+        }
+        ConfigDto configDto = configService.findByOne();
+        if (free > size + configDto.getDiskSize()) {
+            newDiskSize = configDto.getDiskSize();
+        }
+        return newDiskSize;
     }
 
     @Override
@@ -96,12 +130,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateData(UserVo vo) {
+        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         //清空密码，此处不更新密码
         vo.setPassword(null);
         //清空邮箱，此处不更新邮箱
         vo.setEmail(null);
+        //硬盘分配
+        vo.setDiskSize(disk(userId, vo.getDiskSize()));
         // 当前操作用户
-        User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
+        User nowUser = baseMapper.selectById(userId);
         if (nowUser.getUsername().equals(vo.getUsername()) && nowUser.getId().equals(vo.getId())) {
             User user = new User();
             BeanUtils.copyProperties(vo, user);
@@ -140,6 +177,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(users, userDto);
             userDto.setRoleIds(roleMapper.listByRoleIds(users.getId()));
+            Disk disk=fileManagerService.getUserHardDiskSize(users.getId());
+            userDto.setDisk(disk);
             list.add(userDto);
         }
         PageData pageData = new PageData();
@@ -150,8 +189,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Integer updatePwd(PasswordVo vo) {
         // 当前操作用户
-        User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
-        Assert.isTrue(!EncryptUtils.validate(vo.getOldPassword(),nowUser.getPassword()), "旧密码不对，请重新输入");
+        User nowUser = baseMapper.selectById((Serializable) StpUtil.getLoginId());
+        Assert.isTrue(!EncryptUtils.validate(vo.getOldPassword(), nowUser.getPassword()), "旧密码不对，请重新输入");
         nowUser.setPassword(EncryptUtils.aesEncrypt(vo.getNewPassword()));
         return baseMapper.updateById(nowUser);
     }
@@ -161,7 +200,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String codeNumber = SpringUtils.getBean(RedisUtils.class).getCacheObject(RedisConstants.EMAIL_CODE + vo.getNewEmail());
         Assert.isTrue(vo.getCode().equals(codeNumber), "验证码不正确!");
         // 当前操作用户
-        User nowUser =  baseMapper.selectById((Serializable) StpUtil.getLoginId());
+        User nowUser = baseMapper.selectById((Serializable) StpUtil.getLoginId());
         nowUser.setEmail(vo.getNewEmail());
         return baseMapper.updateById(nowUser);
     }

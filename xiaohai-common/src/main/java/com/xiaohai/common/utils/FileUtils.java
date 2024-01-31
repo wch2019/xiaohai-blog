@@ -71,14 +71,18 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     public static String formatFileSize(long fileSize) {
         DecimalFormat df = new DecimalFormat("#.00");
         String fileSizeString = "";
-        if (fileSize < 1024) {
+        if (fileSize == 0) {
+            fileSizeString = "0B";
+        } else if (fileSize < 1024) {
             fileSizeString = df.format((double) fileSize) + "B";
         } else if (fileSize < 1048576) {
             fileSizeString = df.format((double) fileSize / 1024) + "KB";
         } else if (fileSize < 1073741824) {
             fileSizeString = df.format((double) fileSize / 1048576) + "MB";
-        } else {
+        } else if (fileSize < 1099511627776L) {
             fileSizeString = df.format((double) fileSize / 1073741824) + "GB";
+        } else {
+            fileSizeString = df.format((double) fileSize / 1099511627776L) + "TB";
         }
         return fileSizeString;
     }
@@ -619,18 +623,40 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     /**
-     * 计算硬盘使用量
-     * @param total 总容量
-     * @param free 使用容量
+     * 获取硬盘剩余量
+     * @param path
      * @return
      */
-    public static Disk getUserDiskSize(long total, long free) {
-        Disk disk = new Disk();
-        long used = total - free;
-        disk.setTotal(formatFileSize(total));
-        disk.setFree(formatFileSize(free));
-        disk.setUsed(formatFileSize(used));
-        disk.setUsage(NumberUtil.mul(NumberUtil.div(used, total, 4), 100));
+    public static Long getSystemDiskSizeFree(String path) {
+        long free = 0;
+        try {
+            Path diskPath = FileSystems.getDefault().getPath(path);
+            FileStore fileStore = Files.getFileStore(diskPath);
+            free = fileStore.getUsableSpace();
+        } catch (IOException e) {
+            throw new ServiceException("获取磁盘信息出错", e);
+        }
+        return free;
+    }
+
+    /**
+     * 计算硬盘使用量
+     * @param total 总容量
+     * @param used 使用容量
+     * @return
+     */
+    public static Disk getUserDiskSize(long total, long used) {
+        Disk disk = null;
+        try {
+            disk = new Disk();
+            long free = total - used;
+            disk.setTotal(formatFileSize(total));
+            disk.setFree(formatFileSize(free));
+            disk.setUsed(formatFileSize(used));
+            disk.setUsage(NumberUtil.mul(NumberUtil.div(used, total, 4), 100));
+        } catch (Exception e) {
+            log.error("计算硬盘使用量出现意外",e);
+        }
         return disk;
     }
 

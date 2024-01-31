@@ -127,4 +127,10 @@ public class FileController {
     public Response<Disk> getHardDiskSize() {
         return Response.success("获取当前系统硬盘使用情况！", fileManagerService.getHardDiskSize());
     }
+
+    @Operation(summary = "获取当前用户存储使用情况", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping(value = "/userHardDiskSize")
+    public Response<Disk> getUserHardDiskSize() {
+        return Response.success("获取当前用户存储使用情况！", fileManagerService.getUserHardDiskSize());
+    }
 }

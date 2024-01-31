@@ -8,13 +8,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
-* <p>
-* 系统配置 VO（View Object）：显示层对象
-* </p>
-*
-* @author xiaohai
-* @since 2023-02-01
-*/
+ * <p>
+ * 系统配置 VO（View Object）：显示层对象
+ * </p>
+ *
+ * @author xiaohai
+ * @since 2023-02-01
+ */
 @Getter
 @Setter
 @Schema(name = "ConfigVo", description = "系统配置 VO（View Object）：显示层对象")
@@ -57,6 +57,9 @@ public class ConfigVo implements Serializable {
 
 //    @Schema(description = "本地文件地址")
 //    private String filePath;
+
+    @Schema(description = "存储容量")
+    private Long diskSize;
 
     @Schema(description = "关于介绍")
     private String content;

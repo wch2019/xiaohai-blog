@@ -90,4 +90,6 @@ public class User extends BaseEntity  implements Serializable  {
     @Schema(description = "浏览器")
     private String loginBrowser;
 
+    @Schema(description = "存储容量")
+    private Long diskSize;
 }

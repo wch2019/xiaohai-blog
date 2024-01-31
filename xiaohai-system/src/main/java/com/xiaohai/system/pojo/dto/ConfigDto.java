@@ -63,4 +63,7 @@ public class ConfigDto{
 
     @Schema(description = "获取头像上传路径")
     private String avatarPath;
+
+    @Schema(description = "存储容量")
+    private Long diskSize;
 }

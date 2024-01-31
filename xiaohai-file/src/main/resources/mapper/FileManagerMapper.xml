@@ -55,5 +55,18 @@
         ORDER BY
             file_path DESC;
     </select>
+    <select id="selectAllFileSize" resultType="java.lang.Long">
+        SELECT
+            SUM( file_size )
+        FROM
+            file_manager
+    </select>
+    <select id="getTotalDiskSizeByUserId" resultType="java.lang.Long">
+        SELECT disk_size FROM sys_user WHERE id = #{userId}
+    </select>
+    <select id="getUsedDiskSizeByUserId" resultType="java.lang.Long">
+        SELECT SUM(file_size) FROM file_manager WHERE created_by = #{userId}
+    </select>
+
 
 </mapper>

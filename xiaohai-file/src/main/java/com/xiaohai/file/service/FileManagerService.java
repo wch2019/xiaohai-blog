@@ -96,4 +96,17 @@ public interface FileManagerService extends IService<FileManager> {
      * @return
      */
     Disk getHardDiskSize();
+
+    /**
+     * 获取当前用户存储使用情况
+     * @return
+     */
+    Disk getUserHardDiskSize();
+
+    /**
+     * 获取指定用户存储使用情况
+     * @param userId
+     * @return
+     */
+    Disk getUserHardDiskSize(Integer userId);
 }
