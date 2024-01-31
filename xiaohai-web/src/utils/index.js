@@ -156,34 +156,82 @@ export function markdownImageFile(name) {
 
 // 获取路径中最后一个斜杠后面的数据
 export function getLastSegment(input) {
-  let lastSlashIndex = input.lastIndexOf("/");
+  const lastSlashIndex = input.lastIndexOf('/')
 
   // 检查是否找到了 "/"
   if (lastSlashIndex !== -1) {
     // 使用substring获取最后一个 "/" 后面的数据
-    return input.substring(lastSlashIndex + 1);
+    return input.substring(lastSlashIndex + 1)
   } else {
     // 如果没有找到 "/", 返回整个输入字符串
-    return input;
+    return input
   }
 }
 
 // 查找模板中已存在图片的名字和地址，返回的格式为[{text:'xxx',url: 'xxx.png'}]
-export function findImg(str){
+export function findImg(str) {
   const regex = /!\[(.*?)\]\((.*?)\)/g
-  const matches = [];
-  let match;
+  const matches = []
+  let match
   while ((match = regex.exec(str)) !== null) {
-    const [, text, url] = match;
-    matches.push({ text, url });
+    const [, text, url] = match
+    matches.push({ text, url })
   }
   return matches
 }
 // 字符截取长度，如果超过长度返回原数据
 export function truncateString(str, maxLength) {
   if (str.length <= maxLength) {
-    return str;
+    return str
   } else {
-    return str.substring(0, maxLength);
+    return str.substring(0, maxLength)
+  }
+}
+// 存储容量 封装
+export function formatFileSize(fileSize) {
+  const df = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 })
+
+  let value = 0
+  let unit = ''
+  if (fileSize === undefined) {
+    value = 0
+    unit = 'B'
+  } else if (fileSize < 1024) {
+    value = fileSize
+    unit = 'B'
+  } else if (fileSize < 1048576) {
+    value = fileSize / 1024
+    unit = 'KB'
+  } else if (fileSize < 1073741824) {
+    value = fileSize / 1048576
+    unit = 'MB'
+  } else if (fileSize < 1099511627776) {
+    value = fileSize / 1073741824
+    unit = 'GB'
+  } else {
+    value = fileSize / 1099511627776
+    unit = 'TB'
+  }
+
+  return { value: df.format(value), unit }
+}
+// 存储容量 还原
+export function parseFileSize(formattedSize) {
+  const unitMultiplier = {
+    B: 1,
+    KB: 1024,
+    MB: 1048576,
+    GB: 1073741824,
+    TB: 1099511627776
+  }
+
+  const { value, unit } = formattedSize
+  const numericValue = parseFloat(value)
+
+  if (!isNaN(numericValue) && unitMultiplier.hasOwnProperty(unit)) {
+    return numericValue * unitMultiplier[unit]
+  } else {
+    console.error('Invalid formatted size')
+    return null
   }
 }

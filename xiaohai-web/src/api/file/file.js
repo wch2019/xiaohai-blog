@@ -50,7 +50,7 @@ export function uploadFile(data) {
 // 仅支持markdown图片路径删除
 export function delFile(data) {
   return request({
-    url: api+'/markdownImage',
+    url: api + '/markdownImage',
     method: 'delete',
     params: { path: data }
   })
@@ -81,10 +81,16 @@ export function newFolder(data) {
 }
 
 // 获取当前系统硬盘使用情况
-export function hardDiskSize(data) {
+export function hardDiskSize() {
   return request({
     url: api + '/hardDiskSize',
-    method: 'get',
-    params: data
+    method: 'get'
+  })
+}
+// 获取当前用户存储使用情况
+export function userHardDiskSize() {
+  return request({
+    url: api + '/userHardDiskSize',
+    method: 'get'
   })
 }

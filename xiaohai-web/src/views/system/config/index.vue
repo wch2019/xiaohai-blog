@@ -44,14 +44,28 @@
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="关键字" prop="keywords">
-                <el-input v-model="form.keywords" maxlength="255" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入关键字" />
+                <el-input
+                  v-model="form.keywords"
+                  maxlength="255"
+                  show-word-limit
+                  type="textarea"
+                  :autosize="{ minRows: 4}"
+                  placeholder="请输入关键字"
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
               <el-form-item label="网站描述" prop="description">
-                <el-input v-model="form.description" maxlength="255" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入网站描述" />
+                <el-input
+                  v-model="form.description"
+                  maxlength="255"
+                  show-word-limit
+                  type="textarea"
+                  :autosize="{ minRows: 4}"
+                  placeholder="请输入网站描述"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -63,7 +77,12 @@
             </el-col>
           </el-row>
           <el-form-item>
-            <el-button v-if="$store.getters.permission.includes('system:config:save')" type="primary" @click="submitForm">保存</el-button>
+            <el-button
+              v-if="$store.getters.permission.includes('system:config:save')"
+              type="primary"
+              @click="submitForm"
+            >保存
+            </el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -92,7 +111,12 @@
             </el-col>
           </el-row>
           <el-form-item>
-            <el-button v-if="$store.getters.permission.includes('system:config:save')" type="primary" @click="submitForm">保存</el-button>
+            <el-button
+              v-if="$store.getters.permission.includes('system:config:save')"
+              type="primary"
+              @click="submitForm"
+            >保存
+            </el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -140,7 +164,12 @@
             </el-col>
           </el-row>
           <el-form-item>
-            <el-button v-if="$store.getters.permission.includes('system:config:save')" type="primary" @click="submitForm">保存</el-button>
+            <el-button
+              v-if="$store.getters.permission.includes('system:config:save')"
+              type="primary"
+              @click="submitForm"
+            >保存
+            </el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -148,6 +177,28 @@
         <span slot="label">
           <i class="el-icon-folder" /> 本地文件存储
         </span>
+        <el-card>
+          <p class="mb-3">存储空间共 <strong>{{ hardDisk.total }}</strong></p>
+          <el-progress
+            :percentage="hardDisk.usage"
+            :stroke-width="14"
+            :show-text="false"
+            color="#6f7ad3"
+            class="mb-3"
+          />
+          <div class="row">
+            <div>
+              <span class="legend-primary me-2" />
+              <span>已使用</span>
+              <span class="font-size-primary ms-2 me-2">{{ hardDisk.used }}</span>
+            </div>
+            <div>
+              <span class="legend me-2" />
+              <span>空闲</span>
+              <span class="font-size-primary ms-2">{{ hardDisk.free }}</span>
+            </div>
+          </div>
+        </el-card>
         <aside>
           使用IO流将文件存储本地磁盘中<br>
         </aside>
@@ -158,6 +209,21 @@
           :model="form"
           label-width="100px"
         >
+          <el-row>
+            <el-col :span="6">
+              <el-form-item label="用户默认容量" class="input-with-select">
+                <el-input v-model="form.disk" oninput="value=value.replace(/[^\d.]/g,'')">
+                  <el-select slot="append" v-model="form.diskProperty" placeholder="请选择">
+                    <el-option label="B" value="B" />
+                    <el-option label="KB" value="KB" />
+                    <el-option label="MB" value="MB" />
+                    <el-option label="GB" value="GB" />
+                    <el-option label="TB" value="TB" />
+                  </el-select>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-row>
             <el-col :span="6">
               <el-form-item label="本地文件位置">
@@ -179,6 +245,14 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-form-item>
+            <el-button
+              v-if="$store.getters.permission.includes('system:config:save')"
+              type="primary"
+              @click="submitForm"
+            >保存
+            </el-button>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="关于信息">
@@ -237,11 +311,11 @@
 
 <script>
 import { getConfig, addConfig, updateConfig } from '@/api/system/config'
-import { uploadImage, delFile } from '@/api/file/file'
+import { uploadImage, delFile, hardDiskSize } from '@/api/file/file'
 import uploadImg from '@/components/uploadImg'
 import { marked } from 'marked'
 import 'github-markdown-css'
-import {findImg, getLastSegment, markdownImageFile} from '@/utils'
+import { findImg, formatFileSize, getLastSegment, markdownImageFile, parseFileSize } from '@/utils'
 
 export default {
   name: 'Index',
@@ -254,7 +328,16 @@ export default {
         emailUsername: '',
         emailPassword: '',
         emailPort: '',
-        content: ''
+        content: '',
+        diskSize: '',
+        disk: 0,
+        diskProperty: 'B'
+      },
+      hardDisk: {
+        total: '',
+        free: '',
+        used: '',
+        usage: 0
       }
     }
   },
@@ -265,6 +348,7 @@ export default {
   },
   created() {
     this.getConfig()
+    this.hardDiskSize()
   },
   methods: {
     /** 查询配置 */
@@ -273,23 +357,26 @@ export default {
         this.form = response.data
         this.$refs.uploadImg.getimgUrl(this.form.logo)
         this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
-        let imgData = findImg(this.form.content);
+        const imgData = findImg(this.form.content)
         imgData.forEach(item => {
           this.imgRecurrent(item.text, item.url)
         })
+        const formattedSize = formatFileSize(this.form.diskSize)
+        this.$set(this.form, 'disk', formattedSize.value)
+        this.$set(this.form, 'diskProperty', formattedSize.unit)
       })
     },
-    //将解析到图片名字和地址添加到控制列表(具体为什么要填这些参数，是因为mavon-editor插件中要使用到这些内容)
+    // 将解析到图片名字和地址添加到控制列表(具体为什么要填这些参数，是因为mavon-editor插件中要使用到这些内容)
     imgRecurrent(name, url) {
       this.$refs.md.$refs.toolbar_left.$imgAddByFilename(
-        //markdown模板图片地址
+        // markdown模板图片地址
         url,
         {
           // 图片控制列表图片链接
           miniurl: url,
           // 图片控制列表名字
           name: name,
-          //markdown模板图片名称
+          // markdown模板图片名称
           _name: name
         }
       )
@@ -311,7 +398,7 @@ export default {
     },
     // 删除图片
     imgDel(filename) {
-      const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE,"")
+      const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE, '')
       delFile(getLastSegment(name)).then(response => {
         this.$message.success(response.msg)
       })
@@ -322,6 +409,8 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.form.content = this.form.content.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
+      const formattedSize = { value: this.form.disk, unit: this.form.diskProperty }
+      this.form.diskSize = parseFileSize(formattedSize)
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== '') {
@@ -336,11 +425,63 @@ export default {
         }
       })
       this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
+    },
+    // 硬盘使用情况
+    hardDiskSize() {
+      hardDiskSize().then(response => {
+        this.hardDisk = response.data
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+.el-input .el-select {
+  width: 90px;
+}
 
+.input-with-select ::v-deep .el-input-group__append, .el-input-group__prepend {
+  background-color: transparent;
+}
+
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+
+.ms-2 {
+  margin-left: 0.5rem !important;
+}
+
+.legend {
+  --tblr-legend-size: 0.75em;
+  display: inline-block;
+  background: #e6e7e9;
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 2px;
+}
+
+.legend-primary {
+  --tblr-legend-size: 0.75em;
+  display: inline-block;
+  background: #6f7ad3;
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 2px;
+}
+
+.font-size-primary {
+  font-size: 15px;
+  color: #999;
+}
+
+.row {
+  display: flex;
+  justify-content: flex-start;
+}
 </style>

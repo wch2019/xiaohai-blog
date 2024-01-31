@@ -71,6 +71,9 @@ public class UserVo implements Serializable {
     @Schema(description = "帐号状态（0正常 1停用）")
     private String status;
 
+    @Schema(description = "存储容量")
+    private Long diskSize;
+
     @Schema(description = "角色组")
     @NotNull(message = "角色为空")
     private Long[] roleIds;

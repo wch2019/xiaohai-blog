@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8" >
+    <el-row :gutter="10" class="mb8">
       <div style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">
         <div style="display: flex;justify-content: space-between;flex-direction: column;align-items: center;">
           <el-col :span="1.5">
@@ -24,25 +24,26 @@
             </el-checkbox>
           </el-col>
         </div>
-        <div  style="float: right;width: 20%; max-width: 280px;font-size: 15px;color: #999;">
-        <span style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">{{hardDisk.used}} / {{hardDisk.total}}
-          <el-button  type="text" @click="diskDetails.show=true">查看</el-button></span>
-          <el-progress  :percentage="hardDisk.usage" :stroke-width="14"  :show-text="false" color="#6f7ad3"></el-progress>
+        <div style="float: right;width: 20%; max-width: 280px;font-size: 15px;color: #999;">
+          <span
+            style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;"
+          >{{ hardDisk.used }} / {{ hardDisk.total }}
+            <el-button type="text" @click="diskDetails.show=true">查看</el-button></span>
+          <el-progress :percentage="hardDisk.usage" :stroke-width="14" :show-text="false" color="#6f7ad3" />
         </div>
       </div>
     </el-row>
 
-
     <el-table
       ref="multipleTable"
+      v-el-table-infinite-scroll="loadMoreData"
       tooltip-effect="dark"
       :data="fileList"
       style="width: 100%"
       height="calc(100vh - 150px)"
+      :infinite-scroll-disabled="loading"
       @row-click="handle"
       @selection-change="handleSelectionChange"
-      v-el-table-infinite-scroll="loadMoreData"
-      :infinite-scroll-disabled="loading"
     >
       <el-table-column
         type="selection"
@@ -50,11 +51,23 @@
       />
       <el-table-column prop="fileName" label="名称">
         <template slot-scope="scope">
-          <el-image v-if="!scope.row.suffix" :src="require(`../../../assets/disk/folder.png`)" style="top: 3px;height:18px; width:23px"/>
-          <el-image v-else-if="picture(scope.row.suffix)" :src="require(`../../../assets/disk/image.png`)" style="top: 3px;height:18px; width:23px"/>
-          <el-image v-else :src="require('../../../assets/disk/document.png')" style="top: 3px;height:20px; width:20px" />
+          <el-image
+            v-if="!scope.row.suffix"
+            :src="require(`../../../assets/disk/folder.png`)"
+            style="top: 3px;height:18px; width:23px"
+          />
+          <el-image
+            v-else-if="picture(scope.row.suffix)"
+            :src="require(`../../../assets/disk/image.png`)"
+            style="top: 3px;height:18px; width:23px"
+          />
+          <el-image
+            v-else
+            :src="require('../../../assets/disk/document.png')"
+            style="top: 3px;height:20px; width:20px"
+          />
           {{ scope.row.fileName }}
-          <div class="dropdown" >
+          <div class="dropdown">
             <el-dropdown trigger="click" @visible-change>
               <el-button
                 style="padding: 5px; border: none;"
@@ -63,19 +76,28 @@
                 @click.native.stop
               />
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-if="$store.getters.permission.includes('file:files:update')" @click.native="renameFile(scope.row)">重命名</el-dropdown-item>
+                <el-dropdown-item
+                  v-if="$store.getters.permission.includes('file:files:update')"
+                  @click.native="renameFile(scope.row)"
+                >重命名
+                </el-dropdown-item>
                 <el-dropdown-item v-if="scope.row.fileType===0" @click.native="downloadMultipleFiles(scope.row)">下载
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="dialog(scope.row)">查看详情</el-dropdown-item>
-                <el-dropdown-item  v-if="$store.getters.permission.includes('file:files:delete')" divided @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
+                <el-dropdown-item
+                  v-if="$store.getters.permission.includes('file:files:delete')"
+                  divided
+                  @click.native="handleDelete(scope.row)"
+                >删除
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdTime" label="创建时间" align="center" width="180"/>
-      <el-table-column prop="fileSize" label="文件大小" align="center" width="100"/>
-      <slot></slot>
+      <el-table-column prop="createdTime" label="创建时间" align="center" width="180" />
+      <el-table-column prop="fileSize" label="文件大小" align="center" width="100" />
+      <slot />
       <template slot="append">
         <div class="no-more">
           <p v-loading="loading" />
@@ -91,11 +113,11 @@
       :class="alertClass"
     >
       <el-row :gutter="8" class="mb8">
-<!--        <el-col :span="1.5">-->
-<!--          <el-tooltip class="item" effect="dark" content="下载" placement="top">-->
-<!--            <el-button type="info" icon="el-icon-download" size="mini" @click="downloadMultipleFiles" />-->
-<!--          </el-tooltip>-->
-<!--        </el-col>-->
+        <!--        <el-col :span="1.5">-->
+        <!--          <el-tooltip class="item" effect="dark" content="下载" placement="top">-->
+        <!--            <el-button type="info" icon="el-icon-download" size="mini" @click="downloadMultipleFiles" />-->
+        <!--          </el-tooltip>-->
+        <!--        </el-col>-->
         <el-col :span="1.5">
           <el-tooltip
             v-if="$store.getters.permission.includes('file:files:delete')&&selectedItems.length!==0"
@@ -114,25 +136,24 @@
         </el-col>
       </el-row>
     </el-alert>
-    <FileUpload :file-upload="fileUpload" @getList="getList"/>
-    <FileDetails v-if="imageDetails.show" :image-details="imageDetails"/>
-    <disk-details v-if="diskDetails.show" :disk-details="diskDetails"/>
+    <FileUpload :file-upload="fileUpload" @getList="getList" />
+    <FileDetails v-if="imageDetails.show" :image-details="imageDetails" />
+    <disk-details v-if="diskDetails.show" :disk-details="diskDetails" />
   </div>
 </template>
 
 <script>
-import {delFileIds, getFile, hardDiskSize, renameFile} from '@/api/file/file'
-import {downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType} from '@/utils/common'
+import { delFileIds, getFile, hardDiskSize, renameFile, userHardDiskSize } from '@/api/file/file'
+import { downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 import FileDetails from '@/views/file/files/components/fileDetails.vue'
-import DiskDetails from "@/views/file/image/components/diskDetails.vue";
-import {mapGetters} from "vuex";
-
+import DiskDetails from '@/views/file/image/components/diskDetails.vue'
+import { mapGetters } from 'vuex'
 
 export default {
 
   name: 'Index',
-  components: {DiskDetails, FileDetails, FileUpload},
+  components: { DiskDetails, FileDetails, FileUpload },
   data() {
     return {
       // 总条数
@@ -169,24 +190,24 @@ export default {
 
       alertVisible: false,
       alertClass: '',
-      diskDetails:{
+      diskDetails: {
         show: false
       },
-      hardDisk:{
-        total: "",
-        free: "",
-        used: "",
+      hardDisk: {
+        total: '',
+        free: '',
+        used: '',
         usage: 0
       }
     }
-  },computed: {
+  }, computed: {
     ...mapGetters([
       'roles'
     ])
   },
   created() {
     this.hardDiskSize()
-    this.getList('',true)
+    this.getList('', true)
   },
   methods: {
     handleSelectionChange(selection) {
@@ -220,11 +241,11 @@ export default {
         this.getList()
       }
     },
-    getList(path,newFolder) {
+    getList(path, newFolder) {
       this.loading = true
-      if(newFolder){
+      if (newFolder) {
         this.srcList = []
-        this.fileList= []
+        this.fileList = []
         this.form.path = path
         this.form.pageNum = 1
         this.form.pageSize = 15
@@ -243,32 +264,32 @@ export default {
           }
         }
         // 将新的记录添加到fileList中
-        this.fileList = [...this.fileList, ... newRecords]
-        this.total =response.data.total
+        this.fileList = [...this.fileList, ...newRecords]
+        this.total = response.data.total
         this.getPathList()
-        this.fileUpload.path=this.form.path
+        this.fileUpload.path = this.form.path
         this.loading = false
       })
     },
     // 面包屑数据封装
     getPathList() {
       const map = new Map()
-      let a=1
+      let a = 1
       const pathSegments = this.form.path.split('/').map(segment => {
         if (segment === '') {
           return this.breadcrumb.text
         }
         a++
         // 非管理员用户
-        if(!this.roles.includes('admin')){
-          if(a<=3){
+        if (!this.roles.includes('admin')) {
+          if (a <= 3) {
             return
           }
         }
 
         return segment
       })
-      this.breadcrumb.pathList =  pathSegments.filter(segment => segment !== undefined);
+      this.breadcrumb.pathList = pathSegments.filter(segment => segment !== undefined)
       let currentPath = ''
       pathSegments.map(segment => {
         if (segment === this.breadcrumb.text) {
@@ -292,7 +313,7 @@ export default {
     handle(row, column, event, cell) {
       // 进入目录
       if (row.fileType === 1) {
-        this.getList(row.filePath,true)
+        this.getList(row.filePath, true)
       }
       // 查看照片
       if (this.picture(row.suffix)) {
@@ -324,7 +345,7 @@ export default {
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
         inputErrorMessage: '文件名格式不正确',
         inputValue: o.fileName.replace(suffix, '')
-      }).then(({value}) => {
+      }).then(({ value }) => {
         const data = {}
         data.fileName = value + suffix
         data.id = o.id
@@ -383,10 +404,10 @@ export default {
         this.alertClass = 'alert-slide-up'
       }
     },
-    //硬盘使用情况
+    // 硬盘使用情况
     hardDiskSize() {
-      hardDiskSize().then(response => {
-        this.hardDisk=response.data
+      userHardDiskSize().then(response => {
+        this.hardDisk = response.data
       })
     }
   }
@@ -410,7 +431,7 @@ export default {
   position: absolute;
   top: 12px;
   right: 5px;
-//display: none;
+  //display: none;
 }
 
 .hover-element:hover .dropdown {

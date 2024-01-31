@@ -1,6 +1,7 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <div v-if="open" />
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="form.username" placeholder="请输入用户名" />
@@ -11,7 +12,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="角色" prop="roleIds">
-            <el-select v-model="form.roleIds" multiple >
+            <el-select v-model="form.roleIds" multiple>
               <el-option
                 v-for="item in roleOptions"
                 :key="item.id"
@@ -52,6 +53,19 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="存储容量" class="input-with-select">
+            <el-input v-model="form.disk" oninput="value=value.replace(/[^\d.]/g,'')">
+              <el-select slot="append" v-model="form.diskProperty" placeholder="请选择">
+                <el-option label="B" value="B" />
+                <el-option label="KB" value="KB" />
+                <el-option label="MB" value="MB" />
+                <el-option label="GB" value="GB" />
+                <el-option label="TB" value="TB" />
+              </el-select>
+            </el-input>
+          </el-form-item>
+        </el-col>
       </el-row>
 
     </el-form>
@@ -64,6 +78,7 @@
 
 <script>
 import { addUser, updateUser } from '@/api/system/user'
+import { formatFileSize, parseFileSize } from '@/utils'
 
 export default {
   name: 'RoleDialog',
@@ -94,7 +109,9 @@ export default {
         roleIds: [],
         status: '0',
         nickName: '',
-        gender: ''
+        gender: '',
+        disk: 0,
+        diskProperty: 'B'
       },
       // 角色选择框列表
       roleOptions: [],
@@ -103,6 +120,13 @@ export default {
         username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
         email: [{ required: true, validator: validateEmail, trigger: 'blur' }],
         roleIds: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
+      }
+    }
+  },
+  watch: {
+    open: function(newVal) {
+      if (newVal) {
+        this.diskSize()
       }
     }
   },
@@ -116,7 +140,9 @@ export default {
         roleIds: [],
         status: '0',
         nickName: '',
-        gender: ''
+        gender: '',
+        disk: 0,
+        diskProperty: 'B'
       }
     },
     // 取消按钮
@@ -124,9 +150,18 @@ export default {
       this.open = false
       this.reset()
     },
+    diskSize() {
+      const formattedSize = formatFileSize(this.form.diskSize)
+      this.$set(this.form, 'disk', formattedSize.value)
+      this.$set(this.form, 'diskProperty', formattedSize.unit)
+    },
     /** 提交按钮 */
     submitForm() {
       console.log(this.form)
+      const formattedSize = { value: this.form.disk, unit: this.form.diskProperty }
+      this.form.diskSize = parseFileSize(formattedSize)
+      delete this.form.disk
+      delete this.form.diskProperty
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== '') {
@@ -152,5 +187,11 @@ export default {
 </script>
 
 <style scoped>
+.el-input .el-select {
+  width: 90px;
+}
 
+.input-with-select ::v-deep .el-input-group__append, .el-input-group__prepend {
+  background-color: transparent;
+}
 </style>
