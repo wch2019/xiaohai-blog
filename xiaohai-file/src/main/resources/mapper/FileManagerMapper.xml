@@ -67,6 +67,9 @@
     <select id="getUsedDiskSizeByUserId" resultType="java.lang.Long">
         SELECT SUM(file_size) FROM file_manager WHERE created_by = #{userId}
     </select>
+    <select id="getUsedMarkdownSizeByUserId" resultType="java.lang.Long">
+        SELECT SUM(file_size) FROM file_manager WHERE file_path LIKE '%/markdown/%' AND created_by = #{userId}
+    </select>
 
 
 </mapper>

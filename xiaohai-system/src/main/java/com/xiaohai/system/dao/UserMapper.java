@@ -20,4 +20,11 @@ public interface UserMapper extends BaseMapper<User> {
      */
     Long getTotalDiskSizeExcludeUserId(Integer userId);
 
+    /**
+     * 获取指定用户文章数
+     * @param userId
+     * @return
+     */
+    Long getUserArticleCount(Long userId);
+
 }

@@ -45,5 +45,12 @@ public interface FileManagerMapper extends BaseMapper<FileManager> {
      */
     Long getUsedDiskSizeByUserId(Integer userId);
 
+    /**
+     * 获取markdown使用情况
+     * @param userId
+     * @return
+     */
+    Long getUsedMarkdownSizeByUserId(Integer userId);
+
 
 }

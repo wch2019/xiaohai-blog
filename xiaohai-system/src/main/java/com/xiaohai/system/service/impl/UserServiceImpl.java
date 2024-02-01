@@ -119,6 +119,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         for (Long id : ids) {
             Assert.isTrue(!Objects.equals(1L, id), "不可删除管理员");
             Assert.isTrue(!Objects.equals(userId, id), "不可删除当前登录用户");
+            Assert.isTrue(0==baseMapper.getUserArticleCount(id), "存在文章不可删除");
+            Assert.isTrue(!fileManagerService.getUserFileCount(id), "存在文件数据不可删除");
             //删除角色
             userRoleService.delete(Math.toIntExact(id));
             //删除用户

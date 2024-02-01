@@ -8,16 +8,16 @@
         </el-checkbox>
       </el-col>
       <div
-        style="float: right;width: 30%;max-width: 280px; display: flex; justify-content: space-between;flex-direction: row;align-items: center;">
-        <div style="width: 80%;">
-          <el-progress :percentage="50" :stroke-width="14" :show-text="false" color="#6f7ad3"></el-progress>
+        style="float: right;width: 30%;max-width: 280px;"
+      >
+        <div style="width: 100%;">
+          <el-progress :percentage="hardDisk.usage" :stroke-width="14" :show-text="true" color="#6f7ad3" />
         </div>
-        <el-button type="text" @click="diskDetails.show=true">查看</el-button>
       </div>
     </el-row>
     <div style="margin-top:10px">
       <div v-if="fileList.length === 0">
-        <el-empty :image-size="200"/>
+        <el-empty :image-size="200" />
       </div>
     </div>
     <el-row
@@ -61,7 +61,7 @@
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
-              <el-image v-if="o.suffix" fit="cover" :src="o.filePath" :preview-src-list="[o.filePath]" class="image"/>
+              <el-image v-if="o.suffix" fit="cover" :src="o.filePath" :preview-src-list="[o.filePath]" class="image" />
               <el-button type="text" @click="dialog(o)">
                 <el-tooltip :content="o.fileName" placement="top">
                   <div>
@@ -75,7 +75,7 @@
         </el-col>
       </el-checkbox-group>
       <el-col>
-        <p v-loading="loading"/>
+        <p v-loading="loading" />
         <p v-if="noMore" style=" bottom: 0; width: 100%; text-align: center;">没有更多了</p>
       </el-col>
 
@@ -91,7 +91,7 @@
       <el-row :gutter="8" class="mb8">
         <el-col :span="1.5">
           <el-tooltip class="item" effect="dark" content="下载" placement="top">
-            <el-button type="info" icon="el-icon-download" size="mini" @click="downloadMultipleFiles"/>
+            <el-button type="info" icon="el-icon-download" size="mini" @click="downloadMultipleFiles" />
           </el-tooltip>
         </el-col>
         <el-col :span="1.5">
@@ -102,33 +102,31 @@
             content="删除"
             placement="top"
           >
-            <el-button type="info" icon="el-icon-delete" size="mini" @click="handleDelete"/>
+            <el-button type="info" icon="el-icon-delete" size="mini" @click="handleDelete" />
           </el-tooltip>
         </el-col>
         <el-col :span="1.5">
           <el-tooltip class="item" effect="dark" content="取消多选" placement="top">
-            <el-button type="info" icon="el-icon-circle-close" size="mini" @click="deselectAll"/>
+            <el-button type="info" icon="el-icon-circle-close" size="mini" @click="deselectAll" />
           </el-tooltip>
         </el-col>
       </el-row>
     </el-alert>
-    <ImageUpload @getList="getList"/>
-    <image-details v-if="imageDetails.show" :image-details="imageDetails"/>
-    <disk-details v-if="diskDetails.show" :disk-details="diskDetails"/>
+    <ImageUpload @getList="getList" />
+    <image-details v-if="imageDetails.show" :image-details="imageDetails" />
   </div>
 </template>
 
 <script>
-import {markdownImage, renameFile, delFile} from '@/api/file/file'
-import {getFileExtension, getFileAddress, downloadFile, VerifyIsPictureType} from '@/utils/common'
+import { markdownImage, renameFile, delFile, userHardDiskSize } from '@/api/file/file'
+import { getFileExtension, getFileAddress, downloadFile, VerifyIsPictureType } from '@/utils/common'
 import ImageUpload from '@/views/file/image/components/imageUpload.vue'
 import ImageDetails from '@/views/file/image/components/imageDetails.vue'
-import DiskDetails from '@/views/file/image/components/diskDetails.vue'
-import {getLastSegment} from "@/utils";
+import { getLastSegment } from '@/utils'
 
 export default {
   name: 'Index',
-  components: {ImageUpload, ImageDetails, DiskDetails},
+  components: { ImageUpload, ImageDetails },
   data() {
     return {
       // 总条数
@@ -153,12 +151,16 @@ export default {
       isIndeterminate: false,
       alertVisible: false,
       alertClass: '',
-      diskDetails: {
-        show: false
+      hardDisk: {
+        total: '',
+        free: '',
+        used: '',
+        usage: 0
       }
     }
   },
   created() {
+    this.hardDiskSize()
     this.getList()
   },
   methods: {
@@ -245,16 +247,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let hasExecuted = false;
+        let hasExecuted = false
         this.fileList.forEach(element => {
           if (ids.includes(element.id)) {
             delFile(getLastSegment(element.filePath)).then(response => {
               // 使用标志位确保只执行一次
               if (!hasExecuted) {
-                hasExecuted = true;
+                hasExecuted = true
                 // 所有异步操作完成后执行
-                this.$message.success(response.msg); // 假设只有一个异步操作，如果有多个，需要根据实际情况处理
-                this.fileList = this.fileList.filter(element => !ids.includes(element.id));
+                this.$message.success(response.msg) // 假设只有一个异步操作，如果有多个，需要根据实际情况处理
+                this.fileList = this.fileList.filter(element => !ids.includes(element.id))
                 this.deselectAll()
               }
             })
@@ -287,7 +289,7 @@ export default {
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
         inputErrorMessage: '文件名格式不正确',
         inputValue: o.fileName.replace(suffix, '')
-      }).then(({value}) => {
+      }).then(({ value }) => {
         const data = {}
         data.fileName = value + suffix
         data.id = o.id
@@ -300,6 +302,12 @@ export default {
           type: 'info',
           message: '取消输入'
         })
+      })
+    },
+    // 硬盘使用情况
+    hardDiskSize() {
+      userHardDiskSize().then(response => {
+        this.hardDisk = response.data
       })
     }
   }
@@ -452,5 +460,8 @@ export default {
   100% {
     transform: translateY(100%) translateX(-50%);
   }
+}
+::v-deep .el-progress__text{
+  font-size: 14px !important;
 }
 </style>

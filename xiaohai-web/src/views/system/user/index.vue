@@ -82,22 +82,22 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" border style="margin-top: 10px" :data="roleList"  @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" :selectable="judgeSelect"  align="center" />
-      <el-table-column label="头像" align="center" width="120" prop="avatar">
+    <el-table v-loading="loading" border style="margin-top: 10px;width: 100%;" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" :selectable="judgeSelect" align="center" width="55" />
+      <el-table-column label="头像" align="center" prop="avatar" width="120">
         <template slot-scope="scope">
           <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)" />
           <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" />
-      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
-      <el-table-column label="用户性别" align="center" prop="gender">
+      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" width="120" />
+      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" width="120" />
+      <el-table-column label="用户性别" align="center" prop="gender" width="120">
         <template slot-scope="scope">
           <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender" />
         </template>
       </el-table-column>
-      <el-table-column label="角色" align="center" prop="roleIds">
+      <el-table-column label="角色" align="center" prop="roleIds" width="120">
         <template slot-scope="scope">
           <template v-for="(item, index) in roleOptions">
             <el-tag
@@ -110,14 +110,20 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column label="容量" align="center" prop="disk" width="150">
+        <template slot-scope="scope">
+          <span style="font-size: 12px">{{ scope.row.disk.used }} / {{ scope.row.disk.total }}</span>
+          <el-progress :percentage="scope.row.disk.usage" :stroke-width="14" :show-text="false" color="#6f7ad3" />
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" width="80">
         <template slot-scope="scope">
           <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
       <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="150">
         <template slot-scope="scope">
           <el-button
             v-if="$store.getters.permission.includes('system:user:update')"
@@ -275,3 +281,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+</style>

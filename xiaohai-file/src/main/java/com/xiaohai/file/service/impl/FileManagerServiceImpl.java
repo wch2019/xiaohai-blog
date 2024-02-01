@@ -1,6 +1,7 @@
 package com.xiaohai.file.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -87,8 +88,8 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         if (fileManager.getFileName().equals(vo.getFileName())) {
             return fileManager.getFileName();
         }
-        Integer userId =Integer.valueOf((String)StpUtil.getLoginId());
-        if(!fileManager.getCreatedBy().equals(userId)){
+        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+        if (!fileManager.getCreatedBy().equals(userId)) {
             throw new ServiceException("非当前用户数据无法重命名");
         }
         List<FileManager> list = baseMapper.selectChildHierarchy(fileManager.getId());
@@ -165,22 +166,38 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
 
     @Override
     public Disk getUserHardDiskSize() {
-        Integer userId =Integer.valueOf((String)StpUtil.getLoginId());
-//        if(StpUtil.hasRole(Constants.ADMIN)){
-//            baseMapper.selectAllFileSize();
-//        }
-        Long total=baseMapper.getTotalDiskSizeByUserId(userId);
-        Long used=baseMapper.getUsedDiskSizeByUserId(userId);
-        Disk disk=FileUtils.getUserDiskSize(total, used);
+        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
+        Long total = baseMapper.getTotalDiskSizeByUserId(userId);
+        Long used = baseMapper.getUsedDiskSizeByUserId(userId);
+        Long markUsed= baseMapper.getUsedMarkdownSizeByUserId(userId);
+        if (markUsed == null) {
+            markUsed = 0L;
+        }
+        if (used == null) {
+            used = 0L;
+        }
+        Disk disk = FileUtils.getUserDiskSize(total, used);
+        disk.setOtherUsed(FileUtils.formatFileSize(used-markUsed));
+        disk.setMarkUsed(FileUtils.formatFileSize(markUsed));
         return disk;
     }
+
     @Override
     public Disk getUserHardDiskSize(Integer userId) {
-        Long total=baseMapper.getTotalDiskSizeByUserId(userId);
-        Long used=baseMapper.getUsedDiskSizeByUserId(userId);
-        if(used==null){
-            used=0L;
+        Long total = baseMapper.getTotalDiskSizeByUserId(userId);
+        Long used = baseMapper.getUsedDiskSizeByUserId(userId);
+        if (used == null) {
+            used = 0L;
         }
         return FileUtils.getUserDiskSize(total, used);
+    }
+
+    @Override
+    public Boolean getUserFileCount(Long userId) {
+        Long fileCount = baseMapper.selectCount(new LambdaQueryWrapper<FileManager>().eq(FileManager::getCreatedBy, userId));
+        if (fileCount != 0) {
+            return true;
+        }
+        return false;
     }
 }

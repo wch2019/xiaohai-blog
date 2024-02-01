@@ -138,16 +138,16 @@
     </el-alert>
     <FileUpload :file-upload="fileUpload" @getList="getList" />
     <FileDetails v-if="imageDetails.show" :image-details="imageDetails" />
-    <disk-details v-if="diskDetails.show" :disk-details="diskDetails" />
+    <disk-details v-if="diskDetails.show" :disk-details="diskDetails" :hard-disk="hardDisk" />
   </div>
 </template>
 
 <script>
-import { delFileIds, getFile, hardDiskSize, renameFile, userHardDiskSize } from '@/api/file/file'
+import { delFileIds, getFile, renameFile, userHardDiskSize } from '@/api/file/file'
 import { downloadFile, getFileAddress, getFileExtension, VerifyIsPictureType } from '@/utils/common'
 import FileUpload from '@/views/file/files/components/fileUpload.vue'
 import FileDetails from '@/views/file/files/components/fileDetails.vue'
-import DiskDetails from '@/views/file/image/components/diskDetails.vue'
+import DiskDetails from '@/views/file/files/components/diskDetails.vue'
 import { mapGetters } from 'vuex'
 
 export default {

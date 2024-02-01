@@ -50,5 +50,8 @@
         </if>
         </where>
     </select>
+    <select id="getUserArticleCount" resultType="java.lang.Long">
+        SELECT count(*) FROM `b_article`  where user_id =#{userId}
+    </select>
 
 </mapper>

@@ -205,7 +205,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         MultipartFile multipartFile = FileUtils.getFileFromUrl(url, fileName);
         //指定公共markdown图片上传目录
         String path = fileConfig.getProfile() + FileConstants.IMAGE_FILE + File.separator + FileConstants.BING_FILE;
-        return fileService.uploadBing(multipartFile, path, fileName);
+//        fileService.uploadBing(multipartFile, path, fileName);
+        return fileService.uploadImage(multipartFile);
     }
 
     @Override

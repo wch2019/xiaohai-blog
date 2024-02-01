@@ -109,4 +109,11 @@ public interface FileManagerService extends IService<FileManager> {
      * @return
      */
     Disk getUserHardDiskSize(Integer userId);
+
+    /**
+     * 判断用户是否存在文件
+     * @param userId
+     * @return
+     */
+    Boolean getUserFileCount(Long userId);
 }

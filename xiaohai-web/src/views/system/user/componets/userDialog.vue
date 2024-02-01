@@ -140,9 +140,7 @@ export default {
         roleIds: [],
         status: '0',
         nickName: '',
-        gender: '',
-        disk: 0,
-        diskProperty: 'B'
+        gender: ''
       }
     },
     // 取消按钮
@@ -157,7 +155,6 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      console.log(this.form)
       const formattedSize = { value: this.form.disk, unit: this.form.diskProperty }
       this.form.diskSize = parseFileSize(formattedSize)
       delete this.form.disk

@@ -82,6 +82,9 @@ public class UserDto implements Serializable {
     private String loginBrowser;
 
     @Schema(description = "存储容量")
+    private Long diskSize;
+
+    @Schema(description = "存储容量详情")
     private Disk disk;
 
     @Schema(description = "创建时间")
