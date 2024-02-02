@@ -22,8 +22,14 @@ public class Disk {
     @Schema(description = "其他使用量")
     private String otherUsed;
 
+    @Schema(description = "其他使用率")
+    private double otherUsage;
+
     @Schema(description = "markdown使用量")
-    private String markUsed;;
+    private String markUsed;
+
+    @Schema(description = "markdown使用率")
+    private double markUsage;
 
     @Schema(description = "资源的使用率")
     private double usage;

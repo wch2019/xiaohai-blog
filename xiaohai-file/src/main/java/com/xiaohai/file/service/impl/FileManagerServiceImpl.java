@@ -177,8 +177,11 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
             used = 0L;
         }
         Disk disk = FileUtils.getUserDiskSize(total, used);
-        disk.setOtherUsed(FileUtils.formatFileSize(used-markUsed));
+        Long other=used-markUsed;
+        disk.setOtherUsed(FileUtils.formatFileSize(other));
+        disk.setOtherUsage(NumberUtil.mul(NumberUtil.div(other, total, 4), 100).doubleValue());
         disk.setMarkUsed(FileUtils.formatFileSize(markUsed));
+        disk.setMarkUsage(NumberUtil.mul(NumberUtil.div(markUsed, total, 4), 100).doubleValue());
         return disk;
     }
 
