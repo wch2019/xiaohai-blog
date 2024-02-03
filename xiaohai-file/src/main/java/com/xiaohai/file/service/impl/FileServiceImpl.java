@@ -6,10 +6,10 @@ import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
+import com.xiaohai.common.server.Disk;
 import com.xiaohai.common.utils.FileUtils;
 import com.xiaohai.common.utils.MarkdownUtils;
 import com.xiaohai.common.utils.StringUtils;
-import com.xiaohai.file.dao.FileManagerMapper;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
@@ -41,18 +41,21 @@ public class FileServiceImpl implements FileService {
 
     private final FileManagerService fileManagerService;
 
-    private final FileManagerMapper fileManagerMapper;
-
     @Override
     public String uploadAvatar(MultipartFile file) {
+        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         //根据用户区分文件夹
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.AVATAR_FILE;
+        String path = fileConfig.getFilePath() + userId + File.separator + FileConstants.AVATAR_FILE;
         //计算hash
         String hash = FileUtils.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
         String url = getFile(path, hash);
         if (StringUtils.isNotBlank(url)) {
             return url;
+        }
+        Disk disk = fileManagerService.getUserHardDiskSize(userId);
+        if (disk.getFreeNoUnit() < file.getSize()) {
+            throw new ServiceException("容量不足");
         }
         return addFileImage(path, file, hash);
     }
@@ -72,14 +75,19 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadImage(MultipartFile file) {
+        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         //指定markdown图片上传目录,根据用户区分文件夹
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE;
+        String path = fileConfig.getFilePath() + userId + File.separator + FileConstants.MARKDOWN_FILE;
         //计算hash
         String hash = FileUtils.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
         String url = getFile(path, hash);
         if (StringUtils.isNotBlank(url)) {
             return url;
+        }
+        Disk disk = fileManagerService.getUserHardDiskSize(userId);
+        if (disk.getFreeNoUnit() < file.getSize()) {
+            throw new ServiceException("容量不足");
         }
         return addFileImage(path, file, hash);
     }
@@ -191,7 +199,9 @@ public class FileServiceImpl implements FileService {
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
         FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
-        fileManagerVo.setParentId(manager.getId());
+        if(manager!=null){
+            fileManagerVo.setParentId(manager.getId());
+        }
         fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
         fileManagerVo.setFileName(fileName);
         fileManagerVo.setFileSize((int) file.getSize());
@@ -267,20 +277,27 @@ public class FileServiceImpl implements FileService {
         if (file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
+        path = path.isEmpty() ?  path : path.substring(1);
         //根据用户区分文件夹
-        path = fileConfig.getProfile() + path.substring(1);
+        path = fileConfig.getProfile() + path;
         //计算hash
         String hash = FileUtils.extractChecksum(file, SHA_256);
-        //验证是否存在当前文件
-        String url = getFile(path, hash);
-        if (StringUtils.isNotBlank(url)) {
-            return url;
+        if(!path.equals(fileConfig.getProfile())){
+            //验证是否存在当前文件
+            String url = getFile(path, hash);
+            if (StringUtils.isNotBlank(url)) {
+                return url;
+            }
+        }
+        Disk disk = fileManagerService.getUserHardDiskSize(Integer.valueOf((String) StpUtil.getLoginId()));
+        if (disk.getFreeNoUnit() < file.getSize()) {
+            throw new ServiceException("容量不足");
         }
         return addFile(path, file, file.getOriginalFilename(), hash);
     }
 
     @Override
-    public String userPath(){
+    public String userPath() {
         var userPath = fileConfig.getFilePath() + StpUtil.getLoginId();
         return FileUtils.normalizeFilePath(userPath.replace(fileConfig.getProfile(), File.separator));
     }
@@ -294,7 +311,7 @@ public class FileServiceImpl implements FileService {
             }
             path = userPath;
         }
-        if (!path.contains(userPath)&&!StpUtil.hasRole(Constants.ADMIN)) {
+        if (!path.contains(userPath) && !StpUtil.hasRole(Constants.ADMIN)) {
             throw new ServiceException("没有查看权限");
         }
 

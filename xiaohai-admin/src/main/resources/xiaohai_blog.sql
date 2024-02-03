@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本机
+ Source Server         : Blog
  Source Server Type    : MySQL
- Source Server Version : 80028 (8.0.28)
- Source Host           : localhost:3306
- Source Schema         : xiaohai_blog
+ Source Server Version : 80033 (8.0.33)
+ Source Host           : 192.168.68.207:3308
+ Source Schema         : xiaohai_blog_initial
 
  Target Server Type    : MySQL
- Target Server Version : 80028 (8.0.28)
+ Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 26/01/2024 15:13:41
+ Date: 03/02/2024 16:35:30
 */
 
 SET NAMES utf8mb4;
@@ -200,6 +200,7 @@ CREATE TABLE `sys_config`  (
   `email_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '邮箱授权码',
   `email_port` int NULL DEFAULT NULL COMMENT '邮箱发送端口',
   `file_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '本地文件地址',
+  `disk_size` bigint NOT NULL DEFAULT 0 COMMENT '存储容量',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '关于介绍',
   `created_by` int NULL DEFAULT NULL COMMENT '创建人',
   `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
@@ -211,7 +212,7 @@ CREATE TABLE `sys_config`  (
 -- ----------------------------
 -- Records of sys_config
 -- ----------------------------
-INSERT INTO `sys_config` VALUES (1, '/system/favicon.ico', 'DoteCode', 'DotCode | 点码', 'DoteCode,点码,开源博客,Java技术分享,Spring教程', '一个专注于技术分享的博客平台，大家以共同学习，乐于分享，拥抱开源的价值观进行学习交流', '', 'smtp.qq.com', '1372195290@qq.com', '', 587, 'C:/Users/wangchenghai/Pictures/files/', '# 欢迎来到我的博客！\n这里是一个分享知识、记录生活、思考未来的平台。\n\n在这里，我将和大家分享我对于生活、职场、学习等各个方面的见解和心得体会，希望能够为大家提供有价值的帮助和启发。\n\n同时，我也会在博客中记录我的生活点滴、分享我的兴趣爱好、思考我的未来规划，希望能够通过这种方式与大家建立更加亲近的关系。\n\n感谢您的光临，希望我的博客能够给您带来不一样的体验和收获！\n\n', 1, '2023-02-02 10:34:11', 1, '2024-01-26 14:41:01');
+INSERT INTO `sys_config` VALUES (1, '/system/favicon.ico', 'DoteCode', 'DotCode | 点码', 'DoteCode,点码,开源博客,Java技术分享,Spring教程', '一个专注于技术分享的博客平台，大家以共同学习，乐于分享，拥抱开源的价值观进行学习交流', '', 'smtp.qq.com', '1372195290@qq.com', '', 587, 'C:/Users/wangchenghai/Pictures/files/', 104857600, '# 欢迎来到我的博客！\n这里是一个分享知识、记录生活、思考未来的平台。\n\n在这里，我将和大家分享我对于生活、职场、学习等各个方面的见解和心得体会，希望能够为大家提供有价值的帮助和启发。\n\n同时，我也会在博客中记录我的生活点滴、分享我的兴趣爱好、思考我的未来规划，希望能够通过这种方式与大家建立更加亲近的关系。\n\n感谢您的光临，希望我的博客能够给您带来不一样的体验和收获！\n\n', 1, '2023-02-02 10:34:11', 1, '2024-02-03 16:33:08');
 
 -- ----------------------------
 -- Table structure for sys_dict_data
@@ -380,7 +381,7 @@ INSERT INTO `sys_menu` VALUES (30, 5, '', 4, '刷新缓存', 'F', '', '', 'syste
 INSERT INTO `sys_menu` VALUES (31, 1, 'el-icon-s-tools', 2, '系统配置', 'C', 'config', 'system/config/index', '', '0', 1, '2023-03-08 14:15:33', 1, '2023-03-08 14:15:53');
 INSERT INTO `sys_menu` VALUES (32, 0, 'el-icon-files', 3, '文件管理', 'M', 'file', '', '', '0', 1, '2023-03-18 11:53:52', 1, '2023-03-31 17:56:06');
 INSERT INTO `sys_menu` VALUES (33, 32, 'el-icon-folder-opened', 0, '文件详情', 'C', 'files', 'file/files/index', '', '0', 1, '2023-03-18 11:57:26', 1, '2023-03-18 12:09:05');
-INSERT INTO `sys_menu` VALUES (34, 32, 'el-icon-delete', 2, '回收站', 'C', 'delete', 'file/delete/index', '', '0', 1, '2023-03-18 12:09:56', 1, '2023-08-31 16:26:56');
+INSERT INTO `sys_menu` VALUES (34, 32, 'el-icon-delete', 2, '回收站', 'C', 'delete', 'file/delete/index', '', '1', 1, '2023-03-18 12:09:56', 1, '2024-02-03 16:33:37');
 INSERT INTO `sys_menu` VALUES (35, 1, 'el-icon-info', 5, '日志管理', 'C', 'log', 'system/log/index', '', '0', 1, '2023-03-30 15:58:04', 1, '2023-03-30 15:58:49');
 INSERT INTO `sys_menu` VALUES (36, 35, '', 0, '列表', 'F', '', '', 'system:log:list', '0', 1, '2023-03-30 16:15:16', 1, '2023-03-30 16:15:16');
 INSERT INTO `sys_menu` VALUES (37, 35, '', 1, '删除', 'F', '', '', 'system:log:delete', '0', 1, '2023-03-30 16:15:42', 1, '2023-03-30 16:15:42');
@@ -641,6 +642,7 @@ CREATE TABLE `sys_user`  (
   `login_date` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
   `login_os` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '操作系统',
   `login_browser` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '浏览器',
+  `disk_size` bigint NOT NULL DEFAULT 0 COMMENT '存储容量',
   `created_by` int NULL DEFAULT NULL COMMENT '创建人',
   `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `updated_by` int NULL DEFAULT NULL COMMENT '更新人',
@@ -651,8 +653,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '4XBeVW8wO9P1tgT0TDRU2w==', '小海', '1', '/files/1/avatar/da7626c4538341078e7f7db16779afc8.png', '1372195290@qq.com', '15677777777', 'https://gitee.com/wch2019', 'https://github.com/wch2019', '1372195290', '1', '用一点点代码，改变生活', '0', 535, '127.0.0.1', '内网IP', '2024-01-26 11:08:51', 'Windows 10', 'Chrome 12', 1, '2023-02-02 17:30:22', NULL, '2024-01-26 11:08:51');
-INSERT INTO `sys_user` VALUES (2, 'user', '4XBeVW8wO9P1tgT0TDRU2w==', '普通用户', '2', '/files/2/avatar/a760e7d77d5a415ba2e876081115d9dd.png', '137@qq.com', NULL, NULL, NULL, NULL, NULL, NULL, '0', 20, '127.0.0.1', '内网IP', '2024-01-26 11:03:59', 'Windows 10', 'Chrome 12', 1, '2023-02-02 17:30:22', NULL, '2024-01-26 11:03:59');
+INSERT INTO `sys_user` VALUES (1, 'admin', '4XBeVW8wO9P1tgT0TDRU2w==', '小海', '1', '/files/1/avatar/da7626c4538341078e7f7db16779afc8.png', '1372195290@qq.com', '15677777777', 'https://gitee.com/wch2019', 'https://github.com/wch2019', '1372195290', '1', '用一点点代码，改变生活', '0', 536, '127.0.0.1', '内网IP', '2024-02-03 16:29:35', 'Windows 10', 'Chrome 12', 104857600, 1, '2023-02-02 17:30:22', 1, '2024-02-03 16:32:45');
+INSERT INTO `sys_user` VALUES (2, 'user', '4XBeVW8wO9P1tgT0TDRU2w==', '普通用户', '2', '/files/2/avatar/a760e7d77d5a415ba2e876081115d9dd.png', '137@qq.com', NULL, NULL, NULL, NULL, NULL, NULL, '0', 20, '127.0.0.1', '内网IP', '2024-01-26 11:03:59', 'Windows 10', 'Chrome 12', 104857600, 1, '2023-02-02 17:30:22', 1, '2024-02-03 16:32:52');
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -672,7 +674,7 @@ CREATE TABLE `sys_user_role`  (
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
-INSERT INTO `sys_user_role` VALUES (1, 2, 2, 2, '2023-08-06 17:17:46', 2, '2023-08-06 17:17:46');
-INSERT INTO `sys_user_role` VALUES (2, 1, 1, 1, '2024-01-24 16:29:54', 1, '2024-01-24 16:29:54');
+INSERT INTO `sys_user_role` VALUES (1, 1, 1, 1, '2024-02-03 16:32:45', 1, '2024-02-03 16:32:45');
+INSERT INTO `sys_user_role` VALUES (2, 2, 2, 1, '2024-02-03 16:32:52', 1, '2024-02-03 16:32:52');
 
 SET FOREIGN_KEY_CHECKS = 1;

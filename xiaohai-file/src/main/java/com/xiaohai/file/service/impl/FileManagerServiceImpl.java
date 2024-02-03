@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.confing.FileConfig;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
@@ -56,13 +57,16 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     public Integer deleteFile(Long[] ids) {
         for (Long id : ids) {
             FileManager fileManager = baseMapper.selectById(id);
+
             Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
-            if (!fileManager.getCreatedBy().equals(userId)) {
+
+            if (!fileManager.getCreatedBy().equals(userId) && !StpUtil.hasRole(Constants.ADMIN)) {
                 throw new ServiceException("非当前用户数据无法删除");
             }
+
             List<FileManager> list = baseMapper.selectChildHierarchy(fileManager.getId());
             for (FileManager file : list) {
-                if (!file.getCreatedBy().equals(userId)) {
+                if (!file.getCreatedBy().equals(userId) && !StpUtil.hasRole(Constants.ADMIN)) {
                     throw new ServiceException("非当前用户数据无法删除");
                 }
                 String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + file.getFilePath());
@@ -169,7 +173,7 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         Long total = baseMapper.getTotalDiskSizeByUserId(userId);
         Long used = baseMapper.getUsedDiskSizeByUserId(userId);
-        Long markUsed= baseMapper.getUsedMarkdownSizeByUserId(userId);
+        Long markUsed = baseMapper.getUsedMarkdownSizeByUserId(userId);
         if (markUsed == null) {
             markUsed = 0L;
         }
@@ -177,11 +181,17 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
             used = 0L;
         }
         Disk disk = FileUtils.getUserDiskSize(total, used);
-        Long other=used-markUsed;
+        Long other = used - markUsed;
         disk.setOtherUsed(FileUtils.formatFileSize(other));
-        disk.setOtherUsage(NumberUtil.mul(NumberUtil.div(other, total, 4), 100).doubleValue());
         disk.setMarkUsed(FileUtils.formatFileSize(markUsed));
-        disk.setMarkUsage(NumberUtil.mul(NumberUtil.div(markUsed, total, 4), 100).doubleValue());
+        if (total == 0) {
+            disk.setOtherUsage(100);
+            disk.setMarkUsage(100);
+        } else {
+            disk.setOtherUsage(NumberUtil.mul(NumberUtil.div(other, total, 4), 100).doubleValue());
+            disk.setMarkUsage(NumberUtil.mul(NumberUtil.div(markUsed, total, 4), 100).doubleValue());
+        }
+
         return disk;
     }
 

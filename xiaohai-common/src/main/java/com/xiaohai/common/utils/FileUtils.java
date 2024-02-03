@@ -113,7 +113,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             //判断当前文件夹或文件是否存在
             if (file.exists()) {
                 return file.delete();
-            }else{
+            } else {
                 return true;
             }
         } catch (Exception e) {
@@ -223,6 +223,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 通过URL直接转换成MutipartFile
+     *
      * @param url
      * @param fileName
      * @return
@@ -269,8 +270,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
             return null; // 或者抛出自定义异常
         }
     }
-
-
 
 
     /**
@@ -362,7 +361,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @param targetPath 要重命名的目标路径
      * @return 返回新的唯一目标路径
      */
-    public static String renameFile(String targetPath){
+    public static String renameFile(String targetPath) {
         Path target = Paths.get(targetPath);
 
         if (Files.exists(target)) {
@@ -383,7 +382,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
                 target = target.resolveSibling(newTargetPath);
             } while (Files.exists(target));
             // 更新目标路径为新的唯一名称
-            targetPath= target.toString();
+            targetPath = target.toString();
         }
         // 返回新的目标路径
         return targetPath;
@@ -511,6 +510,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 使用replace方法将反斜杠替换为正斜杠
+     *
      * @param filePath
      * @return
      */
@@ -526,6 +526,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 使用replace方法将正斜杠替换为系统兼容的斜杠
+     *
      * @param filePath
      * @return
      */
@@ -541,6 +542,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 获取最后一个 "/" 前面的数据
+     *
      * @param input
      * @return
      */
@@ -550,7 +552,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
         // 检查是否找到了 "/"
         if (lastSlashIndex != -1) {
             // 使用substring获取最后一个 "/" 前面的数据
-            return input.substring(0,lastSlashIndex+1);
+            return input.substring(0, lastSlashIndex + 1);
         } else {
             // 如果没有找到 "/", 可以根据实际需求返回空字符串或整个输入字符串
             return "";
@@ -599,23 +601,30 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 获取硬盘使用量
+     *
      * @param path 路径
      * @return
      */
-    public static Disk getSystemDiskSize(String path){
-        Disk disk=new Disk();
+    public static Disk getSystemDiskSize(String path) {
+        Disk disk = new Disk();
         try {
             Path diskPath = FileSystems.getDefault().getPath(path);
             FileStore fileStore = Files.getFileStore(diskPath);
 
             long free = fileStore.getUsableSpace();
-            long total =fileStore.getTotalSpace();
+            long total = fileStore.getTotalSpace();
             long used = total - free;
 
             disk.setTotal(formatFileSize(total));
+            disk.setTotalNoUnit(total);
             disk.setFree(formatFileSize(free));
+            disk.setFreeNoUnit(free);
             disk.setUsed(formatFileSize(used));
-            disk.setUsage(NumberUtil.mul(NumberUtil.div(used, total, 4), 100));
+            if (total == 0) {
+                disk.setUsage(100);
+            } else {
+                disk.setUsage(NumberUtil.mul(NumberUtil.div(used, total, 4), 100));
+            }
         } catch (IOException e) {
             throw new ServiceException("获取磁盘信息出错", e);
         }
@@ -624,6 +633,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 获取硬盘剩余量
+     *
      * @param path
      * @return
      */
@@ -641,21 +651,24 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 计算硬盘使用量
+     *
      * @param total 总容量
-     * @param used 使用容量
+     * @param used  使用容量
      * @return
      */
     public static Disk getUserDiskSize(long total, long used) {
         Disk disk = null;
-        try {
-            disk = new Disk();
-            long free = total - used;
-            disk.setTotal(formatFileSize(total));
-            disk.setFree(formatFileSize(free));
-            disk.setUsed(formatFileSize(used));
+        disk = new Disk();
+        long free = total - used;
+        disk.setTotal(formatFileSize(total));
+        disk.setTotalNoUnit(total);
+        disk.setFree(formatFileSize(free));
+        disk.setFreeNoUnit(free);
+        disk.setUsed(formatFileSize(used));
+        if (total == 0) {
+            disk.setUsage(100);
+        } else {
             disk.setUsage(NumberUtil.mul(NumberUtil.div(used, total, 4), 100));
-        } catch (Exception e) {
-            log.error("计算硬盘使用量出现意外",e);
         }
         return disk;
     }

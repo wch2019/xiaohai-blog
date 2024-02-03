@@ -13,8 +13,14 @@ public class Disk {
     @Schema(description = "总大小")
     private String total;
 
+    @Schema(description = "总大小没有单位")
+    private long totalNoUnit;
+
     @Schema(description = "剩余大小")
     private String free;
+
+    @Schema(description = "剩余大小没有单位")
+    private long freeNoUnit;
 
     @Schema(description = "已经使用量")
     private String used;
