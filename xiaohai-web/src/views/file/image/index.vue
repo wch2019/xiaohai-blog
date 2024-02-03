@@ -112,7 +112,7 @@
         </el-col>
       </el-row>
     </el-alert>
-    <ImageUpload @getList="getList" />
+    <ImageUpload @getList="getList" @hardDiskSize="hardDiskSize" />
     <image-details v-if="imageDetails.show" :image-details="imageDetails" />
   </div>
 </template>
@@ -258,6 +258,7 @@ export default {
                 this.$message.success(response.msg) // 假设只有一个异步操作，如果有多个，需要根据实际情况处理
                 this.fileList = this.fileList.filter(element => !ids.includes(element.id))
                 this.deselectAll()
+                this.hardDiskSize()
               }
             })
           }

@@ -10,8 +10,8 @@
           circle
         />
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-if="$store.getters.permission.includes('file:files:file')" @click.native="handleImport"><i class="el-icon-upload2"/>上传文件</el-dropdown-item>
-          <el-dropdown-item v-if="$store.getters.permission.includes('file:files:folder')" @click.native="addFolder(fileUpload.path)"><i class="el-icon-folder-add"/>新建文件夹
+          <el-dropdown-item v-if="$store.getters.permission.includes('file:files:file')" @click.native="handleImport"><i class="el-icon-upload2" />上传文件</el-dropdown-item>
+          <el-dropdown-item v-if="$store.getters.permission.includes('file:files:folder')" @click.native="addFolder(fileUpload.path)"><i class="el-icon-folder-add" />新建文件夹
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -29,15 +29,16 @@
         :show-file-list="false"
         :http-request="uploadSectionFile"
       >
-        <i class="el-icon-upload"/>
+        <i class="el-icon-upload" />
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div slot="tip" class="el-upload__tip"> 只能上传不超过500MB的文件</div>
       </el-upload>
 
     </el-dialog>
   </div>
 </template>
 <script>
-import {newFolder, uploadFile, uploadImage} from '@/api/file/file'
+import { newFolder, uploadFile } from '@/api/file/file'
 
 export default {
   name: 'FileUpload',
@@ -58,6 +59,11 @@ export default {
     // 覆盖默认的上传行为
     uploadSectionFile(params) {
       const file = params.file
+      const isLt2M = file.size / 1024 / 1024 < 500
+      if (!isLt2M) {
+        this.$message.error('只能上传大小小于500MB的文件')
+        return
+      }
       // 根据后台需求数据格式
       const form = new FormData()
       // 文件对象
@@ -67,6 +73,7 @@ export default {
         this.$message.success(response.msg)
         this.imageUpload.show = false
         this.$emit('getList')
+        this.$emit('hardDiskSize')
       })
     },
     // 新建文件夹
@@ -78,7 +85,7 @@ export default {
         cancelButtonText: '取消',
         inputPattern: /^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)[^<>:"/\\|?*]+$/,
         inputErrorMessage: '文件名格式不正确'
-      }).then(({value}) => {
+      }).then(({ value }) => {
         const data = {}
         value = '/' + value
         data.path = path ? path + value : value

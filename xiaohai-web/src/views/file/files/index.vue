@@ -136,7 +136,7 @@
         </el-col>
       </el-row>
     </el-alert>
-    <FileUpload :file-upload="fileUpload" @getList="getList" />
+    <FileUpload :file-upload="fileUpload" @getList="getList" @hardDiskSize="hardDiskSize" />
     <FileDetails v-if="imageDetails.show" :image-details="imageDetails" />
     <disk-details v-if="diskDetails.show" :disk-details="diskDetails" :hard-disk="hardDisk" />
   </div>
@@ -387,6 +387,7 @@ export default {
         delFileIds(ids).then(response => {
           this.$message.success(response.msg)
           this.fileList = this.fileList.filter(element => !ids.includes(element.id))
+          this.hardDiskSize()
         })
       }).catch(() => {
         this.$message.info('已取消删除')

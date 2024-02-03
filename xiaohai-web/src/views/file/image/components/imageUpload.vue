@@ -25,6 +25,7 @@
       >
         <i class="el-icon-upload" />
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div slot="tip" class="el-upload__tip">只能上传png、jpg、gif文件，且不超过2MB</div>
       </el-upload>
 
     </el-dialog>
@@ -71,6 +72,7 @@ export default {
         this.$message.success(response.msg)
         this.imageUpload.show = false
         this.$emit('getList')
+        this.$emit('hardDiskSize')
       })
     }
   }

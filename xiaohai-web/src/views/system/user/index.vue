@@ -110,7 +110,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="容量" align="center" prop="disk" width="150">
+      <el-table-column label="容量" align="center" prop="disk" min-width="150">
         <template slot-scope="scope">
           <span style="font-size: 12px">{{ scope.row.disk.used }} / {{ scope.row.disk.total }}</span>
           <el-progress :percentage="scope.row.disk.usage" :stroke-width="14" :show-text="false" color="#6f7ad3" />
@@ -123,7 +123,7 @@
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
       <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="150">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" min-width="150">
         <template slot-scope="scope">
           <el-button
             v-if="$store.getters.permission.includes('system:user:update')"
