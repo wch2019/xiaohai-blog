@@ -23,8 +23,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `b_article`;
 CREATE TABLE `b_article`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `user_id` int NULL DEFAULT NULL COMMENT '用户id',
-  `category_id` int NULL DEFAULT 1 COMMENT '分类id',
+  `user_id` int NOT NULL  COMMENT '用户id',
+  `category_id` int NULL DEFAULT NULL COMMENT '分类id',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '文章标题',
   `summary` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '文章简介',
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '封面',

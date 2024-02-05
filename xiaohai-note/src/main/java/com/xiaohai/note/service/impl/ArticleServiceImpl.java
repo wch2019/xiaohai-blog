@@ -24,6 +24,7 @@ import com.xiaohai.note.pojo.entity.ArticleLike;
 import com.xiaohai.note.pojo.entity.Category;
 import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.query.ArticleQuery;
+import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import com.xiaohai.note.service.ArticleService;
 import com.xiaohai.note.service.ArticleTagService;
@@ -72,6 +73,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final FileService fileService;
 
     @Override
+    public Integer addDraft(ArticleDraftVo vo) {
+        Article article = new Article();
+        BeanUtils.copyProperties(vo, article);
+        //写入作者
+        article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
+        article.setCreatedTime(LocalDateTime.now());
+        article.setUpdatedTime(LocalDateTime.now());
+        baseMapper.insert(article);
+        //统计持续创作天数
+        ContributionUtils.setContribution();
+        return article.getId();
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer add(ArticleVo vo) {
         Article article = new Article();
@@ -84,20 +99,26 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             Assert.isTrue(countTop < 1, "已存在顶置");
             article.setTopTime(LocalDateTime.now());
         }
+        //改为发布
+        article.setIsPush(1);
         article.setCreatedTime(LocalDateTime.now());
         article.setUpdatedTime(LocalDateTime.now());
-        var count = baseMapper.insert(article);
+        baseMapper.insert(article);
         //新增标签
         articleTagService.add(vo.getTags(), article.getId());
         //统计持续创作天数
         ContributionUtils.setContribution();
-        return count;
+        return article.getId();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
+            Article oldArticle=baseMapper.selectById(id);
+            if(!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId()))&& !StpUtil.hasRole(Constants.ADMIN)) {
+                throw new ServiceException("非当前用户数据无法删除");
+            }
             //删除标签关联
             articleTagService.delete(Math.toIntExact(id));
             //删除文章
@@ -109,6 +130,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateData(ArticleVo vo) {
+        Article oldArticle=baseMapper.selectById(vo.getId());
+        if(!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId()))&& !StpUtil.hasRole(Constants.ADMIN)) {
+            throw new ServiceException("非当前用户数据无法更新");
+        }
         Article article = new Article();
         BeanUtils.copyProperties(vo, article);
         //顶置写入时间
@@ -121,7 +146,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         //更新标签
         articleTagService.rewriteArticleTag(vo.getTags(), article.getId());
+        //改为发布
+        article.setIsPush(1);
         article.setUpdatedTime(LocalDateTime.now());
+        //统计持续创作天数
+        ContributionUtils.setContribution();
+        return baseMapper.updateById(article);
+    }
+
+    @Override
+    public Integer updateDraft(ArticleDraftVo vo) {
+        Article oldArticle=baseMapper.selectById(vo.getId());
+        if(!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId()))&& !StpUtil.hasRole(Constants.ADMIN)) {
+            throw new ServiceException("非当前用户数据无法更新");
+        }
+        Article article = new Article();
+        BeanUtils.copyProperties(vo, article);
+        article.setUpdatedTime(LocalDateTime.now());
+        //改为草稿
+        article.setIsPush(0);
         //统计持续创作天数
         ContributionUtils.setContribution();
         return baseMapper.updateById(article);
@@ -132,7 +175,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         ArticleDtoAll articleDtoAll = new ArticleDtoAll();
         Article article = baseMapper.selectById(id);
         BeanUtils.copyProperties(article, articleDtoAll);
-        articleDtoAll.setCategoryName(categoryMapper.selectById(article.getCategoryId()).getName());
+        if(article.getCategoryId()!=null){
+            articleDtoAll.setCategoryName(categoryMapper.selectById(article.getCategoryId()).getName());
+        }
         articleDtoAll.setTags(articleTagMapper.searchAllByArticleId(id));
         //当前文章点赞数
         articleDtoAll.setLikeCount(articleLikeMapper.selectCount(new QueryWrapper<ArticleLike>().eq("article_id", articleDtoAll.getId())));

@@ -1,36 +1,60 @@
 <template>
   <div class="app-container" style="padding: 20px">
-    <el-card class="box-card">
+    <el-card class="box-card" :body-style="{ padding: 0 }">
       <div slot="header" class="clearfix">
-        <span style="font-weight: 600;font-size: 20px;">{{ form.title ? form.title : title }}</span>
-        <el-button size="small" style="float: right; " type="primary" @click="submitForm">保 存</el-button>
-      </div>
-      <!-- 添加或修改参数配置对话框 -->
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row>
-          <el-col :span="16">
-            <el-row>
-              <el-col :span="8">
-                <el-form-item label="标题" prop="title">
-                  <el-input v-model="form.title" maxlength="100" show-word-limit style="width: 100%"
-                            placeholder="请输入标题"/>
+        <el-input class="title" v-model="form.title" maxlength="100" placeholder="输入文章标题" prop="title"></el-input>
+        <el-row style="float: right;">
+          <el-button type="text" disabled> {{ nowTime }} 自动保存草稿</el-button>
+          <el-button size="small" @click="saveArticle()">保 存</el-button>
+          <el-popover
+            placement="left-start"
+            title="发布文章"
+            width="500"
+            trigger="click"
+            v-model="visible"
+          >
+            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+              <el-row>
+                <el-form-item prop="cover">
+                  <template #label>
+                    封面
+                    <el-popover
+                      placement="bottom"
+                      width="180"
+                      trigger="hover"
+                    >
+                      <div style="text-align: right; margin: 0">
+                        随机获取一张图片
+                        <el-button type="text" size="mini" @click="randomImg()">确定</el-button>
+                      </div>
+                      <i slot="reference" class="el-icon-question"/>
+                    </el-popover>
+                  </template>
+
+                  <el-upload
+                    drag
+                    class="image-upload-pic"
+                    action="#"
+                    :show-file-list="false"
+                    :http-request="uploadSectionFile"
+                  >
+                    <el-image v-if="form.cover" fit="cover" :src="form.cover" class="el-upload-dragger"/>
+                    <i v-else class="el-icon-upload"/>
+                    <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em>
+
+                    </div>
+                  </el-upload>
                 </el-form-item>
-              </el-col>
-              <el-col :span="15">
-                <el-form-item label="简介" prop="summary">
-                  <el-input v-model="form.summary" maxlength="250" show-word-limit style="width: 100%"
-                            placeholder="请输入简介"/>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">
                 <el-form-item label="分类" prop="categoryId">
                   <el-select
                     v-model="form.categoryId"
                     placeholder="分类"
                     clearable
                     size="small"
+                    filterable
+                    allow-create
+                    default-first-option
+                    @change="handleChangeCategory"
                     @clear="form.categoryId = null"
                   >
                     <el-option
@@ -41,8 +65,6 @@
                     />
                   </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col :span="8">
                 <el-form-item label="标签" prop="tags">
                   <el-select
                     v-model="form.tags"
@@ -51,6 +73,10 @@
                     clearable
                     size="small"
                     multiple
+                    filterable
+                    allow-create
+                    default-first-option
+                    @change="handleChangeTags"
                     @clear="form.tags = []"
                   >
                     <el-option
@@ -61,108 +87,77 @@
                     />
                   </el-select>
                 </el-form-item>
-              </el-col>
-              <el-col :span="8">
                 <el-form-item label="顶置" prop="isTop">
-                  <el-radio v-for="(item,index) in isTop" :key="index" v-model="form.isTop" size="small" :label="index"
+                  <el-radio v-for="(item,index) in isTop" :key="index" v-model="form.isTop" size="small"
+                            :label="index"
                             border>{{ item }}
                   </el-radio>
                 </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">
-                <el-form-item label="发布" prop="isPush">
-                  <el-radio v-for="(item,index) in isPush" :key="index" v-model="form.isPush" size="small"
-                            :label="index" border>{{ item }}
-                  </el-radio>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
                 <el-form-item label="类型" prop="isOriginal">
                   <el-radio v-for="(item,index) in isOriginal" :key="index" v-model="form.isOriginal" size="small"
                             :label="index" border>{{ item }}
                   </el-radio>
                 </el-form-item>
-              </el-col>
-              <el-col :span="8">
                 <el-form-item v-if="form.isOriginal===1" label="转载地址" prop="originalUrl">
                   <el-input v-model="form.originalUrl" placeholder="请输入转载地址"/>
                 </el-form-item>
-              </el-col>
-            </el-row>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item/>
-            <el-form-item prop="cover">
-              <template #label>
-                封面
-                <el-popover
-                  placement="bottom"
-                  width="180"
-                  trigger="hover"
-                >
-                  <div style="text-align: right; margin: 0">
-                    随机获取一张图片
-                    <el-button type="text" size="mini" @click="randomImg()">确定</el-button>
-                  </div>
-                  <i slot="reference" class="el-icon-question"/>
-                </el-popover>
-              </template>
-
-              <el-upload
-                drag
-                class="image-upload-pic"
-                action="#"
-                :show-file-list="false"
-                :http-request="uploadSectionFile"
-              >
-                <el-image v-if="form.cover" fit="cover" :src="form.cover" class="el-upload-dragger"/>
-                <i v-else class="el-icon-upload"/>
-                <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em>
-
-                </div>
-              </el-upload>
-            </el-form-item>
-          </el-col>
+                <el-form-item label="简介" prop="summary">
+                  <el-input v-model="form.summary" type="textarea" :autosize="{ minRows: 4, maxRows: 4}" maxlength="250"
+                            show-word-limit style="width: 100%"
+                            placeholder="请输入简介"/>
+                </el-form-item>
+              </el-row>
+            </el-form>
+            <div style="text-align: right; margin: 0">
+              <el-button size="small" @click="visible = false">取消</el-button>
+              <el-button size="small" type="primary" @click="submitForm()">发 布</el-button>
+            </div>
+            <el-button size="small" type="primary" style=" margin-left: 10px" slot="reference">发 布</el-button>
+          </el-popover>
         </el-row>
-        <el-divider content-position="left">内容</el-divider>
-        <div style="height: calc((100vh - 480px) - 1rem);">
-          <mavon-editor
-            ref="md"
-            v-model="form.text"
-            style="height: 100%;width: 100%"
-            placeholder="输入文章内容..."
-            font-size="18px"
-            @save="submitForm"
-            @imgAdd="imgAdd"
-            @imgDel="imgDel"
-          >
-            <template slot="left-toolbar-after">
-              <span data-v-548e2160="" class="op-icon-divider"></span>
-              <button
-                type="button"
-                @click="triggerFileInput"
-                class="op-icon fa el-icon-document-add"
-                aria-hidden="true"
-                title="导入md文档"
-              ></button>
-              <input id="upload" type="file" accept=".md" @change="importMd($event)" v-show="false"/>
-            </template>
-          </mavon-editor>
-        </div>
-      </el-form>
+      </div>
+      <div style="height: calc((100vh - 166px) - 1rem);">
+        <mavon-editor
+          ref="md"
+          v-model="form.text"
+          style="height: 100%;width: 100%"
+          placeholder="输入文章内容..."
+          font-size="18px"
+          @save="saveArticle()"
+          @imgAdd="imgAdd"
+          @imgDel="imgDel"
+          @change="textSummary"
+        >
+          <template slot="left-toolbar-after">
+            <span data-v-548e2160="" class="op-icon-divider"></span>
+            <button
+              type="button"
+              @click="triggerFileInput"
+              class="op-icon fa el-icon-document-add"
+              aria-hidden="true"
+              title="导入md文档"
+            ></button>
+            <input id="upload" type="file" accept=".md" @change="importMd($event)" v-show="false"/>
+          </template>
+        </mavon-editor>
+      </div>
     </el-card>
-
   </div>
 </template>
 
 <script>
-import {addArticle, updateArticle, getBingWallpaper, getArticle} from '@/api/note/article'
+import {
+  addArticle,
+  addDraftArticle,
+  getArticle,
+  getBingWallpaper,
+  updateArticle,
+  updateDraftArticle
+} from '@/api/note/article'
 import {delFile, uploadImage} from '@/api/file/file'
-import {optionSelectCategory} from '@/api/note/category'
-import {optionSelectTags} from '@/api/note/tags'
-import {getLastSegment, markdownImageFile, findImg, truncateString} from '@/utils'
+import {addCategory, optionSelectCategory} from '@/api/note/category'
+import {addTags, optionSelectTags} from '@/api/note/tags'
+import {findImg, getLastSegment, markdownImageFile, truncateString} from '@/utils'
 
 export default {
   name: 'Index',
@@ -171,7 +166,7 @@ export default {
       // 标题
       title: '新文章',
       isOriginal: ['原创', '转载'],
-      isPush: ['草稿', '发布'],
+      // isPush: ['草稿', '发布'],
       isTop: ['否', '是'],
       // 标签下拉选
       TagsList: [],
@@ -184,30 +179,61 @@ export default {
         categoryId: [{required: true, message: '分类不能为空', trigger: 'blur'}],
         tags: [{required: true, message: '标签不能为空', trigger: 'blur'}],
         isTop: [{required: true, message: '顶置不能为空', trigger: 'blur'}],
-        isPush: [{required: true, message: '发布不能为空', trigger: 'blur'}],
+        // isPush: [{required: true, message: '发布不能为空', trigger: 'blur'}],
         isOriginal: [{required: true, message: '类型不能为空', trigger: 'blur'}]
       },
       form: {
         id: '',
         title: '',
-        summary:'',
+        summary: '',
         cover: '',
         text: '',
         categoryId: '',
         tags: [],
         isPush: '',
-        isTop: '',
-        isOriginal: '',
-        originalUrl: ''
-      }
+        isTop: 0,
+        isOriginal: 0,
+        originalUrl: '',
+      },
+      // 草稿
+      draft: {
+        id: '',
+        title: '',
+        summary: '',
+        text: ''
+      },
+      oldText: '',
+      //临时缓存
+      cache: {},
+      nowTime: '',
+      visible: false
     }
   },
+  mounted() {
+    // 在组件挂载后，启动定时器，每隔一定时间执行保存操作
+    this.saveTimer = setInterval(() => {
+      if (this.oldText !== this.form.text) {
+        this.oldText = this.form.text
+        this.saveArticle()
+      }
+      this.getTime()
+    }, 5000); // 每隔5秒执行一次保存操作，根据需要调整时间间隔
+  },
+  beforeDestroy() {
+    // 在组件销毁前清除定时器，防止内存泄漏
+    clearInterval(this.saveTimer);
+  },
   created() {
+    this.getTime()
     this.getCategory()
     this.getTags()
     this.getArticle()
   },
   methods: {
+    getTime() {
+      const currentDate = new Date();
+      this.nowTime = currentDate.toLocaleString()
+    },
     /**
      * 查询分类下拉选
      */
@@ -224,14 +250,62 @@ export default {
         this.TagsList = response.data
       })
     },
-    getArticle() {
-      const id = this.$route.query.id
+    // 自动添加简介
+    textSummary() {
+      this.form.summary = truncateString(this.form.text.replace(/\s*/g, ''), 100)
+    },
+    // 监听分类
+    handleChangeCategory(value) {
+      console.log(value)
+      // 判断是否为新添加的选项
+      const isNewItem = value && !this.CategoryList.some(option => option.id === value);
+      if (isNewItem) {
+        const newCategory = {
+          name: value,
+          sort: '0',
+          status: '0'
+        }
+        addCategory(newCategory).then(response => {
+          if (response.code === 200) {
+            const newItem = {id: response.data, name: value};
+            this.CategoryList.push(newItem);
+          }
+        })
+      }
+    },
+    // 监听标签
+    handleChangeTags(value) {
+      // 检查是否有新选项被创建
+      const createdItems = value.filter(item => !this.TagsList.some(option => option.id === item));
+      // 将新选项保存到后端
+      if (createdItems.length > 0) {
+        for (const i in createdItems) {
+          const newCategory = {
+            name: createdItems[i],
+            sort: '0',
+            status: '0'
+          }
+          addTags(newCategory).then(response => {
+            if (response.code === 200) {
+              const newItem = {id: response.data, name: createdItems[i]};
+              this.TagsList.push(newItem);
+            }
+          })
+        }
+      }
+      console.log(this.form.tags)
+    },
+    getArticle(id) {
+      id = this.$route.query.id ? this.$route.query.id : id
       if (id) {
         getArticle(id).then(response => {
           this.form = response.data
-          this.form.cover = process.env.VUE_APP_BASE_API_FILE + this.form.cover
+          if (this.form.cover) {
+            this.form.cover = process.env.VUE_APP_BASE_API_FILE + this.form.cover
+          }
           this.title = this.form.title
           this.form.text = this.form.text.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
+          this.oldText = this.form.text
           let imgData = findImg(this.form.text);
           imgData.forEach(item => {
             this.imgRecurrent(item.text, item.url)
@@ -301,7 +375,7 @@ export default {
       reader.readAsText(file);
       reader.onload = (res) => {
         this.form.text = res.target.result;
-        this.form.summary = truncateString(res.target.result.trim(),100)
+        // this.form.summary = truncateString(res.target.result.trim(),100)
       }
       this.form.title = fileName
       this.$emit('loadTitle', fileName)
@@ -335,7 +409,7 @@ export default {
         this.$message.success(response.msg)
       })
     },
-    /** 提交按钮 */
+    /** 发布按钮 */
     submitForm() {
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -347,26 +421,79 @@ export default {
             this.$message.error('请填写文章内容')
             return
           }
-          this.form.cover = this.form.cover.replaceAll(process.env.VUE_APP_BASE_API_FILE, '')
-          this.form.text = this.form.text.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
-          if (this.form.id !== '') {
-            updateArticle(this.form).then(response => {
+          //新增分类获取id
+          const matchedItem = this.CategoryList.find(option => option.name === this.form.categoryId);
+          if (matchedItem) {
+            this.form.categoryId = matchedItem.id;
+          }
+          //新增标签获取id
+          this.form.tags = this.form.tags.map(tagName => {
+            const foundTag = this.TagsList.find(tag => tag.name === tagName);
+            return foundTag ? foundTag.id : tagName;
+          });
+          // 临时缓存
+          this.cache = JSON.parse(JSON.stringify(this.form));
+          this.cache.cover = this.cache.cover.replaceAll(process.env.VUE_APP_BASE_API_FILE, '')
+          this.cache.text = this.cache.text.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
+          if (this.cache.id !== '') {
+            updateArticle(this.cache).then(response => {
               this.$message.success(response.msg)
               this.$router.push('/note/article')
             })
           } else {
-            addArticle(this.form).then(response => {
+            addArticle(this.cache).then(response => {
               this.$message.success(response.msg)
               this.$router.push('/note/article')
             })
           }
+
         }
       })
+    },
+    /** 保存按钮*/
+    saveArticle() {
+      this.draft.id = JSON.parse(JSON.stringify(this.form)).id;
+      this.draft.title = JSON.parse(JSON.stringify(this.form)).title;
+      this.draft.text = JSON.parse(JSON.stringify(this.form)).text;
+      this.draft.summary = JSON.parse(JSON.stringify(this.form)).summary;
+      if (this.draft.title === '') {
+        this.$message.error('请填写文章标题')
+        return
+      }
+      if (this.draft.text === '') {
+        this.$message.error('请填写文章内容')
+        return
+      }
+      if (this.draft.summary === '') {
+        this.$message.error('请填写简介内容')
+        return
+      }
+      this.draft.text = this.draft.text.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
+      if (this.draft.id !== '') {
+        updateDraftArticle(this.draft).then(response => {
+          console.log("保存草稿成功")
+        })
+      } else {
+        addDraftArticle(this.draft).then(response => {
+          this.getArticle(response.data)
+        })
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.title {
+  width: 60%;
+  border: none;
+  font-weight: 600;
+  font-size: 20px;
+}
 
+::v-deep .title .el-input__inner {
+  border: none;
+  font-weight: 600;
+  font-size: 20px;
+}
 </style>

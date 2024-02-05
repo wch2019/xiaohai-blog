@@ -1,5 +1,6 @@
 package com.xiaohai.note.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -14,6 +15,7 @@ import com.xiaohai.note.dao.CategoryMapper;
 import com.xiaohai.note.pojo.dto.CategoryDto;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.Category;
+import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.query.CategoryQuery;
 import com.xiaohai.note.pojo.vo.CategoryVo;
 import com.xiaohai.note.service.CategoryService;
@@ -44,9 +46,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public Integer add(CategoryVo vo){
+        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Category>().eq(Category::getName,vo.getName()));
+        Assert.isTrue(codeCount == 0, "当前分类已存在");
         Category category=new Category();
         BeanUtils.copyProperties(vo,category);
-        return baseMapper.insert(category);
+        baseMapper.insert(category);
+        return category.getId();
     }
 
     @Override
@@ -61,6 +66,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public Integer updateData(CategoryVo vo){
+        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Category>().eq(Category::getName,vo.getName()).ne(Category::getId, vo.getId()));
+        Assert.isTrue(codeCount == 0, "当前分类已存在");
         Category category=new Category();
         BeanUtils.copyProperties(vo,category);
         return baseMapper.updateById(category);

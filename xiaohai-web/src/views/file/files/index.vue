@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <div style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">
-        <div style="display: flex;justify-content: space-between;flex-direction: column;align-items: center;">
+        <div style="display: flex;justify-content: space-between;flex-direction: column;align-items: flex-start;">
           <el-col :span="1.5">
             <el-breadcrumb
               separator-class="el-icon-arrow-right"

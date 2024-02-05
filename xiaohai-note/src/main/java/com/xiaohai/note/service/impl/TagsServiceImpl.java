@@ -1,5 +1,6 @@
 package com.xiaohai.note.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -12,6 +13,7 @@ import com.xiaohai.note.dao.ArticleTagMapper;
 import com.xiaohai.note.dao.TagsMapper;
 import com.xiaohai.note.pojo.dto.TagsDto;
 import com.xiaohai.note.pojo.entity.ArticleTag;
+import com.xiaohai.note.pojo.entity.Category;
 import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.query.TagsQuery;
 import com.xiaohai.note.pojo.vo.TagsVo;
@@ -41,9 +43,12 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
 
     @Override
     public Integer add(TagsVo vo){
+        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Tags>().eq(Tags::getName,vo.getName()));
+        Assert.isTrue(codeCount == 0, "当前标签已存在");
         Tags tags=new Tags();
         BeanUtils.copyProperties(vo,tags);
-        return baseMapper.insert(tags);
+        baseMapper.insert(tags);
+        return tags.getId();
     }
 
     @Override
@@ -58,6 +63,8 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
 
     @Override
     public Integer updateData(TagsVo vo){
+        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Tags>().eq(Tags::getName,vo.getName()).ne(Tags::getId, vo.getId()));
+        Assert.isTrue(codeCount == 0, "当前标签已存在");
         Tags tags=new Tags();
         BeanUtils.copyProperties(vo,tags);
         return baseMapper.updateById(tags);

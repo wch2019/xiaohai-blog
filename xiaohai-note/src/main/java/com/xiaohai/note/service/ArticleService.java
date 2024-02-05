@@ -5,6 +5,7 @@ import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
+import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,9 +23,15 @@ import java.util.Map;
  */
 public interface ArticleService extends IService<Article> {
 
+    /**
+     * 新增草稿文章
+     * @param vo
+     * @return
+     */
+    Integer addDraft(ArticleDraftVo vo);
 
     /**
-     * 添加文章表
+     * 添加发布文章
      *
      * @param vo 文章表 VO（View Object）：显示层对象
      * @return Integer
@@ -40,12 +47,19 @@ public interface ArticleService extends IService<Article> {
     Integer delete(Long[] ids);
 
     /**
-     * 修改文章表
+     * 修改发布文章
      *
      * @param vo 文章表 VO（View Object）：显示层对象
      * @return Integer
      */
     Integer updateData(ArticleVo vo);
+
+    /**
+     * 更新草稿文章
+     * @param vo
+     * @return
+     */
+    Integer updateDraft(ArticleDraftVo vo);
 
     /**
      * id查询数据

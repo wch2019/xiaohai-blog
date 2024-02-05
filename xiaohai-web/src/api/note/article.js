@@ -11,7 +11,25 @@ export function listArticle(data) {
   })
 }
 
-// 新增文章
+// 新增草稿文章
+export function addDraftArticle(data) {
+  return request({
+    url: api + '/add-draft',
+    method: 'post',
+    data
+  })
+}
+
+// 更新草稿文章
+export function updateDraftArticle(data) {
+  return request({
+    url: api + '/update-draft',
+    method: 'put',
+    data
+  })
+}
+
+// 新增发布文章
 export function addArticle(data) {
   return request({
     url: api,
@@ -20,7 +38,7 @@ export function addArticle(data) {
   })
 }
 
-// 更新文章
+// 更新发布文章
 export function updateArticle(data) {
   return request({
     url: api,
@@ -44,6 +62,7 @@ export function delArticle(data) {
     method: 'delete'
   })
 }
+
 // 获取随机图片必应
 export function getBingWallpaper() {
   return request({
@@ -51,6 +70,7 @@ export function getBingWallpaper() {
     method: 'get'
   })
 }
+
 // id更新发布状态
 export function updatePush(id) {
   return request({
@@ -58,6 +78,7 @@ export function updatePush(id) {
     method: 'put'
   })
 }
+
 // id更新置顶状态
 export function updateTop(id) {
   return request({

@@ -49,9 +49,9 @@ public class ArticleVo implements Serializable {
     @NotNull(message = "是否顶置为空")
     private Integer isTop;
 
-    @Schema(description = "是否发布(0否，1是)")
-    @NotNull(message = "是否发布为空")
-    private Integer isPush;
+//    @Schema(description = "是否发布(0否，1是)")
+//    @NotNull(message = "是否发布为空")
+//    private Integer isPush;
 
     @Schema(description = "是否原创 (0原创，1转载)")
     @NotNull(message = "是否原创为空")

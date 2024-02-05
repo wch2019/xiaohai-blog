@@ -9,6 +9,7 @@ import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
 import com.xiaohai.note.pojo.query.ArticleQuery;
+import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import com.xiaohai.note.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,13 +39,20 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-
-    @Operation(summary = "新增文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "新增草稿文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission(value = {"note:article:add"}, mode = SaMode.OR)
-    @Log(title = "新增文章")
+    @Log(title = "新增草稿文章")
+    @PostMapping("/add-draft")
+    public Response<Integer> addDraft(@Validated  @RequestBody ArticleDraftVo vo) {
+        return Response.success("新增草稿成功！", articleService.addDraft(vo));
+    }
+
+    @Operation(summary = "新增发布文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission(value = {"note:article:add"}, mode = SaMode.OR)
+    @Log(title = "新增发布文章")
     @PostMapping()
     public Response<Integer> add(@Validated  @RequestBody ArticleVo vo) {
-        return Response.success("新增文章成功！", articleService.add(vo));
+        return Response.success("新增发布文章成功！", articleService.add(vo));
     }
 
     @Operation(summary = "删除文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -55,12 +63,20 @@ public class ArticleController {
         return Response.success("删除文章成功！", articleService.delete(ids));
     }
 
+    @Operation(summary = "更新草稿文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission(value = {"note:article:update"}, mode = SaMode.OR)
+    @Log(title = "更新草稿文章")
+    @PutMapping("/update-draft")
+    public Response<Integer> updateDraft(@Validated @RequestBody ArticleDraftVo vo) {
+        return Response.success("更新草稿成功！", articleService.updateDraft(vo));
+    }
+
     @Operation(summary = "更新文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission(value = {"note:article:update"}, mode = SaMode.OR)
     @Log(title = "更新文章")
     @PutMapping()
     public Response<Integer> update(@Validated @RequestBody ArticleVo vo) {
-        return Response.success("更新文章成功！", articleService.updateData(vo));
+        return Response.success("更新发布文章成功！", articleService.updateData(vo));
     }
 
 
