@@ -272,6 +272,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public Integer push(Long id) {
         Article article = baseMapper.selectById(id);
+        Assert.isTrue(article.getCategoryId() != null, "数据不完整无法发布");
         if (article.getIsPush() == 1) {
             article.setIsPush(0);
         } else {

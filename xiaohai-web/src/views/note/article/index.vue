@@ -149,7 +149,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="文章标题" align="center" prop="title">
+      <el-table-column label="文章标题" align="center" prop="title" show-overflow-tooltip>
         <template slot-scope="scope">
           <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
         </template>
@@ -161,7 +161,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="标签" align="center" prop="tags">
+      <el-table-column label="标签" align="center" prop="tags" width="180">
         <template slot-scope="scope">
           <template v-for="(item,index) in TagsList">
             <el-tag
@@ -180,9 +180,18 @@
       <el-table-column label="发布" align="center">
         <template slot-scope="scope">
           <el-switch
+            v-if="scope.row.categoryId"
             v-model="scope.row.isPush"
             active-color="#13ce66"
             inactive-color="#ff4949"
+            @change="push(scope.row)"
+          />
+          <el-switch
+            v-else
+            v-model="scope.row.isPush"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            disabled
             @change="push(scope.row)"
           />
         </template>
@@ -192,8 +201,8 @@
           <el-tag type="warning"> {{ scope.row.pageView }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" min-width="150">
         <template slot-scope="scope">
           <el-button
             v-if="$store.getters.permission.includes('note:article:update')"
