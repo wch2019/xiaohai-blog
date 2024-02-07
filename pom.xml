@@ -25,6 +25,7 @@
         <module>xiaohai-system</module>
         <module>xiaohai-file</module>
         <module>xiaohai-note</module>
+        <module>xiaohai-chat</module>
     </modules>
 
     <properties>
@@ -43,6 +44,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!-- websocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
         <!--lombok-->
         <dependency>
@@ -142,6 +148,12 @@
             <dependency>
                 <groupId>com.xiaohai</groupId>
                 <artifactId>xiaohai-note</artifactId>
+                <version>${xiaohai.version}</version>
+            </dependency>
+            <!--chat 聊天模块 -->
+            <dependency>
+                <groupId>com.xiaohai</groupId>
+                <artifactId>xiaohai-chat</artifactId>
                 <version>${xiaohai.version}</version>
             </dependency>
         </dependencies>
