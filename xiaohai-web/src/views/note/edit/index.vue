@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <el-input class="title" v-model="form.title" maxlength="100" placeholder="输入文章标题" prop="title"></el-input>
         <el-row style="float: right;">
-          <el-button type="text" disabled> {{ nowTime }} 自动保存草稿</el-button>
+          <el-button type="text" disabled> 自动保存草稿</el-button>
           <el-button size="small" @click="saveArticle()">保 存</el-button>
           <el-popover
             placement="left-start"
@@ -139,9 +139,17 @@
             ></button>
             <input id="upload" type="file" accept=".md" @change="importMd($event)" v-show="false"/>
           </template>
+          <template slot="right-toolbar-before">
+            <el-button type="text"  disabled>{{ nowTime }}</el-button>
+            <span class="op-icon-divider"></span>
+            <el-button type="text"  style="color: #0a0a0a" disabled>{{wordCount}}词</el-button>
+            <span class="op-icon-divider"></span>
+
+          </template>
         </mavon-editor>
       </div>
     </el-card>
+<!--    <el-button type="text"  style="float: right; color: #0a0a0a" disabled> {{wordCount}}词</el-button>-->
   </div>
 </template>
 
@@ -205,8 +213,11 @@ export default {
       oldText: '',
       //临时缓存
       cache: {},
+      //保存时间
       nowTime: '',
-      visible: false
+      visible: false,
+      //字数
+      wordCount:0
     }
   },
   mounted() {
@@ -215,8 +226,8 @@ export default {
       if (this.oldText !== this.form.text) {
         this.oldText = this.form.text
         this.saveArticle()
+        this.getTime()
       }
-      this.getTime()
     }, 5000); // 每隔5秒执行一次保存操作，根据需要调整时间间隔
   },
   beforeDestroy() {
@@ -224,7 +235,6 @@ export default {
     clearInterval(this.saveTimer);
   },
   created() {
-    this.getTime()
     this.getCategory()
     this.getTags()
     this.getArticle()
@@ -251,8 +261,11 @@ export default {
       })
     },
     // 自动添加简介
-    textSummary() {
-      this.form.summary = truncateString(this.form.text.replace(/\s*/g, ''), 100)
+    textSummary(markdownText) {
+      //获取html数据,获取纯文本
+      const text=this.$refs.md.d_render.replace(/<[^>]+>/g, '')
+      this.form.summary = truncateString(text.replace(/\s*/g, ''), 100)
+      this.wordCount = text.length;
     },
     // 监听分类
     handleChangeCategory(value) {

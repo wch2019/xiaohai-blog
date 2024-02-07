@@ -418,11 +418,4 @@ export default {
 ::v-deep .el-table .success-row {
   background-color: #f0f9eb
 }
-
-.dis {
-  border-radius: 100px;
-  width: 10px;
-  height: 10px;
-  background: #39C178;
-}
 </style>

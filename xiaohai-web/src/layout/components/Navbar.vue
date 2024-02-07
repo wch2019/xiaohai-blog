@@ -7,14 +7,15 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
 <!--        <search id="header-search" class="right-menu-item" />-->
-
         <el-tooltip content="门户地址" effect="dark" placement="bottom">
           <Website id="website" class="right-menu-item hover-effect" ></Website>
         </el-tooltip>
 
         <el-tooltip content="全屏" effect="dark" placement="bottom">
         <ScreenFull id="screen-full" class="right-menu-item hover-effect" />
+
         </el-tooltip>
+        <Message class="right-menu-item hover-effect" />
 
       </template>
 
@@ -44,6 +45,7 @@ import Hamburger from '@/components/Hamburger'
 import ScreenFull from '@/components/Screenfull'
 import Search from '@/components/HeaderSearch'
 import Website from '@/components/DotCode/Website'
+import Message from '@/components/Message/inform'
 
 export default {
   components: {
@@ -51,7 +53,8 @@ export default {
     Hamburger,
     ScreenFull,
     Website,
-    Search
+    Search,
+    Message
   },
   computed: {
     ...mapGetters([

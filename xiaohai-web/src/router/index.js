@@ -57,6 +57,19 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/message',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/components/Message/index.vue'),
+        name: 'Profile',
+        meta: { title: '消息中心', icon: 'el-icon-bell', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
