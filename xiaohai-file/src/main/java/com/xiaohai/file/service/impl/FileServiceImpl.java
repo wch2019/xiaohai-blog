@@ -74,7 +74,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String uploadImage(MultipartFile file) {
+    public String  uploadImage(MultipartFile file) {
+        if(file.getSize()/ 1024 / 1024 < 2){
+            throw new ServiceException("只能上传图片大小小于2M");
+        }
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
         //指定markdown图片上传目录,根据用户区分文件夹
         String path = fileConfig.getFilePath() + userId + File.separator + FileConstants.MARKDOWN_FILE;
@@ -276,6 +279,9 @@ public class FileServiceImpl implements FileService {
         // 判断文件是否为空
         if (file.isEmpty()) {
             throw new ServiceException("文件为空");
+        }
+        if(file.getSize()/ 1024 / 1024 < 500){
+            throw new ServiceException("只能上传大小小于500MB的文件");
         }
         path = path.isEmpty() ?  path : path.substring(1);
         //根据用户区分文件夹

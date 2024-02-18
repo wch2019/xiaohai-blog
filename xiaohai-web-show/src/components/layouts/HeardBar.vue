@@ -29,6 +29,9 @@
           <div class="menus-item">
             <router-link class="menu-btn" to="/about"> 关于</router-link>
           </div>
+<!--          <div class="menus-item">-->
+<!--            <router-link class="menu-btn" to="/chat"> 聊天</router-link>-->
+<!--          </div>-->
         </div>
       </el-col>
       <el-col class="hidden-md-and-down" :md="8" :lg="4" :xl="5">
