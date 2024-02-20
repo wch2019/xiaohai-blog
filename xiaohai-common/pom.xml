@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
-			<version>5.8.11</version>
+			<version>5.8.25</version>
 		</dependency>
 		<!-- 获取系统信息 -->
 		<dependency>
@@ -69,6 +69,12 @@
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.4</version>
+		</dependency>
+		<!--Bouncy Castle 库-->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.70</version>
 		</dependency>
 	</dependencies>
 
