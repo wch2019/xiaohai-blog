@@ -5,6 +5,9 @@
       <el-icon><UserFilled /></el-icon> 关于
     </h1>
     <el-card class="box-card" shadow="hover">
+<!--      <div class="menus-item">-->
+<!--        <router-link class="menu-btn" to="/chat"> 聊天测试</router-link>-->
+<!--      </div>-->
       <v-md-preview :text="content" ref="preview"></v-md-preview>
     </el-card>
   </el-col>

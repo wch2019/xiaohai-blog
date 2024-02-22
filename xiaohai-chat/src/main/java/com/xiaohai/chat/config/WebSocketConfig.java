@@ -27,6 +27,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/messages")
                 //可以跨域
                 .setAllowedOriginPatterns("*")
+                //这边我们要设置自定义握手管理器才会生效
+                .setHandshakeHandler(new CustomHandshakeHandler())
                 .withSockJS();
     }
 

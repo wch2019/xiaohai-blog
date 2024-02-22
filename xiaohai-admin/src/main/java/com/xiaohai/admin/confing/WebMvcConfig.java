@@ -34,7 +34,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 //登录、验证码、注册、文件
                 .excludePathPatterns("/login","/sendEmailCode","/register","/document/upload/**")
                 //展示页接口
-                .excludePathPatterns("/home/show/**");
+                .excludePathPatterns("/home/show/**")
+                //websocket
+                .excludePathPatterns("/messages/**");
         //分页拦截器
         registry.addInterceptor(new PageableInterceptor());
     }

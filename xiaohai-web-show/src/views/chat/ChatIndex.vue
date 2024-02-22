@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import SockJS from 'sockjs-client/dist/sockjs.min';
 import Stomp from 'stompjs';
-
 interface Message {
   content: string;
 }
@@ -10,21 +9,29 @@ interface Message {
 const messages = ref<Message[]>([]);
 const newMessage = ref<string>('');
 
-const socket = new WebSocket('ws://localhost:8080/api/gs-guide-websocket'); // WebSocket server URL
-const stompClient = Stomp.over(socket);
 
-stompClient.connect({}, () => {
-  stompClient.subscribe('/topic/greetings', (message) => {
-    messages.value.push(JSON.parse(message.body));
+const socket = new SockJS('http://localhost:8089/api/messages'); // WebSocket server URL
+
+const stompClient=Stomp.over(socket)
+function connect(){
+  stompClient.connect({}, () => {
+    stompClient.subscribe('/topic/public', (message:any) => {
+      messages.value.push(message.body);
+    });
   });
-});
+}
+function disconnect(){
+  stompClient.unsubscribe('sub-0')
+  console.log("取消订阅成功 -> destination: /mass");
+}
 
-const sendMessage = () => {
+function sendMessage(){
   if (newMessage.value.trim() !== '') {
-    stompClient.send('/app/hello', {}, JSON.stringify({ name: newMessage.value }));
+    stompClient.send('/app/sendMessage', {}, JSON.stringify({ content: newMessage.value }));
     newMessage.value = '';
   }
-};
+}
+
 </script>
 
 <template>
@@ -34,7 +41,9 @@ const sendMessage = () => {
     </div>
     <div class="chat-input">
       <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a message..." />
-      <button @click="sendMessage">Send</button>
+      <el-button @click="sendMessage">Send</el-button>
+      <el-button @click="disconnect()">disconnect</el-button>
+      <el-button @click="connect()">Connect</el-button>
     </div>
   </div>
 </template>

@@ -13,8 +13,8 @@ const routes: Array<RouteRecordRaw> = [
       { path: '/message', component: () => import('@/views/message/MessageIndex.vue') },
       { path: '/links', component: () => import('@/views/links/LinksIndex.vue') },
       { path: '/about', component: () => import('@/views/about/AboutIndex.vue') },
-      { path: '/article/:id', component: () => import('@/views/article/ArticleIndex.vue') }
-      // { path: '/chat', component: () => import('@/views/chat/ChatIndex.vue') }
+      { path: '/article/:id', component: () => import('@/views/article/ArticleIndex.vue') },
+      { path: '/chat', component: () => import('@/views/chat/ChatIndex.vue') }
     ]
   }
 ]
