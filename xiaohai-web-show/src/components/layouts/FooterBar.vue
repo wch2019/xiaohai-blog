@@ -23,21 +23,24 @@
     <div class="menus-item">
       <router-link class="menu-btn" to="/about"> 关于</router-link>
     </div>
-    <div>©{{ 2023 }} - {{ new Date().getFullYear() }} By XiaoHai</div>
-    <a href="https://beian.miit.gov.cn/" target="_blank">
-      <!--        {{blogInfo.webSite.recordNum}}-->
-    </a>
+    <div class="text-color font-number">©{{ 2023 }} - {{ new Date().getFullYear() }}. Powered by  XiaoHai. <el-link  :underline="false" href="https://beian.miit.gov.cn/" target="_blank">
+      {{blogInfo.recordNum}}
+    </el-link></div>
+
   </el-card>
 </template>
 
 <script>
+import useStore from "@/store/index";
+
 export default {
+
   computed: {
     isMessage() {
       return this.$route.path === '/message'
     },
     blogInfo() {
-      return this.$store.state.blogInfo
+      return useStore().website
     }
   }
 }
