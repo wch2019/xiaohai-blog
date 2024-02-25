@@ -75,7 +75,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String  uploadImage(MultipartFile file) {
-        if(file.getSize()/ 1024 / 1024 < 2){
+        if(file.getSize()/ 1024 / 1024 > 2){
             throw new ServiceException("只能上传图片大小小于2M");
         }
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
@@ -280,7 +280,7 @@ public class FileServiceImpl implements FileService {
         if (file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
-        if(file.getSize()/ 1024 / 1024 < 500){
+        if(file.getSize()/ 1024 / 1024 > 500){
             throw new ServiceException("只能上传大小小于500MB的文件");
         }
         path = path.isEmpty() ?  path : path.substring(1);
