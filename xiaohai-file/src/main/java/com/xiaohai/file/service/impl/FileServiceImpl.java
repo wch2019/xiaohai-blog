@@ -458,6 +458,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String getCopyImage(String sourcePath, String newPath) {
+        log.info("{}:{}",sourcePath,newPath);
         //计算hash
         String hash = FileUtils.extractChecksum(sourcePath, SHA_256);
         //验证是否存在当前文件
