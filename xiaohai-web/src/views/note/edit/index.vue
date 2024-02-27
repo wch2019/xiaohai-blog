@@ -140,16 +140,16 @@
             <input id="upload" type="file" accept=".md" @change="importMd($event)" v-show="false"/>
           </template>
           <template slot="right-toolbar-before">
-            <el-button type="text"  disabled>{{ nowTime }}</el-button>
+            <el-button type="text" disabled>{{ nowTime }}</el-button>
             <span class="op-icon-divider"></span>
-            <el-button type="text"  style="color: #0a0a0a" disabled>{{wordCount}}词</el-button>
+            <el-button type="text" style="color: #0a0a0a" disabled>{{ wordCount }}词</el-button>
             <span class="op-icon-divider"></span>
 
           </template>
         </mavon-editor>
       </div>
     </el-card>
-<!--    <el-button type="text"  style="float: right; color: #0a0a0a" disabled> {{wordCount}}词</el-button>-->
+    <!--    <el-button type="text"  style="float: right; color: #0a0a0a" disabled> {{wordCount}}词</el-button>-->
   </div>
 </template>
 
@@ -217,7 +217,7 @@ export default {
       nowTime: '',
       visible: false,
       //字数
-      wordCount:0
+      wordCount: 0
     }
   },
   mounted() {
@@ -263,13 +263,13 @@ export default {
     // 自动添加简介
     textSummary(markdownText) {
       //获取html数据,获取纯文本
-      const text=this.$refs.md.d_render.replace(/<[^>]+>/g, '')
+      const text = this.$refs.md.d_render.replace(/<[^>]+>/g, '')
       this.form.summary = truncateString(text.replace(/\s*/g, ''), 100)
       this.wordCount = text.length;
     },
     // 监听分类
     handleChangeCategory(value) {
-      console.log(value)
+      // console.log(value)
       // 判断是否为新添加的选项
       const isNewItem = value && !this.CategoryList.some(option => option.id === value);
       if (isNewItem) {
@@ -306,7 +306,7 @@ export default {
           })
         }
       }
-      console.log(this.form.tags)
+      // console.log(this.form.tags)
     },
     getArticle(id) {
       id = this.$route.query.id ? this.$route.query.id : id
@@ -426,11 +426,11 @@ export default {
     submitForm() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.cover === '') {
+          if (this.form.cover == null || this.form.cover === '') {
             this.$message.error('请上传封面')
             return
           }
-          if (this.form.text === '') {
+          if (this.form.text == null || this.form.text === '') {
             this.$message.error('请填写文章内容')
             return
           }

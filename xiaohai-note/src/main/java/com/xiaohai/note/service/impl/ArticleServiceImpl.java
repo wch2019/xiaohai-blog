@@ -115,8 +115,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Transactional(rollbackFor = Exception.class)
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
-            Article oldArticle=baseMapper.selectById(id);
-            if(!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId()))&& !StpUtil.hasRole(Constants.ADMIN)) {
+            Article oldArticle = baseMapper.selectById(id);
+            if (!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId())) && !StpUtil.hasRole(Constants.ADMIN)) {
                 throw new ServiceException("非当前用户数据无法删除");
             }
             //删除标签关联
@@ -130,8 +130,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateData(ArticleVo vo) {
-        Article oldArticle=baseMapper.selectById(vo.getId());
-        if(!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId()))&& !StpUtil.hasRole(Constants.ADMIN)) {
+        Article oldArticle = baseMapper.selectById(vo.getId());
+        if (!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId())) && !StpUtil.hasRole(Constants.ADMIN)) {
             throw new ServiceException("非当前用户数据无法更新");
         }
         Article article = new Article();
@@ -156,8 +156,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public Integer updateDraft(ArticleDraftVo vo) {
-        Article oldArticle=baseMapper.selectById(vo.getId());
-        if(!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId()))&& !StpUtil.hasRole(Constants.ADMIN)) {
+        Article oldArticle = baseMapper.selectById(vo.getId());
+        if (!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId())) && !StpUtil.hasRole(Constants.ADMIN)) {
             throw new ServiceException("非当前用户数据无法更新");
         }
         Article article = new Article();
@@ -172,11 +172,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleDtoAll findById(Long id, int type) {
+
         ArticleDtoAll articleDtoAll = new ArticleDtoAll();
         Article article = baseMapper.selectById(id);
+        if (article == null) {
+            return articleDtoAll;
+        }
+        Integer userId = StpUtil.getLoginIdDefaultNull() == null ? null : Integer.valueOf((String) StpUtil.getLoginId());
+        // 没有发布的文章只能自己查看
+        if (article.getIsPush() == 0 && !article.getUserId().equals(userId) && !StpUtil.hasRole(Constants.ADMIN)) {
+            return articleDtoAll;
+        }
         BeanUtils.copyProperties(article, articleDtoAll);
-        if(article.getCategoryId()!=null){
-            articleDtoAll.setCategoryName(categoryMapper.selectById(article.getCategoryId()).getName());
+        if (articleDtoAll.getCategoryId() != null) {
+            articleDtoAll.setCategoryName(categoryMapper.selectById(articleDtoAll.getCategoryId()).getName());
         }
         articleDtoAll.setTags(articleTagMapper.searchAllByArticleId(id));
         //当前文章点赞数
@@ -250,7 +259,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         MultipartFile multipartFile = FileUtils.getFileFromUrl(url, fileName);
         //指定公共markdown图片上传目录
         String path = fileConfig.getProfile() + FileConstants.IMAGE_FILE + File.separator + FileConstants.BING_FILE;
-//        fileService.uploadBing(multipartFile, path, fileName);
+        //        fileService.uploadBing(multipartFile, path, fileName);
         return fileService.uploadImage(multipartFile);
     }
 
@@ -527,7 +536,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 //新图片位置
                 String newPhotoPath = MarkdownUtils.copyImage(image, newImage);
                 //封面图片
-                String cover = ".." + newPhotoPath.replace(path, File.separator);
+                String cover = ".." + newPhotoPath.replace(path, "/").replace("\\", "/");
                 //获取分类名称
                 Category category = categoryMapper.selectById(article.getCategoryId());
                 //获取标签名称列表

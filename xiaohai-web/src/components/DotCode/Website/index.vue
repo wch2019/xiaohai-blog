@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     goto() {
-      window.open(this.url)
+      window.open(this.url+'/')
     }
   }
 }

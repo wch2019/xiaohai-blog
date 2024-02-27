@@ -143,7 +143,7 @@
       <el-table-column label="封面" align="center" prop="cover" :render-header="renderHeader">
         <template slot-scope="scope">
           <div style="position: relative">
-            <el-image :src="scope.row.cover" :preview-src-list="srcList" />
+            <el-image :src="scope.row.cover" style="border-radius:4px" :preview-src-list="srcList" />
             <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
             <svg-icon v-if="scope.row.isOriginal===1 " icon-class="original" style="position: absolute; bottom: 7px; right: 0;font-size: 10px;" />
           </div>
@@ -151,7 +151,8 @@
       </el-table-column>
       <el-table-column label="文章标题" align="center" prop="title" show-overflow-tooltip>
         <template slot-scope="scope">
-          <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
+          <el-link v-if="scope.row.categoryId" :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
+          <span v-else>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分类" align="center" prop="categoryId">

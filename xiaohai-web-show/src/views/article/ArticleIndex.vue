@@ -329,7 +329,9 @@ const getArticle = async () => {
       markdownImageFile(''),
       `${import.meta.env.VITE_APP_BASE_API_FILE}${markdownImageFile('..')}`
     )
-    getList(res.data.data.categoryId)
+    if (res.data.data.categoryId){
+      getList(res.data.data.categoryId)
+    }
   })
 }
 
