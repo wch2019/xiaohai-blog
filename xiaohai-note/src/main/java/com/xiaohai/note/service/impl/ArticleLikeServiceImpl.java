@@ -33,6 +33,7 @@ public class ArticleLikeServiceImpl extends ServiceImpl<ArticleLikeMapper, Artic
 
     @Override
     public Integer add(ArticleLikeVo vo){
+        // TODO:点赞消息推送
         if(vo.getClickLike()==1){
             ArticleLike like=new ArticleLike();
             like.setArticleId(vo.getArticleId());

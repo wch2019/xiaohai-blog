@@ -36,6 +36,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public Integer add(CommentVo vo) {
+        // TODO：添加评论推送
         Comment comment = new Comment();
         BeanUtils.copyProperties(vo, comment);
         //当前登录人id

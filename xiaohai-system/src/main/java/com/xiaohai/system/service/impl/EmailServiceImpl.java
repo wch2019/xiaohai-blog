@@ -30,15 +30,15 @@ public class EmailServiceImpl implements EmailService {
     private final ConfigMapper configMapper;
 
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-    private  final ConfigService configService;
-    private  String form = "";
+    private final ConfigService configService;
+    private String form = "";
 
 
     @Override
     public void init() {
         ConfigDto systemConfig = configService.findByOne();
         if (systemConfig != null) {
-            form=systemConfig.getEmailUsername();
+            form = systemConfig.getEmailUsername();
             javaMailSender.setHost(systemConfig.getEmailHost());
             javaMailSender.setUsername(systemConfig.getEmailUsername());
             javaMailSender.setPassword(systemConfig.getEmailPassword());
@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
      * 通知我
      */
     @Override
-    public void emailNoticeMe(String subject, String content,String email) {
+    public void emailNoticeMe(String subject, String content, String email) {
 
         // 构建一个邮件对象
         SimpleMailMessage message = new SimpleMailMessage();
@@ -78,17 +78,16 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void friendPassSendEmail(String email) {
 
-        String content =
-                        """
-                            <html>
-                            <body>
-                                <p>您在<a href='http://www.shiyit.com'>DotCode</a>站点申请友链加入审核通过!!</span>
-                                <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
-                                <p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p>
-                            </body>
-                            </html>
-                        """;
-        send(email, content,"友链通过发送通知");
+        String content = """
+                <html>
+                <body>
+                    <p>您在<a href='http://www.dotcode.top'>DotCode</a>站点申请友链加入审核通过!!</span>
+                    <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
+                    <p>可前往<a href='http://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
+                </body>
+                </html>
+                 """;
+        send(email, content, "友链通过发送通知");
     }
 
     /**
@@ -99,13 +98,16 @@ public class EmailServiceImpl implements EmailService {
      */
     @Override
     public void friendFailedSendEmail(String email, String reason) {
-        String content = "<html>\n" +
-                "<body>\n" +
-                "    <p>您在" + "<a href='http://www.shiyit.com'>DotCode</a>" + "站点申请的友链加入审核未通过!具体原因为:" + reason + "</span>\n" +
-                "<p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>" +
-                "<p>可前往<a href='http://www.shiyit.com/links'>本站友链</a>查阅您的站点。</p></body>\n" +
-                "</html>";
-        send(email, content,"友链未通过发送通知");
+        String content = """
+                <html>
+                <body>
+                    <p>您在<a href='http://www.dotcode.top'>DotCode</a>站点申请的友链加入审核未通过!具体原因为:%s</span>
+                    <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
+                   <p>可前往<a href='http://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
+                </body>
+                </html>
+                """.formatted(reason);
+        send(email, content, "友链未通过发送通知");
     }
 
     /**
@@ -116,64 +118,165 @@ public class EmailServiceImpl implements EmailService {
     @Async("syncExecutorPool")
     public void sendCode(String email) {
         String code = String.valueOf(new Random().nextInt(900000) + 100000);
-        String content = "<html>\n" +
-                "\t<body><div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'html', 'ZC0004_vDfNJayMtMUuKGIAzzsWvc8');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">\n" +
-                "  <div id=\"qm_con_body\">\n" +
-                "    <div id=\"mailContentContainer\" class=\"qmbox qm_con_body_content qqmail_webmail_only\" style=\"opacity: 1;\">\n" +
-                "      <style type=\"text/css\">\n" +
-                "        .qmbox h1,.qmbox \t\t\th2,.qmbox \t\t\th3 {\t\t\t\tcolor: #00785a;\t\t\t}\t\t\t.qmbox p {\t\t\t\tpadding: 0;\t\t\t\tmargin: 0;\t\t\t\tcolor: #333;\t\t\t\tfont-size: 16px;\t\t\t}\t\t\t.qmbox hr {\t\t\t\tbackground-color: #d9d9d9;\t\t\t\tborder: none;\t\t\t\theight: 1px;\t\t\t}\t\t\t.qmbox .eo-link {\t\t\t\tcolor: #0576b9;\t\t\t\ttext-decoration: none;\t\t\t\tcursor: pointer;\t\t\t}\t\t\t.qmbox .eo-link:hover {\t\t\t\tcolor: #3498db;\t\t\t}\t\t\t.qmbox .eo-link:hover {\t\t\t\ttext-decoration: underline;\t\t\t}\t\t\t.qmbox .eo-p-link {\t\t\t\tdisplay: block;\t\t\t\tmargin-top: 20px;\t\t\t\tcolor: #009cff;\t\t\t\ttext-decoration: underline;\t\t\t}\t\t\t.qmbox .p-intro {\t\t\t\tpadding: 30px;\t\t\t}\t\t\t.qmbox .p-code {\t\t\t\tpadding: 0 30px 0 30px;\t\t\t}\t\t\t.qmbox .p-news {\t\t\t\tpadding: 0px 30px 30px 30px;\t\t\t}\n" +
-                "      </style>\n" +
-                "      <div style=\"max-width:800px;padding-bottom:10px;margin:20px auto 0 auto;\">\n" +
-                "        <table cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #fff;border-collapse: collapse; border:1px solid #e5e5e5;box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);text-align: left;width: 100%;font-size: 14px;border-spacing: 0;\">\n" +
-                "          <tbody>\n" +
-                "            <tr style=\"background-color: #f8f8f8;\">\n" +
-                "              <td>\n" +
-                "                <img style=\"padding: 15px 0 15px 30px;width:50px\" src=\"https://mail.qq.com/cgi-bin/getqqicon?sid=m0HR_-K6C8HjQBF1&uin=-822819010&mode=newaddr&mailaddr=1372195290%40qq.com\">" +
-                "                <span>DotCode. </span>\n" +
-                "              </td>\n" +
-                "            </tr>\n" +
-                "            <tr>\n" +
-                "              <td class=\"p-intro\">\n" +
-                "                <h1 style=\"font-size: 26px; font-weight: bold;\">验证您的邮箱地址</h1>\n" +
-                "                <p style=\"line-height:1.75em;\">感谢您使用 DotCode. </p>\n" +
-                "                <p style=\"line-height:1.75em;\">以下是您的邮箱验证码，请将它输入到 DotCode 的邮箱验证码输入框中:</p>\n" +
-                "              </td>\n" +
-                "            </tr>\n" +
-                "            <tr>\n" +
-                "              <td class=\"p-code\">\n" +
-                "                <p style=\"color: #253858;text-align:center;line-height:1.75em;background-color: #f2f2f2;min-width: 200px;margin: 0 auto;font-size: 28px;border-radius: 5px;border: 1px solid #d9d9d9;font-weight: bold;\">" + code + "</p>\n" +
-                "              </td>\n" +
-                "            </tr>\n" +
-                "            <tr>\n" +
-                "              <td class=\"p-intro\">\n" +
-                "                <p style=\"line-height:1.75em;\">这一封邮件包括一些您的私密的 DotCode 账号信息，请不要回复或转发它，以免带来不必要的信息泄露风险。 </p>\n" +
-                "              </td>\n" +
-                "            </tr>\n" +
-                "            <tr>\n" +
-                "              <td class=\"p-intro\">\n" +
-                "                <hr>\n" +
-                "                <p style=\"text-align: center;line-height:1.75em;\">xiaohai - DotCode</p>\n" +
-                "              </td>\n" +
-                "            </tr>\n" +
-                "          </tbody>\n" +
-                "        </table>\n" +
-                "      </div>\n" +
-                "      <style type=\"text/css\">\n" +
-                "        .qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {display: none !important;}\n" +
-                "      </style>\n" +
-                "    </div>\n" +
-                "  </div><!-- -->\n" +
-                "  <style>\n" +
-                "    #mailContentContainer .txt {height:auto;}\n" +
-                "  </style>\n" +
-                "</div></body>\n" +
-                "</html>\n";
-        send(email, content,"DotCode验证码");
+        String content = """
+                <!DOCTYPE html>
+                <html lang="en">
+                                        
+                <head>
+                    <meta charset="UTF-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Email Template</title>
+                    <style>
+                        /* Global Styles */
+                        .body {
+                            position: relative;
+                            font-size: 14px;
+                            height: auto;
+                            padding: 15px;
+                            line-height: 1.7;
+                        }
+                                        
+                        /* Typography */
+                        .qmbox h1,
+                        .qmbox h2,
+                        .qmbox h3 {
+                            color: #00785a;
+                        }
+                                        
+                        .qmbox p {
+                            margin: 0;
+                            color: #333;
+                            font-size: 16px;
+                        }
+                                        
+                        /* Links */
+                        .qmbox .eo-link {
+                            color: #0576b9;
+                            text-decoration: none;
+                            cursor: pointer;
+                        }
+                                        
+                        .qmbox .eo-link:hover {
+                            color: #3498db;
+                        }
+                                        
+                        .qmbox .eo-link:hover {
+                            text-decoration: underline;
+                        }
+                                        
+                        .qmbox .eo-p-link {
+                            display: block;
+                            margin-top: 20px;
+                            color: #009cff;
+                            text-decoration: underline;
+                        }
+                                        
+                        /* Container Styles */
+                        #mailContentContainer {
+                            max-width: 800px;
+                            margin: 20px auto 0 auto;
+                            opacity: 1;
+                        }
+                                        
+                        /* Table Styles */
+                        #mailContentContainer table {
+                            background-color: #fff;
+                            border-collapse: collapse;
+                            border: 1px solid #e5e5e5;
+                            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+                            text-align: left;
+                            width: 100%;
+                            font-size: 14px;
+                            border-spacing: 0;
+                        }
+                                        
+                        #mailContentContainer img {
+                            padding: 15px 15px 15px 30px;
+                            width: 50px;
+                        }
+                                        
+                        /* Miscellaneous */
+                        #mailContentContainer .p-code p {
+                            color: #253858;
+                            text-align: center;
+                            line-height: 1.75em;
+                            background-color: #f2f2f2;
+                            min-width: 200px;
+                            margin: 0 auto;
+                            font-size: 28px;
+                            border-radius: 5px;
+                            border: 1px solid #d9d9d9;
+                            font-weight: bold;
+                        }
+                        .p-code {
+                            padding: 0 30px 0 30px;
+                        }
+                        .p-intro {
+                            padding: 30px;
+                        }
+                                        
+                        .p-news {
+                            padding: 0 30px 30px 30px;
+                        }
+                                        
+                        #mailContentContainer .txt {
+                            height: auto;
+                        }
+                    </style>
+                </head>
+                                        
+                <body>
+                    <div id="contentDiv" class="body">
+                        <div id="qm_con_body">
+                            <div id="mailContentContainer" class="qmbox qm_con_body_content qqmail_webmail_only">
+                                <table cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                        <tr style="background-color: #f8f8f8;">
+                                            <td style="display: flex; justify-content: flex-start; align-items: flex-end;">
+                                                <img src="http://www.dotcode.top/api/document/upload/system/favicon.ico">
+                                                <h4>DotCode</h4>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-intro">
+                                                <h1>验证您的邮箱地址</h1>
+                                                <p>感谢您使用 DotCode.</p>
+                                                <p>以下是您的邮箱验证码，请将它输入到 DotCode 的邮箱验证码输入框中:</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-code">
+                                                <p>${code}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-intro">
+                                                <p>这一封邮件包括一些您的私密的 DotCode 账号信息，请不要回复或转发它，以免带来不必要的信息泄露风险。</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-intro">
+                                                <hr>
+                                                <p style="text-align: center;">xiaohai - DotCode</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+                                        
+                </html>
+                """;
+
+        send(email, content, "DotCode验证码");
         log.info("邮箱验证码发送成功,邮箱:{},验证码:{}", email, code);
         SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE + email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
     }
 
-    private void send(String email, String template,String subject) {
+    private void send(String email, String template, String subject) {
         try {
             //创建一个MINE消息
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -181,8 +284,8 @@ public class EmailServiceImpl implements EmailService {
             // 设置邮件主题
             mineHelper.setSubject(subject);
             // 设置邮件发送者
-            mineHelper.setFrom("DotCode小站<"+form+">");
-//            mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
+            mineHelper.setFrom("DotCode小站<" + form + ">");
+            //            mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
             // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
             mineHelper.setTo(email);
             // 设置邮件发送日期

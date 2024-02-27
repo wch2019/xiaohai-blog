@@ -231,20 +231,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="获取图片位置">
-                <el-input v-model="form.imagePath" :disabled="true" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="获取头像位置">
-                <el-input v-model="form.avatarPath" :disabled="true" />
-              </el-form-item>
-            </el-col>
-          </el-row>
           <el-form-item>
             <el-button
               v-if="$store.getters.permission.includes('system:config:save')"
