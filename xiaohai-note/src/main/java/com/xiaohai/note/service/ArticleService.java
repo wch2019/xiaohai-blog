@@ -6,6 +6,7 @@ import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
+import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,9 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 文章表 服务类
- *
  *
  * @author xiaohai
  * @since 2023-04-04
@@ -25,6 +24,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 新增草稿文章
+     *
      * @param vo
      * @return
      */
@@ -56,6 +56,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 更新草稿文章
+     *
      * @param vo
      * @return
      */
@@ -64,28 +65,30 @@ public interface ArticleService extends IService<Article> {
     /**
      * id查询数据
      *
-     * @param id id
+     * @param id   id
      * @param type 展示0,管理1 （展示会累计浏览量）
-     * @return   Article
-*/
-    ArticleDtoAll findById(Long id,int type);
+     * @return Article
+     */
+    ArticleDtoAll findById(Long id, int type);
 
     /**
-    * 查询文章表列表数据
-    *
-    * @param query 文章表 Query 数据查询对象
-    * @return Response
-    */
+     * 查询文章表列表数据
+     *
+     * @param query 文章表 Query 数据查询对象
+     * @return Response
+     */
     ReturnPageData<ArticleDto> findListByPage(ArticleQuery query);
 
     /**
      * 获取随机图片必应
+     *
      * @return
      */
     String wallpaper();
 
     /**
      * 是否顶置
+     *
      * @param id
      * @return
      */
@@ -93,6 +96,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 是否发布
+     *
      * @param id
      * @return
      */
@@ -100,32 +104,37 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 获取所有或指定用户文章的阅读量
+     *
      * @return
      */
     Long getPageView();
 
     /**
      * 近一年个章贡献度
+     *
      * @return
      */
     Map<String, Object> contribution();
 
     /**
      * 查询展示文章表列表数据
+     *
      * @param type
      * @param id
      * @return
      */
-    ReturnPageData<ArticleShowDto> findShowListByPage(Integer type,Long id);
+    ReturnPageData<ArticleShowDto> findShowListByPage(Integer type, Long id);
 
     /**
      * 查询归档列表数据
+     *
      * @return
      */
     ReturnPageData<ArticleShowDto> findBackListByPage();
 
     /**
      * 文章搜索
+     *
      * @param keywords
      * @return
      */
@@ -133,19 +142,29 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 展示页信息展示
+     *
      * @return
      */
     UserBasicDto findShowBasic();
 
     /**
      * 导入markdown压缩文件
+     *
      * @param file 文件
      */
     void uploadCompressedFile(MultipartFile file);
 
     /**
      * 导出markdown压缩文件
+     *
      * @param response
      */
     void downloadCompressedFile(HttpServletResponse response);
+
+    /**
+     * 抓取文章爬虫
+     * @param vo
+     * @return
+     */
+    Integer reptileArticle(ArticleReptileVo vo);
 }

@@ -26,6 +26,11 @@
 			<groupId>com.xiaohai</groupId>
 			<artifactId>xiaohai-file</artifactId>
 		</dependency>
+		<!--spider 爬虫模块-->
+		<dependency>
+			<groupId>com.xiaohai</groupId>
+			<artifactId>xiaohai-spider</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

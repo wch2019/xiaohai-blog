@@ -25,9 +25,12 @@ import com.xiaohai.note.pojo.entity.Category;
 import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
+import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import com.xiaohai.note.service.ArticleService;
 import com.xiaohai.note.service.ArticleTagService;
+import com.xiaohai.spider.article.Acquire;
+import com.xiaohai.spider.pojo.ArticleAcquire;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -481,7 +484,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                                 String newPhotoPath = ".." + fileService.getCopyImage(sourcePath, newPath);
                                 article.setText(article.getText().replaceAll(fileName, newPhotoPath));
                             }
-                            article.setSummary(MarkdownUtils.truncateText(article.getText(), 250));
+                            article.setSummary(MarkdownUtils.truncateText(article.getText(), 100));
                         }
                     }
                     if (entry.getKey().equals("tags")) {
@@ -568,5 +571,32 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             //            //删除当前目录
             //            FileUtils.deleteFile(path);
         }
+    }
+
+    @Override
+    public Integer reptileArticle(ArticleReptileVo vo) {
+        ArticleAcquire articleAcquire = new ArticleAcquire();
+        if (vo.getType().equals("CSDN")) {
+            articleAcquire = Acquire.csdn(vo.getUrl());
+        }
+        if (vo.getType().equals("juejin")) {
+            articleAcquire = Acquire.juejin(vo.getUrl());
+        }
+        if (vo.getType().equals("jianshu")) {
+            articleAcquire = Acquire.jianshu(vo.getUrl());
+        }
+
+        Article article = new Article();
+        BeanUtils.copyProperties(articleAcquire, article);
+        //转载
+        article.setIsOriginal(1);
+        //写入作者
+        article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
+        article.setCreatedTime(LocalDateTime.now());
+        article.setUpdatedTime(LocalDateTime.now());
+        baseMapper.insert(article);
+        //统计持续创作天数
+        ContributionUtils.setContribution();
+        return article.getId();
     }
 }

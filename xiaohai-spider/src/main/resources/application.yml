@@ -1,0 +1,5 @@
+azure:
+  openai:
+    azureOpenaiKey: 7cc66
+    endpoint: https://openai.azure.com
+    deploymentOrModelName: gpt-35-turbo-16k

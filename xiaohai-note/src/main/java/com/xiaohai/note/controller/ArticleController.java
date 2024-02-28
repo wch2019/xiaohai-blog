@@ -10,6 +10,7 @@ import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
+import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import com.xiaohai.note.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -131,5 +132,13 @@ public class ArticleController {
     @GetMapping(value = "/markdown")
     public void downloadCompressedFile(HttpServletResponse response) {
         articleService.downloadCompressedFile(response);
+    }
+
+    @Operation(summary = "抓取文章爬虫", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:article:reptile")
+    @Log(title = "抓取文章爬虫")
+    @PostMapping(value = "/reptile-article")
+    public Response<Integer> reptileArticle(ArticleReptileVo vo) {
+        return Response.success("抓取文章成功！",articleService.reptileArticle(vo));
     }
 }

@@ -86,3 +86,11 @@ export function updateTop(id) {
     method: 'put'
   })
 }
+// 抓取文章
+export function reptileArticle(data) {
+  return request({
+    url: api+"/reptile-article",
+    method: 'post',
+    data
+  })
+}

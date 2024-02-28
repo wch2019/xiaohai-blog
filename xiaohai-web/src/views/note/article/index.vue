@@ -128,6 +128,17 @@
         >导入
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          v-if="$store.getters.permission.includes('note:article:import')"
+          type="info"
+          plain
+          icon="el-icon-attract"
+          size="mini"
+          @click="handleReptile"
+        >抓取
+        </el-button>
+      </el-col>
     </el-row>
 
     <el-table
@@ -233,6 +244,7 @@
       @pagination="getList"
     />
     <to-lead-into v-if="leadInfo.show" :lead-info="leadInfo" @getList="getList" />
+    <reptile-article v-if="reptileInfo.show" :reptile-info="reptileInfo" @getList="getList" />
   </div>
 </template>
 
@@ -241,10 +253,11 @@ import { listArticle, delArticle, updatePush, updateTop } from '@/api/note/artic
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 import ToLeadInto from '@/views/note/article/components/toLeadInto.vue'
+import ReptileArticle from "@/views/note/article/components/ReptileArticle.vue";
 
 export default {
   name: 'Index',
-  components: { ToLeadInto },
+  components: {ReptileArticle, ToLeadInto },
   data() {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,
@@ -276,6 +289,9 @@ export default {
       },
       srcList: [],
       leadInfo: {
+        show: false
+      },
+      reptileInfo: {
         show: false
       }
     }
@@ -366,6 +382,10 @@ export default {
     // 导入
     handleImport() {
       this.leadInfo.show = true
+    },
+    //抓取
+    handleReptile() {
+      this.reptileInfo.show = true
     },
     // 顶置颜色样式添加
     tableRowClassName({ row, rowIndex }) {

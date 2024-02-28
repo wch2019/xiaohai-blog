@@ -25,6 +25,7 @@
         <module>xiaohai-system</module>
         <module>xiaohai-file</module>
         <module>xiaohai-note</module>
+        <module>xiaohai-spider</module>
         <module>xiaohai-chat</module>
     </modules>
 
@@ -113,6 +114,12 @@
             <artifactId>UserAgentUtils</artifactId>
             <version>1.21</version>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.25</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>
@@ -148,6 +155,12 @@
             <dependency>
                 <groupId>com.xiaohai</groupId>
                 <artifactId>xiaohai-note</artifactId>
+                <version>${xiaohai.version}</version>
+            </dependency>
+            <!--spider 爬虫模块 -->
+            <dependency>
+                <groupId>com.xiaohai</groupId>
+                <artifactId>xiaohai-spider</artifactId>
                 <version>${xiaohai.version}</version>
             </dependency>
             <!--chat 聊天模块 -->
