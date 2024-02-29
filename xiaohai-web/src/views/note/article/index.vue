@@ -130,7 +130,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          v-if="$store.getters.permission.includes('note:article:import')"
+          v-if="$store.getters.permission.includes('note:article:reptile')"
           type="info"
           plain
           icon="el-icon-attract"

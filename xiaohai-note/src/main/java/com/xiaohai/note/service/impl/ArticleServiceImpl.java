@@ -585,6 +585,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (vo.getType().equals("jianshu")) {
             articleAcquire = Acquire.jianshu(vo.getUrl());
         }
+        if (vo.getType().equals("bokeyuan")) {
+            articleAcquire = Acquire.bokeyuan(vo.getUrl());
+        }
 
         Article article = new Article();
         BeanUtils.copyProperties(articleAcquire, article);

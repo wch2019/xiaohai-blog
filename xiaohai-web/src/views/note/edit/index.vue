@@ -239,6 +239,14 @@ export default {
     this.getTags()
     this.getArticle()
   },
+  watch: {
+    form(newValue) {
+      // 使用 $nextTick 方法在数据更新后执行回调
+      this.$nextTick(() => {
+        this.addReferrerPolicyToImages();
+      });
+    }
+  },
   methods: {
     getTime() {
       const currentDate = new Date();
@@ -491,6 +499,13 @@ export default {
           this.getArticle(response.data)
         })
       }
+    },
+    //防止无法展示图片
+    addReferrerPolicyToImages() {
+      const images = document.querySelectorAll('img');
+      images.forEach(image => {
+        image.setAttribute('referrerPolicy', 'no-referrer');
+      });
     }
   }
 }

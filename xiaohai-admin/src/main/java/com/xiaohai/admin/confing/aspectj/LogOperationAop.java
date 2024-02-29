@@ -168,6 +168,9 @@ public class LogOperationAop {
             }else if(log.getTitle().equals("更改系统配置")){
                 //如果是将去除邮箱密码信息记录日志
                 log.setOperParam(new JSONArray(joinPoint.getArgs()).getJSONObject(0).set("emailPassword",Constants.CONCEAL).toString());
+            }else if(log.getTitle().equals("新增草稿文章")||log.getTitle().equals("新增发布文章")||log.getTitle().equals("更新发布文章")){
+                //如果是将去除文章内容信息记录日志
+                log.setOperParam(new JSONArray(joinPoint.getArgs()).getJSONObject(0).set("text",Constants.CONCEAL).set("title",Constants.CONCEAL).set("summary",Constants.CONCEAL).toString());
             }else {
                 log.setOperParam(new JSONArray(joinPoint.getArgs()).toString());
             }

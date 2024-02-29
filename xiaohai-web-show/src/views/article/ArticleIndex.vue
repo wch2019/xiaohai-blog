@@ -374,6 +374,7 @@ async function getCatalog() {
     lineIndex: el.getAttribute('data-v-md-line'),
     indent: hTags.indexOf(el.tagName)
   }))
+
 }
 
 const activeIndex = ref(-1)
@@ -405,7 +406,6 @@ const handlePreviewScroll = () => {
     if (targetTitle) {
       targetTitle.highlight = true;
     }
-
     // console.log('Nearest Element with data-v-md-line:', nearestDistance);
   }
 }
@@ -460,6 +460,7 @@ const originalWidth = ref(0);
 const handleScroll = () => {
   const scrollPosition = window.scrollY;
   isFixed.value = scrollPosition > 400;
+  addReferrerPolicyToImages()
 };
 onMounted(() => {
   // 获取 header 元素的初始宽度
@@ -480,6 +481,17 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handlePreviewScroll);
 });
 
+//防止无法展示图片
+function addReferrerPolicyToImages() {
+  const images = preview.value.$el.querySelectorAll('img');
+  // console.log(images)
+  images.forEach((image: HTMLImageElement) => {
+    image.setAttribute('referrerPolicy', '');
+  });
+  images.forEach((image: HTMLImageElement) => {
+      image.setAttribute('referrerPolicy', 'no-referrer');
+  });
+}
 getListComment()
 </script>
 

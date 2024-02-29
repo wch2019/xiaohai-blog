@@ -66,15 +66,14 @@ public class ArticleController {
 
     @Operation(summary = "更新草稿文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission(value = {"note:article:update"}, mode = SaMode.OR)
-    @Log(title = "更新草稿文章")
     @PutMapping("/update-draft")
     public Response<Integer> updateDraft(@Validated @RequestBody ArticleDraftVo vo) {
         return Response.success("更新草稿成功！", articleService.updateDraft(vo));
     }
 
-    @Operation(summary = "更新文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "更新发布文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission(value = {"note:article:update"}, mode = SaMode.OR)
-    @Log(title = "更新文章")
+    @Log(title = "更新发布文章")
     @PutMapping()
     public Response<Integer> update(@Validated @RequestBody ArticleVo vo) {
         return Response.success("更新发布文章成功！", articleService.updateData(vo));
@@ -138,7 +137,7 @@ public class ArticleController {
     @SaCheckPermission("note:article:reptile")
     @Log(title = "抓取文章爬虫")
     @PostMapping(value = "/reptile-article")
-    public Response<Integer> reptileArticle(ArticleReptileVo vo) {
+    public Response<Integer> reptileArticle(@Validated @RequestBody ArticleReptileVo vo) {
         return Response.success("抓取文章成功！",articleService.reptileArticle(vo));
     }
 }
