@@ -24,8 +24,29 @@ import '@kangc/v-md-editor/lib/theme/style/github.css'
 
 // highlightjs
 VMdPreview.use(githubTheme, {
-  Hljs: hljs
+  Hljs: hljs,
+  extend(md:any) {
+    // md 为 markdown-it 实例，可以在此处进行修改配置，并使用 plugin 进行语法扩展
+    // md.renderer.rules.image = function (tokens:any, idx:any, options:any, env:any, self:any) {
+    //   const token = tokens[idx];
+    //   token.attrPush(['referrerPolicy', 'no-referrer'])
+    //   // 获取图片元素的原始HTMLt;
+    //   console.log(self.renderToken(tokens, idx, options))
+    //   return self.renderToken(tokens, idx, options);
+    // };
+  }
 })
+
+// markdown支持显示代码行数
+import createLineNumbertPlugin from '@kangc/v-md-editor/lib/plugins/line-number/index';
+VMdPreview.use(createLineNumbertPlugin())
+// markdown支持代码快速复制
+// 快速复制代码
+import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
+import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css';
+VMdPreview.use(createCopyCodePlugin());
+
+
 
 const app = createApp(App)
 app.use(router)

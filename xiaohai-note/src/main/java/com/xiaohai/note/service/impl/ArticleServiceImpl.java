@@ -588,9 +588,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (vo.getType().equals("bokeyuan")) {
             articleAcquire = Acquire.bokeyuan(vo.getUrl());
         }
-
+        if (vo.getType().equals("zhihu")) {
+            articleAcquire = Acquire.zhihu(vo.getUrl());
+        }
+        if(StringUtils.isBlank(articleAcquire.getTitle())){
+            throw new ServiceException("没有获取到数据请检查链接");
+        }
         Article article = new Article();
         BeanUtils.copyProperties(articleAcquire, article);
+        //添加随机封面
+        article.setCover(wallpaper());
         //转载
         article.setIsOriginal(1);
         //写入作者

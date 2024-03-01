@@ -49,7 +49,7 @@
         原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br/>
       </div>
       <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br/></div>
-      <v-md-preview :text="articleOne.text" ref="preview" @scroll="handlePreviewScroll"></v-md-preview>
+      <v-md-preview :text="articleOne.text" ref="preview" @scroll="handlePreviewScroll" ></v-md-preview>
       <hr class="divider"/>
       <h3 class="flex-center">推荐</h3>
       <el-row style="justify-content: center">
@@ -414,8 +414,8 @@ function getListComment() {
   getComment(route.params.id).then((res) => {
     commentCount.value = res.data.data.commentCount
     const array = res.data.data.commentTrees
-    for (let i = 0; i < array.length; i++) {
-      ;(array[i] as any).replyInputShow = false
+    for (const element of array) {
+      (element as any).replyInputShow = false
     }
     config.value.dataList = array
     config.value.disabled = true
@@ -470,6 +470,11 @@ onMounted(() => {
       originalWidth.value = header.value.getBoundingClientRect().width;
     }
   });
+  // watch(articleOne, () => {
+  //   nextTick(() => {
+  //     addReferrerPolicyToImages()
+  //   })
+  // })
   // 监听滚动事件
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('scroll', handlePreviewScroll);
@@ -483,11 +488,8 @@ onUnmounted(() => {
 
 //防止无法展示图片
 function addReferrerPolicyToImages() {
-  const images = preview.value.$el.querySelectorAll('img');
+  const images =  preview.value.$el.querySelectorAll('img');
   // console.log(images)
-  images.forEach((image: HTMLImageElement) => {
-    image.setAttribute('referrerPolicy', '');
-  });
   images.forEach((image: HTMLImageElement) => {
       image.setAttribute('referrerPolicy', 'no-referrer');
   });

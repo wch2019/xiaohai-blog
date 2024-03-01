@@ -153,8 +153,34 @@ public class Acquire {
         return articleAcquire;
     }
 
-    public static void main(String[] args) {
-        bokeyuan("https://www.cnblogs.com/steven-yang/p/18042992");
+    /**
+     * 知乎
+     * @author wangchenghai
+     * @date  2024/03/01 15:36:36
+     * @param url
+     * @return com.xiaohai.spider.pojo.ArticleAcquire
+     */
+    public static ArticleAcquire zhihu(String url) {
+        ArticleAcquire articleAcquire = new ArticleAcquire();
+        articleAcquire.setOriginalUrl(url);
+        try {
+            log.info("知乎爬取地址：{}", url);
+            Document doc = Jsoup.connect(url).get();
+            // 获取文章标题
+            Elements articleContent = doc.getElementsByClass("Post-Title");
+            log.info("文章标题：{}", articleContent.text());
+            articleAcquire.setTitle(articleContent.text());
+            // 获取文章内容
+            Elements contentElement = doc.getElementsByClass("css-376mun");
+            MutableDataSet options = new MutableDataSet();
+            FlexmarkHtmlConverter converter = FlexmarkHtmlConverter.builder(options).build();
+            var result = converter.convert(contentElement.get(0).html());
+            articleAcquire.setText(result);
+            articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
+        } catch (IOException e) {
+            throw new ServiceException("知乎爬虫出现意外", e);
+        }
+        return articleAcquire;
     }
 
 }

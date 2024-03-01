@@ -11,6 +11,7 @@
             <el-radio-button label="juejin" >掘金</el-radio-button>
             <el-radio-button label="jianshu" >简书</el-radio-button>
             <el-radio-button label="bokeyuan" >博客园</el-radio-button>
+            <el-radio-button label="zhihu" >知乎</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="URL" prop="url">
@@ -21,7 +22,7 @@
           <h4 style="margin: 0">描述：</h4>
           1.本脚本仅可能存在不准确，请自行检查数据结果<br>
           2.本脚本仅支持抓取文章内容<br>
-          3.抓取成功自动保存到草稿<br>
+          3.抓取成功自动保存到草稿，并添加随机封面<br>
           4.如有其他想获取，请联系作者<br>
         </div>
         </el-form-item>
