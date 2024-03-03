@@ -49,7 +49,8 @@
         原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br/>
       </div>
       <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br/></div>
-      <v-md-preview :text="articleOne.text" ref="preview" @scroll="handlePreviewScroll" ></v-md-preview>
+      <div class="preview"></div>
+<!--      <v-md-preview :text="articleOne.text" ></v-md-preview>-->
       <hr class="divider"/>
       <h3 class="flex-center">推荐</h3>
       <el-row style="justify-content: center">
@@ -127,8 +128,8 @@
       原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br/>
     </div>
     <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br/></div>
-    <v-md-preview :text="articleOne.text"></v-md-preview>
-
+<!--    <v-md-preview :text="articleOne.text"></v-md-preview>-->
+    <div class="preview"></div>
     <hr class="divider"/>
     <h3 class="flex-center">推荐</h3>
     <el-card
@@ -229,15 +230,17 @@
               目录
             </h2>
           </template>
+
           <div class="catalog">
-            <div
-              v-for="anchor in titles"
-              :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"
-              @click="handleAnchorClick(anchor)"
-              :class="{ 'toc-item': true, 'active': anchor.highlight }"
-            >
-              <el-link :underline="false">{{ anchor.title }}</el-link>
-            </div>
+            <div id="outline"></div>
+<!--            <div-->
+<!--              v-for="anchor in titles"-->
+<!--              :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"-->
+<!--              @click="handleAnchorClick(anchor)"-->
+<!--              :class="{ 'toc-item': true, 'active': anchor.highlight }"-->
+<!--            >-->
+<!--              <el-link :underline="false">{{ anchor.title }}</el-link>-->
+<!--            </div>-->
           </div>
         </el-card>
       </div>
@@ -255,6 +258,8 @@ import {article, listArticles, listTag, getComment, articleLike, deleteComment} 
 import {addComment} from '@/api/user'
 import comments from '@/components/comments/index.vue'
 import {image, markdownImageFile, open, openQQ} from '@/utils/publicMethods'
+import Vditor from "vditor";
+import 'vditor/dist/index.css'
 
 // 文章详情
 const articleOne = ref({})
@@ -262,7 +267,7 @@ const articleOne = ref({})
 const userBasic = ref('')
 const route = useRoute()
 const titles = ref()
-const preview = ref()
+// const preview = ref()
 const router = useRouter()
 // 标签列表
 const tags = ref([])
@@ -329,7 +334,8 @@ const getArticle = async () => {
       markdownImageFile(''),
       `${import.meta.env.VITE_APP_BASE_API_FILE}${markdownImageFile('..')}`
     )
-    if (res.data.data.categoryId){
+    renderMarkdown(articleOne.value.text)
+    if (res.data.data.categoryId) {
       getList(res.data.data.categoryId)
     }
   })
@@ -346,76 +352,76 @@ const getTags = async () => {
 }
 
 getTags()
+
 // 跳转到指定位置
-const handleAnchorClick = (anchor: any) => {
-  const {lineIndex} = anchor
-  const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`)
-  if (heading) {
-    preview.value.scrollToTarget({
-      target: heading,
-      scrollContainer: window,
-      top: 80
-    })
-  }
-}
+// const handleAnchorClick = (anchor: any) => {
+//   const {lineIndex} = anchor
+//   const heading = preview.value.$el.querySelector(`[data-v-md-line="${lineIndex}"]`)
+//   if (heading) {
+//     preview.value.scrollToTarget({
+//       target: heading,
+//       scrollContainer: window,
+//       top: 80
+//     })
+//   }
+// }
 
 // 目录生成方法
-async function getCatalog() {
-  await getArticle()
-  const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6')
-  const filterTitles = Array.from(anchors).filter((title: any) => !!title.innerText.trim())
-  if (!filterTitles.length) {
-    titles.value = []
-    return
-  }
-  const hTags = Array.from(new Set(filterTitles.map((title: any) => title.tagName))).sort()
-  titles.value = filterTitles.map((el: any) => ({
-    title: el.innerText,
-    lineIndex: el.getAttribute('data-v-md-line'),
-    indent: hTags.indexOf(el.tagName)
-  }))
+// async function getCatalog() {
+//   await getArticle()
+//   const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6')
+//   const filterTitles = Array.from(anchors).filter((title: any) => !!title.innerText.trim())
+//   if (!filterTitles.length) {
+//     titles.value = []
+//     return
+//   }
+//   const hTags = Array.from(new Set(filterTitles.map((title: any) => title.tagName))).sort()
+//   titles.value = filterTitles.map((el: any) => ({
+//     title: el.innerText,
+//     lineIndex: el.getAttribute('data-v-md-line'),
+//     indent: hTags.indexOf(el.tagName)
+//   }))
+// }
 
-}
-
-const activeIndex = ref(-1)
-const handlePreviewScroll = () => {
-  // 在滚动时更新当前高亮的标题索引
-  const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6');
-  // 初始化最近的元素和距离
-  let nearestElement = null;
-  let nearestDistance = Infinity;
-
-  anchors.forEach((anchor:any) => {
-    const rect = anchor.getBoundingClientRect();
-    const distanceToTop = rect.top;
-    nearestDistance = distanceToTop;
-    // 检查是否在视口内
-    if (distanceToTop <= 90 && distanceToTop >= nearestDistance) {
-      nearestElement = anchor;
-      nearestDistance = distanceToTop;
-    }
-  });
-  if (nearestElement) {
-    const lineValue = nearestElement.getAttribute('data-v-md-line');
-    // 在使用 titles 之前将所有元素的 highlight 属性设置为 false
-    titles.value.forEach((title:any) => title.highlight = false);
-    // 找到 lineIndex 等于 lineValue 的元素
-    const targetTitle = titles.value.find((title:any) => title.lineIndex == lineValue);
-
-    // 如果找到了符合条件的元素，设置其属性 highlight 为 true
-    if (targetTitle) {
-      targetTitle.highlight = true;
-    }
-    // console.log('Nearest Element with data-v-md-line:', nearestDistance);
-  }
-}
+//
+// const handlePreviewScroll = () => {
+//   // 在滚动时更新当前高亮的标题索引
+//   const anchors = preview.value.$el.querySelectorAll('h1,h2,h3,h4,h5,h6');
+//   // 初始化最近的元素和距离
+//   let nearestElement = null;
+//   let nearestDistance = Infinity;
+//
+//   anchors.forEach((anchor: any) => {
+//     const rect = anchor.getBoundingClientRect();
+//     const distanceToTop = rect.top;
+//     nearestDistance = distanceToTop;
+//     // 检查是否在视口内
+//     if (distanceToTop <= 90 && distanceToTop >= nearestDistance) {
+//       nearestElement = anchor;
+//       nearestDistance = distanceToTop;
+//     }
+//   });
+//   if (nearestElement) {
+//     const lineValue = nearestElement.getAttribute('data-v-md-line');
+//     // 在使用 titles 之前将所有元素的 highlight 属性设置为 false
+//     titles.value.forEach((title: any) => title.highlight = false);
+//     // 找到 lineIndex 等于 lineValue 的元素
+//     const targetTitle = titles.value.find((title: any) => title.lineIndex == lineValue);
+//
+//     // 如果找到了符合条件的元素，设置其属性 highlight 为 true
+//     if (targetTitle) {
+//       targetTitle.highlight = true;
+//     }
+//     // console.log('Nearest Element with data-v-md-line:', nearestDistance);
+//   }
+// }
 
 function getListComment() {
   getComment(route.params.id).then((res) => {
     commentCount.value = res.data.data.commentCount
     const array = res.data.data.commentTrees
-    for (const element of array) {
-      (element as any).replyInputShow = false
+    for (let i = 0; i < array.length; i++) {
+      ;(array[i] as any).replyInputShow = false
     }
     config.value.dataList = array
     config.value.disabled = true
@@ -452,16 +458,18 @@ onBeforeMount(async () => {
       }
     }
   )
-  await getCatalog()
+  await getArticle()
 })
+
 const header = ref(null);
 const isFixed = ref(false);
 const originalWidth = ref(0);
+
 const handleScroll = () => {
   const scrollPosition = window.scrollY;
   isFixed.value = scrollPosition > 400;
-  addReferrerPolicyToImages()
 };
+
 onMounted(() => {
   // 获取 header 元素的初始宽度
   // 使用 nextTick 来获取元素宽度，确保在 DOM 更新之后
@@ -470,30 +478,103 @@ onMounted(() => {
       originalWidth.value = header.value.getBoundingClientRect().width;
     }
   });
-  // watch(articleOne, () => {
-  //   nextTick(() => {
-  //     addReferrerPolicyToImages()
-  //   })
-  // })
   // 监听滚动事件
   window.addEventListener('scroll', handleScroll);
-  window.addEventListener('scroll', handlePreviewScroll);
+  // window.addEventListener('scroll', handlePreviewScroll);
 });
 
 onUnmounted(() => {
   // 在组件销毁时移除滚动事件监听器
   window.removeEventListener('scroll', handleScroll);
-  window.removeEventListener('scroll', handlePreviewScroll);
+  // window.removeEventListener('scroll', handlePreviewScroll);
 });
 
-//防止无法展示图片
-function addReferrerPolicyToImages() {
-  const images =  preview.value.$el.querySelectorAll('img');
-  // console.log(images)
-  images.forEach((image: HTMLImageElement) => {
-      image.setAttribute('referrerPolicy', 'no-referrer');
+function renderMarkdown(md: any) {
+  const previewElement = document.querySelector(".preview") as HTMLDivElement;
+  const outlineElement = document.getElementById("outline") as HTMLDivElement;
+
+  Vditor.preview(previewElement,
+    md,
+    {
+      mode: "light",
+      hljs: {style: "github", lineNumber: true},
+      transform(html) {
+        return html.replaceAll('<img', '<img referrerPolicy="no-referrer"')
+      },
+      after: function () {
+        // 事件委托处理图片点击事件
+        previewElement.addEventListener("click", (event) => {
+          // 使用类型断言告诉 TypeScript 事件的目标是 HTMLImageElement 类型
+          const target = event.target as HTMLImageElement;
+          if (target.tagName === "IMG") {
+            Vditor.previewImage(target);
+          }
+        });
+        if (window.innerWidth <= 768) {
+          return
+        }
+        // 显示大纲并初始化
+        Vditor.outlineRender(previewElement, outlineElement)
+        if (outlineElement.innerText.trim() !== '') {
+          outlineElement.style.display = 'block'
+          initOutline()
+        }
+      },
+    })
+}
+
+const initOutline = () => {
+  // 获取所有标题元素
+  const previewElement = document.querySelector('.preview');
+  const headingElements = Array.from(previewElement?.children || [])
+    .filter(item => item.tagName.length === 2 && item.tagName !== 'HR' && item.tagName.indexOf('H') === 0);
+  let toc = [];
+
+
+  window.addEventListener('scroll', () => {
+    // 获取大纲项元素
+    const outlineItems = document.querySelectorAll('.vditor-outline__item--current');
+    const scrollTop = window.scrollY;
+    // 更新目录项
+    toc = headingElements.map(item => ({
+      id: item.id,
+      offsetTop: item.offsetTop
+    }));
+
+    let highlighted = false;
+
+    // 遍历目录项
+    for (let i = 0; i < toc.length; i++) {
+      if (scrollTop < toc[i].offsetTop - 30) {
+        // 清除所有大纲项的当前样式
+        outlineItems.forEach(element => element.classList.remove('vditor-outline__item--current'));
+        // 确定当前目录项
+        const index = i > 0 ? i - 1 : 0;
+        const currentElement = document.querySelector('span[data-target-id="' + toc[index].id + '"]');
+        if (currentElement) {
+          // 添加当前目录项的样式
+          currentElement.classList.add('vditor-outline__item--current');
+          highlighted = true;
+        }
+        break;
+      }
+    }
+
+    // 如果没有任何部分高于滚动位置，则将最后一个元素设置为当前元素
+    if (!highlighted && toc.length > 0) {
+      outlineItems.forEach(element => element.classList.remove('vditor-outline__item--current'));
+      const lastElementId = toc[toc.length - 1].id;
+      const lastElement = document.querySelector('span[data-target-id="' + lastElementId + '"]');
+      if (lastElement) {
+        // 添加最后一个目录项的样式
+        lastElement.classList.add('vditor-outline__item--current');
+      }
+    }
   });
 }
+
+
+
 getListComment()
 </script>
 
@@ -544,25 +625,29 @@ getListComment()
   position: fixed;
   top: 90px;
 }
-.catalog{
+
+.catalog {
   overflow: hidden;
   max-height: calc(100vh - 400px);
 }
+
 /* 在滑动时显示滚动条 */
 .catalog:hover {
   overflow-y: auto;
 }
-
-.toc-item {
-  cursor: pointer;
+</style>
+<style>
+.vditor-outline__item--current {
+  border-left: 2px solid #4285f4;
+  color: #4285f4 !important;
+  background-color: #f6f8fa;
 }
-
-.toc-item:hover {
-  background-color: #f0f0f0;
+.vditor-outline  li > span:hover {
+  color: #4285f4 !important;
+  background-color: #f6f8fa;
 }
-
-.active {
-  background-color: #f0f0f0;
+.vditor-outline {
+  width: 100%;
 }
 
 </style>

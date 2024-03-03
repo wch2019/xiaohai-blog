@@ -19,6 +19,7 @@
     "pinia": "^2.0.35",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
+    "vditor": "^3.9.9",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vuex": "^4.0.2"
