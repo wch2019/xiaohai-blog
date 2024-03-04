@@ -497,6 +497,7 @@ function renderMarkdown(md: any) {
     md,
     {
       mode: "light",
+      anchor: 2,
       hljs: {style: "github", lineNumber: true},
       transform(html) {
         return html.replaceAll('<img', '<img referrerPolicy="no-referrer"')
@@ -638,16 +639,18 @@ getListComment()
 </style>
 <style>
 .vditor-outline__item--current {
-  border-left: 2px solid #4285f4;
-  color: #4285f4 !important;
+  border-left: 2px solid #fd5a5a;
+  color: #fd5a5a !important;
   background-color: #f6f8fa;
 }
 .vditor-outline  li > span:hover {
-  color: #4285f4 !important;
+  color: #fd5a5a !important;
   background-color: #f6f8fa;
 }
 .vditor-outline {
   width: 100%;
 }
-
+.vditor-reset{
+  color: var(--el-text-color-primary) !important;
+}
 </style>
