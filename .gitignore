@@ -30,3 +30,15 @@ target/
 ### VS Code ###
 .vscode/
 node_modules/
+
+### 打包路径 ###
+docker/admin/xiaohai-blog.jar
+docker/web/xiaohai-web
+docker/web/xiaohai-web-show
+
+docker/blog
+docker/mysql
+docker/redis
+docker/web/nginx/log
+
+

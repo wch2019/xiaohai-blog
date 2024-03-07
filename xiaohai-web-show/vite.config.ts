@@ -20,6 +20,9 @@ export default defineConfig({
       '@': resolve(__dirname, 'src') // 设置 `@` 指向 `src` 目录
     }
   },
+  build: {
+    outDir: '../docker/web/xiaohai-web-show', // 这里设置输出路径
+  },
   base: '/', // 设置打包路径
   server: {
     host: '0.0.0.0', // 设置host访问

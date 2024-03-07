@@ -2,25 +2,33 @@ server:
   # 服务器的HTTP端口，默认为80
   port: 8089
   servlet:
-    # 应用的访问路径
+    # 应用的访问路径/prod-api
     context-path: /prod-api
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:/IP地址:端口号/数据库名?characterEncoding=UTF-8&useUnicode=true&useSSL=false
-    username: 数据库账号
-    password: 数据库密码
+    # IP地址:端口号/数据库名
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   # redis配置
   redis:
     # Redis数据库索引（默认为0）
-    database: 1
+    database: ${SPRING_REDIS_DATABASE}
     # Redis服务器地址
-    host: redis地址
+    host: ${SPRING_REDIS_HOST}
     # Redis服务器连接端口
-    port: redis端口
+    port: ${SPRING_REDIS_PORT}
     # Redis服务器连接密码（默认为空）
-    password: redis密码
+    password: ${SPRING_REDIS_PASSWORD}
 #==============================系统文件存放配置=======================================
 file:
   #文件地址最后加斜杠,注意，示例：window是D:\blog\prod\而linux是/blog/prod/
-  profile: /blog/prod/
+  profile: /blog/
+springdoc:
+  swagger-ui:
+    #正式改为false
+    enabled: false
+  api-docs:
+    #正式改为false
+    enabled: false

@@ -51,7 +51,7 @@ public class Acquire {
                 articleAcquire.setText(result);
                 articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServiceException("CSDN爬虫出现意外", e);
         }
         return articleAcquire;
@@ -84,7 +84,7 @@ public class Acquire {
             var result = converter.convert(contentElement);
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServiceException("掘金爬虫出现意外", e);
         }
         return articleAcquire;
@@ -116,7 +116,7 @@ public class Acquire {
             var result = converter.convert(contentElement.get(0).html());
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServiceException("简书爬虫出现意外", e);
         }
         return articleAcquire;
@@ -147,7 +147,7 @@ public class Acquire {
             var result = converter.convert(contentElement);
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServiceException("简书爬虫出现意外", e);
         }
         return articleAcquire;
@@ -177,7 +177,7 @@ public class Acquire {
             var result = converter.convert(contentElement.get(0).html());
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServiceException("知乎爬虫出现意外", e);
         }
         return articleAcquire;

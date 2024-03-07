@@ -62,6 +62,7 @@ public class MyCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        log.info(url);
         //数据初始化
         initDatabase();
 
@@ -80,10 +81,10 @@ public class MyCommandLineRunner implements CommandLineRunner {
         log.info("检查数据库是否初始化");
         // 检测当前衔接数据库是否存在
         if (currentDatabaseExists()) {
-            if (countTablesInDatabase()==0) {
+            if (countTablesInDatabase() == 0) {
                 //导入sql
                 importSql();
-            }else {
+            } else {
                 log.info("数据库存在，无需初始化！");
             }
             return;
@@ -149,6 +150,7 @@ public class MyCommandLineRunner implements CommandLineRunner {
 
     /**
      * 获取当前数据库中的表的数量
+     *
      * @return 表的数量
      */
     private int countTablesInDatabase() {
@@ -181,7 +183,7 @@ public class MyCommandLineRunner implements CommandLineRunner {
     /**
      * 导入sql
      */
-    private void importSql(){
+    private void importSql() {
         log.info("开始执行SQL文件导入");
         ResourceDatabasePopulator database = new ResourceDatabasePopulator();
         database.addScript(new ClassPathResource("xiaohai_blog.sql"));

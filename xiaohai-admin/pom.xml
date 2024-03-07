@@ -56,6 +56,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 指定输出目录 -->
+                    <outputDirectory>../docker/admin</outputDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>

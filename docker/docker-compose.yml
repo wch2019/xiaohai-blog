@@ -1,0 +1,112 @@
+version: '3'
+services:
+  #blog后台
+  xiaohai-blog:
+    image: xiaohai-blog-admin:latest
+    container_name: xiaohai-blog-admin
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - blog-mysql
+      - blog-redis
+    networks:
+      blog_network:
+    volumes:
+      #本地文件路径
+      - "./blog:/blog"
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://blog-mysql:3306/xiaohai_blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_REDIS_HOST=blog-redis
+      - SPRING_REDIS_DATABASE=0
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD}
+  #bolg页面
+  xiaohai-blog-web:
+    image: xiaohai-blog-web:latest
+    container_name: xiaohai-blog-web
+    restart: always
+    depends_on:
+      - xiaohai-blog
+    networks:
+      blog_network:
+    volumes:
+      # 页面目录
+      - ./web/:/usr/share/nginx/html
+      # 配置文件映射
+      - ./web/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./web/nginx/conf.d:/etc/nginx/conf.d/
+      # 日志目录
+      - ./web/nginx/log:/var/log/nginx
+    # 端口绑定
+    ports:
+      - "80:80"
+  # mysql配置
+  blog-mysql:
+    # 使用mysql:8.0.33镜像
+    image: mysql:8.0.33
+    # 设置自启
+    restart: always
+    env_file:
+      - .env
+    # 容器名
+    container_name: blog-mysql
+    networks:
+      blog_network:
+    #环境变量
+    environment:
+      #root用户密码配置
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    # mysql基础配置
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+      --max_allowed_packet=128M;
+    # 端口绑定
+    ports:
+      - "3306:3306"
+    #设置容器的权限为root
+    privileged: true
+    # 数据卷(需要在宿主机新建对应空文件)
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./mysql/conf:/etc/mysql/conf.d"
+      - "./mysql/mysqlBackup:/data/mysqlBackup"
+      - "./mysql/mysql-files:/var/lib/mysql-files"
+      - "./mysql/log:/var/log/mysql"
+      - "./mysql/data:/var/lib/mysql"
+  # redis配置
+  blog-redis:
+    # 使用最新redis版本镜像
+    image: redis:latest
+    # 容器名
+    container_name: blog-redis
+    # 设置自启
+    restart: always
+    env_file:
+      - .env
+    #设置容器的权限为root
+    privileged: true
+    networks:
+      blog_network:
+    #指定配置启动 密码
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    # 端口绑定
+    ports:
+      - "6379:6379"
+    # 数据卷(需要在宿主机新建对应空文件)
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      # 日志
+      - "./redis/log:/var/log/redis"
+      # 数据文件
+      - "./redis/data:/data"
+networks:
+  blog_network:
