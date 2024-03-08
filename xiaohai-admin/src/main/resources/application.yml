@@ -1,3 +1,10 @@
+# 项目相关配置
+blog:
+  # 名称
+  name: xiaohai-blog
+  # 版本
+  version: ${revision}
+
 server:
   # 服务器的HTTP端口，默认为80
   port: 8089
@@ -14,8 +21,10 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   servlet:
     multipart:
-      max-file-size: 4000MB
-      max-request-size: 4000MB
+      # 单个文件大小
+      max-file-size: 500MB
+      # 设置总上传的文件大小
+      max-request-size: 500MB
   # redis配置
   redis:
     # Redis数据库索引（默认为0）
@@ -103,4 +112,5 @@ springdoc:
       packages-to-scan: com.xiaohai.system,com.xiaohai.admin.confing,com.xiaohai.admin.home,com.xiaohai.admin.monitor,com.xiaohai.file,com.xiaohai.note
 #==============================系统文件存放配置=======================================
 file:
+  #文件地址最后加斜杠,注意，示例：window是D:\blog\prod\而linux是/blog/prod/
   profile: /mnt/data/files/blog/dev/

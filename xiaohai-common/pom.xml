@@ -10,8 +10,7 @@
 	</parent>
 
 	<artifactId>xiaohai-common</artifactId>
-	<version>0.0.1</version>
-	<name>xiaohai-common</name>
+
 	<description>common 通用工具</description>
 
 	<properties>

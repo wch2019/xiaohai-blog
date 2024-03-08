@@ -8,8 +8,7 @@
         <version>0.0.1</version>
     </parent>
     <artifactId>xiaohai-system</artifactId>
-    <version>0.0.1</version>
-    <name>xiaohai-system</name>
+
     <description>system 系统模块</description>
     <properties>
         <java.version>17</java.version>

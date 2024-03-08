@@ -7,10 +7,11 @@
         <artifactId>xiaohai-blog</artifactId>
         <version>0.0.1</version>
     </parent>
+
     <packaging>jar</packaging>
+
     <artifactId>xiaohai-admin</artifactId>
-    <version>0.0.1</version>
-    <name>xiaohai-admin</name>
+
     <description>xiaohai-admin</description>
     <properties>
         <java.version>17</java.version>

@@ -10,7 +10,8 @@
     </parent>
     <groupId>com.xiaohai</groupId>
     <artifactId>xiaohai-blog</artifactId>
-    <version>0.0.1</version>
+    <version>{revision}</version>
+
     <name>xiaohai-blog</name>
     <description>xiaohai个人博客</description>
 
@@ -30,6 +31,7 @@
     </modules>
 
     <properties>
+        <revision>1.0.0</revision>
         <xiaohai.version>0.0.1</xiaohai.version>
         <java.version>17</java.version>
     </properties>

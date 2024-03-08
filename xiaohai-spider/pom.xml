@@ -8,8 +8,7 @@
         <version>0.0.1</version>
     </parent>
     <artifactId>xiaohai-spider</artifactId>
-    <version>0.0.1</version>
-    <name>xiaohai-spider</name>
+
     <description>spider 爬虫模块</description>
     <properties>
         <java.version>17</java.version>

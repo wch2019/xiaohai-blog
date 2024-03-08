@@ -8,8 +8,7 @@
 		<version>0.0.1</version>
 	</parent>
 	<artifactId>xiaohai-generator</artifactId>
-	<version>0.0.1</version>
-	<name>xiaohai-generator</name>
+
 	<description>generator 代码生成</description>
 	<properties>
 		<java.version>17</java.version>
