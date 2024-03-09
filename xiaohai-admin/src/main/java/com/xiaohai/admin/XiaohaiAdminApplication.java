@@ -7,13 +7,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @SpringBootApplication
 @ComponentScan("com.xiaohai")
-@MapperScan({"com.xiaohai.system.dao","com.xiaohai.note.dao","com.xiaohai.file.dao"})
+@EnableScheduling
+@MapperScan({"com.xiaohai.system.dao", "com.xiaohai.note.dao", "com.xiaohai.file.dao"})
 @Slf4j
 public class XiaohaiAdminApplication {
 
@@ -24,8 +26,15 @@ public class XiaohaiAdminApplication {
         String port = env.getProperty("server.port");
         String path = env.getProperty("server.servlet.context-path");
         String swaggerPath = env.getProperty("springdoc.swagger-ui.path");
-        log.info("(♥◠‿◠)ﾉﾞ  启动成功   ლ(´ڡ`ლ)ﾞ ");
-        log.info("Knife4j-ui: http://" + ip + ":" + port + path + "/doc.html");
-        log.info("Swagger-ui: http://" + ip + ":" + port + path + swaggerPath);
+        var swaggerUiEnabled = env.getProperty("springdoc.swagger-ui.enabled");
+        var apiDocsEnabled = env.getProperty("springdoc.api-docs.enabled");
+        log.info("(♥◠‿◠)ﾉﾞ  启动成功   ლ(´ڡ`ლ)ﾞ");
+        log.info("http://" + ip + ":" + port + path + "/index");
+        if ("true".equals(swaggerUiEnabled)) {
+            log.info("Swagger-ui: http://" + ip + ":" + port + path + swaggerPath);
+        }
+        if ("true".equals(apiDocsEnabled)) {
+            log.info("Knife4j-ui: http://" + ip + ":" + port + path + "/doc.html");
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.xiaohai.admin.confing;
+package com.xiaohai.common.confing;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

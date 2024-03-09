@@ -3,7 +3,7 @@ blog:
   # 名称
   name: xiaohai-blog
   # 版本
-  version: ${revision}
+  version: 0.0.1
 
 server:
   # 服务器的HTTP端口，默认为80
