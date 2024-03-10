@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaohai.note.dao.NotificationsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xiaohai.note.pojo.entity.Notifications">
+        <id column="id" property="id" />
+        <result column="created_time" property="createdTime" />
+        <result column="user_id" property="userId" />
+        <result column="type" property="type" />
+        <result column="article_id" property="articleId" />
+        <result column="comment_id" property="commentId" />
+        <result column="like_id" property="likeId" />
+        <result column="is_read" property="isRead" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        created_time,
+        id, user_id, type, article_id, comment_id, like_id, is_read
+    </sql>
+    <select id="selectFindList" resultType="com.xiaohai.note.pojo.dto.NotificationsDto">
+        SELECT
+        id,
+        user_id as userId,
+        type,
+        article_id as articleId,
+        (SELECT title FROM b_article where id=article_id)as title,
+        comment_id as commentId,
+        like_id as likeId,
+        (SELECT nick_name FROM sys_user where id=(SELECT user_id FROM b_article_like where id=like_id))as likeNickName,
+        is_read as isRead,
+        created_time as createdTime
+        FROM
+        `b_notifications`
+        <where>
+            user_id = #{userId}
+            <if test="param.isRead != null and param.isRead != ''">
+                and is_read = #{param.isRead}
+            </if>
+            <if test="param.userId != null and param.userId != ''">
+                and type=#{param.type}
+            </if>
+        </where>
+        ORDER BY
+        created_time DESC
+    </select>
+
+</mapper>

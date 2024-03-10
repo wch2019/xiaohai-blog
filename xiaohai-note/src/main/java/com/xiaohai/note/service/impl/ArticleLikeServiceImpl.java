@@ -2,24 +2,26 @@ package com.xiaohai.note.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.xiaohai.common.daomain.PageData;
-import com.xiaohai.note.pojo.entity.ArticleLike;
-import com.xiaohai.note.dao.ArticleLikeMapper;
-import com.xiaohai.note.service.ArticleLikeService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xiaohai.common.daomain.ReturnPageData;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.xiaohai.common.utils.PageUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.BeanUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.note.dao.ArticleLikeMapper;
+import com.xiaohai.note.dao.ArticleMapper;
+import com.xiaohai.note.pojo.dto.ArticleLikeDto;
+import com.xiaohai.note.pojo.entity.Article;
+import com.xiaohai.note.pojo.entity.ArticleLike;
 import com.xiaohai.note.pojo.query.ArticleLikeQuery;
 import com.xiaohai.note.pojo.vo.ArticleLikeVo;
-import com.xiaohai.note.pojo.dto.ArticleLikeDto;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.xiaohai.note.pojo.vo.NotificationsVo;
+import com.xiaohai.note.service.ArticleLikeService;
+import com.xiaohai.note.service.NotificationsService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -29,16 +31,31 @@ import java.util.List;
  * @since 2023-07-01
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ArticleLikeServiceImpl extends ServiceImpl<ArticleLikeMapper, ArticleLike> implements ArticleLikeService {
+
+    private final NotificationsService notificationsService;
+
+    private final ArticleMapper articleMapper;
 
     @Override
     public Integer add(ArticleLikeVo vo){
-        // TODO:点赞消息推送
+
         if(vo.getClickLike()==1){
             ArticleLike like=new ArticleLike();
             like.setArticleId(vo.getArticleId());
             like.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
-            return  baseMapper.insert(like);
+            baseMapper.insert(like);
+            // 点赞消息推送
+            NotificationsVo notificationsVo=new NotificationsVo();
+            Article article =articleMapper.selectById(vo.getArticleId());
+            notificationsVo.setUserId(article.getUserId());
+            notificationsVo.setArticleId(vo.getArticleId());
+            notificationsVo.setLikeId(like.getId());
+            notificationsVo.setType("1");
+            notificationsService.add(notificationsVo);
+            return 1;
         }else{
             return  baseMapper.delete(new QueryWrapper<ArticleLike>().eq("user_id",StpUtil.getLoginId()).eq("article_id",vo.getArticleId()));
         }
