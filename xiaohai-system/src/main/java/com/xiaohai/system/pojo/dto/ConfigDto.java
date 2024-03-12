@@ -34,8 +34,11 @@ public class ConfigDto{
     @Schema(description = "网站描述")
     private String description;
 
-    @Schema(description = "备案号")
+    @Schema(description = "ICP备案号")
     private String recordNum;
+
+    @Schema(description = "公安备案号")
+    private String securityRecordNum;
 
     @Schema(description = "邮箱地址")
     private String emailHost;

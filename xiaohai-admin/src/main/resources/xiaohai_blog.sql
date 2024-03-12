@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 03/02/2024 16:35:30
+ Date: 12/03/2024 22:17:06
 */
 
 SET NAMES utf8mb4;
@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `b_article`;
 CREATE TABLE `b_article`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `user_id` int NOT NULL  COMMENT '用户id',
+  `user_id` int NULL DEFAULT NULL COMMENT '用户id',
   `category_id` int NULL DEFAULT NULL COMMENT '分类id',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '文章标题',
   `summary` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '文章简介',
@@ -140,6 +140,26 @@ CREATE TABLE `b_friend_link`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for b_notifications
+-- ----------------------------
+DROP TABLE IF EXISTS `b_notifications`;
+CREATE TABLE `b_notifications`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` int NOT NULL COMMENT '用户id',
+  `type` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '通知类型',
+  `article_id` int NULL DEFAULT NULL COMMENT '文章id',
+  `comment_id` int NULL DEFAULT NULL COMMENT '评论id',
+  `like_id` int NULL DEFAULT NULL COMMENT '喜欢id',
+  `is_read` int NULL DEFAULT 0 COMMENT '是否已读(0否，1是)',
+  `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统通知' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of b_notifications
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for b_tags
 -- ----------------------------
 DROP TABLE IF EXISTS `b_tags`;
@@ -194,7 +214,8 @@ CREATE TABLE `sys_config`  (
   `title` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '标题',
   `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '关键字',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '网站描述',
-  `record_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备案号',
+  `record_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'ICP备案号',
+  `security_record_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '公安备案号',
   `email_host` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '邮箱地址',
   `email_username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '邮箱发件人',
   `email_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '邮箱授权码',
@@ -212,7 +233,7 @@ CREATE TABLE `sys_config`  (
 -- ----------------------------
 -- Records of sys_config
 -- ----------------------------
-INSERT INTO `sys_config` VALUES (1, '/system/favicon.ico', 'DoteCode', 'DotCode | 点码', 'DoteCode,点码,开源博客,Java技术分享,Spring教程', '一个专注于技术分享的博客平台，大家以共同学习，乐于分享，拥抱开源的价值观进行学习交流', '', 'smtp.qq.com', '1372195290@qq.com', '', 587, 'C:/Users/wangchenghai/Pictures/files/', 104857600, '# 欢迎来到我的博客！\n这里是一个分享知识、记录生活、思考未来的平台。\n\n在这里，我将和大家分享我对于生活、职场、学习等各个方面的见解和心得体会，希望能够为大家提供有价值的帮助和启发。\n\n同时，我也会在博客中记录我的生活点滴、分享我的兴趣爱好、思考我的未来规划，希望能够通过这种方式与大家建立更加亲近的关系。\n\n感谢您的光临，希望我的博客能够给您带来不一样的体验和收获！\n\n', 1, '2023-02-02 10:34:11', 1, '2024-02-03 16:33:08');
+INSERT INTO `sys_config` VALUES (1, '/system/favicon.ico', 'DoteCode', 'DotCode | 点码', 'DoteCode,点码,开源博客,Java技术分享,Spring教程', '一个专注于技术分享的博客平台，大家以共同学习，乐于分享，拥抱开源的价值观进行学习交流', '', NULL, 'smtp.qq.com', '1372195290@qq.com', '', 587, 'C:/Users/wangchenghai/Pictures/files/', 104857600, '# 欢迎来到我的博客！\n这里是一个分享知识、记录生活、思考未来的平台。\n\n在这里，我将和大家分享我对于生活、职场、学习等各个方面的见解和心得体会，希望能够为大家提供有价值的帮助和启发。\n\n同时，我也会在博客中记录我的生活点滴、分享我的兴趣爱好、思考我的未来规划，希望能够通过这种方式与大家建立更加亲近的关系。\n\n感谢您的光临，希望我的博客能够给您带来不一样的体验和收获！\n\n', 1, '2023-02-02 10:34:11', 1, '2024-02-03 16:33:08');
 
 -- ----------------------------
 -- Table structure for sys_dict_data
@@ -343,7 +364,7 @@ CREATE TABLE `sys_menu`  (
   `updated_by` int NULL DEFAULT NULL COMMENT '更新人',
   `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -480,7 +501,7 @@ CREATE TABLE `sys_role_menu`  (
   `updated_by` int NULL DEFAULT NULL COMMENT '更新人',
   `updated_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3178 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色权限关联表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3311 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色权限关联表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_menu

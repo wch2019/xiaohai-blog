@@ -27,7 +27,7 @@ import java.util.List;
 @Tag(name = "系统通知",description = "系统通知")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/note/notifications")
+@RequestMapping("/notifications")
 public class NotificationsController {
 
     private final NotificationsService notificationsService;

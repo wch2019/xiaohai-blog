@@ -19,6 +19,7 @@
     "echarts": "^5.4.2",
     "el-table-infinite-scroll": "^2.0.0",
     "element-ui": "^2.15.13",
+    "event-source-polyfill": "^1.0.31",
     "fuse.js": "3.4.4",
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.7.0",

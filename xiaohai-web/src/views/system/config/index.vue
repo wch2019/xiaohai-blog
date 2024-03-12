@@ -71,8 +71,15 @@
           </el-row>
           <el-row>
             <el-col :sm="12" :md="10" :lg="8" :xl="6">
-              <el-form-item label="备案号" prop="recordNum">
-                <el-input v-model="form.recordNum" maxlength="50" show-word-limit placeholder="请输入备案号" />
+              <el-form-item label="ICP备案号" prop="recordNum">
+                <el-input v-model="form.recordNum" maxlength="50" show-word-limit placeholder="请输入ICP备案号" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :sm="12" :md="10" :lg="8" :xl="6">
+              <el-form-item label="公安备案号" prop="recordNum">
+                <el-input v-model="form.securityRecordNum" maxlength="50" show-word-limit placeholder="请输入公安备案号" />
               </el-form-item>
             </el-col>
           </el-row>

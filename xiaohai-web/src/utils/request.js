@@ -1,7 +1,7 @@
 import axios from 'axios'
-import {MessageBox} from 'element-ui'
+import { MessageBox } from 'element-ui'
 import store from '@/store'
-import {getToken} from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 import message from 'element-ui/packages/message'
 import qs from 'qs'
 
@@ -17,31 +17,31 @@ const service = axios.create({
 
 // request 请求拦截器
 service.interceptors.request.use(config => {
-    // 在发送请求之前执行某些操作
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['authorization'] = getToken()
-    }
-
-    if (config.method === 'get') {
-      config.paramsSerializer = function (params) {
-        Object.keys(params).forEach(key => {
-          if (params[key] === null) {
-            delete params[key]
-          }
-        })
-        return qs.stringify(params, {arrayFormat: 'repeat'})
-      }
-    }
-    return config
-  },
-  error => {
-    // do something with request error
-    console.log(error) // for debug
-    return Promise.reject(error)
+  // 在发送请求之前执行某些操作
+  if (store.getters.token) {
+    // let each request carry token
+    // ['X-Token'] is a custom headers key
+    // please modify it according to the actual situation
+    config.headers['authorization'] = getToken()
   }
+
+  if (config.method === 'get') {
+    config.paramsSerializer = function(params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] === null) {
+          delete params[key]
+        }
+      })
+      return qs.stringify(params, { arrayFormat: 'repeat' })
+    }
+  }
+  return config
+},
+error => {
+  // do something with request error
+  console.log(error) // for debug
+  return Promise.reject(error)
+}
 )
 
 // response 响应拦截器

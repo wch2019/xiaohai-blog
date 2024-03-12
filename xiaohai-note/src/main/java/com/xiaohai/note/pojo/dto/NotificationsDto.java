@@ -44,7 +44,7 @@ public class NotificationsDto implements Serializable {
     private Integer likeId;
 
     @Schema(description = "喜欢用户")
-    private Integer likeNickName;
+    private String likeNickName;
 
     @Schema(description = "是否已读(0否，1是)")
     private Integer isRead;

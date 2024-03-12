@@ -38,7 +38,7 @@
             <if test="param.isRead != null and param.isRead != ''">
                 and is_read = #{param.isRead}
             </if>
-            <if test="param.userId != null and param.userId != ''">
+            <if test="param.type != null and param.type != ''">
                 and type=#{param.type}
             </if>
         </where>

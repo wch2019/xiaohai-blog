@@ -3,29 +3,35 @@
     <div class="menus-item">
       <router-link class="menu-btn" to="/"> 首页</router-link>
     </div>
-    <el-divider direction="vertical" />
+    <el-divider direction="vertical"/>
     <div class="menus-item">
       <router-link class="menu-btn" to="/category"> 分类</router-link>
     </div>
-    <el-divider direction="vertical" />
+    <el-divider direction="vertical"/>
     <div class="menus-item">
       <router-link class="menu-btn" to="/tags"> 标签</router-link>
     </div>
-    <el-divider direction="vertical" />
+    <el-divider direction="vertical"/>
     <div class="menus-item">
       <router-link class="menu-btn" to="/back"> 归档</router-link>
     </div>
-    <el-divider direction="vertical" />
+    <el-divider direction="vertical"/>
     <div class="menus-item">
       <router-link class="menu-btn" to="/message"> 留言</router-link>
     </div>
-    <el-divider direction="vertical" />
+    <el-divider direction="vertical"/>
     <div class="menus-item">
       <router-link class="menu-btn" to="/about"> 关于</router-link>
     </div>
-    <div class="text-color font-number">©{{ 2023 }} - {{ new Date().getFullYear() }}. Powered by  XiaoHai. <el-link  :underline="false" href="https://beian.miit.gov.cn/" target="_blank">
-      {{blogInfo.recordNum}}
-    </el-link></div>
+    <div class="text-color font-number">©{{ 2023 }} - {{ new Date().getFullYear() }}. Powered by XiaoHai
+      <el-link class="with-foot"  type="info" :underline="false" href="https://beian.miit.gov.cn/" target="_blank">
+        {{ blogInfo.recordNum }}
+      </el-link>
+      <el-link class="with-foot" v-if="blogInfo.securityRecordNum"  type="info" :underline="false" href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+        <el-image src="../static/record.png" style="height: 16px"/>
+        {{ blogInfo.securityRecordNum }}
+      </el-link >
+    </div>
 
   </el-card>
 </template>
@@ -80,14 +86,20 @@ export default {
     background-position: 0 50%;
   }
 }
+
 .menus-item {
   position: relative;
   display: inline-block;
 }
+
 .menus-item a {
   display: block;
   color: var(--color);
   text-align: center;
   text-decoration: none;
+}
+
+.with-foot{
+  margin-left: 0.3rem;
 }
 </style>
