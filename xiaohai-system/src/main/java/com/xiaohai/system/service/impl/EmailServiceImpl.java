@@ -15,7 +15,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
@@ -128,7 +127,6 @@ public class EmailServiceImpl implements EmailService {
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>Email Template</title>
                     <style>
-                        /* Global Styles */
                         .body {
                             position: relative;
                             font-size: 14px;
@@ -137,7 +135,6 @@ public class EmailServiceImpl implements EmailService {
                             line-height: 1.7;
                         }
                                         
-                        /* Typography */
                         .qmbox h1,
                         .qmbox h2,
                         .qmbox h3 {
@@ -150,7 +147,6 @@ public class EmailServiceImpl implements EmailService {
                             font-size: 16px;
                         }
                                         
-                        /* Links */
                         .qmbox .eo-link {
                             color: #0576b9;
                             text-decoration: none;
@@ -172,14 +168,12 @@ public class EmailServiceImpl implements EmailService {
                             text-decoration: underline;
                         }
                                         
-                        /* Container Styles */
                         #mailContentContainer {
                             max-width: 800px;
                             margin: 20px auto 0 auto;
                             opacity: 1;
                         }
                                         
-                        /* Table Styles */
                         #mailContentContainer table {
                             background-color: #fff;
                             border-collapse: collapse;
@@ -196,7 +190,6 @@ public class EmailServiceImpl implements EmailService {
                             width: 50px;
                         }
                                         
-                        /* Miscellaneous */
                         #mailContentContainer .p-code p {
                             color: #253858;
                             text-align: center;
@@ -247,7 +240,9 @@ public class EmailServiceImpl implements EmailService {
                                         </tr>
                                         <tr>
                                             <td class="p-code">
-                                                <p>${code}</p>
+                                                <p>
+                                                """+code+"""
+                                                </p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -270,7 +265,6 @@ public class EmailServiceImpl implements EmailService {
                                         
                 </html>
                 """;
-
         send(email, content, "DotCode验证码");
         log.info("邮箱验证码发送成功,邮箱:{},验证码:{}", email, code);
         SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE + email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);

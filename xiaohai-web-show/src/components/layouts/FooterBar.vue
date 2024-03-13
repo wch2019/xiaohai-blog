@@ -25,11 +25,10 @@
     </div>
     <div class="text-color font-number">©{{ 2023 }} - {{ new Date().getFullYear() }}. Powered by XiaoHai
       <el-link class="with-foot"  type="info" :underline="false" href="https://beian.miit.gov.cn/" target="_blank">
-        {{ blogInfo.recordNum }}
+        {{blogInfo.recordNum }}
       </el-link>
       <el-link class="with-foot" v-if="blogInfo.securityRecordNum"  type="info" :underline="false" href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
-        <el-image src="../static/record.png" style="height: 16px"/>
-        {{ blogInfo.securityRecordNum }}
+        <el-image src="../static/record.png" style="height: 16px"/>{{blogInfo.securityRecordNum }}
       </el-link >
     </div>
 
