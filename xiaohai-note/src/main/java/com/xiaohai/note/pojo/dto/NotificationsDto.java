@@ -25,8 +25,8 @@ public class NotificationsDto implements Serializable {
     @Schema(description = "id")
     private Integer id;
 
-    @Schema(description = "用户id")
-    private Integer userId;
+//    @Schema(description = "用户id")
+//    private Integer userId;
 
     @Schema(description = "通知类型")
     private String type;

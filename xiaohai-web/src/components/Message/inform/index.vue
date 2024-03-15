@@ -13,11 +13,20 @@
           v-for="(alert, index) in displayedAlerts"
           :key="index"
           class="message"
-          :title="alert.title"
-          :description="alert.description"
+          :title="type(alert.type)"
+          close-text="知道了"
           type="success"
           @close="close"
-        />
+        >
+          <template slot="title">
+            <div>
+              {{ alert }}
+              <el-link v-if="alert.type===1" :underline="false" @click="onClick(alert.articleId)">{{ alert.title }}</el-link>
+            </div>
+
+          </template>
+        </el-alert>
+
       </div>
       <div style="text-align: right; margin: 0">
         <router-link to="/message/index">
@@ -39,16 +48,9 @@ export default {
   name: 'Website',
   data() {
     return {
+      url: process.env.VUE_APP_BLOG_WEB_API,
       count: 0,
-      alerts: [
-        { description: '文字说明1', title: '1' },
-        { description: '文字说明2', title: '1' },
-        { description: '文字说明3', title: '1' },
-        { description: '文字说明4', title: '1' },
-        { description: '文字说明5', title: '1' },
-        { description: '文字说明6', title: '1' },
-        { description: '文字说明7', title: '1' }
-      ]
+      alerts: []
     }
   },
   computed: {
@@ -102,11 +104,33 @@ export default {
     },
     getUnreadList() {
       getUnread().then(response => {
-        console.log(response.data)
+        this.alerts = response.data
+        // for (const result of data) {
+        //   const alert = { description: '', title: '' }
+        //   alert.description = result.title
+        //
+        //   for (const dict of this.$store.getters.dict.sys_notification_type) {
+        //     if (result.type === dict.dictValue) {
+        //       alert.title = dict.dictLabel
+        //     }
+        //   }
+        //   this.alerts.push(alert)
+        // }
       })
+    },
+    type(type) {
+      for (const dict of this.$store.getters.dict.sys_notification_type) {
+        if (type === dict.dictValue) {
+          console.log(dict.dictLabel)
+          return dict.dictLabel
+        }
+      }
     },
     close() {
       this.$message.success('已读')
+    },
+    onClick(row) {
+      window.open(this.url + '/article/' + row.id)
     }
   }
 }
