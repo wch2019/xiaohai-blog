@@ -49,7 +49,7 @@ module.exports = {
     // },
     proxy: {
       '/api': {
-        target: 'http://localhost:8089',
+        target: 'http://nas.dotcode.top:23456',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace('/^\/api/', '/')
