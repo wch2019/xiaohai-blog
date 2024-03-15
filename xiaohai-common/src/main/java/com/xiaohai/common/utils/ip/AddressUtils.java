@@ -4,8 +4,12 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.xiaohai.common.utils.StringUtils;
+import org.lionsoul.ip2region.xdb.Searcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 获取地址类
@@ -44,7 +48,32 @@ public class AddressUtils {
         return UNKNOWN;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getRealAddressByIP("219.146.89.86"));
+    public static void main(String[] args) throws IOException {
+        // 1、创建 searcher 对象
+        String dbPath = "D:\\Project\\gitee\\xiaohai-blog\\xiaohai-common\\src\\main\\java\\com\\xiaohai\\common\\utils\\ip\\ip2region.xdb";
+        Searcher searcher = null;
+        try {
+            searcher = Searcher.newWithFileOnly(dbPath);
+        } catch (IOException e) {
+            System.out.printf("failed to create searcher with `%s`: %s\n", dbPath, e);
+            return;
+        }
+
+        // 2、查询
+        String ip = "219.146.89.86";
+        try {
+            long sTime = System.nanoTime();
+            String region = searcher.search(ip);
+            long cost = TimeUnit.NANOSECONDS.toMicros((long) (System.nanoTime() - sTime));
+            System.out.printf("{region: %s, ioCount: %d, took: %d μs}\n", region, searcher.getIOCount(), cost);
+        } catch (Exception e) {
+            System.out.printf("failed to search(%s): %s\n", ip, e);
+        }
+
+        // 3、关闭资源
+        searcher.close();
+
+        // 备注：并发使用，每个线程需要创建一个独立的 searcher 对象单独使用。
+//        System.out.println(getRealAddressByIP("219.146.89.86"));
     }
 }
