@@ -3,6 +3,7 @@ package com.xiaohai.note.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xiaohai.note.pojo.dto.NotificationsDto;
+import com.xiaohai.note.pojo.dto.NotificationsLikeDto;
 import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.NotificationsQuery;
 import org.apache.ibatis.annotations.Param;
@@ -25,4 +26,11 @@ public interface NotificationsMapper extends BaseMapper<Notifications> {
      * @return
      */
     IPage<NotificationsDto> selectFindList(@Param("page") IPage<NotificationsDto> wherePage, @Param("param") NotificationsQuery query, @Param("userId") Integer userId);
+
+    /**
+     * 消息记录喜欢
+     * @param likeId
+     * @return
+     */
+    NotificationsLikeDto selectFindLike(@Param("likeId") Integer likeId);
 }

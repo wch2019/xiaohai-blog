@@ -1,48 +1,70 @@
 <template>
   <div>
     <el-popover
-      placement="bottom"
-      width="300"
+      placement="bottom-end"
+      width="400"
       trigger="click"
       @show="getUnreadList"
     >
-      <!--      <div style="min-height: 200px">-->
-      <!--        <el-alert-->
-      <!--          v-for="(alert, index) in displayedAlerts"-->
-      <!--          :key="index"-->
-      <!--          class="message"-->
-      <!--          :title="type(alert.type)"-->
-      <!--          close-text="知道了"-->
-      <!--          type="success"-->
-      <!--          @close="close"-->
-      <!--        >-->
-      <!--          <template slot="title">-->
-      <!--            <div>-->
-      <!--              {{ alert }}-->
-      <!--              <el-link v-if="alert.type===1" :underline="false" @click="onClick(alert.articleId)">{{ alert.title }}</el-link>-->
-      <!--            </div>-->
-
-      <!--          </template>-->
-      <!--        </el-alert>-->
-
-      <!--      </div>-->
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane v-for="item in activeList" :label="item.label" :name="item.value"></el-tab-pane>
-      </el-tabs>
-      <div v-for="item in alerts" style="margin-bottom: 10px">
-        <div class="content-flex">
-          <img src="../../../assets/login/1.jpg">
-          <div class="name-header">
-            <div class="name">名字</div>
-            <div class="subhead">
-              <span>赞了你的文章</span>
-              <span>2024-1-3</span>
+      <div style="min-height: 200px">
+        <el-tabs v-model="activeName" :stretch="true" @tab-click="handleClick">
+          <el-tab-pane v-for="item in activeList" :key="item.name" :label="item.label" :name="item.value" />
+        </el-tabs>
+        <div v-for="like in alertsLike" v-show="activeName==='1'" :key="like.id" class="content">
+          <div class="content-flex">
+            <el-image :src="header(like.likeDto.avatar)" />
+            <div class="name-header">
+              <div class="name">{{ like.likeDto.nickName }}</div>
+              <div class="subhead">
+                <span>赞了你的文章</span>
+                <span>{{ like.createdTime }}</span>
+              </div>
+              <el-tooltip :content="like.title" placement="bottom">
+                <el-link class="ellipsis-link" :underline="false" @click="onClick(like.articleId)">
+                  《{{ like.title }}》
+                </el-link>
+              </el-tooltip>
             </div>
           </div>
+
         </div>
-        <div class="content">
-          文章文章文章文章文章文章文章文章文章文章文章文章文章文章文章文章文章文章
+        <div v-for="common in alertsCommon" v-show="activeName==='2'" :key="common.id" class="content">
+          <div class="content-flex">
+            <el-image :src="header(common.likeDto.avatar)" />
+            <div class="name-header">
+              <div class="name">{{ common.likeDto.nickName }}</div>
+              <div class="subhead">
+                <span>
+                  评论的文章
+                  <el-link class="ellipsis-link subhead" :underline="false" @click="onClick(common.articleId)">
+                    《{{ common.title }}》
+                  </el-link>
+                </span>
+                <span>{{ common.createdTime }}</span>
+              </div>
+              {{ common.likeDto.nickName }}
+            </div>
+          </div>
+
         </div>
+        <!--        <div v-for="system in alertsSystem" v-show="activeName==='3'" :key="system.id" class="content">-->
+        <!--          <div class="content-flex">-->
+        <!--            <el-image :src="header(alert.likeDto.avatar)" />-->
+        <!--            <div class="name-header">-->
+        <!--              <div class="name">{{ alert.likeDto.nickName }}</div>-->
+        <!--              <div class="subhead">-->
+        <!--                <span>赞了你的文章</span>-->
+        <!--                <span>{{ alert.createdTime }}</span>-->
+        <!--              </div>-->
+        <!--              <el-tooltip :content="alert.title" placement="bottom">-->
+        <!--                <el-link class="ellipsis-link" :underline="false" @click="onClick(alert.articleId)">-->
+        <!--                  《{{ alert.title }}》-->
+        <!--                </el-link>-->
+        <!--              </el-tooltip>-->
+        <!--            </div>-->
+        <!--          </div>-->
+
+        <!--        </div>-->
       </div>
       <div style="text-align: right; margin: 0">
         <router-link to="/message/index">
@@ -51,6 +73,7 @@
       </div>
       <el-badge v-if="count!==0" slot="reference" :value="count" class="item el-icon-bell" />
       <el-badge v-else slot="reference" class="item el-icon-bell" />
+
     </el-popover>
   </div>
 </template>
@@ -66,12 +89,14 @@ export default {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,
       count: 0,
-      alerts: [],
-      activeName: 'first',
+      alertsLike: [],
+      alertsCommon: [],
+      alertsSystem: [],
+      activeName: '1',
       activeList: [
-        { label: '点赞', value: 'first' },
-        { label: '评论', value: 'second' },
-        { label: '私信', value: 'third' }
+        { label: '点赞', value: '1' },
+        { label: '评论', value: '2' },
+        { label: '系统', value: '3' }
       ]
     }
   },
@@ -126,19 +151,10 @@ export default {
     },
     getUnreadList() {
       getUnread().then(response => {
-        this.alerts = response.data
-        console.log(this.alerts,'this.alerts')
-        // for (const result of data) {
-        //   const alert = { description: '', title: '' }
-        //   alert.description = result.title
-        //
-        //   for (const dict of this.$store.getters.dict.sys_notification_type) {
-        //     if (result.type === dict.dictValue) {
-        //       alert.title = dict.dictLabel
-        //     }
-        //   }
-        //   this.alerts.push(alert)
-        // }
+        this.alertsLike = response.data
+        this.alertsCommon = response.data
+        this.alertsSystem = response.data
+        console.log(this.alerts, 'this.alerts')
       })
     },
     type(type) {
@@ -152,46 +168,65 @@ export default {
     close() {
       this.$message.success('已读')
     },
-    onClick(row) {
-      window.open(this.url + '/article/' + row.id)
+    onClick(articleId) {
+      window.open(this.url + '/article/' + articleId)
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+      console.log(tab, event)
+    },
+    /**
+     * 头像
+     */
+    header(avatar) {
+      return process.env.VUE_APP_BASE_API_FILE + avatar
     }
   }
 }
 </script>
 
 <style scoped>
-.message {
-  margin: 4px 0 4px 0;
-}
-.content-flex{
+
+.content-flex {
   display: flex;
-  img{
+  padding: 10px;
+
+  img {
     width: 35px;
     height: 35px;
-    border-radius: 50%;
+    border-radius: 4px;
   }
-  .name{
+
+  .name {
     font-weight: 800;
   }
-  .subhead{
+
+  .subhead {
     font-size: 12px;
+    color: #ccc;
   }
-  .name-header{
+
+  .name-header {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-left: 10px;
   }
+
+  .ellipsis-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 300px; /* 可根据需要调整最大宽度 */
+  }
 }
-.content{
-  margin-left: 45px;
+
+.content {
+  margin: 1px 0;
+}
+
+.content :hover {
   background-color: #F5F6F9;
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow:ellipsis;
-  white-space: nowrap;
+  border-radius: 4px; /* 添加圆角 */
 }
 </style>

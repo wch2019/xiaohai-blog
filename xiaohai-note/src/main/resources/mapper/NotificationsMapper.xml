@@ -28,7 +28,6 @@
         (SELECT title FROM b_article where id=article_id)as title,
         comment_id as commentId,
         like_id as likeId,
-        (SELECT nick_name FROM sys_user where id=(SELECT user_id FROM b_article_like where id=like_id))as likeNickName,
         is_read as isRead,
         created_time as createdTime
         FROM
@@ -44,6 +43,12 @@
         </where>
         ORDER BY
         created_time DESC
+    </select>
+    <select id="selectFindLike" resultType="com.xiaohai.note.pojo.dto.NotificationsLikeDto">
+        SELECT nick_name as nickName,
+               avatar
+        FROM sys_user
+        where id = (SELECT user_id FROM b_article_like where id = #{likeId})
     </select>
 
 </mapper>

@@ -141,16 +141,17 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
     }
 
     @Override
-    public List<NotificationsDto> findList() {
+    public List<NotificationsDto> findList(NotificationsQuery query) {
         Integer userId = Integer.valueOf(String.valueOf(StpUtil.getLoginId()));
-        NotificationsQuery query = new NotificationsQuery();
         query.setIsRead(0);
         IPage<NotificationsDto> wherePage = new Page<>(1, 5);
         IPage<NotificationsDto> iPage = baseMapper.selectFindList(wherePage, query, userId);
         List<NotificationsDto> list = iPage.getRecords();
-//        for (NotificationsDto dto : list) {
-//           dto.getCommentId()
-//        }
+        for (NotificationsDto dto : list) {
+            if (dto.getLikeId() != null) {
+                dto.setLikeDto(baseMapper.selectFindLike(dto.getLikeId()));
+            }
+        }
         return list;
     }
 
@@ -160,9 +161,11 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
         Integer userId = Integer.valueOf(String.valueOf(StpUtil.getLoginId()));
         IPage<NotificationsDto> iPage = baseMapper.selectFindList(wherePage, query, userId);
         List<NotificationsDto> list = iPage.getRecords();
-//        for (NotificationsDto dto : list) {
-//            dto.getCommentId();
-//        }
+        for (NotificationsDto dto : list) {
+            if (dto.getLikeId() != null) {
+                dto.setLikeDto(baseMapper.selectFindLike(dto.getLikeId()));
+            }
+        }
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, list);

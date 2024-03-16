@@ -7,7 +7,9 @@ import com.xiaohai.common.utils.StringUtils;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -50,12 +52,12 @@ public class AddressUtils {
 
     public static void main(String[] args) throws IOException {
         // 1、创建 searcher 对象
-        String dbPath = "D:\\Project\\gitee\\xiaohai-blog\\xiaohai-common\\src\\main\\java\\com\\xiaohai\\common\\utils\\ip\\ip2region.xdb";
+        File file = ResourceUtils.getFile("classpath:ip2region.xdb");
         Searcher searcher = null;
         try {
-            searcher = Searcher.newWithFileOnly(dbPath);
+            searcher = Searcher.newWithFileOnly(file.getPath());
         } catch (IOException e) {
-            System.out.printf("failed to create searcher with `%s`: %s\n", dbPath, e);
+            System.out.printf("failed to create searcher with `%s`: %s\n", file.getPath(), e);
             return;
         }
 

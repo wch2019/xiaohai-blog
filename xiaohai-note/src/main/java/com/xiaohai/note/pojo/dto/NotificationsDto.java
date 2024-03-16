@@ -40,11 +40,14 @@ public class NotificationsDto implements Serializable {
     @Schema(description = "评论id")
     private Integer commentId;
 
+    @Schema(description = "通知评论")
+    private NotificationsCommentDto commentDto;
+
     @Schema(description = "喜欢id")
     private Integer likeId;
 
-    @Schema(description = "喜欢用户")
-    private String likeNickName;
+    @Schema(description = "通知喜欢")
+    private NotificationsLikeDto likeDto;
 
     @Schema(description = "是否已读(0否，1是)")
     private Integer isRead;

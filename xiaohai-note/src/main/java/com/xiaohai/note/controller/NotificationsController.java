@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -54,8 +55,8 @@ public class NotificationsController {
 
     @Operation(summary = "查询未读系统通知",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("/unread")
-    public Response<List<NotificationsDto>> findList(){
-        return  Response.success("查询未读系统通知成功！",notificationsService.findList());
+    public Response<List<NotificationsDto>> findList(@ParameterObject NotificationsQuery query){
+        return  Response.success("查询未读系统通知成功！",notificationsService.findList(query));
     }
 
     @Operation(summary = "查询系统通知列表数据",security = {@SecurityRequirement(name = Constants.SESSION_ID)})

@@ -55,7 +55,7 @@ public interface NotificationsService extends IService<Notifications> {
      *
      * @return   Notifications
      */
-    List<NotificationsDto> findList();
+    List<NotificationsDto> findList(NotificationsQuery query);
 
     /**
     * 查询系统通知列表数据
