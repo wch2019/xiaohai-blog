@@ -104,21 +104,7 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
         BeanUtils.copyProperties(vo, notifications);
         notifications.setCreatedTime(LocalDateTime.now());
         baseMapper.insert(notifications);
-        long count = baseMapper.selectCount(new LambdaQueryWrapper<Notifications>()
-                .eq(Notifications::getUserId, userId)
-                .eq(Notifications::getIsRead, 0));
-        SseEmitter sseEmitter = sseEmitterMap.get(userId);
-        if (sseEmitter != null) {
-            try {
-                sseEmitter.send(SseEmitter.event()
-                        .data(count)
-                        .reconnectTime(3000));
-            } catch (IOException e) {
-                sseEmitterMap.remove(userId);
-                sseEmitter.complete();
-                log.info("用户：{}，SSE连接断开！", userId);
-            }
-        }
+        sseInform(userId);
     }
 
     @Override
@@ -137,7 +123,29 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
             notifications.setIsRead(1);
             baseMapper.updateById(notifications);
         }
+        Integer userId = Integer.valueOf(String.valueOf(StpUtil.getLoginId()));
+        sseInform(userId);
         return ids.length;
+    }
+
+    /**
+     * 通知客户端
+     * @param userId
+     */
+    public void sseInform(Integer userId) {
+        long count = baseMapper.selectCount(new LambdaQueryWrapper<Notifications>()
+                .eq(Notifications::getUserId, userId)
+                .eq(Notifications::getIsRead, 0));
+        SseEmitter sseEmitter = sseEmitterMap.get(userId);
+        try {
+            sseEmitter.send(SseEmitter.event()
+                    .data(count)
+                    .reconnectTime(3000));
+        } catch (IOException e) {
+            sseEmitterMap.remove(userId);
+            sseEmitter.complete();
+            log.info("用户：{}，SSE连接断开！", userId);
+        }
     }
 
     @Override
@@ -150,6 +158,9 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
         for (NotificationsDto dto : list) {
             if (dto.getLikeId() != null) {
                 dto.setLikeDto(baseMapper.selectFindLike(dto.getLikeId()));
+            }
+            if (dto.getCommentId() != null) {
+//                dto.setCommentDto(baseMapper.selectFindLike(dto.getLikeId()));
             }
         }
         return list;

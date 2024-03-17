@@ -34,7 +34,7 @@
         `b_notifications`
         <where>
             user_id = #{userId}
-            <if test="param.isRead != null and param.isRead != ''">
+            <if test="param.isRead != null">
                 and is_read = #{param.isRead}
             </if>
             <if test="param.type != null and param.type != ''">

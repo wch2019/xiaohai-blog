@@ -8,45 +8,46 @@
     >
       <div style="min-height: 200px">
         <el-tabs v-model="activeName" :stretch="true" @tab-click="handleClick">
-          <el-tab-pane v-for="item in activeList" :key="item.name" :label="item.label" :name="item.value" />
+          <el-tab-pane v-for="item in $store.getters.dict.sys_notification_type" :key="item.name" :label="item.dictLabel" :name="item.dictValue" />
         </el-tabs>
         <div v-for="like in alertsLike" v-show="activeName==='1'" :key="like.id" class="content">
           <div class="content-flex">
-            <el-image :src="header(like.likeDto.avatar)" />
+            <el-image :src="header(like.likeDto?like.likeDto.avatar:'')" />
             <div class="name-header">
-              <div class="name">{{ like.likeDto.nickName }}</div>
+              <div class="name">{{ like.likeDto?like.likeDto.nickName:'' }}</div>
               <div class="subhead">
                 <span>赞了你的文章</span>
                 <span>{{ like.createdTime }}</span>
               </div>
               <el-tooltip :content="like.title" placement="bottom">
-                <el-link class="ellipsis-link" :underline="false" @click="onClick(like.articleId)">
+                <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
                   《{{ like.title }}》
                 </el-link>
               </el-tooltip>
             </div>
           </div>
-
         </div>
-        <div v-for="common in alertsCommon" v-show="activeName==='2'" :key="common.id" class="content">
-          <div class="content-flex">
-            <el-image :src="header(common.likeDto.avatar)" />
-            <div class="name-header">
-              <div class="name">{{ common.likeDto.nickName }}</div>
-              <div class="subhead">
-                <span>
-                  评论的文章
-                  <el-link class="ellipsis-link subhead" :underline="false" @click="onClick(common.articleId)">
-                    《{{ common.title }}》
-                  </el-link>
-                </span>
-                <span>{{ common.createdTime }}</span>
-              </div>
-              {{ common.likeDto.nickName }}
-            </div>
-          </div>
+        <!--        <div v-for="common in alertsCommon" v-show="activeName==='2'" :key="common.id" class="content">-->
+        <!--          <div class="content-flex">-->
+        <!--            <el-image :src="header(common.likeDto.avatar)" />-->
+        <!--            <div class="name-header">-->
+        <!--              <div class="name">{{ common.likeDto.nickName }}</div>-->
+        <!--              <div class="subhead">-->
+        <!--                <span>-->
+        <!--                  评论-->
+        <!--                </span>-->
+        <!--                <span>{{ common.createdTime }}</span>-->
+        <!--              </div>-->
+        <!--              {{ common.likeDto.nickName }}-->
+        <!--              <el-tooltip :content="common.title" placement="bottom">-->
+        <!--                <el-link class="ellipsis-link subhead" :underline="false" @click="onClick(common)">-->
+        <!--                  《{{ common.title }}》-->
+        <!--                </el-link>-->
+        <!--              </el-tooltip>-->
+        <!--            </div>-->
+        <!--          </div>-->
 
-        </div>
+        <!--        </div>-->
         <!--        <div v-for="system in alertsSystem" v-show="activeName==='3'" :key="system.id" class="content">-->
         <!--          <div class="content-flex">-->
         <!--            <el-image :src="header(alert.likeDto.avatar)" />-->
@@ -81,7 +82,7 @@
 <script>
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { getToken } from '@/utils/auth'
-import { getUnread } from '@/api/note/notifications'
+import { getUnread, updateNotifications } from '@/api/note/notifications'
 
 export default {
   name: 'Website',
@@ -93,18 +94,16 @@ export default {
       alertsCommon: [],
       alertsSystem: [],
       activeName: '1',
-      activeList: [
-        { label: '点赞', value: '1' },
-        { label: '评论', value: '2' },
-        { label: '系统', value: '3' }
-      ]
+      params: {
+        type: '1'
+      }
     }
   },
   computed: {
-    displayedAlerts() {
-      // 获取前 5 条警报
-      return this.alerts.slice(0, 5)
-    }
+    // displayedAlerts() {
+    // 获取前 5 条警报
+    // return this.alerts.slice(0, 5)
+    // }
   },
   mounted() {
     this.createSSE()
@@ -150,28 +149,29 @@ export default {
       }
     },
     getUnreadList() {
-      getUnread().then(response => {
+      this.params.type = this.activeName
+      getUnread(this.params).then(response => {
         this.alertsLike = response.data
         this.alertsCommon = response.data
         this.alertsSystem = response.data
-        console.log(this.alerts, 'this.alerts')
+        console.log(this.params, 'this.params')
       })
     },
-    type(type) {
-      for (const dict of this.$store.getters.dict.sys_notification_type) {
-        if (type === dict.dictValue) {
-          console.log(dict.dictLabel)
-          return dict.dictLabel
-        }
-      }
+    /**
+     *已读
+     */
+    read(ids) {
+      updateNotifications(ids).then(response => {
+        console.log(response, 'response')
+      })
     },
-    close() {
-      this.$message.success('已读')
-    },
-    onClick(articleId) {
-      window.open(this.url + '/article/' + articleId)
+    onClick(like) {
+      this.read(like.id)
+      this.alertsLike = this.alertsLike.filter(item => item.id !== like.id)
+      window.open(this.url + '/article/' + like.articleId)
     },
     handleClick(tab, event) {
+      this.getUnreadList()
       console.log(tab, event)
     },
     /**
