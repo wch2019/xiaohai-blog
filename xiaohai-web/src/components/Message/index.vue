@@ -4,23 +4,29 @@
       <div slot="header" class="clearfix">
         <span>消息中心</span>
       </div>
-      <el-tabs v-model="activeName" tab-position="left" :stretch="true" style="height: 200px;">
+      <el-tabs v-model="activeName" tab-position="left" :stretch="true" style="height: calc(100vh - 190px);">
         <el-tab-pane v-for="item in $store.getters.dict.sys_notification_type" :key="item.name" :label="item.dictLabel" :name="item.dictValue">
           <div v-for="like in alertsLike" v-show="activeName==='1'" :key="like.id" class="content">
-            <div class="content-flex">
-              <el-image :src="header(like.likeDto?like.likeDto.avatar:'')" />
-              <div class="name-header">
-                <div class="name">{{ like.likeDto?like.likeDto.nickName:'' }}</div>
-                <div class="subhead">
-                  <span>赞了你的文章</span>
-                  <span>{{ like.createdTime }}</span>
+            <el-badge is-dot class="item" />
+            <div style="display: flex;justify-content: space-between;">
+
+              <div class="content-flex">
+                <el-image :src="header(like.likeDto?like.likeDto.avatar:'')" />
+                <div class="name-header">
+                  <div class="name">{{ like.likeDto?like.likeDto.nickName:'' }}</div>
+                  <div class="subhead">
+                    <span>赞了你的文章</span>
+                    <span>{{ like.createdTime }}</span>
+                  </div>
+                  <el-tooltip :content="like.title" placement="bottom">
+                    <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
+                      《{{ like.title }}》
+                    </el-link>
+                  </el-tooltip>
                 </div>
-                <el-tooltip :content="like.title" placement="bottom">
-                  <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
-                    《{{ like.title }}》
-                  </el-link>
-                </el-tooltip>
+
               </div>
+              <el-button type="text" class="know-button" @click="handleKnowClick(like)">我知道了</el-button>
             </div>
           </div>
         </el-tab-pane>
@@ -31,7 +37,7 @@
 
 <script>
 
-import { getUnread, updateNotifications } from '@/api/note/notifications'
+import { listNotifications, updateNotifications } from '@/api/note/notifications'
 
 export default {
   name: 'Index',
@@ -53,10 +59,10 @@ export default {
   methods: {
     getUnreadList() {
       this.params.type = this.activeName
-      getUnread(this.params).then(response => {
-        this.alertsLike = response.data
-        this.alertsCommon = response.data
-        this.alertsSystem = response.data
+      listNotifications(this.params).then(response => {
+        this.alertsLike = response.data.records
+        this.alertsCommon = response.data.records
+        this.alertsSystem = response.data.records
       })
     },
     /**
@@ -81,6 +87,11 @@ export default {
      */
     header(avatar) {
       return process.env.VUE_APP_BASE_API_FILE + avatar
+    },
+    handleKnowClick(like) {
+      this.read(like.id)
+      console.log(like)
+      // 在这里处理点击 "我知道了" 按钮的逻辑
     }
   }
 }
@@ -117,7 +128,6 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
-  max-width: 300px; /* 可根据需要调整最大宽度 */
 }
 }
 
@@ -129,4 +139,14 @@ export default {
   background-color: #F5F6F9;
   border-radius: 4px; /* 添加圆角 */
 }
+
+  .know-button {
+    margin-right: 10px;
+    //display: none; /* 默认隐藏按钮 */
+  }
+
+  .content:hover .know-button {
+    //display: inline-block; /* 鼠标悬停时显示按钮 */
+  }
+
 </style>

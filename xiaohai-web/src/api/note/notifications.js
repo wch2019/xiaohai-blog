@@ -2,8 +2,8 @@ import request from '@/utils/request'
 
 const api = '/notifications'
 
-// 查询标签列表数据
-export function listTags(data) {
+// 查询系统通知列表数据
+export function listNotifications(data) {
   return request({
     url: api,
     method: 'get',
@@ -26,21 +26,5 @@ export function getUnread(data) {
     url: api + '/unread',
     method: 'get',
     params: data
-  })
-}
-
-// 删除标签
-export function delTags(data) {
-  return request({
-    url: api + '/' + data,
-    method: 'delete'
-  })
-}
-
-// 获取标签选择列表
-export function optionSelectTags() {
-  return request({
-    url: api + '/option-select',
-    method: 'GET'
   })
 }
