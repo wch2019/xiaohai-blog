@@ -72,7 +72,7 @@
           <el-button size="small" type="text">查看全部</el-button>
         </router-link>
       </div>
-      <el-badge v-if="count!==0" slot="reference" :value="count" class="item el-icon-bell" />
+      <el-badge v-if="count!=0" slot="reference" :value="count" class="item el-icon-bell" />
       <el-badge v-else slot="reference" class="item el-icon-bell" />
 
     </el-popover>

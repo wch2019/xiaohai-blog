@@ -6,27 +6,27 @@
       </div>
       <el-tabs v-model="activeName" tab-position="left" :stretch="true" style="height: calc(100vh - 190px);">
         <el-tab-pane v-for="item in $store.getters.dict.sys_notification_type" :key="item.name" :label="item.dictLabel" :name="item.dictValue">
-          <div v-for="like in alertsLike" v-show="activeName==='1'" :key="like.id" class="content">
-            <el-badge is-dot class="item" />
-            <div style="display: flex;justify-content: space-between;">
-
-              <div class="content-flex">
-                <el-image :src="header(like.likeDto?like.likeDto.avatar:'')" />
-                <div class="name-header">
-                  <div class="name">{{ like.likeDto?like.likeDto.nickName:'' }}</div>
-                  <div class="subhead">
-                    <span>赞了你的文章</span>
-                    <span>{{ like.createdTime }}</span>
+          <div v-for="like in alertsLike" v-show="activeName==='1'" :key="like.id">
+            <el-badge v-if="like.isRead===0" is-dot class="item" style="position: absolute;right: 0;" />
+            <div class="content">
+              <div style="display: flex;justify-content: space-between;">
+                <div class="content-flex">
+                  <el-image :src="header(like.likeDto?like.likeDto.avatar:'')" />
+                  <div class="name-header">
+                    <div class="name">{{ like.likeDto?like.likeDto.nickName:'' }}</div>
+                    <div class="subhead">
+                      <span>赞了你的文章</span>
+                      <span>{{ like.createdTime }}</span>
+                    </div>
+                    <el-tooltip :content="like.title" placement="bottom">
+                      <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
+                        《{{ like.title }}》
+                      </el-link>
+                    </el-tooltip>
                   </div>
-                  <el-tooltip :content="like.title" placement="bottom">
-                    <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
-                      《{{ like.title }}》
-                    </el-link>
-                  </el-tooltip>
                 </div>
-
+                <el-button v-if="like.isRead===0" type="text" class="know-button" @click="handleKnowClick(like)">我知道了</el-button>
               </div>
-              <el-button type="text" class="know-button" @click="handleKnowClick(like)">我知道了</el-button>
             </div>
           </div>
         </el-tab-pane>
@@ -75,7 +75,7 @@ export default {
     },
     onClick(like) {
       this.read(like.id)
-      this.alertsLike = this.alertsLike.filter(item => item.id !== like.id)
+      like.isRead = 1
       window.open(this.url + '/article/' + like.articleId)
     },
     handleClick(tab, event) {
@@ -90,8 +90,7 @@ export default {
     },
     handleKnowClick(like) {
       this.read(like.id)
-      console.log(like)
-      // 在这里处理点击 "我知道了" 按钮的逻辑
+      like.isRead = 1
     }
   }
 }
@@ -142,11 +141,11 @@ export default {
 
   .know-button {
     margin-right: 10px;
-    //display: none; /* 默认隐藏按钮 */
+    display: none; /* 默认隐藏按钮 */
   }
 
   .content:hover .know-button {
-    //display: inline-block; /* 鼠标悬停时显示按钮 */
+    display: inline-block; /* 鼠标悬停时显示按钮 */
   }
 
 </style>

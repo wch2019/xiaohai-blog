@@ -52,7 +52,7 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
             SseEmitter emitter = entry.getValue();
             try {
                 emitter.send("heartbeat");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 sseEmitterMap.remove(entry.getKey());
                 emitter.complete();
                 log.info("用户：{}，SSE连接断开！", entry.getKey());
@@ -141,7 +141,7 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
             sseEmitter.send(SseEmitter.event()
                     .data(count)
                     .reconnectTime(3000));
-        } catch (IOException e) {
+        } catch (Exception e) {
             sseEmitterMap.remove(userId);
             sseEmitter.complete();
             log.info("用户：{}，SSE连接断开！", userId);
