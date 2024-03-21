@@ -8,12 +8,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.note.dao.CommentMapper;
 import com.xiaohai.note.dao.NotificationsMapper;
 import com.xiaohai.note.pojo.dto.NotificationsDto;
 import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.NotificationsQuery;
 import com.xiaohai.note.pojo.vo.NotificationsVo;
 import com.xiaohai.note.service.NotificationsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -35,12 +37,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, Notifications> implements NotificationsService {
 
     private final Map<Integer, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();
 
     // 心跳间隔时间（单位：毫秒）
     private static final long HEARTBEAT_INTERVAL = 5000;
+
+    private final CommentMapper commentMapper;
 
 
     /**
@@ -160,7 +165,7 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 dto.setLikeDto(baseMapper.selectFindLike(dto.getLikeId()));
             }
             if (dto.getCommentId() != null) {
-//                dto.setCommentDto(baseMapper.selectFindLike(dto.getLikeId()));
+                dto.setCommentDto(commentMapper.findCommentId(dto.getCommentId()));
             }
         }
         return list;
@@ -175,6 +180,9 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
         for (NotificationsDto dto : list) {
             if (dto.getLikeId() != null) {
                 dto.setLikeDto(baseMapper.selectFindLike(dto.getLikeId()));
+            }
+            if (dto.getCommentId() != null) {
+                dto.setCommentDto(commentMapper.findCommentId(dto.getCommentId()));
             }
         }
         PageData pageData = new PageData();

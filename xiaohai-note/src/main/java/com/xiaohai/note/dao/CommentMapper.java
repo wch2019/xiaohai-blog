@@ -33,4 +33,11 @@ public interface CommentMapper extends BaseMapper<Comment> {
      * @return
      */
     List<CommentTree> findCommentList(Long articleId);
+
+    /**
+     * 根据id查询评论
+     * @param id
+     * @return
+     */
+    CommentDto findCommentId(Integer id);
 }

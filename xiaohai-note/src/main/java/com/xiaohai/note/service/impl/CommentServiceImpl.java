@@ -11,13 +11,19 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.common.utils.TreeUtils;
+import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.CommentMapper;
 import com.xiaohai.note.pojo.dto.CommentCountDto;
 import com.xiaohai.note.pojo.dto.CommentDto;
+import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.Comment;
 import com.xiaohai.note.pojo.query.CommentQuery;
 import com.xiaohai.note.pojo.vo.CommentVo;
+import com.xiaohai.note.pojo.vo.NotificationsVo;
 import com.xiaohai.note.service.CommentService;
+import com.xiaohai.note.service.NotificationsService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +38,14 @@ import java.util.List;
  * @since 2023-05-24
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
+    private final NotificationsService notificationsService;
+    private final ArticleMapper articleMapper;
     @Override
     public Integer add(CommentVo vo) {
-        // TODO：添加评论推送
         Comment comment = new Comment();
         BeanUtils.copyProperties(vo, comment);
         //当前登录人id
@@ -46,7 +55,20 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             comment.setReplyUserId(baseMapper.selectById(vo.getParentId()).getUserId());
         }
         comment.setCreatedTime(LocalDateTime.now());
-        return baseMapper.insert(comment);
+        var count=baseMapper.insert(comment);
+        // 评论消息推送
+        NotificationsVo notificationsVo=new NotificationsVo();
+        if(vo.getArticleId()!=0){
+            Article article =articleMapper.selectById(vo.getArticleId());
+            notificationsVo.setUserId(article.getUserId());
+        }else {
+            notificationsVo.setUserId(1);
+        }
+        notificationsVo.setArticleId(vo.getArticleId());
+        notificationsVo.setCommentId(comment.getId());
+        notificationsVo.setType("2");
+        notificationsService.add(notificationsVo);
+        return count;
     }
 
     @Override

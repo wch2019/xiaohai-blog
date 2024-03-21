@@ -83,5 +83,28 @@
         ORDER BY
             c.created_time ASC
     </select>
+    <select id="findCommentId" resultType="com.xiaohai.note.pojo.dto.CommentDto">
+        SELECT
+            c.id,
+            c.parent_id AS parentId,
+            c.article_id AS articleId,
+            c.user_id AS userId,
+            CASE WHEN u.nick_name IS NULL || u.nick_name = '' THEN u.username ELSE u.nick_name END AS username,
+            u.avatar,
+            c.reply_user_id AS replyUserId,
+            ( SELECT  CASE WHEN nick_name IS NULL || nick_name = '' THEN username ELSE nick_name END FROM sys_user WHERE id = replyUserId ) AS replyUsername,
+            (SELECT avatar FROM sys_user WHERE id = replyUserId) AS replyAvatar,
+            c.content,
+            a.title,
+            c.created_time AS createdTime
+        FROM
+            b_comment c
+                LEFT JOIN b_article a ON a.id = c.article_id
+                LEFT JOIN sys_user u ON u.id = c.user_id
+        where
+            c.id=#{id}
+        ORDER BY
+            c.created_time ASC
+    </select>
 
 </mapper>

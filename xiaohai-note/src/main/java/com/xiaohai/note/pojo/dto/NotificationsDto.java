@@ -41,7 +41,7 @@ public class NotificationsDto implements Serializable {
     private Integer commentId;
 
     @Schema(description = "通知评论")
-    private NotificationsCommentDto commentDto;
+    private CommentDto commentDto;
 
     @Schema(description = "喜欢id")
     private Integer likeId;
