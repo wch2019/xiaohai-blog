@@ -40,6 +40,9 @@ public class NotificationsVo implements Serializable {
     @Schema(description = "喜欢id")
     private Integer likeId;
 
+    @Schema(description = "系統通知")
+    private String message;
+
     @Schema(description = "是否已读(0否，1是)")
     private Integer isRead;
 }

@@ -9,43 +9,60 @@
       <div style="min-height: 200px">
         <el-tabs v-model="activeName" :stretch="true" @tab-click="handleClick">
           <el-tab-pane v-for="item in $store.getters.dict.sys_notification_type" :key="item.name" :label="item.dictLabel" :name="item.dictValue" />
-        </el-tabs>
-        <div v-for="like in alertsLike" v-show="activeName==='1'" :key="like.id" class="content">
-          <div class="content-flex">
-            <el-image :src="header(like.likeDto?like.likeDto.avatar:'')" />
-            <div class="name-header">
-              <div class="name">{{ like.likeDto?like.likeDto.nickName:'' }}</div>
-              <div class="subhead">
-                <span>赞了你的文章</span>
-                <span>{{ like.createdTime }}</span>
+          <div v-if="activeName==='1'">
+            <div v-for="like in alertsLike" :key="like.id" class="content">
+              <div class="content-flex">
+                <el-image :src="header(like.likeDto?like.likeDto.avatar:'')" />
+                <div class="name-header">
+                  <div class="name">{{ like.likeDto?like.likeDto.nickName:'' }}</div>
+                  <div class="subhead">
+                    <span>赞了你的文章</span>
+                    <span>{{ like.createdTime }}</span>
+                  </div>
+                  <el-tooltip :content="like.title" placement="bottom">
+                    <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
+                      《{{ like.title }}》
+                    </el-link>
+                  </el-tooltip>
+                </div>
               </div>
-              <el-tooltip :content="like.title" placement="bottom">
-                <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
-                  《{{ like.title }}》
-                </el-link>
-              </el-tooltip>
             </div>
           </div>
-        </div>
-        <!--        <div v-for="common in alertsCommon" v-show="activeName==='2'" :key="common.id" class="content">-->
-        <!--          <div class="content-flex">-->
-        <!--            <el-image :src="header(common.likeDto.avatar)" />-->
-        <!--            <div class="name-header">-->
-        <!--              <div class="name">{{ common.likeDto.nickName }}</div>-->
-        <!--              <div class="subhead">-->
-        <!--                <span>-->
-        <!--                  评论-->
-        <!--                </span>-->
-        <!--                <span>{{ common.createdTime }}</span>-->
-        <!--              </div>-->
-        <!--              {{ common.likeDto.nickName }}-->
-        <!--              <el-tooltip :content="common.title" placement="bottom">-->
-        <!--                <el-link class="ellipsis-link subhead" :underline="false" @click="onClick(common)">-->
-        <!--                  《{{ common.title }}》-->
-        <!--                </el-link>-->
-        <!--              </el-tooltip>-->
-        <!--            </div>-->
-        <!--          </div>-->
+          <div v-if="activeName==='2'">
+            <div v-for="common in alertsCommon" :key="common.id">
+              <div v-if="common.commentDto" class="content">
+                <div style="display: flex;justify-content: space-between;">
+                  <div class="content-flex">
+                    <div style="width: 35px">
+                      <el-image :src="header(common.commentDto.avatar)" />
+                    </div>
+                    <div class="name-header">
+                      <div class="name">{{ common.commentDto.username }}</div>
+                      <div class="subhead">
+                        <span v-if="common.commentDto.replyUsername">@ {{ common.commentDto.replyUsername }}</span>
+                        <span v-if="common.articleId">
+                          评论文章
+                          <el-tooltip :content="common.title" placement="bottom">
+                            <el-link class="ellipsis-link" :underline="false" @click="onClick(common)">
+                              《{{ common.title }}》
+                            </el-link>
+                          </el-tooltip>
+                        </span>
+                        <span v-else>
+                          留言
+                        </span>
+                        <span>{{ common.commentDto.createdTime }}</span>
+                      </div>
+                      <div style="font-size: 14px;">
+                        {{ common.commentDto.content }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-tabs>
 
         <!--        </div>-->
         <!--        <div v-for="system in alertsSystem" v-show="activeName==='3'" :key="system.id" class="content">-->
@@ -151,10 +168,15 @@ export default {
     getUnreadList() {
       this.params.type = this.activeName
       getUnread(this.params).then(response => {
-        this.alertsLike = response.data
-        this.alertsCommon = response.data
-        this.alertsSystem = response.data
-        console.log(this.params, 'this.params')
+        if (this.activeName === '1') {
+          this.alertsLike = response.data
+        }
+        if (this.activeName === '2') {
+          this.alertsCommon = response.data
+        }
+        if (this.activeName === '3') {
+          this.alertsSystem = response.data
+        }
       })
     },
     /**
@@ -172,7 +194,6 @@ export default {
     },
     handleClick(tab, event) {
       this.getUnreadList()
-      console.log(tab, event)
     },
     /**
      * 头像

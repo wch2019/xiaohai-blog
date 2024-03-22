@@ -39,7 +39,7 @@ public class MySaTokenListener implements SaTokenListener {
         userNew.setId(user.getId());
         userNew.setLoginCount(user.getLoginCount()+1);
         userNew.setLoginIp(IpUtils.getIpAddr(request));
-        userNew.setLoginSource(AddressUtils.getRealAddressByIP(userNew.getLoginIp()));
+        userNew.setLoginSource(AddressUtils.getIp2regionCity(userNew.getLoginIp()));
         //获取UA信息
         UserAgent userAgent = IpUtils.getUserAgent(request);
         userNew.setLoginOs(userAgent.getOperatingSystem().getName());

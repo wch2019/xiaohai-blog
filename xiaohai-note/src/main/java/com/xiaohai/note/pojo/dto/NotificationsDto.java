@@ -49,6 +49,9 @@ public class NotificationsDto implements Serializable {
     @Schema(description = "通知喜欢")
     private NotificationsLikeDto likeDto;
 
+    @Schema(description = "系統通知")
+    private String message;
+
     @Schema(description = "是否已读(0否，1是)")
     private Integer isRead;
 

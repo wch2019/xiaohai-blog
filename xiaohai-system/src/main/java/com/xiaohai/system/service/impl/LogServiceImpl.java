@@ -9,6 +9,7 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.*;
 import com.xiaohai.common.utils.Spring.SpringUtils;
+import com.xiaohai.common.utils.ip.AddressUtils;
 import com.xiaohai.system.dao.LogMapper;
 import com.xiaohai.system.pojo.dto.LogDto;
 import com.xiaohai.system.pojo.entity.Log;
@@ -72,6 +73,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         for (Log logs : iPage.getRecords()) {
             LogDto logDto = new LogDto();
             BeanUtils.copyProperties(logs, logDto);
+            logDto.setOperIpAddress(AddressUtils.getIp2region(logs.getOperIp()));
             list.add(logDto);
         }
         PageData pageData = new PageData();

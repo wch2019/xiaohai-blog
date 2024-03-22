@@ -44,6 +44,9 @@ public class LogDto implements Serializable {
     @Schema(description = "主机地址")
     private String operIp;
 
+    @Schema(description = "主机地址")
+    private String operIpAddress;
+
     @Schema(description = "请求参数")
     private String operParam;
 

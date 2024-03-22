@@ -29,6 +29,11 @@ public class AddressUtils {
     // 未知地址
     public static final String UNKNOWN = "XX XX";
 
+    /**
+     * 第三方获取地址
+     * @param ip
+     * @return
+     */
     public static String getRealAddressByIP(String ip) {
         // 内网不查询
         if (IpUtils.internalIp(ip)) {
@@ -50,32 +55,72 @@ public class AddressUtils {
         return UNKNOWN;
     }
 
-    public static void main(String[] args) throws IOException {
-        // 1、创建 searcher 对象
-        File file = ResourceUtils.getFile("classpath:ip2region.xdb");
-        Searcher searcher = null;
-        try {
-            searcher = Searcher.newWithFileOnly(file.getPath());
-        } catch (IOException e) {
-            System.out.printf("failed to create searcher with `%s`: %s\n", file.getPath(), e);
-            return;
-        }
 
-        // 2、查询
-        String ip = "219.146.89.86";
+    /**
+     * 通过ip2region获取地址
+     * @param ip
+     * @return
+     */
+    public static String getIp2region(String ip) {
+        // 内网不查询
+        if (IpUtils.internalIp(ip)) {
+            return "内网IP";
+        }
         try {
+            File file = ResourceUtils.getFile("classpath:ip2region.xdb");
+            Searcher searcher = Searcher.newWithFileOnly(file.getPath());
             long sTime = System.nanoTime();
             String region = searcher.search(ip);
             long cost = TimeUnit.NANOSECONDS.toMicros((long) (System.nanoTime() - sTime));
-            System.out.printf("{region: %s, ioCount: %d, took: %d μs}\n", region, searcher.getIOCount(), cost);
+            log.info("region: {}, ioCount: {}, took: {} μs", region, searcher.getIOCount(), cost);
+            searcher.close();
+            return region;
         } catch (Exception e) {
-            System.out.printf("failed to search(%s): %s\n", ip, e);
+            log.error("获取地理位置异常 {}", ip);
         }
+        return UNKNOWN;
+    }
 
-        // 3、关闭资源
-        searcher.close();
+    /**
+     * 通过ip2region获取城市
+     * @param ip
+     * @return
+     */
+    public static String getIp2regionCity(String ip) {
+        // 内网不查询
+        if (IpUtils.internalIp(ip)) {
+            return "内网IP";
+        }
+        try {
+            File file = ResourceUtils.getFile("classpath:ip2region.xdb");
+            Searcher searcher = Searcher.newWithFileOnly(file.getPath());
+            long sTime = System.nanoTime();
+            String region = searcher.search(ip);
+            long cost = TimeUnit.NANOSECONDS.toMicros((long) (System.nanoTime() - sTime));
+            log.info("region: {}, ioCount: {}, took: {} μs", region, searcher.getIOCount(), cost);
+            searcher.close();
+            return getDataAtIndex(region, 3);
+        } catch (Exception e) {
+            log.error("获取地理位置异常 {}", ip);
+        }
+        return UNKNOWN;
+    }
 
-        // 备注：并发使用，每个线程需要创建一个独立的 searcher 对象单独使用。
-//        System.out.println(getRealAddressByIP("219.146.89.86"));
+    public static String getDataAtIndex(String input, int index) {
+        // 使用 '|' 分割字符串
+        String[] parts = input.split("\\|");
+
+        // 检查索引是否有效，如果有效则返回对应位置的数据；否则返回空字符串
+        if (index >= 0 && index < parts.length) {
+            return parts[index];
+        } else {
+            return "";
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        String ip = "219.146.89.86";
+        System.out.println(getIp2region(ip));
+        System.out.println(getRealAddressByIP("219.146.89.86"));
     }
 }

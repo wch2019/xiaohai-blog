@@ -92,6 +92,7 @@
         </template>
       </el-table-column>
       <el-table-column label="ip地址" align="center" prop="operIp" :show-overflow-tooltip="true" />
+      <el-table-column label="ip地址" align="center" prop="operIpAddress" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status==1" type="danger">异常</el-tag>
