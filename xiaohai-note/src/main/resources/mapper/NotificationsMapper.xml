@@ -29,6 +29,9 @@
         comment_id as commentId,
         like_id as likeId,
         is_read as isRead,
+        link_id as linkId,
+        feedback_id as feedbackId,
+        remark,
         created_time as createdTime
         FROM
         `b_notifications`

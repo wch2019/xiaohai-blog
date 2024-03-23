@@ -67,6 +67,30 @@
             </div>
           </div>
         </div>
+        <div v-if="activeName==='3'">
+          <div v-for="system in alertsSystem" :key="system.id">
+            <el-badge v-if="system.isRead===0" is-dot class="item" style="position: absolute;right: 0;" />
+            <div class="content">
+              <div style="display: flex;justify-content: space-between;">
+                <div v-if="system.linkDto" class="content-flex">
+                  <el-image :src="logo" />
+                  <div class="name-header">
+                    <div class="name">{{ system.remark }}</div>
+                    <div class="subhead">
+                      <span>{{ system.createdTime }}</span>
+                    </div>
+                    <div style="font-size: 14px;">
+                      <el-link class="ellipsis-link" :underline="false" :href="system.linkDto.url" target="_blank">
+                        {{ system.linkDto.name }} :  {{ system.linkDto.url }} : {{ system.linkDto.info }}
+                      </el-link>
+                    </div>
+                  </div>
+                </div>
+                <el-button v-if="system.isRead===0" type="text" class="know-button" @click="handleKnowClick(system)">我知道了</el-button>
+              </div>
+            </div>
+          </div>
+        </div>
       </el-tab-pane>
       <pagination
         v-show="total>0"
@@ -89,6 +113,7 @@ export default {
   name: 'Index',
   data() {
     return {
+      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico',
       url: process.env.VUE_APP_BLOG_WEB_API,
       // 总条数
       total: 0,

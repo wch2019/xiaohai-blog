@@ -9,8 +9,11 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.CommentMapper;
+import com.xiaohai.note.dao.FriendLinkMapper;
 import com.xiaohai.note.dao.NotificationsMapper;
+import com.xiaohai.note.pojo.dto.FriendLinkDto;
 import com.xiaohai.note.pojo.dto.NotificationsDto;
+import com.xiaohai.note.pojo.entity.FriendLink;
 import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.NotificationsQuery;
 import com.xiaohai.note.pojo.vo.NotificationsVo;
@@ -46,6 +49,8 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
     private static final long HEARTBEAT_INTERVAL = 5000;
 
     private final CommentMapper commentMapper;
+
+    private final FriendLinkMapper friendLinkMapper;
 
 
     /**
@@ -167,6 +172,12 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
             if (dto.getCommentId() != null) {
                 dto.setCommentDto(commentMapper.findCommentId(dto.getCommentId()));
             }
+            if (dto.getLinkId() != null) {
+                FriendLink friendLink =friendLinkMapper.selectById(dto.getLinkId());
+                FriendLinkDto friendLinkDto = new FriendLinkDto();
+                BeanUtils.copyProperties(friendLink, friendLinkDto);
+                dto.setLinkDto(friendLinkDto);
+            }
         }
         return list;
     }
@@ -183,6 +194,12 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
             }
             if (dto.getCommentId() != null) {
                 dto.setCommentDto(commentMapper.findCommentId(dto.getCommentId()));
+            }
+            if (dto.getLinkId() != null) {
+                FriendLink friendLink =friendLinkMapper.selectById(dto.getLinkId());
+                FriendLinkDto friendLinkDto = new FriendLinkDto();
+                BeanUtils.copyProperties(friendLink, friendLinkDto);
+                dto.setLinkDto(friendLinkDto);
             }
         }
         PageData pageData = new PageData();
