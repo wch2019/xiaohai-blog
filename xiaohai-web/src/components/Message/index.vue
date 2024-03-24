@@ -72,15 +72,15 @@
             <el-badge v-if="system.isRead===0" is-dot class="item" style="position: absolute;right: 0;" />
             <div class="content">
               <div style="display: flex;justify-content: space-between;">
-                <div v-if="system.linkDto" class="content-flex">
+                <div class="content-flex">
                   <el-image :src="logo" />
-                  <div class="name-header">
+                  <div v-if="system.linkDto" class="name-header">
                     <div class="name">{{ system.remark }}</div>
                     <div class="subhead">
                       <span>{{ system.createdTime }}</span>
                     </div>
                     <div style="font-size: 14px;">
-                      <el-link class="ellipsis-link" :underline="false" :href="system.linkDto.url" target="_blank">
+                      <el-link class="ellipsis-link" :underline="false" @click="onClickLink(system)">
                         {{ system.linkDto.name }} :  {{ system.linkDto.url }} : {{ system.linkDto.info }}
                       </el-link>
                     </div>
@@ -154,6 +154,11 @@ export default {
       updateNotifications(ids).then(response => {
         console.log(response, 'response')
       })
+    },
+    onClickLink(system) {
+      this.read(system.id)
+      system.isRead = 1
+      window.open(system.linkDto.url)
     },
     onClick(like) {
       this.read(like.id)

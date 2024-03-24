@@ -86,14 +86,13 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="模块名称" align="center" prop="title" :show-overflow-tooltip="true" />
-      <el-table-column label="请求方式" align="center" prop="requestMethod" :show-overflow-tooltip="true">
+      <el-table-column label="请求方式" align="center" prop="requestMethod" width="90">
         <template slot-scope="scope">
           <dict-tag :options="$store.getters.dict.sys_request_method" :value="scope.row.requestMethod" />
         </template>
       </el-table-column>
       <el-table-column label="ip地址" align="center" prop="operIp" :show-overflow-tooltip="true" />
-      <el-table-column label="ip地址" align="center" prop="operIpAddress" :show-overflow-tooltip="true" />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column label="状态" align="center" prop="status" width="90">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status==1" type="danger">异常</el-tag>
           <el-tag v-if="scope.row.status==0" type="success">正常</el-tag>

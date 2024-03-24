@@ -60,7 +60,9 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
 
     @Override
     public Log findById(Long id) {
-        return baseMapper.selectById(id);
+        Log log=baseMapper.selectById(id);
+        log.setOperIp(log.getOperIp()+ "("+AddressUtils.getIp2region(log.getOperIp())+")");
+        return log;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         for (Log logs : iPage.getRecords()) {
             LogDto logDto = new LogDto();
             BeanUtils.copyProperties(logs, logDto);
-            logDto.setOperIpAddress(AddressUtils.getIp2region(logs.getOperIp()));
+            logDto.setOperIp(logs.getOperIp()+ "("+AddressUtils.getIp2region(logs.getOperIp())+")");
             list.add(logDto);
         }
         PageData pageData = new PageData();

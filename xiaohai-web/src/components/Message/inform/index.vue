@@ -3,7 +3,7 @@
     <el-popover
       placement="bottom-end"
       width="400"
-      trigger="click"
+      trigger="hover"
       @show="getUnreadList"
     >
       <div style="min-height: 200px">
@@ -62,27 +62,29 @@
               </div>
             </div>
           </div>
+          <div v-if="activeName==='3'">
+            <div v-for="system in alertsSystem" :key="system.id">
+              <div class="content">
+                <div style="display: flex;justify-content: space-between;">
+                  <div class="content-flex">
+                    <el-image :src="logo" />
+                    <div v-if="system.linkDto" class="name-header">
+                      <div class="name">{{ system.remark }}</div>
+                      <div class="subhead">
+                        <span>{{ system.createdTime }}</span>
+                      </div>
+                      <div style="font-size: 14px;">
+                        <el-link class="ellipsis-link" :underline="false" @click="onClickLink(system)">
+                          {{ system.linkDto.name }} :  {{ system.linkDto.url }} : {{ system.linkDto.info }}
+                        </el-link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </el-tabs>
-
-        <!--        </div>-->
-        <!--        <div v-for="system in alertsSystem" v-show="activeName==='3'" :key="system.id" class="content">-->
-        <!--          <div class="content-flex">-->
-        <!--            <el-image :src="header(alert.likeDto.avatar)" />-->
-        <!--            <div class="name-header">-->
-        <!--              <div class="name">{{ alert.likeDto.nickName }}</div>-->
-        <!--              <div class="subhead">-->
-        <!--                <span>赞了你的文章</span>-->
-        <!--                <span>{{ alert.createdTime }}</span>-->
-        <!--              </div>-->
-        <!--              <el-tooltip :content="alert.title" placement="bottom">-->
-        <!--                <el-link class="ellipsis-link" :underline="false" @click="onClick(alert.articleId)">-->
-        <!--                  《{{ alert.title }}》-->
-        <!--                </el-link>-->
-        <!--              </el-tooltip>-->
-        <!--            </div>-->
-        <!--          </div>-->
-
-        <!--        </div>-->
       </div>
       <div style="text-align: right; margin: 0">
         <router-link to="/message/index">
@@ -105,6 +107,7 @@ export default {
   name: 'Website',
   data() {
     return {
+      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico',
       url: process.env.VUE_APP_BLOG_WEB_API,
       count: 0,
       alertsLike: [],
@@ -186,6 +189,12 @@ export default {
       updateNotifications(ids).then(response => {
         console.log(response, 'response')
       })
+    },
+    onClickLink(system) {
+      this.read(system.id)
+      system.isRead = 1
+      this.alertsSystem = this.alertsSystem.filter(item => item.id !== system.id)
+      window.open(system.linkDto.url)
     },
     onClick(like) {
       this.read(like.id)
