@@ -25,6 +25,11 @@
             <groupId>com.xiaohai</groupId>
             <artifactId>xiaohai-file</artifactId>
         </dependency>
+        <!--note 博客模块 -->
+        <dependency>
+            <groupId>com.xiaohai</groupId>
+            <artifactId>xiaohai-note</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

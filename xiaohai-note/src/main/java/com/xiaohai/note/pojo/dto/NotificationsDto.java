@@ -58,6 +58,9 @@ public class NotificationsDto implements Serializable {
     @Schema(description = "反馈id")
     private Integer feedbackId;
 
+    @Schema(description = "通知反馈")
+    private NotificationsFeedbackDto feedbackDto;
+
     @Schema(description = "描述")
     private String remark;
 

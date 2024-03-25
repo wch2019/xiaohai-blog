@@ -3,7 +3,7 @@
     <el-popover
       placement="bottom-end"
       width="400"
-      trigger="hover"
+      trigger="click"
       @show="getUnreadList"
     >
       <div style="min-height: 200px">
@@ -33,7 +33,7 @@
               <div v-if="common.commentDto" class="content">
                 <div style="display: flex;justify-content: space-between;">
                   <div class="content-flex">
-                    <div style="width: 35px">
+                    <div style="width: 35px;min-width: 35px">
                       <el-image :src="header(common.commentDto.avatar)" />
                     </div>
                     <div class="name-header">
@@ -67,7 +67,9 @@
               <div class="content">
                 <div style="display: flex;justify-content: space-between;">
                   <div class="content-flex">
-                    <el-image :src="logo" />
+                    <div style="width: 35px;min-width: 35px">
+                      <el-image :src="logo" />
+                    </div>
                     <div v-if="system.linkDto" class="name-header">
                       <div class="name">{{ system.remark }}</div>
                       <div class="subhead">
@@ -77,6 +79,15 @@
                         <el-link class="ellipsis-link" :underline="false" @click="onClickLink(system)">
                           {{ system.linkDto.name }} :  {{ system.linkDto.url }} : {{ system.linkDto.info }}
                         </el-link>
+                      </div>
+                    </div>
+                    <div v-if="system.feedbackDto" class="name-header">
+                      <div class="name">{{ system.remark }}</div>
+                      <div class="subhead">
+                        <span>{{ system.createdTime }}</span>
+                      </div>
+                      <div style="font-size: 14px;">
+                        {{ system.feedbackDto.title }} :  {{ system.feedbackDto.content }}
                       </div>
                     </div>
                   </div>

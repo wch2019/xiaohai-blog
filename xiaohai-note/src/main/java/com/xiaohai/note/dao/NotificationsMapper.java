@@ -3,6 +3,7 @@ package com.xiaohai.note.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xiaohai.note.pojo.dto.NotificationsDto;
+import com.xiaohai.note.pojo.dto.NotificationsFeedbackDto;
 import com.xiaohai.note.pojo.dto.NotificationsLikeDto;
 import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.NotificationsQuery;
@@ -33,4 +34,10 @@ public interface NotificationsMapper extends BaseMapper<Notifications> {
      * @return
      */
     NotificationsLikeDto selectFindLike(@Param("likeId") Integer likeId);
+    /**
+     * 查询反馈记录
+     * @param feedbackId
+     * @return
+     */
+    NotificationsFeedbackDto selectFeedbackById(@Param("feedbackId") Integer feedbackId);
 }

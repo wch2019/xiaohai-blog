@@ -13,6 +13,7 @@ import com.xiaohai.note.dao.FriendLinkMapper;
 import com.xiaohai.note.dao.NotificationsMapper;
 import com.xiaohai.note.pojo.dto.FriendLinkDto;
 import com.xiaohai.note.pojo.dto.NotificationsDto;
+import com.xiaohai.note.pojo.dto.NotificationsFeedbackDto;
 import com.xiaohai.note.pojo.entity.FriendLink;
 import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.NotificationsQuery;
@@ -178,6 +179,9 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 BeanUtils.copyProperties(friendLink, friendLinkDto);
                 dto.setLinkDto(friendLinkDto);
             }
+            if (dto.getFeedbackId() != null) {
+                dto.setFeedbackDto(baseMapper.selectFeedbackById(dto.getFeedbackId()));
+            }
         }
         return list;
     }
@@ -200,6 +204,9 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 FriendLinkDto friendLinkDto = new FriendLinkDto();
                 BeanUtils.copyProperties(friendLink, friendLinkDto);
                 dto.setLinkDto(friendLinkDto);
+            }
+            if (dto.getFeedbackId() != null) {
+                dto.setFeedbackDto(baseMapper.selectFeedbackById(dto.getFeedbackId()));
             }
         }
         PageData pageData = new PageData();

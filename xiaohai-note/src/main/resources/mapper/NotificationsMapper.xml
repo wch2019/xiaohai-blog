@@ -53,5 +53,17 @@
         FROM sys_user
         where id = (SELECT user_id FROM b_article_like where id = #{likeId})
     </select>
+    <select id="selectFeedbackById" resultType="com.xiaohai.note.pojo.dto.NotificationsFeedbackDto">
+        SELECT
+        id,
+        title,
+        content,
+        reason,
+        status,
+        created_time as createdTime
+        FROM
+        `sys_feedback`
+        where id = #{feedbackId}
+    </select>
 
 </mapper>
