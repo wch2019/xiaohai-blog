@@ -109,10 +109,10 @@
         >
           <el-row>
             <el-col :span="6">
-              <el-form-item label="系统通知">
-                <el-radio-group v-model="form.resource" size="medium">
-                  <el-radio border label="开启" />
-                  <el-radio border label="关闭" />
+              <el-form-item label="消息邮箱通知">
+                <el-radio-group v-model="form.emailMessage" size="medium">
+                  <el-radio label="0" border>开启</el-radio>
+                  <el-radio label="1" border>关闭</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -317,6 +317,7 @@ export default {
     return {
       form: {
         id: '',
+        emailMessage: '1',
         emailHost: '',
         emailUsername: '',
         emailPassword: '',

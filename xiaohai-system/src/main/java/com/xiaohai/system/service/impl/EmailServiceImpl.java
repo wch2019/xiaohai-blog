@@ -120,7 +120,6 @@ public class EmailServiceImpl implements EmailService {
         String content = """
                 <!DOCTYPE html>
                 <html lang="en">
-                                        
                 <head>
                     <meta charset="UTF-8">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -128,69 +127,55 @@ public class EmailServiceImpl implements EmailService {
                     <title>Email Template</title>
                     <style>
                         .body {
-                            position: relative;
                             font-size: 14px;
-                            height: auto;
                             padding: 15px;
                             line-height: 1.7;
                         }
-                                        
-                        .qmbox h1,
-                        .qmbox h2,
-                        .qmbox h3 {
+                                
+                        .qmbox h1, .qmbox h2, .qmbox h3 {
                             color: #00785a;
                         }
-                                        
+                                
                         .qmbox p {
                             margin: 0;
                             color: #333;
                             font-size: 16px;
                         }
-                                        
-                        .qmbox .eo-link {
+                                
+                        .qmbox .eo-link, .qmbox .eo-link:hover {
                             color: #0576b9;
                             text-decoration: none;
                             cursor: pointer;
                         }
-                                        
+                                
                         .qmbox .eo-link:hover {
                             color: #3498db;
                         }
-                                        
-                        .qmbox .eo-link:hover {
-                            text-decoration: underline;
-                        }
-                                        
+                                
                         .qmbox .eo-p-link {
                             display: block;
                             margin-top: 20px;
                             color: #009cff;
                             text-decoration: underline;
                         }
-                                        
-                        #mailContentContainer {
+                                
+                        .mailContentContainer {
                             max-width: 800px;
                             margin: 20px auto 0 auto;
                             opacity: 1;
-                        }
-                                        
-                        #mailContentContainer table {
-                            background-color: #fff;
                             border-collapse: collapse;
                             border: 1px solid #e5e5e5;
                             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
                             text-align: left;
-                            width: 100%;
                             font-size: 14px;
-                            border-spacing: 0;
                         }
-                                        
-                        #mailContentContainer img {
+                                
+                        .mailContentContainer img {
                             padding: 15px 15px 15px 30px;
                             width: 50px;
                         }
-                                        
-                        #mailContentContainer .p-code p {
+                                
+                        .mailContentContainer .p-code p {
                             color: #253858;
                             text-align: center;
                             line-height: 1.75em;
@@ -202,27 +187,25 @@ public class EmailServiceImpl implements EmailService {
                             border: 1px solid #d9d9d9;
                             font-weight: bold;
                         }
+                                
                         .p-code {
-                            padding: 0 30px 0 30px;
+                            padding: 0 30px;
                         }
+                                
                         .p-intro {
                             padding: 30px;
                         }
-                                        
+                                
                         .p-news {
-                            padding: 0 30px 30px 30px;
-                        }
-                                        
-                        #mailContentContainer .txt {
-                            height: auto;
+                            padding: 0 30px 30px;
                         }
                     </style>
                 </head>
-                                        
+                                
                 <body>
                     <div id="contentDiv" class="body">
                         <div id="qm_con_body">
-                            <div id="mailContentContainer" class="qmbox qm_con_body_content qqmail_webmail_only">
+                            <div class="mailContentContainer qmbox qm_con_body_content qqmail_webmail_only">
                                 <table cellpadding="0" cellspacing="0">
                                     <tbody>
                                         <tr style="background-color: #f8f8f8;">
@@ -241,7 +224,7 @@ public class EmailServiceImpl implements EmailService {
                                         <tr>
                                             <td class="p-code">
                                                 <p>
-                                                """+code+"""
+                                                   %S
                                                 </p>
                                             </td>
                                         </tr>
@@ -262,9 +245,7 @@ public class EmailServiceImpl implements EmailService {
                         </div>
                     </div>
                 </body>
-                                        
-                </html>
-                """;
+                </html>""".formatted(code);
         send(email, content, "DotCode验证码");
         log.info("邮箱验证码发送成功,邮箱:{},验证码:{}", email, code);
         SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE + email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);

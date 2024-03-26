@@ -46,6 +46,9 @@ public class ConfigVo implements Serializable {
     @Schema(description = "公安备案号")
     private String securityRecordNum;
 
+    @Schema(description = "邮箱通知")
+    private String emailMessage;
+
     @Schema(description = "邮箱地址")
     private String emailHost;
 

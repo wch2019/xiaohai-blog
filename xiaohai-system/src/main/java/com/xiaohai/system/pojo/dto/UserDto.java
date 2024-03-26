@@ -63,6 +63,7 @@ public class UserDto implements Serializable {
 
     @Schema(description = "帐号状态（0正常 1停用）")
     private String status;
+
     @Schema(description = "登录次数")
     private String loginCount;
 
