@@ -3,7 +3,6 @@ package com.xiaohai.system.service.impl;
 import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
-import com.xiaohai.system.dao.ConfigMapper;
 import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.service.ConfigService;
 import com.xiaohai.system.service.EmailService;
@@ -26,8 +25,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
-    private final ConfigMapper configMapper;
-
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
     private final ConfigService configService;
     private String form = "";
