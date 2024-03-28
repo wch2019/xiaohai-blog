@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+
     private final ConfigService configService;
     private String form = "";
 
