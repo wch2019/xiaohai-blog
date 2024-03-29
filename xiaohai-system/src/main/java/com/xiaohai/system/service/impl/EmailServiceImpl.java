@@ -1,6 +1,8 @@
 package com.xiaohai.system.service.impl;
 
+import com.xiaohai.common.confing.MailSenderConfig;
 import com.xiaohai.common.constant.RedisConstants;
+import com.xiaohai.common.utils.EmailUtils;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.system.pojo.dto.ConfigDto;
@@ -28,6 +30,7 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
     private final ConfigService configService;
+    private final MailSenderConfig mailSenderConfig;
     private String form = "";
 
 
@@ -244,7 +247,8 @@ public class EmailServiceImpl implements EmailService {
                     </div>
                 </body>
                 </html>""".formatted(code);
-        send(email, content, "DotCode验证码");
+        EmailUtils.send(mailSenderConfig.getSender(),email, content, "DotCode验证码");
+//        send(email, content, "DotCode验证码");
         log.info("邮箱验证码发送成功,邮箱:{},验证码:{}", email, code);
         SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE + email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
     }

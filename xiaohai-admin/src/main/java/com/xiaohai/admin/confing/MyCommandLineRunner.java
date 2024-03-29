@@ -1,5 +1,10 @@
 package com.xiaohai.admin.confing;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.xiaohai.common.confing.MailSenderConfig;
+import com.xiaohai.common.daomain.EmailDto;
+import com.xiaohai.system.pojo.dto.ConfigDto;
+import com.xiaohai.system.service.ConfigService;
 import com.xiaohai.system.service.DictTypeService;
 import com.xiaohai.system.service.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +37,10 @@ public class MyCommandLineRunner implements CommandLineRunner {
     private final DictTypeService dictTypeService;
 
     private final EmailService emailService;
+
+    private final MailSenderConfig mailSenderConfig;
+
+    private final ConfigService configService;
     /**
      * 读取衔接地址
      */
@@ -70,7 +79,11 @@ public class MyCommandLineRunner implements CommandLineRunner {
         //重置字典缓存数据
         dictTypeService.refreshDict();
         //刷新邮箱配置
-        emailService.init();
+//        emailService.init();
+        ConfigDto systemConfig = configService.findByOne();
+        EmailDto email = new EmailDto();
+        BeanUtil.copyProperties(systemConfig, email);
+        mailSenderConfig.init(email);
         log.info("加载必要数据完成");
     }
 
