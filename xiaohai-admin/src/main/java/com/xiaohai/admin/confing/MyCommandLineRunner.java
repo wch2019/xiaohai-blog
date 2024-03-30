@@ -6,7 +6,6 @@ import com.xiaohai.common.daomain.EmailDto;
 import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.service.ConfigService;
 import com.xiaohai.system.service.DictTypeService;
-import com.xiaohai.system.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +34,6 @@ import java.sql.*;
 public class MyCommandLineRunner implements CommandLineRunner {
 
     private final DictTypeService dictTypeService;
-
-    private final EmailService emailService;
 
     private final MailSenderConfig mailSenderConfig;
 
@@ -79,7 +76,6 @@ public class MyCommandLineRunner implements CommandLineRunner {
         //重置字典缓存数据
         dictTypeService.refreshDict();
         //刷新邮箱配置
-//        emailService.init();
         ConfigDto systemConfig = configService.findByOne();
         EmailDto email = new EmailDto();
         BeanUtil.copyProperties(systemConfig, email);

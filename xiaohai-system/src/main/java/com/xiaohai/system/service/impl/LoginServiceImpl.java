@@ -3,8 +3,9 @@ package com.xiaohai.system.service.impl;
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.xiaohai.common.constant.Constants;
+import com.xiaohai.common.confing.MailSenderConfig;
 import com.xiaohai.common.constant.RedisConstants;
+import com.xiaohai.common.utils.EmailUtils;
 import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
@@ -13,28 +14,33 @@ import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RegisterVo;
 import com.xiaohai.system.pojo.vo.UserVo;
-import com.xiaohai.system.service.EmailService;
 import com.xiaohai.system.service.LoginService;
 import com.xiaohai.system.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wangchenghai
  * @date 2023/01/18 13:47:03
  */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
     private final UserMapper userMapper;
 
-    private final EmailService emailService;
-
 
     private final UserService serService;
+
+    private final MailSenderConfig mailSenderConfig;
 
 
     @Override
@@ -59,8 +65,20 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String sendEmailCode(String email) {
-        emailService.sendCode(email);
+        sendCode(email);
         return "验证码已发送，请前往邮箱查看!";
+    }
+
+    /**
+     * 发送邮箱验证码
+     * 异步处理
+     */
+    @Async("syncExecutorPool")
+    public void sendCode(String email) {
+        String code = String.valueOf(new Random().nextInt(900000) + 100000);
+        EmailUtils.send(mailSenderConfig.getSender(), email, EmailUtils.authCode(code), "DotCode验证码");
+        log.info("邮箱验证码发送成功,邮箱:{},验证码:{}", email, code);
+        SpringUtils.getBean(RedisUtils.class).setCacheObject(RedisConstants.EMAIL_CODE + email, code, RedisConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
     }
 
     @Override

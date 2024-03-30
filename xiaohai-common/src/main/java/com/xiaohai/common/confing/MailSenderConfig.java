@@ -16,6 +16,10 @@ public class MailSenderConfig {
     private final JavaMailSenderImpl javaMailSender= new JavaMailSenderImpl();
 
 
+    /**
+     * 初始化
+     * @param emailDto 邮箱配置
+     */
     public void init(EmailDto emailDto) {
         if (emailDto != null) {
             javaMailSender.setHost(emailDto.getEmailHost());

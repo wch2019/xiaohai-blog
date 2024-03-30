@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.confing.MailSenderConfig;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
+import com.xiaohai.common.utils.EmailUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.CommentMapper;
 import com.xiaohai.note.dao.FriendLinkMapper;
@@ -51,6 +53,8 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
     private final CommentMapper commentMapper;
 
     private final FriendLinkMapper friendLinkMapper;
+
+    private final MailSenderConfig mailSenderConfig;
 
 
     /**
@@ -115,6 +119,8 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
         notifications.setCreatedTime(LocalDateTime.now());
         baseMapper.insert(notifications);
         sseInform(userId);
+        // TODO 邮箱推送
+        EmailUtils.send(mailSenderConfig.getSender(), "", "", "");
     }
 
     @Override
