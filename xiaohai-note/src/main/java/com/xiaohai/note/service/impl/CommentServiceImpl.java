@@ -59,6 +59,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 评论消息推送
         NotificationsVo notificationsVo=new NotificationsVo();
         if(vo.getArticleId()!=0){
+            //文章作者通知
             Article article =articleMapper.selectById(vo.getArticleId());
             notificationsVo.setUserId(article.getUserId());
         }else {
@@ -68,6 +69,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         notificationsVo.setCommentId(comment.getId());
         notificationsVo.setType("2");
         notificationsService.add(notificationsVo);
+        if(comment.getReplyUserId()!=null){
+            // 回复作者通知
+            notificationsVo.setUserId(comment.getReplyUserId());
+            notificationsService.add(notificationsVo);
+        }
+        // TODO 评论通知，不完善后期还需修改
         return count;
     }
 

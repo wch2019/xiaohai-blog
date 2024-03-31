@@ -34,9 +34,6 @@ public class NotificationsDto implements Serializable {
     @Schema(description = "文章id")
     private Integer articleId;
 
-    @Schema(description = "文章标题")
-    private String title;
-
     @Schema(description = "评论id")
     private Integer commentId;
 

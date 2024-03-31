@@ -25,7 +25,6 @@
         user_id as userId,
         type,
         article_id as articleId,
-        (SELECT title FROM b_article where id=article_id)as title,
         comment_id as commentId,
         like_id as likeId,
         is_read as isRead,
@@ -48,10 +47,16 @@
         created_time DESC
     </select>
     <select id="selectFindLike" resultType="com.xiaohai.note.pojo.dto.NotificationsLikeDto">
-        SELECT nick_name as nickName,
-               avatar
-        FROM sys_user
-        where id = (SELECT user_id FROM b_article_like where id = #{likeId})
+        SELECT
+            u.nick_name AS nickName,
+            u.avatar,
+            a.title
+        FROM
+            sys_user u
+                LEFT JOIN b_article_like l ON u.id = l.user_id
+                LEFT JOIN b_article a ON a.id = l.article_id
+        WHERE
+            l.id = #{likeId}
     </select>
     <select id="selectFeedbackById" resultType="com.xiaohai.note.pojo.dto.NotificationsFeedbackDto">
         SELECT
@@ -64,6 +69,12 @@
         FROM
         `sys_feedback`
         where id = #{feedbackId}
+    </select>
+    <select id="selectEmailByUserId" resultType="java.lang.String">
+        SELECT email FROM sys_user where id = #{userId}
+    </select>
+    <select id="selectEmailNoticeStatus" resultType="java.lang.Integer">
+        select email_message from sys_config
     </select>
 
 </mapper>

@@ -24,7 +24,6 @@ public class EmailUtils {
             mineHelper.setSubject(subject);
             // 设置邮件发送者
             mineHelper.setFrom("DotCode小站<" + javaMailSender.getUsername() + ">");
-            //            mineHelper.setFrom(Objects.requireNonNull(javaMailSender.getUsername()));
             // 设置邮件接收者，可以有多个接收者，中间用逗号隔开
             mineHelper.setTo(email);
             // 设置邮件发送日期
@@ -39,15 +38,37 @@ public class EmailUtils {
     }
 
     /**
+     * 点赞通知 模板
+     *
+     * @param articleId 文章id
+     * @param title     标题
+     * @return java.lang.String
+     * @author xiaohai
+     * @date 2024/3/31 8:39
+     */
+    public static String likeEmail(Integer articleId, String title) {
+        return """
+                <html>
+                <body>
+                      <div style="font-family: Arial, sans-serif;">
+                          <h2>您的内容受到了点赞！</h2>
+                          <p>我们很高兴地通知您，您的 <a href='https://www.dotcode.top/article/%s'>《%s》 </a>得到了一个新的赞。</p>
+                          <p>这个赞是对您精彩内容的认可，感谢您对我们平台的贡献。继续保持优秀的创作！</p>
+                      </div>
+                </body>
+                </html>""".formatted(articleId, title);
+    }
+
+    /**
      * 友链通过发送通知 模板
      */
     public static String friendPass() {
         return """
                 <html>
                 <body>
-                    <p>您在<a href='http://www.dotcode.top'>DotCode</a>站点申请友链加入审核通过!!</span>
+                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点申请友链加入审核通过!!</span>
                     <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
-                    <p>可前往<a href='http://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
+                    <p>可前往<a href='https://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
                 </body>
                 </html>
                  """;
@@ -62,9 +83,9 @@ public class EmailUtils {
         return """
                 <html>
                 <body>
-                    <p>您在<a href='http://www.dotcode.top'>DotCode</a>站点申请的友链加入审核未通过!具体原因为:%s</span>
+                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点申请的友链加入审核未通过!具体原因为:%s</span>
                     <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
-                   <p>可前往<a href='http://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
+                   <p>可前往<a href='https://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
                 </body>
                 </html>
                 """.formatted(reason);

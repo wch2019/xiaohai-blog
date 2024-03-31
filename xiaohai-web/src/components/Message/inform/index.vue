@@ -19,9 +19,9 @@
                     <span>赞了你的文章</span>
                     <span>{{ like.createdTime }}</span>
                   </div>
-                  <el-tooltip :content="like.title" placement="bottom">
+                  <el-tooltip :content="like.likeDto.title" placement="bottom">
                     <el-link class="ellipsis-link" :underline="false" @click="onClick(like)">
-                      《{{ like.title }}》
+                      《{{ like.likeDto.title }}》
                     </el-link>
                   </el-tooltip>
                 </div>
@@ -42,9 +42,9 @@
                         <span v-if="common.commentDto.replyUsername">@ {{ common.commentDto.replyUsername }}</span>
                         <span v-if="common.articleId">
                           评论文章
-                          <el-tooltip :content="common.title" placement="bottom">
+                          <el-tooltip :content="common.commentDto.title" placement="bottom">
                             <el-link class="ellipsis-link" :underline="false" @click="onClick(common)">
-                              《{{ common.title }}》
+                              《{{ common.commentDto.title }}》
                             </el-link>
                           </el-tooltip>
                         </span>

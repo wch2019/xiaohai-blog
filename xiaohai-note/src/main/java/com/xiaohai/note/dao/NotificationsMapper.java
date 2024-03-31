@@ -34,10 +34,23 @@ public interface NotificationsMapper extends BaseMapper<Notifications> {
      * @return
      */
     NotificationsLikeDto selectFindLike(@Param("likeId") Integer likeId);
+
     /**
      * 查询反馈记录
      * @param feedbackId
      * @return
      */
     NotificationsFeedbackDto selectFeedbackById(@Param("feedbackId") Integer feedbackId);
+
+    /**
+     * 根据用户id获取邮箱
+     * @param userId
+     * @return
+     */
+    String selectEmailByUserId(@Param("userId") Integer userId);
+    /**
+     * 获取邮箱通知状态
+     * @return
+     */
+    Integer selectEmailNoticeStatus();
 }

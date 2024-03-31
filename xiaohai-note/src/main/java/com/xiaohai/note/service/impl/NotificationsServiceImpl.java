@@ -15,6 +15,7 @@ import com.xiaohai.note.dao.FriendLinkMapper;
 import com.xiaohai.note.dao.NotificationsMapper;
 import com.xiaohai.note.pojo.dto.FriendLinkDto;
 import com.xiaohai.note.pojo.dto.NotificationsDto;
+import com.xiaohai.note.pojo.dto.NotificationsLikeDto;
 import com.xiaohai.note.pojo.entity.FriendLink;
 import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.NotificationsQuery;
@@ -120,7 +121,22 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
         baseMapper.insert(notifications);
         sseInform(userId);
         // TODO 邮箱推送
-        EmailUtils.send(mailSenderConfig.getSender(), "", "", "");
+        var emailNoticeStatus = baseMapper.selectEmailNoticeStatus();
+        if(emailNoticeStatus==0){
+            var email = baseMapper.selectEmailByUserId(userId);
+            if (notifications.getType().equals("1")) {
+                NotificationsLikeDto likeDto=baseMapper.selectFindLike(notifications.getLikeId());
+                var likeEmail=EmailUtils.likeEmail(notifications.getArticleId(),likeDto.getTitle());
+                EmailUtils.send(mailSenderConfig.getSender(), email, likeEmail, "点赞通知");
+            }
+            if (notifications.getType().equals("2")) {
+                EmailUtils.send(mailSenderConfig.getSender(), email, "", "评论通知");
+            }
+            if (notifications.getType().equals("3")) {
+                EmailUtils.send(mailSenderConfig.getSender(), email, "", "系统通知");
+            }
+        }
+
     }
 
     @Override
@@ -146,6 +162,7 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
 
     /**
      * 通知客户端
+     *
      * @param userId
      */
     public void sseInform(Integer userId) {
@@ -159,7 +176,9 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                     .reconnectTime(3000));
         } catch (Exception e) {
             sseEmitterMap.remove(userId);
-            sseEmitter.complete();
+            if(sseEmitter!=null){
+                sseEmitter.complete();
+            }
             log.info("用户：{}，SSE连接断开！", userId);
         }
     }
@@ -179,7 +198,7 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 dto.setCommentDto(commentMapper.findCommentId(dto.getCommentId()));
             }
             if (dto.getLinkId() != null) {
-                FriendLink friendLink =friendLinkMapper.selectById(dto.getLinkId());
+                FriendLink friendLink = friendLinkMapper.selectById(dto.getLinkId());
                 FriendLinkDto friendLinkDto = new FriendLinkDto();
                 BeanUtils.copyProperties(friendLink, friendLinkDto);
                 dto.setLinkDto(friendLinkDto);
@@ -205,7 +224,7 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 dto.setCommentDto(commentMapper.findCommentId(dto.getCommentId()));
             }
             if (dto.getLinkId() != null) {
-                FriendLink friendLink =friendLinkMapper.selectById(dto.getLinkId());
+                FriendLink friendLink = friendLinkMapper.selectById(dto.getLinkId());
                 FriendLinkDto friendLinkDto = new FriendLinkDto();
                 BeanUtils.copyProperties(friendLink, friendLinkDto);
                 dto.setLinkDto(friendLinkDto);

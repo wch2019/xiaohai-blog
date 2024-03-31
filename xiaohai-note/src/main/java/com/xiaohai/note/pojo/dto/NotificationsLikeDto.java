@@ -29,4 +29,7 @@ public class NotificationsLikeDto implements Serializable {
     @Schema(description = "头像地址")
     private String avatar;
 
+    @Schema(description = "文章标题")
+    private String title;
+
 }

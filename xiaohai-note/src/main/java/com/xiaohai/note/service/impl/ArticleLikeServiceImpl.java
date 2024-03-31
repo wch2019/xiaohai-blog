@@ -10,9 +10,11 @@ import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.ArticleLikeMapper;
 import com.xiaohai.note.dao.ArticleMapper;
+import com.xiaohai.note.dao.NotificationsMapper;
 import com.xiaohai.note.pojo.dto.ArticleLikeDto;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.ArticleLike;
+import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.ArticleLikeQuery;
 import com.xiaohai.note.pojo.vo.ArticleLikeVo;
 import com.xiaohai.note.pojo.vo.NotificationsVo;
@@ -37,6 +39,8 @@ public class ArticleLikeServiceImpl extends ServiceImpl<ArticleLikeMapper, Artic
 
     private final NotificationsService notificationsService;
 
+    private final NotificationsMapper notificationsMapper;
+
     private final ArticleMapper articleMapper;
 
     @Override
@@ -57,7 +61,9 @@ public class ArticleLikeServiceImpl extends ServiceImpl<ArticleLikeMapper, Artic
             notificationsService.add(notificationsVo);
             return 1;
         }else{
-            return  baseMapper.delete(new QueryWrapper<ArticleLike>().eq("user_id",StpUtil.getLoginId()).eq("article_id",vo.getArticleId()));
+            ArticleLike articleLike=baseMapper.selectOne(new QueryWrapper<ArticleLike>().eq("user_id",StpUtil.getLoginId()).eq("article_id",vo.getArticleId()));
+            notificationsMapper.delete(new QueryWrapper<Notifications>().eq("like_id",articleLike.getId()));
+            return  baseMapper.deleteById(articleLike.getId());
         }
     }
 
@@ -65,6 +71,7 @@ public class ArticleLikeServiceImpl extends ServiceImpl<ArticleLikeMapper, Artic
     public Integer delete(Long[] ids){
         for (Long id : ids) {
             baseMapper.deleteById(id);
+            notificationsMapper.delete(new QueryWrapper<Notifications>().eq("like_id",id));
         }
         return ids.length;
     }
