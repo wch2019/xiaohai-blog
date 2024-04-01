@@ -51,12 +51,25 @@ public class EmailUtils {
                 <html>
                 <body>
                       <div style="font-family: Arial, sans-serif;">
-                          <h2>您的内容受到了点赞！</h2>
+                          <h2>您的内容收到了点赞！</h2>
                           <p>我们很高兴地通知您，您的 <a href='https://www.dotcode.top/article/%s'>《%s》 </a>得到了一个新的赞。</p>
                           <p>这个赞是对您精彩内容的认可，感谢您对我们平台的贡献。继续保持优秀的创作！</p>
                       </div>
                 </body>
                 </html>""".formatted(articleId, title);
+    }
+
+    public static String commentEmail(String content) {
+        return """
+                <html>
+                <body>
+                      <div style="font-family: Arial, sans-serif;">
+                          <h2>您收到评论！</h2>
+                          <p>%s</p>
+                          <p>详情请<a href='https://www.dotcode.top'>登陆</a>查看通知</p>
+                      </div>
+                </body>
+                </html>""".formatted(content);
     }
 
     /**

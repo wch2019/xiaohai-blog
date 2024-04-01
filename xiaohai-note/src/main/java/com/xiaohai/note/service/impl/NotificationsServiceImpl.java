@@ -13,6 +13,7 @@ import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.CommentMapper;
 import com.xiaohai.note.dao.FriendLinkMapper;
 import com.xiaohai.note.dao.NotificationsMapper;
+import com.xiaohai.note.pojo.dto.CommentDto;
 import com.xiaohai.note.pojo.dto.FriendLinkDto;
 import com.xiaohai.note.pojo.dto.NotificationsDto;
 import com.xiaohai.note.pojo.dto.NotificationsLikeDto;
@@ -130,7 +131,9 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 EmailUtils.send(mailSenderConfig.getSender(), email, likeEmail, "点赞通知");
             }
             if (notifications.getType().equals("2")) {
-                EmailUtils.send(mailSenderConfig.getSender(), email, "", "评论通知");
+                CommentDto commentDto=commentMapper.findCommentId(notifications.getCommentId());
+                var commentEmail=EmailUtils.commentEmail(commentDto.getContent());
+                EmailUtils.send(mailSenderConfig.getSender(), email, commentEmail, "评论通知");
             }
             if (notifications.getType().equals("3")) {
                 EmailUtils.send(mailSenderConfig.getSender(), email, "", "系统通知");
