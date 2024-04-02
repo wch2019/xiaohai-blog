@@ -13,10 +13,7 @@ import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.note.dao.CommentMapper;
 import com.xiaohai.note.dao.FriendLinkMapper;
 import com.xiaohai.note.dao.NotificationsMapper;
-import com.xiaohai.note.pojo.dto.CommentDto;
-import com.xiaohai.note.pojo.dto.FriendLinkDto;
-import com.xiaohai.note.pojo.dto.NotificationsDto;
-import com.xiaohai.note.pojo.dto.NotificationsLikeDto;
+import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.FriendLink;
 import com.xiaohai.note.pojo.entity.Notifications;
 import com.xiaohai.note.pojo.query.NotificationsQuery;
@@ -136,7 +133,24 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 EmailUtils.send(mailSenderConfig.getSender(), email, commentEmail, "评论通知");
             }
             if (notifications.getType().equals("3")) {
-                EmailUtils.send(mailSenderConfig.getSender(), email, "", "系统通知");
+                String emailTemplate="";
+                // 友链
+                if (notifications.getLinkId() != null) {
+                    FriendLink friendLink = friendLinkMapper.selectById(notifications.getLinkId());
+                    // 已通过
+                    if (friendLink.getStatus().equals("1")) {
+                        emailTemplate=EmailUtils.friendPass(friendLink.getUrl(),friendLink.getName());
+                    }
+                    // 未通过
+                    if (friendLink.getStatus().equals("2")) {
+                        emailTemplate=EmailUtils.friendFailed(friendLink.getUrl(),friendLink.getName(),friendLink.getReason());
+                    }
+                }
+                // 反馈
+                if (notifications.getFeedbackId() != null) {
+                    NotificationsFeedbackDto feedbackDto =baseMapper.selectFeedbackById(notifications.getFeedbackId());
+                }
+                EmailUtils.send(mailSenderConfig.getSender(), email, emailTemplate, "系统通知");
             }
         }
 

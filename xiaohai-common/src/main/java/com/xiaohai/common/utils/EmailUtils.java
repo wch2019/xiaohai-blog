@@ -59,6 +59,14 @@ public class EmailUtils {
                 </html>""".formatted(articleId, title);
     }
 
+    /**
+     * 评论通知
+     *
+     * @param content 消息
+     * @return java.lang.String
+     * @author wangchenghai
+     * @date 2024/04/02 14:01:36
+     */
     public static String commentEmail(String content) {
         return """
                 <html>
@@ -75,16 +83,16 @@ public class EmailUtils {
     /**
      * 友链通过发送通知 模板
      */
-    public static String friendPass() {
+    public static String friendPass(String url, String name) {
         return """
                 <html>
                 <body>
-                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点申请友链加入审核通过!!</span>
+                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点 <a href='%s'>%s</a> 申请友链加入审核通过!!</span>
                     <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
                     <p>可前往<a href='https://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
                 </body>
                 </html>
-                 """;
+                 """.formatted(url, name);
     }
 
     /**
@@ -92,16 +100,16 @@ public class EmailUtils {
      *
      * @param reason 原因
      */
-    public static String friendFailed(String reason) {
+    public static String friendFailed(String url, String name, String reason) {
         return """
                 <html>
                 <body>
-                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点申请的友链加入审核未通过!具体原因为:%s</span>
+                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点 <a href='%s'>%s</a> 申请的友链加入审核未通过!具体原因为:%s</span>
                     <p style='padding: 20px;'>感谢您的选择，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
                    <p>可前往<a href='https://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
                 </body>
                 </html>
-                """.formatted(reason);
+                """.formatted(url, name, reason);
     }
 
     /**
