@@ -81,6 +81,19 @@ public class EmailUtils {
     }
 
     /**
+     * 友链申请发送通知 模板
+     */
+    public static String friendEmail(String url, String name) {
+        return """
+                <html>
+                <body>
+                    <p><a href='%s'>%s</a> 申请友链加入!!!</span>
+                </body>
+                </html>
+                 """.formatted(url, name);
+    }
+
+    /**
      * 友链通过发送通知 模板
      */
     public static String friendPass(String url, String name) {
