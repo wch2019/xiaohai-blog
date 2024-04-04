@@ -153,18 +153,18 @@ public class NotificationsServiceImpl extends ServiceImpl<NotificationsMapper, N
                 // 反馈
                 if (notifications.getFeedbackId() != null) {
                     NotificationsFeedbackDto feedbackDto=baseMapper.selectFeedbackById(notifications.getFeedbackId());
-//                    // 未审核
-//                    if (feedbackDto.getStatus().equals("0")) {
-//                        emailTemplate=EmailUtils.friendEmail(feedbackDto.getTitle(),feedbackDto.getContent());
-//                    }
-//                    // 已通过
-//                    if (feedbackDto.getStatus().equals("1")) {
-//                        emailTemplate=EmailUtils.friendPass(feedbackDto.getTitle(),feedbackDto.getContent(),feedbackDto.getReason());
-//                    }
-//                    // 未通过
-//                    if (feedbackDto.getStatus().equals("2")) {
-//                        emailTemplate=EmailUtils.friendFailed(feedbackDto.getTitle(),feedbackDto.getContent(),feedbackDto.getReason());
-//                    }
+                    // 未审核
+                    if (feedbackDto.getStatus().equals("0")) {
+                        emailTemplate=EmailUtils.feedbackEmail(feedbackDto.getTitle(),feedbackDto.getContent());
+                    }
+                    // 已通过
+                    if (feedbackDto.getStatus().equals("1")) {
+                        emailTemplate=EmailUtils.feedbackPass(feedbackDto.getTitle(),feedbackDto.getContent());
+                    }
+                    // 未通过
+                    if (feedbackDto.getStatus().equals("2")) {
+                        emailTemplate=EmailUtils.feedbackFailed(feedbackDto.getTitle(),feedbackDto.getContent(),feedbackDto.getReason());
+                    }
                 }
                 EmailUtils.send(mailSenderConfig.getSender(), email, emailTemplate, "系统通知");
             }

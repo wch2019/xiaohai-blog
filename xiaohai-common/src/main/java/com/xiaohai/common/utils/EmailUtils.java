@@ -87,7 +87,7 @@ public class EmailUtils {
         return """
                 <html>
                 <body>
-                    <p><a href='%s'>%s</a> 申请友链加入!!!</span>
+                    <span><a href='%s'>%s</a> 申请友链加入!!!</span>
                 </body>
                 </html>
                  """.formatted(url, name);
@@ -123,6 +123,50 @@ public class EmailUtils {
                 </body>
                 </html>
                 """.formatted(url, name, reason);
+    }
+
+    public static String feedbackEmail(String title, String content) {
+        return """
+                <html>
+                <body>
+                   <p>用户反馈!!!</span>
+                    <p>反馈信息:%s-%s</p>
+                   <p>详情请<a href='https://www.dotcode.top'>登陆</a>查看通知</p>
+                </body>
+                </html>
+                """.formatted(title, content);
+    }
+
+    /**
+     * 反馈通过发送通知 模板
+     */
+    public static String feedbackPass(String title, String content) {
+        return """
+                <html>
+                <body>
+                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点 %s:%s反馈审核通过!!</span>
+                    <p style='padding: 20px;'>感谢您的反馈，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
+                    <p>详情请<a href='https://www.dotcode.top'>登陆</a>查看通知</p>
+                </body>
+                </html>
+                 """.formatted(title, content);
+    }
+
+    /**
+     * 反馈未通过发送通知 模板
+     *
+     * @param reason 原因
+     */
+    public static String feedbackFailed(String title, String content, String reason) {
+        return """
+                <html>
+                <body>
+                    <p>您在<a href='https://www.dotcode.top'>DotCode</a>站点  %s:%s 反馈审核未通过!具体原因为:%s</span>
+                    <p style='padding: 20px;'>感谢您的反馈，本站将会竭尽维护好站点稳定，分享高质量的文章，欢迎相互交流互访。</p>
+                    <p>详情请<a href='https://www.dotcode.top'>登陆</a>查看通知</p>
+                </body>
+                </html>
+                """.formatted(title, content, reason);
     }
 
     /**
