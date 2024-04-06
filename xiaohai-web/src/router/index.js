@@ -63,7 +63,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/components/Message/index.vue'),
+        component: () => import('@/components/Message/index'),
         name: 'Profile',
         meta: { title: '消息中心', icon: 'el-icon-bell', noCache: true }
       }

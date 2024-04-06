@@ -90,7 +90,7 @@ public class EmailUtils {
                     <span><a href='%s'>%s</a> 申请友链加入!!!</span>
                 </body>
                 </html>
-                 """.formatted(url, name);
+                """.formatted(url, name);
     }
 
     /**
@@ -105,7 +105,7 @@ public class EmailUtils {
                     <p>可前往<a href='https://www.dotcode.top/links'>本站友链</a>查阅您的站点。</p>
                 </body>
                 </html>
-                 """.formatted(url, name);
+                """.formatted(url, name);
     }
 
     /**
@@ -129,8 +129,8 @@ public class EmailUtils {
         return """
                 <html>
                 <body>
-                   <p>用户反馈!!!</span>
-                    <p>反馈信息:%s-%s</p>
+                   <h2>用户反馈:%s</h2>
+                   <p>%s</p>
                    <p>详情请<a href='https://www.dotcode.top'>登陆</a>查看通知</p>
                 </body>
                 </html>
@@ -149,7 +149,7 @@ public class EmailUtils {
                     <p>详情请<a href='https://www.dotcode.top'>登陆</a>查看通知</p>
                 </body>
                 </html>
-                 """.formatted(title, content);
+                """.formatted(title, content);
     }
 
     /**
