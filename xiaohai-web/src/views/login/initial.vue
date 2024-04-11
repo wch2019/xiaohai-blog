@@ -9,11 +9,12 @@
         label-position="left"
       >
         <h2>DotCode's Blog</h2>
-        <el-steps :active="active" finish-status="success">
+        <el-steps :active="active" finish-status="success" process-status="wait" style="margin-bottom:30px;">
           <el-step title="步骤 1" />
           <el-step title="步骤 2" />
           <el-step title="步骤 3" />
         </el-steps>
+
         <el-form-item prop="username" class="inputNew">
           <el-input
             ref="username"
@@ -66,9 +67,10 @@
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="handleRegister"
+
+          @click="next"
         >
-          <span v-if="!loading">注 册</span>
+          <span v-if="!loading">下一步</span>
           <span v-else>注 册 中...</span>
         </el-button>
 
@@ -102,30 +104,8 @@ import { Message } from 'element-ui'
 export default {
   name: 'Register',
   data() {
-    // 验证是否相同
-    const equalToPassword = (rule, value, callback) => {
-      if (this.registerForm.password !== value) {
-        callback(new Error('两次输入的密码不一致'))
-      } else {
-        callback()
-      }
-    }
-    // 邮箱验证
-    const validateEmail = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请正确填写邮箱'))
-      } else {
-        if (value !== '') {
-          var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-          if (!reg.test(value)) {
-            callback(new Error('请输入有效的邮箱'))
-          }
-        }
-        callback()
-      }
-    }
-
     return {
+      active: 1,
       count: '',
       timer: null,
       captchaEnabled: true,
@@ -145,13 +125,7 @@ export default {
         password: [
           { required: true, trigger: 'blur', message: '请输入您的密码' },
           { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
-        ],
-        confirmPassword: [
-          { required: true, trigger: 'blur', message: '请再次输入您的密码' },
-          { required: true, validator: equalToPassword, trigger: 'blur' }
-        ],
-        code: [{ required: true, trigger: 'blur', message: '请输入验证码' }],
-        email: [{ validator: validateEmail, trigger: 'blur' }]
+        ]
       },
       loading: false,
       redirect: undefined
@@ -174,36 +148,8 @@ export default {
       const num = Math.floor(Math.random() * 5 + 1)
       this.imgSrc = require('@/assets/login/' + num + '.jpg')
     },
-    // 获取邮箱验证码
-    getCode() {
-      this.$refs.loginForm.validateField('email', (val) => {
-        if (!val) {
-          const data = {
-            email: this.registerForm.email
-          }
-          sendEmailCode(data).then(res => {
-            console.log(res)
-            Message({ message: res.msg, type: 'success', duration: 5 * 1000 })
-          })
-          const TIME_COUNT = 60
-          if (!this.timer) {
-            this.count = TIME_COUNT
-            this.captchaEnabled = false
-            this.timer = setInterval(() => {
-              if (this.count > 0 && this.count <= TIME_COUNT) {
-                this.count--
-              } else {
-                this.captchaEnabled = true
-                clearInterval(this.timer)
-                this.timer = null
-              }
-            }, 1000)
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    next() {
+      if (this.active++ > 2) this.active = 1
     },
     handleRegister() {
       this.$refs.loginForm.validate(valid => {
