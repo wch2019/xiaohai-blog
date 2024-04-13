@@ -6,6 +6,7 @@ import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.utils.OnLineUtils;
+import com.xiaohai.system.pojo.vo.InitialVo;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RegisterVo;
 import com.xiaohai.system.service.LoginService;
@@ -39,7 +40,7 @@ public class LoginController {
 
     @Operation(summary = "发送邮箱验证码")
     @Log(title = "发送邮箱验证码")
-    @GetMapping( "/sendEmailCode")
+    @GetMapping( "sendEmailCode")
     public Response<String> sendEmailCode(String email){
         return Response.success(loginService.sendEmailCode(email));
     }
@@ -49,6 +50,18 @@ public class LoginController {
     @PostMapping("register")
     public Response<Integer> register(@Validated @RequestBody RegisterVo vo){
         return  Response.success("注册成功！",loginService.register(vo));
+    }
+
+    @Operation(summary = "初始化")
+    @PostMapping("initial")
+    public Response<String> initial(@Validated @RequestBody InitialVo vo){
+        return  Response.success("初始化成功！", loginService.initial(vo));
+    }
+
+    @Operation(summary = "未初始化")
+    @PostMapping("uninitialized")
+    public Response<Integer> uninitialized(){
+        return  Response.success(loginService.uninitialized());
     }
 
     @Operation(summary = "退出",security = {@SecurityRequirement(name = Constants.SESSION_ID)})

@@ -1,7 +1,9 @@
 package com.xiaohai.system.service;
 
+import com.xiaohai.system.pojo.vo.InitialVo;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RegisterVo;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
@@ -31,4 +33,17 @@ public interface LoginService {
      * @param vo
      */
     Integer register(RegisterVo vo);
+
+    /**
+     * 初始化
+     * @param vo
+     * @return
+     */
+    String initial(InitialVo vo);
+
+    /**
+     * 是否初始化
+     * @return
+     */
+    String uninitialized();
 }

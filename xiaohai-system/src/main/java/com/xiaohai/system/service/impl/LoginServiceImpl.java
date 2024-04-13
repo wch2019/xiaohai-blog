@@ -11,6 +11,7 @@ import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.entity.User;
+import com.xiaohai.system.pojo.vo.InitialVo;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RegisterVo;
 import com.xiaohai.system.pojo.vo.UserVo;
@@ -93,5 +94,15 @@ public class LoginServiceImpl implements LoginService {
         Long[] a = {2L};
         userVo.setRoleIds(a);
         return serService.add(userVo);
+    }
+
+    @Override
+    public String initial(InitialVo vo) {
+        return "";
+    }
+
+    @Override
+    public String uninitialized() {
+        return "";
     }
 }

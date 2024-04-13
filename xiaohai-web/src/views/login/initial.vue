@@ -9,26 +9,16 @@
         label-position="left"
       >
         <h2>DotCode's Blog</h2>
-        <el-steps :active="active" finish-status="success" process-status="wait" style="margin-bottom:30px;">
-          <el-step title="步骤 1" />
-          <el-step title="步骤 2" />
-          <el-step title="步骤 3" />
-        </el-steps>
-
-        <el-form-item prop="username" class="inputNew">
+        <el-form-item prop="siteName" class="inputNew">
           <el-input
-            ref="username"
-            v-model="registerForm.username"
-            placeholder="请输入用户名"
-            name="username"
+            ref="email"
+            v-model="registerForm.siteName"
+            placeholder="请输入站点名称"
+            name="email"
             type="text"
-            tabindex="1"
+            tabindex="2"
             auto-complete="on"
-          >
-            <template #prefix>
-              <svg-icon icon-class="user" />
-            </template>
-          </el-input>
+          />
         </el-form-item>
         <el-form-item prop="email" class="inputNew">
           <el-input
@@ -43,8 +33,21 @@
             <template #prefix>
               <svg-icon icon-class="email" />
             </template>
-            <el-link v-if="captchaEnabled" slot="suffix" :underline="false" type="warning" @click="getCode">发送验证码</el-link>
-            <span v-else slot="suffix">{{ count }}s后重新获取</span>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="username" class="inputNew">
+          <el-input
+            ref="username"
+            v-model="registerForm.username"
+            placeholder="请输入用户名"
+            name="username"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+          >
+            <template #prefix>
+              <svg-icon icon-class="user" />
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password" class="inputNew">
@@ -62,16 +65,30 @@
             </template>
           </el-input>
         </el-form-item>
+        <el-form-item prop="confirmPassword" class="inputNew">
+          <el-input
+            ref="confirmPassword"
+            v-model="registerForm.confirmPassword"
+            type="password"
+            placeholder="确认密码"
+            auto-complete="on"
+            tabindex="5"
+            @keyup.enter.native="handleRegister"
+          >
+            <template #prefix>
+              <svg-icon icon-class="password" />
+            </template>
+          </el-input>
+        </el-form-item>
 
         <el-button
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
-
-          @click="next"
+          @click.native.prevent="handleRegister"
         >
-          <span v-if="!loading">下一步</span>
-          <span v-else>注 册 中...</span>
+          <span v-if="!loading">初始化</span>
+          <span v-else>初 始 中...</span>
         </el-button>
 
       </el-form>
@@ -99,11 +116,33 @@
 </template>
 
 <script>
-import { sendEmailCode, register } from '@/api/login'
+import { register } from '@/api/login'
 import { Message } from 'element-ui'
 export default {
-  name: 'Register',
+  name: 'Initial',
   data() {
+    // 验证是否相同
+    const equalToPassword = (rule, value, callback) => {
+      if (this.registerForm.password !== value) {
+        callback(new Error('两次输入的密码不一致'))
+      } else {
+        callback()
+      }
+    }
+    // 邮箱验证
+    const validateEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请正确填写邮箱'))
+      } else {
+        if (value !== '') {
+          var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+          if (!reg.test(value)) {
+            callback(new Error('请输入有效的邮箱'))
+          }
+        }
+        callback()
+      }
+    }
     return {
       active: 1,
       count: '',
@@ -118,6 +157,10 @@ export default {
         email: ''
       },
       registerRules: {
+        siteName: [
+          { required: true, trigger: 'blur', message: '请输入站点名称' },
+          { min: 2, max: 8, message: '站点名称长度必须介于 2 和 8 之间', trigger: 'blur' }
+        ],
         username: [
           { required: true, trigger: 'blur', message: '请输入您的账号' },
           { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
@@ -125,7 +168,12 @@ export default {
         password: [
           { required: true, trigger: 'blur', message: '请输入您的密码' },
           { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
-        ]
+        ],
+        confirmPassword: [
+          { required: true, trigger: 'blur', message: '请再次输入您的密码' },
+          { required: true, validator: equalToPassword, trigger: 'blur' }
+        ],
+        email: [{ validator: validateEmail, trigger: 'blur' }]
       },
       loading: false,
       redirect: undefined
@@ -147,9 +195,6 @@ export default {
     getImg() {
       const num = Math.floor(Math.random() * 5 + 1)
       this.imgSrc = require('@/assets/login/' + num + '.jpg')
-    },
-    next() {
-      if (this.active++ > 2) this.active = 1
     },
     handleRegister() {
       this.$refs.loginForm.validate(valid => {
