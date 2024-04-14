@@ -38,3 +38,19 @@ export function sendEmailCode(data) {
     params: data
   })
 }
+// 未初始化
+export function uninitialized() {
+  return request({
+    url: '/uninitialized',
+    method: 'get'
+  })
+}
+
+// 初始化
+export function initial(data) {
+  return request({
+    url: '/initial',
+    method: 'post',
+    data
+  })
+}

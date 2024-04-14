@@ -54,12 +54,12 @@ public class LoginController {
 
     @Operation(summary = "初始化")
     @PostMapping("initial")
-    public Response<String> initial(@Validated @RequestBody InitialVo vo){
+    public Response<Integer> initial(@Validated @RequestBody InitialVo vo){
         return  Response.success("初始化成功！", loginService.initial(vo));
     }
 
     @Operation(summary = "未初始化")
-    @PostMapping("uninitialized")
+    @GetMapping("uninitialized")
     public Response<Integer> uninitialized(){
         return  Response.success(loginService.uninitialized());
     }

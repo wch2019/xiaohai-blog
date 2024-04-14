@@ -39,11 +39,11 @@ public interface LoginService {
      * @param vo
      * @return
      */
-    String initial(InitialVo vo);
+    Integer initial(InitialVo vo);
 
     /**
      * 是否初始化
      * @return
      */
-    String uninitialized();
+    Integer uninitialized();
 }

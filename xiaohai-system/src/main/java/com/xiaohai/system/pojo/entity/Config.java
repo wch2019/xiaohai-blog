@@ -77,4 +77,7 @@ public class Config extends BaseEntity implements Serializable {
 
     @Schema(description = "关于介绍")
     private String content;
+
+    @Schema(description = "初始化状态（0开启，1关闭）")
+    private Integer initial;
 }

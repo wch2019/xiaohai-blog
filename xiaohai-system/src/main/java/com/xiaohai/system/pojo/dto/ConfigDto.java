@@ -72,4 +72,7 @@ public class ConfigDto{
 
     @Schema(description = "存储容量")
     private Long diskSize;
+
+    @Schema(description = "初始化状态（0开启，1关闭）")
+    private Integer initial;
 }

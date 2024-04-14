@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import { uninitialized } from '@/api/login'
+
 export default {
   name: 'Login',
   data() {
@@ -121,6 +123,7 @@ export default {
     }
   },
   created() {
+    this.getUninitialized()
     this.getImg()
     this.getCode()
     this.getCookie()
@@ -134,6 +137,14 @@ export default {
     // 跳转注册
     registerClick() {
       this.$router.push('/register')
+    },
+    // 初始化
+    getUninitialized() {
+      uninitialized().then(res => {
+        if (res.data === 0) {
+          this.$router.push('/initial')
+        }
+      })
     },
     getCode() {
       // getCodeImg().then(res => {

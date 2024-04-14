@@ -3,7 +3,7 @@
     <div class="loginPart">
       <el-form
         ref="loginForm"
-        :model="registerForm"
+        :model="initialForm"
         :rules="registerRules"
         auto-complete="on"
         label-position="left"
@@ -12,18 +12,22 @@
         <el-form-item prop="siteName" class="inputNew">
           <el-input
             ref="email"
-            v-model="registerForm.siteName"
+            v-model="initialForm.siteName"
             placeholder="请输入站点名称"
             name="email"
             type="text"
-            tabindex="2"
+            tabindex="1"
             auto-complete="on"
-          />
+          >
+            <template #prefix>
+              <svg-icon icon-class="website" />
+            </template>
+          </el-input>
         </el-form-item>
         <el-form-item prop="email" class="inputNew">
           <el-input
             ref="email"
-            v-model="registerForm.email"
+            v-model="initialForm.email"
             placeholder="请输入邮箱"
             name="email"
             type="text"
@@ -38,11 +42,11 @@
         <el-form-item prop="username" class="inputNew">
           <el-input
             ref="username"
-            v-model="registerForm.username"
+            v-model="initialForm.username"
             placeholder="请输入用户名"
             name="username"
             type="text"
-            tabindex="1"
+            tabindex="3"
             auto-complete="on"
           >
             <template #prefix>
@@ -53,7 +57,7 @@
         <el-form-item prop="password" class="inputNew">
           <el-input
             ref="password"
-            v-model="registerForm.password"
+            v-model="initialForm.password"
             name="password"
             type="password"
             placeholder="密码"
@@ -68,12 +72,12 @@
         <el-form-item prop="confirmPassword" class="inputNew">
           <el-input
             ref="confirmPassword"
-            v-model="registerForm.confirmPassword"
+            v-model="initialForm.confirmPassword"
             type="password"
             placeholder="确认密码"
             auto-complete="on"
             tabindex="5"
-            @keyup.enter.native="handleRegister"
+            @keyup.enter.native="handleInitial"
           >
             <template #prefix>
               <svg-icon icon-class="password" />
@@ -85,7 +89,7 @@
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="handleRegister"
+          @click.native.prevent="handleInitial"
         >
           <span v-if="!loading">初始化</span>
           <span v-else>初 始 中...</span>
@@ -116,14 +120,14 @@
 </template>
 
 <script>
-import { register } from '@/api/login'
+import { initial } from '@/api/login'
 import { Message } from 'element-ui'
 export default {
   name: 'Initial',
   data() {
     // 验证是否相同
     const equalToPassword = (rule, value, callback) => {
-      if (this.registerForm.password !== value) {
+      if (this.initialForm.password !== value) {
         callback(new Error('两次输入的密码不一致'))
       } else {
         callback()
@@ -145,15 +149,12 @@ export default {
     }
     return {
       active: 1,
-      count: '',
-      timer: null,
-      captchaEnabled: true,
       imgSrc: require('@/assets/login/3.jpg'),
-      registerForm: {
+      initialForm: {
+        siteName: '',
         username: '',
         password: '',
         confirmPassword: '',
-        code: '',
         email: ''
       },
       registerRules: {
@@ -175,16 +176,7 @@ export default {
         ],
         email: [{ validator: validateEmail, trigger: 'blur' }]
       },
-      loading: false,
-      redirect: undefined
-    }
-  },
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
+      loading: false
     }
   },
   created() {
@@ -196,13 +188,15 @@ export default {
       const num = Math.floor(Math.random() * 5 + 1)
       this.imgSrc = require('@/assets/login/' + num + '.jpg')
     },
-    handleRegister() {
+    handleInitial() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          register(this.registerForm).then(res => {
+          console.log(this.initialForm)
+          initial(this.initialForm).then(res => {
             Message({ message: res.msg, type: 'success', duration: 5 * 1000 })
             this.loading = false
+            this.$router.push('/login')
           }).catch(() => {
             this.loading = false
           })

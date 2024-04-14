@@ -22,10 +22,10 @@ public class XiaohaiAdminApplication {
     public static void main(String[] args) throws UnknownHostException {
         ConfigurableApplicationContext application = SpringApplication.run(XiaohaiAdminApplication.class, args);
         Environment env = application.getEnvironment();
-        String ip = InetAddress.getLocalHost().getHostAddress();
-        String port = env.getProperty("server.port");
-        String path = env.getProperty("server.servlet.context-path");
-        String swaggerPath = env.getProperty("springdoc.swagger-ui.path");
+        var ip = InetAddress.getLocalHost().getHostAddress();
+        var port = env.getProperty("server.port");
+        var path = env.getProperty("server.servlet.context-path");
+        var swaggerPath = env.getProperty("springdoc.swagger-ui.path");
         var swaggerUiEnabled = env.getProperty("springdoc.swagger-ui.enabled");
         var apiDocsEnabled = env.getProperty("springdoc.api-docs.enabled");
         log.info("(♥◠‿◠)ﾉﾞ  启动成功   ლ(´ڡ`ლ)ﾞ");

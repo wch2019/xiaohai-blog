@@ -30,4 +30,8 @@ public class InitialVo {
     @NotBlank(message = "密码不能为空")
     @Schema(description = "密码", example = "123456")
     private String password;
+
+    @NotBlank(message = "邮箱不能为空")
+    @Schema(description = "邮箱", example = "1372195290@qq.com")
+    private String email;
 }

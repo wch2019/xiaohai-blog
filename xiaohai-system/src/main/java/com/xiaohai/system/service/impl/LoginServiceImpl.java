@@ -2,6 +2,7 @@ package com.xiaohai.system.service.impl;
 
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.confing.MailSenderConfig;
 import com.xiaohai.common.constant.RedisConstants;
@@ -10,11 +11,14 @@ import com.xiaohai.common.utils.EncryptUtils;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.system.dao.UserMapper;
+import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.vo.InitialVo;
 import com.xiaohai.system.pojo.vo.LoginVo;
 import com.xiaohai.system.pojo.vo.RegisterVo;
 import com.xiaohai.system.pojo.vo.UserVo;
+import com.xiaohai.system.service.ConfigService;
+import com.xiaohai.system.pojo.entity.Config;
 import com.xiaohai.system.service.LoginService;
 import com.xiaohai.system.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Random;
@@ -38,10 +43,11 @@ public class LoginServiceImpl implements LoginService {
 
     private final UserMapper userMapper;
 
-
     private final UserService serService;
 
     private final MailSenderConfig mailSenderConfig;
+
+    private final ConfigService configService;
 
 
     @Override
@@ -97,12 +103,28 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public String initial(InitialVo vo) {
-        return "";
+    @Transactional(rollbackFor = Exception.class)
+    public Integer initial(InitialVo vo) {
+        ConfigDto configDto=configService.findByOne();
+        Assert.isTrue(configDto.getInitial().equals(0), "无法再次初始化！");
+        // 初始化
+        User user = new User();
+        user.setId(1);
+        user.setPassword(EncryptUtils.aesEncrypt(vo.getPassword()));
+        user.setUsername(vo.getUsername());
+        user.setEmail(vo.getEmail());
+        userMapper.updateById(user);
+        Config config=new Config();
+        config.setId(configDto.getId());
+        config.setInitial(1);
+        config.setName(vo.getSiteName());
+        configService.updateById(config);
+        return 1;
     }
 
     @Override
-    public String uninitialized() {
-        return "";
+    public Integer uninitialized() {
+        ConfigDto configDto=configService.findByOne();
+        return configDto.getInitial();
     }
 }

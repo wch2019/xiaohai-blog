@@ -31,8 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 //swagger
                 .excludePathPatterns("/favicon.ico", "/webjars/**", "/img.icons/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger-ui/**", "/doc.html", "/swagger-ui.html")
-                //登录、验证码、注册、文件
-                .excludePathPatterns("/login","/sendEmailCode","/register","/document/upload/**")
+                //登录、验证码、注册、初始化、初始化检测、文件
+                .excludePathPatterns("/login","/sendEmailCode","/register","/initial","/uninitialized","/document/upload/**")
                 //展示页接口
                 .excludePathPatterns("/home/show/**")
                 //websocket

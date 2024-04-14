@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 26/03/2024 22:51:47
+ Date: 14/04/2024 20:07:16
 */
 
 SET NAMES utf8mb4;
@@ -227,6 +227,7 @@ CREATE TABLE `sys_config`  (
   `file_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '本地文件地址',
   `disk_size` bigint NOT NULL DEFAULT 0 COMMENT '存储容量',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '关于介绍',
+  `initial` int NOT NULL DEFAULT 0 COMMENT '初始化状态（0开启，1关闭）',
   `created_by` int NULL DEFAULT NULL COMMENT '创建人',
   `created_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `updated_by` int NULL DEFAULT NULL COMMENT '更新人',
@@ -237,7 +238,7 @@ CREATE TABLE `sys_config`  (
 -- ----------------------------
 -- Records of sys_config
 -- ----------------------------
-INSERT INTO `sys_config` VALUES (1, '/system/favicon.ico', 'DoteCode', 'DotCode | 点码', 'DoteCode,点码,开源博客,Java技术分享,Spring教程', '一个专注于技术分享的博客平台，大家以共同学习，乐于分享，拥抱开源的价值观进行学习交流', '', NULL, '1', 'smtp.qq.com', '1372195290@qq.com', '', 587, 'C:/Users/wangchenghai/Pictures/files/', 104857600, '# 欢迎来到我的博客！\n这里是一个分享知识、记录生活、思考未来的平台。\n\n在这里，我将和大家分享我对于生活、职场、学习等各个方面的见解和心得体会，希望能够为大家提供有价值的帮助和启发。\n\n同时，我也会在博客中记录我的生活点滴、分享我的兴趣爱好、思考我的未来规划，希望能够通过这种方式与大家建立更加亲近的关系。\n\n感谢您的光临，希望我的博客能够给您带来不一样的体验和收获！\n\n', 1, '2023-02-02 10:34:11', 1, '2024-02-03 16:33:08');
+INSERT INTO `sys_config` VALUES (1, '/system/favicon.ico', 'DoteCode', 'DotCode | 点码', 'DoteCode,点码,开源博客,Java技术分享,Spring教程', '一个专注于技术分享的博客平台，大家以共同学习，乐于分享，拥抱开源的价值观进行学习交流', '', NULL, '1', 'smtp.qq.com', '1372195290@qq.com', '', 587, 'C:/Users/wangchenghai/Pictures/files/', 104857600, '# 欢迎来到我的博客！\n这里是一个分享知识、记录生活、思考未来的平台。\n\n在这里，我将和大家分享我对于生活、职场、学习等各个方面的见解和心得体会，希望能够为大家提供有价值的帮助和启发。\n\n同时，我也会在博客中记录我的生活点滴、分享我的兴趣爱好、思考我的未来规划，希望能够通过这种方式与大家建立更加亲近的关系。\n\n感谢您的光临，希望我的博客能够给您带来不一样的体验和收获！\n\n', 0, 1, '2023-02-02 10:34:11', 1, '2024-02-03 16:33:08');
 
 -- ----------------------------
 -- Table structure for sys_dict_data

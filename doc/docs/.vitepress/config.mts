@@ -36,6 +36,7 @@ export default defineConfig({
                             {text: '使用 Docker 部署', link: '/使用 Docker 部署'},
                         ]
                     },
+                    {text: '初始化', link: '/初始化'},
                 ]
             },
             {
