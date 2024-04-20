@@ -7,10 +7,13 @@ import com.xiaohai.common.utils.StringUtils;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,6 +34,7 @@ public class AddressUtils {
 
     /**
      * 第三方获取地址
+     *
      * @param ip
      * @return
      */
@@ -40,7 +44,7 @@ public class AddressUtils {
             return "内网IP";
         }
         try {
-            String rspStr = HttpUtil.get(IP_URL+"?ip=" + ip + "&json=true");
+            String rspStr = HttpUtil.get(IP_URL + "?ip=" + ip + "&json=true");
             if (StringUtils.isEmpty(rspStr)) {
                 log.error("获取地理位置异常 {}", ip);
                 return UNKNOWN;
@@ -58,6 +62,7 @@ public class AddressUtils {
 
     /**
      * 通过ip2region获取地址
+     *
      * @param ip
      * @return
      */
@@ -67,8 +72,9 @@ public class AddressUtils {
             return "内网IP";
         }
         try {
-            File file = ResourceUtils.getFile("classpath:ip2region.xdb");
-            Searcher searcher = Searcher.newWithFileOnly(file.getPath());
+            Resource resource = new ClassPathResource("ip2region.xdb");
+            InputStream inputStream = resource.getInputStream();
+            Searcher searcher = Searcher.newWithBuffer(inputStream.readAllBytes());
             long sTime = System.nanoTime();
             String region = searcher.search(ip);
             long cost = TimeUnit.NANOSECONDS.toMicros((long) (System.nanoTime() - sTime));
@@ -76,13 +82,14 @@ public class AddressUtils {
             searcher.close();
             return region;
         } catch (Exception e) {
-            log.error("获取地理位置异常 {}", ip);
+            log.error("获取地理位置异常 {}", ip, e);
         }
         return UNKNOWN;
     }
 
     /**
      * 通过ip2region获取城市
+     *
      * @param ip
      * @return
      */
@@ -92,8 +99,9 @@ public class AddressUtils {
             return "内网IP";
         }
         try {
-            File file = ResourceUtils.getFile("classpath:ip2region.xdb");
-            Searcher searcher = Searcher.newWithFileOnly(file.getPath());
+            Resource resource = new ClassPathResource("ip2region.xdb");
+            InputStream inputStream = resource.getInputStream();
+            Searcher searcher = Searcher.newWithBuffer(inputStream.readAllBytes());
             long sTime = System.nanoTime();
             String region = searcher.search(ip);
             long cost = TimeUnit.NANOSECONDS.toMicros((long) (System.nanoTime() - sTime));
@@ -101,7 +109,7 @@ public class AddressUtils {
             searcher.close();
             return getDataAtIndex(region, 3);
         } catch (Exception e) {
-            log.error("获取地理位置异常 {}", ip);
+            log.error("获取地理位置异常 {}", ip, e);
         }
         return UNKNOWN;
     }
@@ -119,7 +127,7 @@ public class AddressUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        String ip = "144.0.53.69";
+        String ip = "144.0.53.222";
         System.out.println(getIp2region(ip));
         System.out.println(getRealAddressByIP(ip));
     }
