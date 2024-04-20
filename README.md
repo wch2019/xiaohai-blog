@@ -40,7 +40,7 @@ DotCode(点码），是一个前后分离的博客系统。
 
 - 引入 **RBAC** 权限管理设计，灵活的权限控制，按钮级别的权限控制，满足绝大部分的权限需求
 
-- 采用**Markdown** 编辑器([mavonEditor](www.mavoneditor.com)），更符合开发者的编辑方式
+- 采用**Markdown** 编辑器([vditor](https://b3log.org/vditor/)），更符合开发者的编辑方式
 
 ##  项目目录
 
