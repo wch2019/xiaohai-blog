@@ -119,8 +119,8 @@ public class AddressUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        String ip = "219.146.89.86";
+        String ip = "144.0.53.69";
         System.out.println(getIp2region(ip));
-        System.out.println(getRealAddressByIP("219.146.89.86"));
+        System.out.println(getRealAddressByIP(ip));
     }
 }
