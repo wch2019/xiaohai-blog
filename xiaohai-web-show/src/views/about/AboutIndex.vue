@@ -56,7 +56,17 @@ function renderMarkdown(md: any) {
         hljs: {style: "github", lineNumber: true},
         transform(html) {
           return html.replaceAll('<img', '<img referrerPolicy="no-referrer"')
-        }
+        },
+        after: function () {
+          // 事件委托处理图片点击事件
+          previewElement.addEventListener("click", (event) => {
+            // 使用类型断言告诉 TypeScript 事件的目标是 HTMLImageElement 类型
+            const target = event.target as HTMLImageElement;
+            if (target.tagName === "IMG") {
+              Vditor.previewImage(target);
+            }
+          });
+        },
       })
   }
 
