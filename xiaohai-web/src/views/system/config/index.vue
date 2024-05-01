@@ -299,7 +299,7 @@
         <div v-highlight class="markdown-body" v-html="content" />
       </el-tab-pane>
       <el-tab-pane label="测试编辑">
-        <div id="vditor" />
+        <Vditor :value="form.content" @input="updateContent" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -309,15 +309,14 @@
 import { addConfig, getConfig, updateConfig } from '@/api/system/config'
 import { delFile, hardDiskSize, uploadImage } from '@/api/file/file'
 import uploadImg from '@/components/uploadImg'
+import Vditor from '@/components/Vditor'
 import { marked } from 'marked'
 import 'github-markdown-css'
 import { findImg, formatFileSize, getLastSegment, markdownImageFile, parseFileSize } from '@/utils'
-import Vditor from 'vditor'
-import 'vditor/dist/index.css'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'Index',
-  components: { uploadImg },
+  components: { uploadImg, Vditor },
   data() {
     return {
       form: {
@@ -349,64 +348,64 @@ export default {
     this.getConfig()
     this.hardDiskSize()
   },
-  mounted() {
-    const vditor = new Vditor('vditor', {
-      placeholder: '输入内容...',
-      value: this.form.content,
-      height: window.innerHeight,
-      typewriterMode: true,
-      toolbarConfig: {
-        pin: false
-      },
-      counter: {
-        enable: true
-      },
-      cache: {
-        enable: false
-      },
-      upload: {
-        url: 'api/file/image',
-        headers: {
-          'authorization': getToken()
-        },
-        accept: 'image/*',
-        max: 2 * 1024 * 1024,
-        multiple: false, // 是否允许批量上传
-        fieldName: 'file',
-        // 文件名安全处理
-        filename(name) {
-          return name
-            .replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '')
-            .replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '')
-            .replace('/\\s/g', '')
-        },
-        // 数据转换
-        format(files, responseText) {
-          const res = JSON.parse(responseText)
-          if (res.code === 200) {
-            return JSON.stringify({
-              code: 0,
-              data: { errFiles: '', succMap: { [getLastSegment(res.data)]: process.env.VUE_APP_BASE_API_FILE + res.data }}
-            })
-          } else {
-            return JSON.stringify({
-              code: 1,
-              msg: res.msg,
-              data: { errFiles: '', succMap: {}}
-            })
-          }
-        },
-        error(msg) {
-        }
-      },
-      fullscreen: {
-        index: 10000
-      },
-      after: () => {
-        // this.contentEditor.setValue('hello, Vditor + Vue!')
-      }
-    })
-  },
+  // mounted() {
+  //   const vditor = new Vditor('vditor', {
+  //     placeholder: '输入内容...',
+  //     value: this.form.content,
+  //     height: window.innerHeight,
+  //     typewriterMode: true,
+  //     toolbarConfig: {
+  //       pin: false
+  //     },
+  //     counter: {
+  //       enable: true
+  //     },
+  //     cache: {
+  //       enable: false
+  //     },
+  //     upload: {
+  //       url: 'api/file/image',
+  //       headers: {
+  //         'authorization': getToken()
+  //       },
+  //       accept: 'image/*',
+  //       max: 2 * 1024 * 1024,
+  //       multiple: false, // 是否允许批量上传
+  //       fieldName: 'file',
+  //       // 文件名安全处理
+  //       filename(name) {
+  //         return name
+  //           .replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '')
+  //           .replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '')
+  //           .replace('/\\s/g', '')
+  //       },
+  //       // 数据转换
+  //       format(files, responseText) {
+  //         const res = JSON.parse(responseText)
+  //         if (res.code === 200) {
+  //           return JSON.stringify({
+  //             code: 0,
+  //             data: { errFiles: '', succMap: { [getLastSegment(res.data)]: process.env.VUE_APP_BASE_API_FILE + res.data }}
+  //           })
+  //         } else {
+  //           return JSON.stringify({
+  //             code: 1,
+  //             msg: res.msg,
+  //             data: { errFiles: '', succMap: {}}
+  //           })
+  //         }
+  //       },
+  //       error(msg) {
+  //       }
+  //     },
+  //     fullscreen: {
+  //       index: 10000
+  //     },
+  //     after: () => {
+  //       // this.contentEditor.setValue('hello, Vditor + Vue!')
+  //     }
+  //   })
+  // },
   methods: {
     /** 查询配置 */
     getConfig() {
@@ -488,6 +487,9 @@ export default {
       hardDiskSize().then(response => {
         this.hardDisk = response.data
       })
+    },
+    updateContent(value) {
+      this.form.content = value
     }
   }
 }
