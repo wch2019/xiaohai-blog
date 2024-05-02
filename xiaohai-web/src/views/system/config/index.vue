@@ -296,10 +296,10 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="测试展示">
-        <div v-highlight class="markdown-body" v-html="content" />
+        <Preview :md="form.content" />
       </el-tab-pane>
       <el-tab-pane label="测试编辑">
-        <Vditor :value="form.content" @input="updateContent" />
+        <Vditor :value="form.content" @fileRead="handleFileRead" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -310,13 +310,14 @@ import { addConfig, getConfig, updateConfig } from '@/api/system/config'
 import { delFile, hardDiskSize, uploadImage } from '@/api/file/file'
 import uploadImg from '@/components/uploadImg'
 import Vditor from '@/components/Vditor'
+import Preview from '@/components/Vditor/preview.vue'
 import { marked } from 'marked'
 import 'github-markdown-css'
 import { findImg, formatFileSize, getLastSegment, markdownImageFile, parseFileSize } from '@/utils'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'Index',
-  components: { uploadImg, Vditor },
+  components: { uploadImg, Vditor, Preview },
   data() {
     return {
       form: {
@@ -488,8 +489,12 @@ export default {
         this.hardDisk = response.data
       })
     },
-    updateContent(value) {
-      this.form.content = value
+    handleFileRead(fileData) {
+      // 这里的 fileData 包含文件名和内容
+      const { fileName, content } = fileData
+      // 在这里处理文件内容，例如将内容显示在页面上或者做其他操作
+      console.log('文件名:', fileName)
+      this.form.content = content
     }
   }
 }
