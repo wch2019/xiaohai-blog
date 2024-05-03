@@ -299,7 +299,7 @@
         <Preview :md="form.content" />
       </el-tab-pane>
       <el-tab-pane label="测试编辑">
-        <Vditor :value="form.content" @fileRead="handleFileRead" />
+        <Vditor :value="form.content" @fileRead="handleFileRead" @save="submitForm" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -314,7 +314,6 @@ import Preview from '@/components/Vditor/preview.vue'
 import { marked } from 'marked'
 import 'github-markdown-css'
 import { findImg, formatFileSize, getLastSegment, markdownImageFile, parseFileSize } from '@/utils'
-import { getToken } from '@/utils/auth'
 export default {
   name: 'Index',
   components: { uploadImg, Vditor, Preview },
@@ -464,7 +463,9 @@ export default {
       this.form.logo = imgUrl
     },
     /** 提交按钮 */
-    submitForm() {
+    submitForm(save) {
+      const { content } = save
+      console.log(content)
       this.form.content = this.form.content.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
       const formattedSize = { value: this.form.disk, unit: this.form.diskProperty }
       this.form.diskSize = parseFileSize(formattedSize)
