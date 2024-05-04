@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :id="editorId" :style="{height: height + 'px'}" />
+    <div :id="editorId" :style="{height: height + 'px'}" @input="onEditorInput" />
     <input v-show="false" id="upload" type="file" accept=".md" @change="importMd($event)">
     <button v-show="false" id="save" @click="save()" />
   </div>
@@ -29,7 +29,7 @@ export default {
     toolbarConfig: {
       type: Object,
       default: () => ({
-        pin: false
+        pin: true
       })
     },
     uploadConfig: {
@@ -88,8 +88,15 @@ export default {
   },
   watch: {
     value(newVal) {
+      console.log('newVal', newVal)
       if (newVal !== '') {
         this.initVditor()
+      }
+    },
+    beforeDestroy() {
+      // 销毁编辑器实例
+      if (this.editor) {
+        this.editor.destroy()
       }
     }
   },
@@ -97,8 +104,11 @@ export default {
     // this.initVditor()
   },
   methods: {
+    onEditorInput(value) {
+      // console.log('this.editor.getValue()', this.editor.getValue())
+    },
     initVditor() {
-      new Vditor(this.editorId, {
+      this.editor = new Vditor(this.editorId, {
         toolbar: [
           'emoji',
           'headings',
@@ -181,13 +191,12 @@ export default {
         fullscreen: this.fullscreenConfig,
         after: this.afterInit,
         input(value) {
-          console.log(value)
+          this.value = value
         }
       })
     },
     // 导入md文档
     importMd(e) {
-      console.log(e)
       const file = e.target.files[0]
       if (!file.name.endsWith('.md')) {
         this.$message.warning('文件扩展名必须为.md！')
@@ -207,7 +216,7 @@ export default {
       e.target.value = null
     },
     save() {
-      this.$emit('save')
+      this.$emit('save', this.editor.getValue())
     }
   }
 }

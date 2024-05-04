@@ -299,6 +299,9 @@
         <Preview :md="form.content" />
       </el-tab-pane>
       <el-tab-pane label="测试编辑">
+        <aside>
+          登录系统后展示弹窗<br>
+        </aside>
         <Vditor :value="form.content" @fileRead="handleFileRead" @save="submitForm" />
       </el-tab-pane>
     </el-tabs>
@@ -463,9 +466,10 @@ export default {
       this.form.logo = imgUrl
     },
     /** 提交按钮 */
-    submitForm(save) {
-      const { content } = save
-      console.log(content)
+    submitForm(text) {
+      if (text) {
+        this.form.content = text
+      }
       this.form.content = this.form.content.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
       const formattedSize = { value: this.form.disk, unit: this.form.diskProperty }
       this.form.diskSize = parseFileSize(formattedSize)
