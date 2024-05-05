@@ -1,310 +1,296 @@
 <template>
   <div class="app-container">
-    <el-tabs type="border-card">
-      <el-tab-pane label="网站信息">
-        <span slot="label">
-          <i class="el-icon-s-platform" /> 网站信息
-        </span>
-        <el-form
-          ref="form"
-          style="margin-left: 20px;"
-          label-position="left"
-          :model="form"
-          label-width="100px"
-        >
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="LOGO" prop="logo">
-                <uploadImg
-                  ref="uploadImg"
-                  action-url="/api/file/logo"
-                  :image-url="form.logo"
-                  :img-width="100"
-                  :img-height="100"
-                  file-name="logoFile"
-                  @getImgUrl="getImgUrl"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :sm="12" :md="10" :lg="8" :xl="6">
-              <el-form-item label="网站名称" prop="name">
-                <el-input v-model="form.name" maxlength="8" show-word-limit placeholder="请输入网站名称" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :sm="12" :md="10" :lg="8" :xl="6">
-              <el-form-item label="标题" prop="title">
-                <el-input v-model="form.title" maxlength="20" show-word-limit placeholder="请输入网站标题" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :sm="12" :md="10" :lg="8" :xl="6">
-              <el-form-item label="关键字" prop="keywords">
-                <el-input
-                  v-model="form.keywords"
-                  maxlength="255"
-                  show-word-limit
-                  type="textarea"
-                  :autosize="{ minRows: 4}"
-                  placeholder="请输入关键字"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :sm="12" :md="10" :lg="8" :xl="6">
-              <el-form-item label="网站描述" prop="description">
-                <el-input
-                  v-model="form.description"
-                  maxlength="255"
-                  show-word-limit
-                  type="textarea"
-                  :autosize="{ minRows: 4}"
-                  placeholder="请输入网站描述"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :sm="12" :md="10" :lg="8" :xl="6">
-              <el-form-item label="ICP备案号" prop="recordNum">
-                <el-input v-model="form.recordNum" maxlength="50" show-word-limit placeholder="请输入ICP备案号" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :sm="12" :md="10" :lg="8" :xl="6">
-              <el-form-item label="公安备案号" prop="recordNum">
-                <el-input v-model="form.securityRecordNum" maxlength="50" show-word-limit placeholder="请输入公安备案号" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item>
-            <el-button
-              v-if="$store.getters.permission.includes('system:config:save')"
-              type="primary"
-              @click="submitForm"
-            >保存
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="系统开关">
-        <span slot="label">
-          <i class="el-icon-open" /> 系统开关
-        </span>
-        <aside>
-          选择可用配置<br>
-        </aside>
-        <el-form
-          ref="form"
-          style="margin-left: 20px;"
-          label-position="left"
-          :model="form"
-          label-width="100px"
-        >
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="消息邮箱通知">
-                <el-radio-group v-model="form.emailMessage" size="medium">
-                  <el-radio label="0" border>开启</el-radio>
-                  <el-radio label="1" border>关闭</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item>
-            <el-button
-              v-if="$store.getters.permission.includes('system:config:save')"
-              type="primary"
-              @click="submitForm"
-            >保存
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="邮箱配置">
-        <span slot="label">
-          <i class="el-icon-message" /> 邮箱配置
-        </span>
-        <aside>
-          使用邮箱发送通知<br>
-        </aside>
-        <el-form
-          ref="form"
-          style="margin-left: 20px;"
-          label-position="left"
-          :model="form"
-          label-width="100px"
-        >
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="邮箱地址" prop="username">
-                <el-input v-model="form.emailHost" placeholder="请输入邮箱地址(smtp.qq.com)" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
+    <el-card class="box-card" :body-style="{ height: 'calc(100vh - 90px)'}">
+      <el-tabs tab-position="left">
+        <el-tab-pane label="网站信息">
+          <span slot="label">
+            <i class="el-icon-s-platform" /> 网站信息
+          </span>
+          <aside>
+            网站信息维护<br>
+          </aside>
+          <el-form
+            ref="form"
+            style="margin-left: 20px;"
+            label-position="left"
+            :model="form"
+            label-width="100px"
+          >
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="LOGO" prop="logo">
+                  <uploadImg
+                    ref="uploadImg"
+                    action-url="/api/file/logo"
+                    :image-url="form.logo"
+                    :img-width="100"
+                    :img-height="100"
+                    file-name="logoFile"
+                    @getImgUrl="getImgUrl"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :sm="12" :md="10" :lg="8" :xl="6">
+                <el-form-item label="网站名称" prop="name">
+                  <el-input v-model="form.name" maxlength="8" show-word-limit placeholder="请输入网站名称" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :sm="12" :md="10" :lg="8" :xl="6">
+                <el-form-item label="标题" prop="title">
+                  <el-input v-model="form.title" maxlength="20" show-word-limit placeholder="请输入网站标题" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :sm="12" :md="10" :lg="8" :xl="6">
+                <el-form-item label="关键字" prop="keywords">
+                  <el-input
+                    v-model="form.keywords"
+                    maxlength="255"
+                    show-word-limit
+                    type="textarea"
+                    :autosize="{ minRows: 4}"
+                    placeholder="请输入关键字"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :sm="12" :md="10" :lg="8" :xl="6">
+                <el-form-item label="网站描述" prop="description">
+                  <el-input
+                    v-model="form.description"
+                    maxlength="255"
+                    show-word-limit
+                    type="textarea"
+                    :autosize="{ minRows: 4}"
+                    placeholder="请输入网站描述"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :sm="12" :md="10" :lg="8" :xl="6">
+                <el-form-item label="ICP备案号" prop="recordNum">
+                  <el-input v-model="form.recordNum" maxlength="50" show-word-limit placeholder="请输入ICP备案号" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :sm="12" :md="10" :lg="8" :xl="6">
+                <el-form-item label="公安备案号" prop="recordNum">
+                  <el-input
+                    v-model="form.securityRecordNum"
+                    maxlength="50"
+                    show-word-limit
+                    placeholder="请输入公安备案号"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item>
+              <el-button
+                v-if="$store.getters.permission.includes('system:config:save')"
+                type="primary"
+                @click="submitForm"
+              >保存
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="系统开关">
+          <span slot="label">
+            <i class="el-icon-open" /> 系统开关
+          </span>
+          <aside>
+            选择可用配置<br>
+          </aside>
+          <el-form
+            ref="form"
+            style="margin-left: 20px;"
+            label-position="left"
+            :model="form"
+            label-width="100px"
+          >
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="消息邮箱通知">
+                  <el-radio-group v-model="form.emailMessage" size="medium">
+                    <el-radio label="0" border>开启</el-radio>
+                    <el-radio label="1" border>关闭</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item>
+              <el-button
+                v-if="$store.getters.permission.includes('system:config:save')"
+                type="primary"
+                @click="submitForm"
+              >保存
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="邮箱配置">
+          <span slot="label">
+            <i class="el-icon-message" /> 邮箱配置
+          </span>
+          <aside>
+            使用邮箱发送通知<br>
+          </aside>
+          <el-form
+            ref="form"
+            style="margin-left: 20px;"
+            label-position="left"
+            :model="form"
+            label-width="100px"
+          >
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="邮箱地址" prop="username">
+                  <el-input v-model="form.emailHost" placeholder="请输入邮箱地址(smtp.qq.com)" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">
 
-              <el-form-item label="邮箱发送者" prop="email">
-                <el-input v-model="form.emailUsername" placeholder="请输入邮箱发送者" maxlength="50" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="邮箱授权码" prop="email">
-                <el-input v-model="form.emailPassword" placeholder="请输入邮箱授权码" maxlength="50" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="邮箱端口" prop="email">
-                <el-input v-model="form.emailPort" placeholder="请输入邮箱端口(587)" maxlength="50" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item>
-            <el-button
-              v-if="$store.getters.permission.includes('system:config:save')"
-              type="primary"
-              @click="submitForm"
-            >保存
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="本地文件存储">
-        <span slot="label">
-          <i class="el-icon-folder" /> 本地文件存储
-        </span>
-        <el-card>
-          <p class="mb-3">存储空间共 <strong>{{ hardDisk.total }}</strong></p>
-          <el-progress
-            :percentage="hardDisk.usage"
-            :stroke-width="14"
-            :show-text="false"
-            color="#6f7ad3"
-            class="mb-3"
-          />
-          <div class="row">
-            <div>
-              <span class="legend-primary me-2" />
-              <span>已使用</span>
-              <span class="font-size-primary ms-2 me-2">{{ hardDisk.used }}</span>
-            </div>
-            <div>
-              <span class="legend me-2" />
-              <span>空闲</span>
-              <span class="font-size-primary ms-2">{{ hardDisk.free }}</span>
-            </div>
-          </div>
-        </el-card>
-        <aside>
-          使用IO流将文件存储本地磁盘中<br>
-        </aside>
-        <el-form
-          ref="form"
-          style="margin-left: 20px;"
-          label-position="left"
-          :model="form"
-          label-width="100px"
-        >
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="用户默认容量" class="input-with-select">
-                <el-input v-model="form.disk" oninput="value=value.replace(/[^\d.]/g,'')">
-                  <el-select slot="append" v-model="form.diskProperty" placeholder="请选择">
-                    <el-option label="B" value="B" />
-                    <el-option label="KB" value="KB" />
-                    <el-option label="MB" value="MB" />
-                    <el-option label="GB" value="GB" />
-                    <el-option label="TB" value="TB" />
-                  </el-select>
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="本地文件位置">
-                <el-input v-model="form.profile" :disabled="true" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item>
-            <el-button
-              v-if="$store.getters.permission.includes('system:config:save')"
-              type="primary"
-              @click="submitForm"
-            >保存
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="关于信息">
-        <span slot="label">
-          <i class="el-icon-edit-outline" /> 关于信息
-        </span>
-        <el-form
-          ref="form"
-          style="margin-left: 20px;"
-          label-position="left"
-          :model="form"
-          label-width="100px"
-        >
-          <mavon-editor
-            ref="md"
-            v-model="form.content"
-            placeholder="输入内容..."
-            font-size="18px"
-            @save="submitForm"
-            @imgAdd="imgAdd"
-            @imgDel="imgDel"
-          />
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="系统通知">
-        <span slot="label">
-          <i class="el-icon-edit-outline" /> 系统通知
-        </span>
-        <aside>
-          登录系统后展示弹窗<br>
-        </aside>
-        <el-form
-          ref="form"
-          style="margin-left: 20px;"
-          label-position="left"
-          :model="form"
-          label-width="100px"
-        >
-          <mavon-editor
-            ref="md"
-            v-model="form.content"
-            placeholder="输入内容..."
-            font-size="18px"
-            @save="submitForm"
-            @imgAdd="imgAdd"
-            @imgDel="imgDel"
-          />
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="测试展示">
-        <Preview :md="form.content" />
-      </el-tab-pane>
-      <el-tab-pane label="测试编辑">
-        <aside>
-          登录系统后展示弹窗<br>
-        </aside>
-        <Vditor :value="form.content" @fileRead="handleFileRead" @save="submitForm" />
-      </el-tab-pane>
-    </el-tabs>
+                <el-form-item label="邮箱发送者" prop="email">
+                  <el-input v-model="form.emailUsername" placeholder="请输入邮箱发送者" maxlength="50" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="邮箱授权码" prop="email">
+                  <el-input v-model="form.emailPassword" placeholder="请输入邮箱授权码" maxlength="50" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="邮箱端口" prop="email">
+                  <el-input v-model="form.emailPort" placeholder="请输入邮箱端口(587)" maxlength="50" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item>
+              <el-button
+                v-if="$store.getters.permission.includes('system:config:save')"
+                type="primary"
+                @click="submitForm"
+              >保存
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="本地文件存储">
+          <span slot="label">
+            <i class="el-icon-folder" /> 文件存储
+          </span>
+          <aside>
+            <el-card style="margin: 30px 0 30px 0">
+              <p class="mb-3">存储空间共 <strong>{{ hardDisk.total }}</strong></p>
+              <el-progress
+                :percentage="hardDisk.usage"
+                :stroke-width="14"
+                :show-text="false"
+                color="#6f7ad3"
+                class="mb-3"
+              />
+              <div class="row">
+                <div>
+                  <span class="legend-primary me-2" />
+                  <span>已使用</span>
+                  <span class="font-size-primary ms-2 me-2">{{ hardDisk.used }}</span>
+                </div>
+                <div>
+                  <span class="legend me-2" />
+                  <span>空闲</span>
+                  <span class="font-size-primary ms-2">{{ hardDisk.free }}</span>
+                </div>
+              </div>
+            </el-card>
+          </aside>
+
+          <el-form
+            ref="form"
+            style="margin-left: 20px;"
+            label-position="left"
+            :model="form"
+            label-width="100px"
+          >
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="用户默认容量" class="input-with-select">
+                  <el-input v-model="form.disk" oninput="value=value.replace(/[^\d.]/g,'')">
+                    <el-select slot="append" v-model="form.diskProperty" placeholder="请选择">
+                      <el-option label="B" value="B" />
+                      <el-option label="KB" value="KB" />
+                      <el-option label="MB" value="MB" />
+                      <el-option label="GB" value="GB" />
+                      <el-option label="TB" value="TB" />
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="本地文件位置">
+                  <el-input v-model="form.profile" :disabled="true" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item>
+              <el-button
+                v-if="$store.getters.permission.includes('system:config:save')"
+                type="primary"
+                @click="submitForm"
+              >保存
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="关于信息">
+          <span slot="label">
+            <i class="el-icon-edit-outline" /> 关于信息
+          </span>
+          <Vditor :height="calculateHeight()" :value="form.content" @fileRead="handleFileRead" @save="submitForm" />
+        </el-tab-pane>
+        <!--        <el-tab-pane label="关于信息">-->
+        <!--          <span slot="label">-->
+        <!--            <i class="el-icon-edit-outline" /> 关于信息-->
+        <!--          </span>-->
+        <!--          <el-form-->
+        <!--            ref="form"-->
+        <!--            style="margin-left: 20px;"-->
+        <!--            label-position="left"-->
+        <!--            :model="form"-->
+        <!--            label-width="100px"-->
+        <!--          >-->
+        <!--            <mavon-editor-->
+        <!--              ref="md"-->
+        <!--              v-model="form.content"-->
+        <!--              placeholder="输入内容..."-->
+        <!--              font-size="18px"-->
+        <!--              @save="submitForm"-->
+        <!--              @imgAdd="imgAdd"-->
+        <!--              @imgDel="imgDel"-->
+        <!--            />-->
+        <!--          </el-form>-->
+        <!--        </el-tab-pane>-->
+        <el-tab-pane label="测试展示">
+          <Preview :md="form.content" :style="{height: calculateHeight()+'px'}" />
+        </el-tab-pane>
+      </el-tabs>
+    </el-card>
+
   </div>
 </template>
 
@@ -317,6 +303,7 @@ import Preview from '@/components/Vditor/preview.vue'
 import { marked } from 'marked'
 import 'github-markdown-css'
 import { findImg, formatFileSize, getLastSegment, markdownImageFile, parseFileSize } from '@/utils'
+
 export default {
   name: 'Index',
   components: { uploadImg, Vditor, Preview },
@@ -351,64 +338,6 @@ export default {
     this.getConfig()
     this.hardDiskSize()
   },
-  // mounted() {
-  //   const vditor = new Vditor('vditor', {
-  //     placeholder: '输入内容...',
-  //     value: this.form.content,
-  //     height: window.innerHeight,
-  //     typewriterMode: true,
-  //     toolbarConfig: {
-  //       pin: false
-  //     },
-  //     counter: {
-  //       enable: true
-  //     },
-  //     cache: {
-  //       enable: false
-  //     },
-  //     upload: {
-  //       url: 'api/file/image',
-  //       headers: {
-  //         'authorization': getToken()
-  //       },
-  //       accept: 'image/*',
-  //       max: 2 * 1024 * 1024,
-  //       multiple: false, // 是否允许批量上传
-  //       fieldName: 'file',
-  //       // 文件名安全处理
-  //       filename(name) {
-  //         return name
-  //           .replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '')
-  //           .replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '')
-  //           .replace('/\\s/g', '')
-  //       },
-  //       // 数据转换
-  //       format(files, responseText) {
-  //         const res = JSON.parse(responseText)
-  //         if (res.code === 200) {
-  //           return JSON.stringify({
-  //             code: 0,
-  //             data: { errFiles: '', succMap: { [getLastSegment(res.data)]: process.env.VUE_APP_BASE_API_FILE + res.data }}
-  //           })
-  //         } else {
-  //           return JSON.stringify({
-  //             code: 1,
-  //             msg: res.msg,
-  //             data: { errFiles: '', succMap: {}}
-  //           })
-  //         }
-  //       },
-  //       error(msg) {
-  //       }
-  //     },
-  //     fullscreen: {
-  //       index: 10000
-  //     },
-  //     after: () => {
-  //       // this.contentEditor.setValue('hello, Vditor + Vue!')
-  //     }
-  //   })
-  // },
   methods: {
     /** 查询配置 */
     getConfig() {
@@ -493,6 +422,10 @@ export default {
       hardDiskSize().then(response => {
         this.hardDisk = response.data
       })
+    },
+    // 计算高度
+    calculateHeight() {
+      return window.innerHeight - 120
     },
     handleFileRead(fileData) {
       // 这里的 fileData 包含文件名和内容
