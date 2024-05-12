@@ -6,9 +6,9 @@
       :body-style="{ padding: '0px', height: '440px' }"
       style="position: relative"
     >
-      <img src="../../assets/image/1.jpg" class="image" />
+      <img src="../../assets/image/1.jpg" class="image"/>
       <div style="display: flex; padding: 10px; justify-content: center; text-align: center">
-        <el-avatar v-if="showBasic.avatar" :src="image(showBasic.avatar)" class="panThumb" />
+        <el-avatar v-if="showBasic.avatar" :src="image(showBasic.avatar)" class="panThumb"/>
 
         <el-space direction="vertical" :size="'large'" fill style="margin-top: 20px; width: 80%">
           <h2 style="margin-bottom: 0px">{{ showBasic.username }}</h2>
@@ -68,7 +68,10 @@
 
     <el-card class="box-card" shadow="hover">
       <template #header>
-        <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="hot"></svg-icon> 热门</h2>
+        <h2 class="text-lg" style="margin: 0">
+          <svg-icon icon-class="hot"></svg-icon>
+          热门
+        </h2>
       </template>
       <div
         v-loading="store.hotArticles ? false : loading"
@@ -111,7 +114,10 @@
     <el-card class="box-card" shadow="hover">
       <template #header>
         <div class="card-header">
-          <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="tags"></svg-icon> 标签</h2>
+          <h2 class="text-lg" style="margin: 0">
+            <svg-icon icon-class="tags"></svg-icon>
+            标签
+          </h2>
           <el-link @click="cancelClick('/tags')">查看更多</el-link>
         </div>
       </template>
@@ -124,7 +130,8 @@
             size="large"
             @click="cancelClick('/tags' + '?id=' + tag.id + '&name=' + tag.name)"
           >
-            <svg-icon icon-class="label-sign"></svg-icon> {{ tag.name }}
+            <svg-icon icon-class="label-sign"></svg-icon>
+            {{ tag.name }}
             <div class="tags">{{ tag.count }}</div>
           </el-button>
         </div>
@@ -132,7 +139,10 @@
     </el-card>
     <el-card class="box-card" shadow="hover">
       <template #header>
-        <h2 class="text-lg" style="margin: 0"><svg-icon icon-class="link"></svg-icon> 友链</h2>
+        <h2 class="text-lg" style="margin: 0">
+          <svg-icon icon-class="link"></svg-icon>
+          友链
+        </h2>
       </template>
       <el-space wrap size="large">
         <div v-for="link in store.friendLinkList" :key="link">
@@ -144,8 +154,8 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from 'vue'
-import { useRouter } from 'vue-router'
+import {nextTick, ref, watch, watchEffect} from 'vue'
+import {useRouter} from 'vue-router'
 import {getArticle, image, open, openQQ} from '@/utils/publicMethods'
 import useStore from '@/store/index'
 
@@ -155,13 +165,9 @@ const router = useRouter()
 const loading = ref(true)
 
 // 网站信息
-let showBasic = ref<any>(store?.showBasic)
+let showBasic = ref<any>({})
 
-watch(
-  () => store,
-  () => {
-    showBasic=store?.showBasic
-  }
+watchEffect(() => showBasic = store?.showBasic
 )
 
 function greetings() {
@@ -196,11 +202,13 @@ function cancelClick(path: any) {
   border: 1px solid transparent;
   height: 100%;
 }
+
 .image {
   width: 100%;
   height: 170px;
   display: block;
 }
+
 .test::before {
   content: '';
   position: absolute;
@@ -211,6 +219,7 @@ function cancelClick(path: any) {
   z-index: 2;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
 }
+
 .time {
   font-size: 12px;
   color: #999;
@@ -228,6 +237,7 @@ function cancelClick(path: any) {
   padding: 0;
   min-height: auto;
 }
+
 .panThumb {
   height: 100px !important;
   width: 100px !important;
@@ -235,6 +245,7 @@ function cancelClick(path: any) {
   top: 115px;
   border: 5px solid #ffffff;
 }
+
 .image-hot:hover {
   transform: scale(1.1);
 }
@@ -242,6 +253,7 @@ function cancelClick(path: any) {
 .image:hover {
   transform: scale(1.1);
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;
