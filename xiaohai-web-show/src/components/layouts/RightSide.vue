@@ -165,9 +165,15 @@ const router = useRouter()
 const loading = ref(true)
 
 // 网站信息
-let showBasic = ref<any>({})
+let showBasic = ref<any>(store?.showBasic)
 
-watchEffect(() => showBasic = store?.showBasic
+watch(() => store,
+  () => {
+    showBasic.value = store.showBasic
+  },
+  {
+    deep: true
+  }
 )
 
 function greetings() {
