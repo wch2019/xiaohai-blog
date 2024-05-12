@@ -144,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useRouter } from 'vue-router'
 import {getArticle, image, open, openQQ} from '@/utils/publicMethods'
 import useStore from '@/store/index'
@@ -155,7 +155,11 @@ const router = useRouter()
 const loading = ref(true)
 
 // 网站信息
-const showBasic = ref<any>(store?.showBasic)
+let showBasic = ref<any>(store?.showBasic)
+
+onMounted(() => {
+  showBasic=store.showBasic
+})
 
 function greetings() {
   const date = new Date()
