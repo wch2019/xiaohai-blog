@@ -154,7 +154,7 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, ref, watch, watchEffect} from 'vue'
+import {ref, watch} from 'vue'
 import {useRouter} from 'vue-router'
 import {getArticle, image, open, openQQ} from '@/utils/publicMethods'
 import useStore from '@/store/index'

@@ -261,7 +261,7 @@
           <span slot="label">
             <i class="el-icon-edit-outline" /> 关于信息
           </span>
-          <Vditor :height="calculateHeight()" :value="form.content" @fileRead="handleFileRead" @save="submitForm" />
+          <Vditor :height="calculateHeight()" :value="form.content" style="margin-top: 30px" @fileRead="handleFileRead" @save="submitForm" />
         </el-tab-pane>
         <!--        <el-tab-pane label="关于信息">-->
         <!--          <span slot="label">-->
@@ -347,7 +347,7 @@ export default {
         this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
         const imgData = findImg(this.form.content)
         imgData.forEach(item => {
-          this.imgRecurrent(item.text, item.url)
+          // this.imgRecurrent(item.text, item.url)
         })
         const formattedSize = formatFileSize(this.form.diskSize)
         this.$set(this.form, 'disk', formattedSize.value)
@@ -425,7 +425,7 @@ export default {
     },
     // 计算高度
     calculateHeight() {
-      return window.innerHeight - 120
+      return window.innerHeight - 150
     },
     handleFileRead(fileData) {
       // 这里的 fileData 包含文件名和内容
