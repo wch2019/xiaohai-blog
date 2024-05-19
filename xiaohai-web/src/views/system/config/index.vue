@@ -345,50 +345,13 @@ export default {
         this.form = response.data
         this.$refs.uploadImg.getimgUrl(this.form.logo)
         this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
-        const imgData = findImg(this.form.content)
-        imgData.forEach(item => {
-          // this.imgRecurrent(item.text, item.url)
-        })
+        // const imgData = findImg(this.form.content)
+        // imgData.forEach(item => {
+        //    this.imgRecurrent(item.text, item.url)
+        // })
         const formattedSize = formatFileSize(this.form.diskSize)
         this.$set(this.form, 'disk', formattedSize.value)
         this.$set(this.form, 'diskProperty', formattedSize.unit)
-      })
-    },
-    // 将解析到图片名字和地址添加到控制列表(具体为什么要填这些参数，是因为mavon-editor插件中要使用到这些内容)
-    imgRecurrent(name, url) {
-      this.$refs.md.$refs.toolbar_left.$imgAddByFilename(
-        // markdown模板图片地址
-        url,
-        {
-          // 图片控制列表图片链接
-          miniurl: url,
-          // 图片控制列表名字
-          name: name,
-          // markdown模板图片名称
-          _name: name
-        }
-      )
-    },
-    // 绑定@imgAdd event
-    imgAdd(pos, $file) {
-      // 第一步.将图片上传到服务器.
-      var data = new FormData()
-      data.append('file', $file)
-      uploadImage(data).then(response => {
-        this.$message.success(response.msg)
-        /**
-         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-         */
-        this.$refs.md.$img2Url(pos, process.env.VUE_APP_BASE_API_FILE + response.data)
-      })
-    },
-    // 删除图片
-    imgDel(filename) {
-      const name = filename[0].replace(process.env.VUE_APP_BASE_API_FILE, '')
-      delFile(getLastSegment(name)).then(response => {
-        this.$message.success(response.msg)
       })
     },
     getImgUrl(imgUrl) {
