@@ -261,30 +261,14 @@
           <span slot="label">
             <i class="el-icon-edit-outline" /> 关于信息
           </span>
-          <Vditor :height="calculateHeight()" :value="form.content" style="margin-top: 30px" @fileRead="handleFileRead" @save="submitForm" />
+          <Vditor
+            :height="calculateHeight()"
+            :value="form.content"
+            style="margin-top: 30px"
+            @fileRead="handleFileRead"
+            @save="submitForm"
+          />
         </el-tab-pane>
-        <!--        <el-tab-pane label="关于信息">-->
-        <!--          <span slot="label">-->
-        <!--            <i class="el-icon-edit-outline" /> 关于信息-->
-        <!--          </span>-->
-        <!--          <el-form-->
-        <!--            ref="form"-->
-        <!--            style="margin-left: 20px;"-->
-        <!--            label-position="left"-->
-        <!--            :model="form"-->
-        <!--            label-width="100px"-->
-        <!--          >-->
-        <!--            <mavon-editor-->
-        <!--              ref="md"-->
-        <!--              v-model="form.content"-->
-        <!--              placeholder="输入内容..."-->
-        <!--              font-size="18px"-->
-        <!--              @save="submitForm"-->
-        <!--              @imgAdd="imgAdd"-->
-        <!--              @imgDel="imgDel"-->
-        <!--            />-->
-        <!--          </el-form>-->
-        <!--        </el-tab-pane>-->
         <el-tab-pane label="测试展示">
           <Preview :md="form.content" :style="{height: calculateHeight()+'px'}" />
         </el-tab-pane>
@@ -296,13 +280,13 @@
 
 <script>
 import { addConfig, getConfig, updateConfig } from '@/api/system/config'
-import { delFile, hardDiskSize, uploadImage } from '@/api/file/file'
+import { hardDiskSize } from '@/api/file/file'
 import uploadImg from '@/components/uploadImg'
 import Vditor from '@/components/Vditor'
 import Preview from '@/components/Vditor/preview.vue'
 import { marked } from 'marked'
 import 'github-markdown-css'
-import { findImg, formatFileSize, getLastSegment, markdownImageFile, parseFileSize } from '@/utils'
+import { formatFileSize, markdownImageFile, parseFileSize } from '@/utils'
 
 export default {
   name: 'Index',
@@ -345,10 +329,6 @@ export default {
         this.form = response.data
         this.$refs.uploadImg.getimgUrl(this.form.logo)
         this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
-        // const imgData = findImg(this.form.content)
-        // imgData.forEach(item => {
-        //    this.imgRecurrent(item.text, item.url)
-        // })
         const formattedSize = formatFileSize(this.form.diskSize)
         this.$set(this.form, 'disk', formattedSize.value)
         this.$set(this.form, 'diskProperty', formattedSize.unit)
@@ -390,6 +370,7 @@ export default {
     calculateHeight() {
       return window.innerHeight - 150
     },
+    // md文件读取值
     handleFileRead(fileData) {
       // 这里的 fileData 包含文件名和内容
       const { fileName, content } = fileData
