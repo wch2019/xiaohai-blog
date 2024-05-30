@@ -64,11 +64,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public Integer delete(Long[] ids) {
         for (Long id : ids) {
             Role role = baseMapper.selectById(id);
-            if (role.getCode().equals(Constants.ADMIN)) {
-                throw new ServiceException("admin角色不能删除");
-            }
-            if(role.getCode().equals(Constants.USER)){
-                throw new ServiceException("user角色不能删除");
+            List<String> code = List.of(Constants.ADMIN, Constants.USER, Constants.DEMO);
+            if (code.contains(role.getCode())) {
+                throw new ServiceException("当前角色不能删除");
             }
             Long codeCount = userRoleMapper.selectCount(new QueryWrapper<UserRole>().eq("role_id", id));
             Assert.isTrue(codeCount == 0, "当前角色存在用户，无法删除");
@@ -82,11 +80,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional(rollbackFor = Exception.class)
     public Integer updateData(RoleVo vo) {
         Role old = baseMapper.selectById(vo.getId());
-        if (old.getCode().equals(Constants.ADMIN) && !vo.getCode().equals(Constants.ADMIN)) {
-            throw new ServiceException("admin角色不能修改编码");
-        }
-        if (old.getCode().equals(Constants.USER) && !vo.getCode().equals(Constants.USER)) {
-            throw new ServiceException("user角色不能修改编码");
+        List<String> code = List.of(Constants.ADMIN, Constants.USER, Constants.DEMO);
+
+        if (code.contains(old.getCode()) && !code.contains(vo.getCode())) {
+            throw new ServiceException("当前角色不能修改编码");
         }
         Long codeCount = baseMapper.selectCount(new QueryWrapper<Role>().eq("code", vo.getCode()).ne("id", vo.getId()));
         Assert.isTrue(codeCount == 0, "更新角色：" + vo.getCode() + "失败，角色已存在");
@@ -98,9 +95,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public RoleDto findById(Long id) {
-        Role role=baseMapper.selectById(id);
-        RoleDto roleDto=new RoleDto();
-        BeanUtils.copyProperties(role,roleDto);
+        Role role = baseMapper.selectById(id);
+        RoleDto roleDto = new RoleDto();
+        BeanUtils.copyProperties(role, roleDto);
         roleDto.setMenuIds(menuMapper.listByMenuIds(id));
         return roleDto;
     }
@@ -108,9 +105,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public ReturnPageData<Role> findListByPage(RoleQuery query) {
         IPage<Role> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Role> iPage = baseMapper.selectPage(wherePage,new QueryWrapper<Role>()
-                .eq(StringUtils.isNotBlank(query.getStatus()),"status",query.getStatus())
-                .like(StringUtils.isNotBlank(query.getName()),"name",query.getName()));
+        IPage<Role> iPage = baseMapper.selectPage(wherePage, new QueryWrapper<Role>()
+                .eq(StringUtils.isNotBlank(query.getStatus()), "status", query.getStatus())
+                .like(StringUtils.isNotBlank(query.getName()), "name", query.getName()));
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());

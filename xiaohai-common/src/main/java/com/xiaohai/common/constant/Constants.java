@@ -43,6 +43,10 @@ public class Constants {
      */
     public static final String USER = "user";
     /**
+     * 演示角色
+     */
+    public static final String DEMO= "demo";
+    /**
      * 文章内容高亮开始
      */
     public static final String PRE_TAG = "<span style=\"color:red\">";
