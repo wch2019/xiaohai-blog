@@ -24,14 +24,17 @@ export default {
   },
   watch: {
     '$route'() {
-      if (!this.roles.includes('admin')) {
-        this.currentRole = 'userDashboard'
-      }
+      this.getUser()
     }
   },
   created() {
-    if (!this.roles.includes('admin')) {
-      this.currentRole = 'userDashboard'
+    this.getUser()
+  },
+  methods: {
+    getUser() {
+      if (!this.roles.includes('admin') && !this.roles.includes('demo')) {
+        this.currentRole = 'userDashboard'
+      }
     }
   }
 }

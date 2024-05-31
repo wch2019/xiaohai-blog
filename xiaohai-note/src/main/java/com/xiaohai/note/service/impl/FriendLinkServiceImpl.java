@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.PageData;
+import com.xiaohai.common.utils.RoleUtils;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.FriendLink;
 import com.xiaohai.note.dao.FriendLinkMapper;
@@ -116,8 +117,8 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
         FriendLink friendLink = new FriendLink();
         BeanUtils.copyProperties(query, friendLink);
         IPage<FriendLink> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        //不是管理员查询用户自己的
-        if (!StpUtil.hasRole(Constants.ADMIN)) {
+        //不是管理员、demo查询用户自己的
+        if (RoleUtils.checkRole()) {
             friendLink.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
         }
         IPage<FriendLink> iPage = baseMapper.selectPage(wherePage, Wrappers.query(friendLink));

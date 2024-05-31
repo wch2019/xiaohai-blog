@@ -219,9 +219,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
         Integer userId = null;
-        //判断角色是否是管理员
-        if (!StpUtil.hasRole(Constants.ADMIN)) {
-            //不是管理员只查询当前用户数据
+        //判断角色是否是管理员和demo
+        if (RoleUtils.checkRole()) {
+            //不是管理员、demo只查询当前用户数据
             userId = Integer.valueOf((String) StpUtil.getLoginId());
         }
         IPage<ArticleDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
@@ -296,7 +296,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public Long getPageView() {
         Integer userId = null;
-        if (!StpUtil.hasRole(Constants.ADMIN)) {
+        if (RoleUtils.checkRole()) {
             userId = Integer.valueOf((String) StpUtil.getLoginId());
         }
         return baseMapper.getPageView(userId);

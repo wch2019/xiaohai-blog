@@ -70,7 +70,7 @@ const actions = {
         }
         const { nickName, avatar, id, username } = data.info
         commit('SET_NAME', nickName || username)
-        commit('SET_AVATAR', process.env.VUE_APP_BASE_API_FILE + avatar)
+        commit('SET_AVATAR', avatar ? process.env.VUE_APP_BASE_API_FILE + avatar : undefined)
         commit('SET_MENU', data.menu)
         commit('SET_PERMISSION', data.permission)
         commit('SET_ROLES', data.role)

@@ -94,7 +94,7 @@
             @click="handleUpdate(scope.row)"
           >修改
           </el-button>
-          <template v-if="scope.row.code !== 'admin' && scope.row.code !== 'user'">
+          <template v-if="scope.row.code !== 'admin' && scope.row.code !== 'user' && scope.row.code !== 'demo' ">
             <el-button
               v-if="$store.getters.permission.includes('system:role:delete')"
               size="mini"
@@ -189,7 +189,7 @@ export default {
     },
     /** 多选框可选择的判断*/
     judgeSelect(row) {
-      return row.code !== 'admin' && row.code !== 'user' // 返回true该行可选，返回false则不可选
+      return row.code !== 'admin' && row.code !== 'user' && row.code !== 'demo' // 返回true该行可选，返回false则不可选
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

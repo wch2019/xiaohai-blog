@@ -6,13 +6,13 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-<!--        <search id="header-search" class="right-menu-item" />-->
+        <!--        <search id="header-search" class="right-menu-item" />-->
         <el-tooltip content="门户地址" effect="dark" placement="bottom">
-          <Website id="website" class="right-menu-item hover-effect" ></Website>
+          <Website id="website" class="right-menu-item hover-effect" />
         </el-tooltip>
 
         <el-tooltip content="全屏" effect="dark" placement="bottom">
-        <ScreenFull id="screen-full" class="right-menu-item hover-effect" />
+          <ScreenFull id="screen-full" class="right-menu-item hover-effect" />
 
         </el-tooltip>
         <Message class="right-menu-item hover-effect" />

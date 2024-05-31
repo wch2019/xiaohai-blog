@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
+import com.xiaohai.common.utils.RoleUtils;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.ArticleLike;
 import com.xiaohai.note.pojo.entity.Comment;
@@ -48,13 +49,13 @@ public class HomeManageController {
     public Response<Map<String, Long>> getCount() {
         Map<String, Long> map = new HashMap<>();
         //文章数
-        map.put("article", articleService.count(new QueryWrapper<Article>().eq(!StpUtil.hasRole(Constants.ADMIN), "user_id", StpUtil.getLoginId())));
+        map.put("article", articleService.count(new QueryWrapper<Article>().eq(RoleUtils.checkRole(), "user_id", StpUtil.getLoginId())));
         //评论数
-        map.put("message", commentService.count(new QueryWrapper<Comment>().eq(!StpUtil.hasRole(Constants.ADMIN), "user_id", StpUtil.getLoginId())));
+        map.put("message", commentService.count(new QueryWrapper<Comment>().eq(RoleUtils.checkRole(), "user_id", StpUtil.getLoginId())));
         //用户数
         map.put("user", userService.count());
         //点赞数
-        map.put("like", articleLikeService.count(new QueryWrapper<ArticleLike>().eq(!StpUtil.hasRole(Constants.ADMIN), "user_id", StpUtil.getLoginId())));
+        map.put("like", articleLikeService.count(new QueryWrapper<ArticleLike>().eq(RoleUtils.checkRole(), "user_id", StpUtil.getLoginId())));
         //阅读量
         map.put("views", articleService.getPageView());
         return Response.success("获取文章数,用户数,评论数，浏览量成功！", map);
