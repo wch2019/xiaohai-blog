@@ -339,7 +339,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm(text) {
-      if (text) {
+      if (typeof text === 'string') {
         this.form.content = text
       }
       this.form.content = this.form.content.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
@@ -350,15 +350,16 @@ export default {
           if (this.form.id !== '') {
             updateConfig(this.form).then(response => {
               this.$message.success(response.msg)
+              this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
             })
           } else {
             addConfig(this.form).then(response => {
               this.$message.success(response.msg)
+              this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
             })
           }
         }
       })
-      this.form.content = this.form.content.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
     },
     // 硬盘使用情况
     hardDiskSize() {
