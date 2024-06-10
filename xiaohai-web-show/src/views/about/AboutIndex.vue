@@ -36,7 +36,7 @@ function getContent() {
   // 文章内图片地址替换
   content.value = website.value.content.replaceAll(
     markdownImageFile(''),
-    `${import.meta.env.VITE_APP_BASE_API_FILE}` + markdownImageFile('')
+    `${import.meta.env.VITE_APP_BASE_API_FILE}` + markdownImageFile('..')
   )
   renderMarkdown(content.value)
 }
