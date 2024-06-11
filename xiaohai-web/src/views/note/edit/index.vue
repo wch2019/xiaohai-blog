@@ -4,8 +4,9 @@
       <div slot="header" class="clearfix">
         <el-input v-model="form.title" class="title" maxlength="100" placeholder="输入文章标题" prop="title" />
         <el-row style="float: right;">
+          {{ nowTime }}
           <el-button type="text" disabled> 自动保存草稿</el-button>
-          <el-button size="small" @click="saveArticle()">保 存</el-button>
+          <el-button size="small" @click="saveArticle(this.form.newText)">保 存</el-button>
           <el-popover
             v-model="visible"
             placement="left-start"
@@ -133,40 +134,46 @@
           </el-popover>
         </el-row>
       </div>
-      <div style="height: calc((100vh - 166px) - 1rem);">
-        <mavon-editor
-          ref="md"
-          v-model="form.text"
-          style="height: 100%;width: 100%"
-          placeholder="输入文章内容..."
-          font-size="18px"
-          @save="saveArticle()"
-          @imgAdd="imgAdd"
-          @imgDel="imgDel"
-          @change="textSummary"
-        >
-          <template slot="left-toolbar-after">
-            <span data-v-548e2160="" class="op-icon-divider" />
-            <button
-              type="button"
-              class="op-icon fa el-icon-document-add"
-              aria-hidden="true"
-              title="导入md文档"
-              @click="triggerFileInput"
-            />
-            <input v-show="false" id="upload" type="file" accept=".md" @change="importMd($event)">
-          </template>
-          <template slot="right-toolbar-before">
-            <el-button type="text" disabled>{{ nowTime }}</el-button>
-            <span class="op-icon-divider" />
-            <el-button type="text" style="color: #0a0a0a" disabled>{{ wordCount }}词</el-button>
-            <span class="op-icon-divider" />
+      <!--      <div style="height: calc((100vh - 166px) - 1rem);">-->
+      <!--        <mavon-editor-->
+      <!--          ref="md"-->
+      <!--          v-model="form.text"-->
+      <!--          style="height: 100%;width: 100%"-->
+      <!--          placeholder="输入文章内容..."-->
+      <!--          font-size="18px"-->
+      <!--          @save="saveArticle()"-->
+      <!--          @imgAdd="imgAdd"-->
+      <!--          @imgDel="imgDel"-->
+      <!--          @change="textSummary"-->
+      <!--        >-->
+      <!--          <template slot="left-toolbar-after">-->
+      <!--            <span data-v-548e2160="" class="op-icon-divider" />-->
+      <!--            <button-->
+      <!--              type="button"-->
+      <!--              class="op-icon fa el-icon-document-add"-->
+      <!--              aria-hidden="true"-->
+      <!--              title="导入md文档"-->
+      <!--              @click="triggerFileInput"-->
+      <!--            />-->
+      <!--            <input v-show="false" id="upload" type="file" accept=".md" @change="importMd($event)">-->
+      <!--          </template>-->
+      <!--          <template slot="right-toolbar-before">-->
+      <!--            <el-button type="text" disabled>{{ nowTime }}</el-button>-->
+      <!--            <span class="op-icon-divider" />-->
+      <!--            <el-button type="text" style="color: #0a0a0a" disabled>{{ wordCount }}词</el-button>-->
+      <!--            <span class="op-icon-divider" />-->
 
-          </template>
-        </mavon-editor>
-      </div>
+      <!--          </template>-->
+      <!--        </mavon-editor>-->
+      <!--      </div>-->
+      <Vditor
+        :height="calculateHeight()"
+        :value="form.text"
+        @fileRead="handleFileRead"
+        @save="saveArticle"
+        @text="textContent"
+      />
     </el-card>
-    <!--    <el-button type="text"  style="float: right; color: #0a0a0a" disabled> {{wordCount}}词</el-button>-->
   </div>
 </template>
 
@@ -183,9 +190,11 @@ import { delFile, uploadImage } from '@/api/file/file'
 import { addCategory, optionSelectCategory } from '@/api/note/category'
 import { addTags, optionSelectTags } from '@/api/note/tags'
 import { findImg, getLastSegment, markdownImageFile, truncateString } from '@/utils'
+import Vditor from '@/components/Vditor/index.vue'
 
 export default {
   name: 'Index',
+  components: { Vditor },
   data() {
     return {
       // 标题
@@ -228,6 +237,8 @@ export default {
         text: ''
       },
       oldText: '',
+      // 最新文章数据
+      newText: '',
       // 临时缓存
       cache: {},
       // 保存时间
@@ -248,9 +259,9 @@ export default {
   mounted() {
     // 在组件挂载后，启动定时器，每隔一定时间执行保存操作
     this.saveTimer = setInterval(() => {
-      if (this.oldText !== this.form.text) {
-        this.oldText = this.form.text
-        this.saveArticle()
+      if (this.oldText !== this.form.newText) {
+        this.oldText = this.form.newText
+        this.saveArticle(this.form.newText)
         this.getTime()
       }
     }, 5000) // 每隔5秒执行一次保存操作，根据需要调整时间间隔
@@ -488,7 +499,11 @@ export default {
       })
     },
     /** 保存按钮*/
-    saveArticle() {
+    saveArticle(text) {
+      console.log(text)
+      if (typeof text === 'string') {
+        this.form.text = text
+      }
       this.draft.id = JSON.parse(JSON.stringify(this.form)).id
       this.draft.title = JSON.parse(JSON.stringify(this.form)).title
       this.draft.text = JSON.parse(JSON.stringify(this.form)).text
@@ -522,6 +537,22 @@ export default {
       images.forEach(image => {
         image.setAttribute('referrerPolicy', 'no-referrer')
       })
+    },
+    // 计算高度
+    calculateHeight() {
+      return window.innerHeight - 150
+    },
+    // md文件读取值
+    handleFileRead(fileData) {
+      // 这里的 fileData 包含文件名和内容
+      const { fileName, content } = fileData
+      // 在这里处理文件内容，例如将内容显示在页面上或者做其他操作
+      console.log('文件名:', fileName)
+      this.form.text = content
+    },
+    textContent(content) {
+      console.log('文本信息:', content)
+      this.form.newText = content
     }
   }
 }

@@ -105,8 +105,9 @@ export default {
     this.initVditor()
   },
   methods: {
-    onEditorInput(value) {
-      // console.log('this.editor.getValue()', this.editor.getValue())
+    onEditorInput() {
+      // 返回文本数据
+      this.$emit('text', this.editor.getValue())
     },
     initVditor() {
       this.editor = new Vditor(this.editorId, {
