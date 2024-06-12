@@ -6,7 +6,7 @@
         <el-row style="float: right;">
           {{ nowTime }}
           <el-button type="text" disabled> 自动保存草稿</el-button>
-          <el-button size="small" @click="saveArticle(this.form.newText)">保 存</el-button>
+          <el-button size="small" @click="saveArticle(newText)">保 存</el-button>
           <el-popover
             v-model="visible"
             placement="left-start"
@@ -168,7 +168,7 @@
       <!--      </div>-->
       <Vditor
         :height="calculateHeight()"
-        :value="form.text"
+        :value="newText"
         @fileRead="handleFileRead"
         @save="saveArticle"
         @text="textContent"
@@ -259,9 +259,9 @@ export default {
   mounted() {
     // 在组件挂载后，启动定时器，每隔一定时间执行保存操作
     this.saveTimer = setInterval(() => {
-      if (this.oldText !== this.form.newText) {
-        this.oldText = this.form.newText
-        this.saveArticle(this.form.newText)
+      if (this.oldText !== this.newText) {
+        this.oldText = this.newText
+        this.saveArticle(this.newText)
         this.getTime()
       }
     }, 5000) // 每隔5秒执行一次保存操作，根据需要调整时间间隔
@@ -355,10 +355,11 @@ export default {
           this.title = this.form.title
           this.form.text = this.form.text.replaceAll(markdownImageFile(name), process.env.VUE_APP_BASE_API_FILE + markdownImageFile('..'))
           this.oldText = this.form.text
-          const imgData = findImg(this.form.text)
-          imgData.forEach(item => {
-            this.imgRecurrent(item.text, item.url)
-          })
+          this.newText = this.form.text
+          // const imgData = findImg(this.form.text)
+          // imgData.forEach(item => {
+          //   this.imgRecurrent(item.text, item.url)
+          // })
         })
       }
     },
@@ -540,7 +541,7 @@ export default {
     },
     // 计算高度
     calculateHeight() {
-      return window.innerHeight - 150
+      return window.innerHeight - 170
     },
     // md文件读取值
     handleFileRead(fileData) {
