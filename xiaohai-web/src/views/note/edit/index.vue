@@ -4,9 +4,10 @@
       <div slot="header" class="clearfix">
         <el-input v-model="form.title" class="title" maxlength="100" placeholder="输入文章标题" prop="title" />
         <el-row style="float: right;">
-          {{ nowTime }}
-          <el-button type="text" disabled> 自动保存草稿</el-button>
-          <el-button size="small" @click="saveArticle(newText)">保 存</el-button>
+
+          <el-button v-if="nowTime" type="text" disabled>  {{ nowTime }}</el-button>
+          <el-button v-else type="text" disabled> 自动保存草稿</el-button>
+          <el-button size="small" @click="saveArticle">保 存</el-button>
           <el-popover
             v-model="visible"
             placement="left-start"
@@ -168,10 +169,11 @@
       <!--      </div>-->
       <Vditor
         :height="calculateHeight()"
-        :value="newText"
+        :value="oldText"
         @fileRead="handleFileRead"
         @save="saveArticle"
-        @text="textContent"
+        @markdown="markdownText"
+        @html="textSummary"
       />
     </el-card>
   </div>
@@ -236,6 +238,7 @@ export default {
         summary: '',
         text: ''
       },
+      // 历史文章数据
       oldText: '',
       // 最新文章数据
       newText: '',
@@ -259,10 +262,9 @@ export default {
   mounted() {
     // 在组件挂载后，启动定时器，每隔一定时间执行保存操作
     this.saveTimer = setInterval(() => {
-      if (this.oldText !== this.newText) {
-        this.oldText = this.newText
-        this.saveArticle(this.newText)
-        this.getTime()
+      if (this.newText !== this.form.text) {
+        this.newText = this.form.text
+        this.saveArticle()
       }
     }, 5000) // 每隔5秒执行一次保存操作，根据需要调整时间间隔
   },
@@ -295,13 +297,6 @@ export default {
       optionSelectTags().then(response => {
         this.TagsList = response.data
       })
-    },
-    // 自动添加简介
-    textSummary(markdownText) {
-      // 获取html数据,获取纯文本
-      const text = this.$refs.md.d_render.replace(/<[^>]+>/g, '')
-      this.form.summary = truncateString(text.replace(/\s*/g, ''), 100)
-      this.wordCount = text.length
     },
     // 监听分类
     handleChangeCategory(value) {
@@ -344,6 +339,7 @@ export default {
       }
       // console.log(this.form.tags)
     },
+    // 获取文章信息
     getArticle(id) {
       id = this.$route.query.id ? this.$route.query.id : id
       if (id) {
@@ -363,6 +359,14 @@ export default {
         })
       }
     },
+    // 随机照片
+    randomImg() {
+      getBingWallpaper().then(response => {
+        this.form.cover = process.env.VUE_APP_BASE_API_FILE + response.data
+        this.$message.success(response.msg)
+      })
+    },
+
     // 将解析到图片名字和地址添加到控制列表(具体为什么要填这些参数，是因为mavon-editor插件中要使用到这些内容)
     imgRecurrent(name, url) {
       this.$refs.md.$refs.toolbar_left.$imgAddByFilename(
@@ -378,13 +382,7 @@ export default {
         }
       )
     },
-    // 随机照片
-    randomImg() {
-      getBingWallpaper().then(response => {
-        this.form.cover = process.env.VUE_APP_BASE_API_FILE + response.data
-        this.$message.success(response.msg)
-      })
-    },
+
     // 覆盖默认的上传行为
     uploadSectionFile(params) {
       const file = params.file
@@ -500,11 +498,7 @@ export default {
       })
     },
     /** 保存按钮*/
-    saveArticle(text) {
-      console.log(text)
-      if (typeof text === 'string') {
-        this.form.text = text
-      }
+    saveArticle() {
       this.draft.id = JSON.parse(JSON.stringify(this.form)).id
       this.draft.title = JSON.parse(JSON.stringify(this.form)).title
       this.draft.text = JSON.parse(JSON.stringify(this.form)).text
@@ -524,6 +518,7 @@ export default {
       this.draft.text = this.draft.text.replaceAll(process.env.VUE_APP_BASE_API_FILE, '..')
       if (this.draft.id !== '') {
         updateDraftArticle(this.draft).then(response => {
+          this.getTime()
           console.log('保存草稿成功')
         })
       } else {
@@ -551,9 +546,17 @@ export default {
       console.log('文件名:', fileName)
       this.form.text = content
     },
-    textContent(content) {
-      console.log('文本信息:', content)
-      this.form.newText = content
+    // 返回文章信息
+    markdownText(content) {
+      // console.log('文本信息:', content)
+      this.form.text = content
+    },
+    // 自动添加简介
+    textSummary(html) {
+      // 获取html数据,获取纯文本
+      const text = html.replace(/<[^>]+>/g, '')
+      this.form.summary = truncateString(text.replace(/\s*/g, ''), 100)
+      this.wordCount = text.length
     }
   }
 }

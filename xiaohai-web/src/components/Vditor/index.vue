@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div :id="editorId" :style="{height: height + 'px'}" @input="onEditorInput" />
+    <div :id="editorId" :style="{height: height + 'px'}" />
     <input v-show="false" id="upload" type="file" accept=".md" @change="importMd($event)">
-    <button v-show="false" id="save" @click="save()" />
   </div>
 </template>
 
@@ -75,11 +74,6 @@ export default {
       default: () => ({
         index: 10000
       })
-    },
-    afterInit: {
-      type: Function,
-      default: () => {
-      }
     }
   },
   data() {
@@ -105,19 +99,18 @@ export default {
     this.initVditor()
   },
   methods: {
-    onEditorInput() {
-      // 返回文本数据
-      this.$emit('text', this.editor.getValue())
-    },
+    // onEditorInput() {
+    //
+    // },
     initVditor() {
       this.editor = new Vditor(this.editorId, {
         toolbar: [
-          'emoji',
           'headings',
           'bold',
           'italic',
           'strike',
           'link',
+          'emoji',
           '|',
           'list',
           'ordered-list',
@@ -154,8 +147,8 @@ export default {
             tip: '保存',
             className: 'right',
             icon: '<svg t="1714634549868" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21360" width="200" height="200"><path d="M1013.3 223.2l-148.7-148.5c-6.8-6.8-16-10.8-26.2-10.8-7.4 0-32.9 0-70.3 0L256 63.9c-83.7 0-145 0-154.3 0l-1 0c-20.4 0-36.7 16.3-36.7 36.7l0 885.6 0 0.8c0 20.4 16.3 36.9 36.7 36.9l117.9 0 0.8 0 648.3 0 1 0 0.8 0L986 1023.9l1.1 0c20.7 0 36.9-16.5 36.9-36.9l0-736.6 0-0.5C1024 240.2 1020.9 231 1013.3 223.2zM704 128l0 256L320 384l0-256L704 128zM320 960l0-320 448 0 0 320L320 960zM960 960l-90.6 0-0.8 0-1 0L832 960 832 623.2c0-26.8-21.1-47.3-47.2-47.3L303.2 575.9c-25.9 0-47.2 20.4-47.2 47.3l0 336.7-36.7 0-0.8 0L128 959.9l0-832 128 0L256 400.7c0 26.8 21.4 47.3 47.2 47.3l417.5 0c26.2 0 47.2-20.4 47.2-47.3l0-272.7 59.3 0L960 260.4 960 960z" p-id="21361"></path><path d="M672 704 416 704c-17.7 0-32 14.3-32 32s14.3 32 32 32l256 0c17.7 0 32-14.3 32-32S689.7 704 672 704z" p-id="21362"></path><path d="M672 832 416 832c-17.7 0-32 14.3-32 32s14.3 32 32 32l256 0c17.7 0 32-14.3 32-32S689.7 832 672 832z" p-id="21363"></path></svg>',
-            click() {
-              document.getElementById('save').click()
+            click: () => {
+              this.$emit('save', this.editor.getValue())
             }
           },
           '|',
@@ -178,6 +171,7 @@ export default {
         ],
         placeholder: this.placeholder,
         value: this.value,
+        icon: 'material',
         height: this.height,
         hint: {
           emoji: this.emoji
@@ -185,16 +179,26 @@ export default {
         typewriterMode: true,
         toolbarConfig: this.toolbarConfig,
         counter: {
-          enable: true
+          enable: true,
+          type: 'text'
         },
         cache: {
           enable: false
         },
         upload: this.uploadConfig,
         fullscreen: this.fullscreenConfig,
-        after: this.afterInit,
-        input(value) {
-          this.value = value
+        after: () => {
+          this.addReferrerPolicyToImages()
+        },
+        resize: {
+          // 是否支持大小拖拽
+          enable: false
+        },
+        input: () => {
+          // 返回Markdown数据
+          this.$emit('markdown', this.editor.getValue())
+          // 返回html
+          this.$emit('html', this.editor.getHTML())
         }
       })
     },
@@ -218,9 +222,26 @@ export default {
       })
       e.target.value = null
     },
-    save() {
-      this.$emit('save', this.editor.getValue())
+    // 防止无法展示图片
+    addReferrerPolicyToImages() {
+      const images = document.querySelectorAll('img')
+      images.forEach(image => {
+        if (!image.hasAttribute('referrerPolicy')) {
+          image.setAttribute('referrerPolicy', 'no-referrer')
+        }
+      })
     }
   }
 }
 </script>
+
+<style scoped>
+
+::v-deep .vditor-toolbar {
+  background-color: var(--toolbar-background-color);
+  box-shadow: 2px 2px 5px 1px var(--border-color);
+  padding: 0 5px;
+  line-height: 1;
+  border-bottom: 0;
+}
+</style>
