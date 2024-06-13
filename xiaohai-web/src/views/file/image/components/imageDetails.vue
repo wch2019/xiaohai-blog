@@ -28,7 +28,6 @@ export default {
     // 取消按钮
     cancel() {
       this.imageDetails.show = false
-      this.reset()
     }
   }
 }
