@@ -87,24 +87,28 @@ public interface FileManagerService extends IService<FileManager> {
      * 根据parentId分页获取
      *
      * @param parentId
+     * @param isAsc    一个布尔值，表示排序方向。true 表示升序（ASC），false 表示降序（DESC）。
      * @return
      */
-    ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId);
+    ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId, Boolean isAsc);
 
     /**
      * 获取当前系统硬盘使用情况
+     *
      * @return
      */
     Disk getHardDiskSize();
 
     /**
      * 获取当前用户存储使用情况
+     *
      * @return
      */
     Disk getUserHardDiskSize();
 
     /**
      * 获取指定用户存储使用情况
+     *
      * @param userId
      * @return
      */
@@ -112,6 +116,7 @@ public interface FileManagerService extends IService<FileManager> {
 
     /**
      * 判断用户是否存在文件
+     *
      * @param userId
      * @return
      */

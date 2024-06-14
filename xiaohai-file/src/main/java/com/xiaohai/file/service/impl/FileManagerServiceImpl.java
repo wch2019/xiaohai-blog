@@ -148,9 +148,12 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
     }
 
     @Override
-    public ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId) {
+    public ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId, Boolean isAsc) {
         IPage<FileManager> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<FileManager> iPage = baseMapper.selectPage(wherePage, new LambdaQueryWrapper<FileManager>().eq(FileManager::getParentId, parentId));
+        IPage<FileManager> iPage = baseMapper.selectPage(wherePage, new LambdaQueryWrapper<FileManager>()
+                .eq(FileManager::getParentId, parentId)
+                .orderBy(true,isAsc,FileManager::getCreatedTime)
+        );
         List<FileManagerDto> list = new ArrayList<>();
         for (FileManager fileManagers : iPage.getRecords()) {
             FileManagerDto fileManagerDto = new FileManagerDto();

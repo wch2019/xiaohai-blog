@@ -313,7 +313,7 @@ public class FileServiceImpl implements FileService {
         var userPath = userPath();
         if (org.apache.commons.lang3.StringUtils.isBlank(path)) {
             if (StpUtil.hasRole(Constants.ADMIN)) {
-                return fileManagerService.getParentIdPath(0);
+                return fileManagerService.getParentIdPath(0,true);
             }
             path = userPath;
         }
@@ -327,7 +327,7 @@ public class FileServiceImpl implements FileService {
         if (fileManager == null) {
             return new ReturnPageData<>();
         }
-        return fileManagerService.getParentIdPath(fileManager.getId());
+        return fileManagerService.getParentIdPath(fileManager.getId(),true);
 
         //        List<FileDto> list = new ArrayList<>();
         //        // 指定文件夹路径
@@ -362,7 +362,7 @@ public class FileServiceImpl implements FileService {
         if (fileManager == null) {
             return new ReturnPageData<>();
         }
-        return fileManagerService.getParentIdPath(fileManager.getId());
+        return fileManagerService.getParentIdPath(fileManager.getId(),false);
 
         //        File folder = new File(folderPath);
         //        if (folder.isDirectory()) {

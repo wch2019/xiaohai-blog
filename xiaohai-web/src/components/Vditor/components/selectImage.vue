@@ -16,6 +16,7 @@
         v-infinite-scroll="loadMore"
         :gutter="5"
         infinite-scroll-disabled="loading"
+        infinite-scroll-distance="4"
         class="scroll"
       >
         <el-col
