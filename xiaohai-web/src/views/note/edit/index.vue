@@ -170,6 +170,7 @@
       <Vditor
         :height="calculateHeight()"
         :value="oldText"
+        :disabled="form.title==''?true:false"
         @fileRead="handleFileRead"
         @save="saveArticle"
         @markdown="markdownText"

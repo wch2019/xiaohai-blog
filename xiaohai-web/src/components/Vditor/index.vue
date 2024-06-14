@@ -77,19 +77,36 @@ export default {
       default: () => ({
         index: 10000
       })
+    },
+    // 是否禁用编辑器
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       editorId: 'vditor-' + Math.random().toString(36).substring(2, 9),
       emoji: emoji,
-      drawerVisible: false
+      drawerVisible: false,
+      // 初始化禁用
+      initializeDisabled: false
     }
   },
   watch: {
     value(newVal) {
       if (newVal !== '') {
         this.initVditor()
+      }
+    },
+    disabled(newVal) {
+      if (this.initializeDisabled) {
+        console.log(this.editor)
+        if (newVal) {
+          this.editor.disabled()
+        } else {
+          this.editor.enable()
+        }
       }
     },
     beforeDestroy() {
@@ -134,7 +151,7 @@ export default {
           {
             name: 'image',
             tipPosition: 'nw',
-            tip: '图片数据',
+            tip: '图片',
             className: 'right',
             icon: '<svg t="1718257683771" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2786" width="200" height="200"><path d="M867.90864 574.538232V257.779543a50.844091 50.844091 0 0 0-50.844092-50.844091h-610.129096a50.844091 50.844091 0 0 0-50.844092 50.844091v499.797418l430.141013-257.779543a152.532274 152.532274 0 0 1 157.108243 0z m0 118.466733l-177.445879-106.264151a50.844091 50.844091 0 0 0-50.844092 0L254.220457 817.064548h562.844091a50.844091 50.844091 0 0 0 50.844092-50.844091z m-660.973188-587.757696h610.129096a152.532274 152.532274 0 0 1 152.532274 152.532274v508.440914a152.532274 152.532274 0 0 1-152.532274 152.532274h-610.129096a152.532274 152.532274 0 0 1-152.532274-152.532274v-508.440914a152.532274 152.532274 0 0 1 152.532274-152.532274z m127.110228 355.90864a76.266137 76.266137 0 1 1 76.266137-76.266137 76.266137 76.266137 0 0 1-76.266137 76.266137z" fill="#666666" p-id="2787"></path></svg>',
             click: () => {
@@ -200,6 +217,10 @@ export default {
         fullscreen: this.fullscreenConfig,
         after: () => {
           this.addReferrerPolicyToImages()
+          if (this.disabled) {
+            this.editor.disabled()
+            this.initializeDisabled = true
+          }
         },
         resize: {
           // 是否支持大小拖拽
