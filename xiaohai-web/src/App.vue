@@ -17,6 +17,10 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  background-color: #fafafa;
+  font-family: open sans, Helvetica, Arial, sans-serif;
+}
 
 ::-webkit-scrollbar {
   /*滚动条整体样式*/
@@ -37,6 +41,7 @@ export default {
   border-radius: 10px;
   background: rgba(234, 233, 233, 0.98);
 }
+
 //html{
 //  -webkit-filter:grayscale(100%);
 //  -moz-filter:grayscale(100%);

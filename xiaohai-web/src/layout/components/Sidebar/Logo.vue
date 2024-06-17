@@ -51,6 +51,7 @@ export default {
 }
 
 .sidebar-logo-container {
+  margin-top: 20px;
   position: relative;
   width: 100%;
   height: 50px;
@@ -58,15 +59,14 @@ export default {
   background: #2b2f3a;
   text-align: center;
   overflow: hidden;
-  border-bottom: 1px solid #d3dce6;
 
   & .sidebar-logo-link {
     height: 100%;
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 38px;
+      height: 38px;
       vertical-align: middle;
       margin-right: 12px;
     }
@@ -77,7 +77,7 @@ export default {
       color: #fff;
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
+      font-size: 20px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
     }

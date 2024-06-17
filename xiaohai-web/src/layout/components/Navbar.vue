@@ -7,33 +7,33 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <!--        <search id="header-search" class="right-menu-item" />-->
+
+        <el-tooltip content="全屏" effect="dark" placement="bottom">
+          <ScreenFull id="screen-full" class="right-menu-item hover-effect" />
+        </el-tooltip>
+
         <el-tooltip content="门户地址" effect="dark" placement="bottom">
           <Website id="website" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <el-tooltip content="全屏" effect="dark" placement="bottom">
-          <ScreenFull id="screen-full" class="right-menu-item hover-effect" />
-
-        </el-tooltip>
         <Message class="right-menu-item hover-effect" />
 
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
-          <el-avatar v-if="$store.getters.avatar" shape="square" :src="$store.getters.avatar" />
-          <el-avatar v-else shape="square"> {{ $store.getters.name }} </el-avatar>
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/user/index">
-            <el-dropdown-item> 个人信息</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出登录</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+      <!--      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">-->
+      <!--        <div class="avatar-wrapper">-->
+      <!--          <el-avatar v-if="$store.getters.avatar" shape="square" :src="$store.getters.avatar" />-->
+      <!--          <el-avatar v-else shape="square"> {{ $store.getters.name }} </el-avatar>-->
+      <!--        </div>-->
+      <!--        <el-dropdown-menu slot="dropdown">-->
+      <!--          <router-link to="/user/index">-->
+      <!--            <el-dropdown-item> 个人信息</el-dropdown-item>-->
+      <!--          </router-link>-->
+      <!--          <el-dropdown-item divided @click.native="logout">-->
+      <!--            <span style="display:block;">退出登录</span>-->
+      <!--          </el-dropdown-item>-->
+      <!--        </el-dropdown-menu>-->
+      <!--      </el-dropdown>-->
     </div>
   </div>
 </template>
@@ -77,11 +77,14 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  height: 50px;
+  padding-top: 20px;
+  height: 70px;
   overflow: hidden;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  /* 主要内容 */
+  background-color: rgba(255, 255, 255, 0.1);
+  /* 模糊大小就是靠的blur这个函数中的数值大小 */
+  backdrop-filter: blur(5px);
 
   .hamburger-container {
     line-height: 46px;
@@ -90,10 +93,6 @@ export default {
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
-
-    &:hover {
-      background: rgba(0, 0, 0, .025)
-    }
   }
 
   .breadcrumb-container {
@@ -107,6 +106,7 @@ export default {
 
   .right-menu {
     float: right;
+    margin-right: 30px;
     height: 100%;
     line-height: 50px;
 
@@ -116,7 +116,7 @@ export default {
 
     .right-menu-item {
       display: inline-block;
-      padding: 0 8px;
+      padding: 0 12px;
       height: 100%;
       font-size: 18px;
       color: #5a5e66;

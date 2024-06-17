@@ -5,12 +5,12 @@
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
-<!--        <tags-view v-if="needTagsView" />-->
+        <!--        <tags-view v-if="needTagsView" />-->
       </div>
       <app-main />
-<!--      <right-panel v-if="showSettings">-->
-<!--        <settings />-->
-<!--      </right-panel>-->
+      <!--      <right-panel v-if="showSettings">-->
+      <!--        <settings />-->
+      <!--      </right-panel>-->
     </div>
   </div>
 </template>
@@ -88,12 +88,12 @@ export default {
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
+    width: calc(100% - 230px);
     transition: width 0.28s;
   }
 
   .hideSidebar .fixed-header {
-    width: calc(100% - 54px)
+    width: calc(100% - 80px)
   }
 
   .mobile .fixed-header {

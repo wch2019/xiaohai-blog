@@ -11,17 +11,17 @@
     <el-row>
       <div style=" margin-bottom: 32px;">
         <h4 style="text-align: center; margin: 20px">
-          <mallki class-name="mallki-text" text="近一年文章贡献度"/>
+          <mallki class-name="mallki-text" text="近一年文章贡献度" />
         </h4>
         <div style="text-align: center">
           <calendar-heatmap
-              style="width: 100%;max-width: 1200px; "
-              :end-date="new Date().toLocaleDateString()"
-              :values="timeValue"
-              :locale="locale"
-              tooltip-unit="个贡献"
-              :max="6"
-              :range-color="[ '#efe8e8', '#f9c0c0', '#f37373', '#e13838', '#E32121FF']"
+            style="width: 100%;max-width: 1200px; "
+            :end-date="new Date().toLocaleDateString()"
+            :values="timeValue"
+            :locale="locale"
+            tooltip-unit="个贡献"
+            :max="6"
+            :range-color="[ '#efe8e8', '#f9c0c0', '#f37373', '#e13838', '#E32121FF']"
           />
         </div>
         <div style="padding-left:18%;padding-bottom:2%;font-size: 12px">
@@ -199,7 +199,7 @@ export default {
 <style lang="scss" scoped>
 .dashboard-editor-container {
   padding: 32px;
-  background-color: rgb(240, 242, 245);
+  //background-color: rgb(240, 242, 245);
   position: relative;
 
   .github-corner {

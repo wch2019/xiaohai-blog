@@ -270,4 +270,5 @@ export default {
   background-color: #F5F6F9;
   border-radius: 4px; /* 添加圆角 */
 }
+
 </style>

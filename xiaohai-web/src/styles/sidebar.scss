@@ -3,7 +3,7 @@
   .main-container {
     min-height: 100%;
     transition: margin-left .28s;
-    margin-left: $sideBarWidth;
+    margin-left: 230px;
     position: relative;
   }
 
@@ -12,20 +12,22 @@
   }
 
   .sidebar-container {
+    border-radius: 8px;
+
     -webkit-transition: width .28s;
     transition: width 0.28s;
     width: $sideBarWidth !important;
     background-color: $base-menu-background;
-    height: 100%;
     position: fixed;
     font-size: 0px;
-    top: 0;
-    bottom: 0;
-    left: 0;
+    top: 20px;
+    bottom: 20px;
+    left: 20px;
     z-index: 1001;
     overflow: hidden;
-    -webkit-box-shadow: 2px 0 6px rgba(0,21,41,.35);
-    box-shadow: 2px 0 6px rgba(0,21,41,.35);
+    -webkit-box-shadow: 0 0 8px var(--color_box_shadow);
+    box-shadow: 0 0 8px var(--color_box_shadow);
+
 
     // reset element-ui css
     .horizontal-collapse-transition {
@@ -46,7 +48,7 @@
 
     &.has-logo {
       .el-scrollbar {
-        height: calc(100% - 50px);
+        height: calc(100% - 70px);
       }
     }
 
@@ -105,13 +107,16 @@
     }
   }
 
+  .sidebar-container:hover{
+    box-shadow: 0 0 16px var(--color_box_shadow_hover);
+  }
   .hideSidebar {
     .sidebar-container {
-      width: 54px !important;
+      width: 60px !important;
     }
 
     .main-container {
-      margin-left: 54px;
+      margin-left: 80px;
     }
 
     .submenu-title-noDropdown {
@@ -178,7 +183,7 @@
 
     .sidebar-container {
       transition: transform .28s;
-      width: $sideBarWidth !important;
+      //width: $sideBarWidth !important;
     }
 
     &.hideSidebar {

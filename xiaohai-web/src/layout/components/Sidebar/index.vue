@@ -1,7 +1,8 @@
 <template>
   <div :class="{'has-logo':showLogo}" :style="{ backgroundColor: settings.sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
     <logo v-if="showLogo" :collapse="isCollapse" />
-    <el-scrollbar :class="settings.sideTheme"  wrap-class="scrollbar-wrapper">
+
+    <el-scrollbar :class="settings.sideTheme" style="height: 80%" wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
@@ -15,17 +16,25 @@
         <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
+
+    <span style="bottom: 30px; width: 100%">
+      <div class="foter">
+
+        <Avatar v-if="showLogo" :collapse="isCollapse" />
+      </div>
+    </span>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex'
 import Logo from './Logo'
+import Avatar from './Avatar.vue'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
 
 export default {
-  components: { SidebarItem, Logo },
+  components: { SidebarItem, Logo, Avatar },
   computed: {
     ...mapState(['settings']),
     ...mapGetters([
@@ -53,3 +62,8 @@ export default {
   }
 }
 </script>
+<style  lang="scss" scoped>
+.foter{
+  border: 1px solid #c0ccda;
+}
+</style>
