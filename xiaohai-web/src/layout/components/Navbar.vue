@@ -124,10 +124,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        //transition: background .3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          //background: rgba(0, 0, 0, .025)
         }
       }
     }

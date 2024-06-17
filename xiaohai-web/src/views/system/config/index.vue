@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card" :body-style="{ height: 'calc(100vh - 90px)'}">
+    <el-card class="box-card" :body-style="{ height: 'calc(100vh - 120px)'}">
       <el-tabs tab-position="left">
         <el-tab-pane label="网站信息">
           <span slot="label">

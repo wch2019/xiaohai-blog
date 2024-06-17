@@ -85,10 +85,36 @@
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createdTime" />
+      <el-table-column label="顺序" width="50">
+        <template slot-scope="scope">
+          <div class="custom-input-number">
+            <div class="buttons">
+
+              <el-button
+                class="el-button-margin-left"
+                size="mini"
+                type="text"
+                :disabled="scope.row.menuSort === min"
+                icon="el-icon-arrow-up"
+                @click="sort(scope.row,'-')"
+              />
+              <span> {{ scope.row.menuSort }}</span>
+              <el-button
+                class="el-button-margin-left"
+                size="mini"
+                type="text"
+                icon="el-icon-arrow-down"
+                @click="sort(scope.row,'+')"
+              />
+            </div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             v-if="$store.getters.permission.includes('system:menu:update')"
+            class="el-button-margin-left"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -97,6 +123,7 @@
           </el-button>
           <el-button
             v-if="$store.getters.permission.includes('system:menu:add')"
+            class="el-button-margin-left"
             size="mini"
             type="text"
             icon="el-icon-plus"
@@ -105,6 +132,7 @@
           </el-button>
           <el-button
             v-if="$store.getters.permission.includes('system:menu:delete')"
+            class="el-button-margin-left"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -122,7 +150,7 @@
 
 <script>
 import MenuDialog from './componets/menuDialog.vue'
-import { listMenu, delMenu, getMenu } from '@/api/system/menu'
+import { listMenu, delMenu, getMenu, updateMenu } from '@/api/system/menu'
 
 export default {
   name: 'Index',
@@ -141,7 +169,8 @@ export default {
       queryParams: {
         menuName: null,
         status: null
-      }
+      },
+      min: 0
     }
   },
   created() {
@@ -223,7 +252,46 @@ export default {
     /** 回调*/
     closeDialog() {
       this.getList()
+    },
+    sort(row, operation) {
+      if (operation === '-') {
+        row.menuSort = row.menuSort - 1
+      }
+      if (operation === '+') {
+        row.menuSort = row.menuSort + 1
+      }
+      const form = {
+        id: row.id,
+        menuSort: row.menuSort
+      }
+      updateMenu(form).then(response => {
+        this.$message.success(response.msg)
+        this.menuList = this.sortMenuList(this.menuList)
+      })
+    },
+    // 排序
+    sortMenuList(list) {
+      return list.slice().sort((a, b) => a.menuSort - b.menuSort).map(item => {
+        if (item.children && item.children.length > 0) {
+          item.children = this.sortMenuList(item.children)
+        }
+        return item
+      })
     }
+
   }
 }
 </script>
+<style scoped>
+.custom-input-number {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+</style>
