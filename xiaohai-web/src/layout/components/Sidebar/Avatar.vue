@@ -52,13 +52,13 @@ export default {
         dangerouslyUseHTMLString: true,
         confirmButtonText: '是的，我要走了',
         cancelButtonText: '继续留下'
-      }).then(() => {
+      }).then(async() => {
         this.$message({
           type: 'success',
           center: true,
           message: '唉，真是伤心呢...再见啦！😢'
         })
-        this.$store.dispatch('user/logout')
+        await this.$store.dispatch('user/logout')
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }).catch(() => {
         this.$message({
