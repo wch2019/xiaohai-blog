@@ -63,22 +63,23 @@ export default {
           return false
         } else {
           // Temp set(will be used if only has one showing child)
+          // 临时设置(将在只有一个显示子节点时使用)
           this.onlyOneChild = item
           return true
         }
       })
-
       // When there is only one child router, the child router is displayed by default
+      // 当只有一个子路由器时，默认显示该子路由器
       if (showingChildren.length === 1) {
         return true
       }
 
       // Show parent if there are no child router to display
+      // 如果没有要显示的子路由器，则显示父路由器
       if (showingChildren.length === 0) {
-        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
+        this.onlyOneChild = { ...parent, path: '', noShowingChildren: true }
         return true
       }
-
       return false
     },
     resolvePath(routePath) {

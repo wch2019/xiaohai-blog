@@ -6,17 +6,14 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="settings.sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground"
-        :text-color="settings.sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor"
         :unique-opened="false"
-        :active-text-color="settings.theme"
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item v-for="route in processedPermissionRoutes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
-    <Avatar :collapse="isCollapse" />
+    <Avatar :collapse="isCollapse" @operation="operation" />
   </div>
 </template>
 
@@ -29,12 +26,55 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo, Avatar },
+  data() {
+    return {
+      operationValue: 'basic'
+    }
+  },
   computed: {
     ...mapState(['settings']),
     ...mapGetters([
       'permission_routes',
       'sidebar'
     ]),
+    // 新的计算属性，根据指定规则处理 permission_routes
+    processedPermissionRoutes() {
+      // 获取原始的 permission_routes
+      const routes = this.permission_routes
+      // 根据指定规则将其转换为数组
+      // 这里假设规则是将 routes 对象的键值对转换为数组元素
+      const processedRoutes = []
+
+      for (const key in routes) {
+        if (Object.prototype.hasOwnProperty.call(routes, key)) {
+          // 存在不展示的直接跳过
+          if (routes[key].hidden) {
+            continue
+          }
+          // if (routes[key].name === this.operationValue) {
+          //   for (const route in routes[key].children) {
+          //     console.log('children', routes[key].children[route])
+          //     // 根据需要对每个 route 进行处理
+          //     processedRoutes.push({
+          //       name: key,
+          //       ...routes[key].children[route]
+          //     })
+          //   }
+          //   console.log(key, routes[key])
+          //   // return processedRoutes
+          // } else {
+          // 根据需要对每个 route 进行处理
+          processedRoutes.push({
+            name: key,
+            ...routes[key]
+          })
+          console.log(key, routes[key])
+          // }
+        }
+      }
+      console.log('processedRoutes', processedRoutes)
+      return processedRoutes
+    },
     activeMenu() {
       const route = this.$route
       const { meta, path } = route
@@ -52,6 +92,11 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    }
+  },
+  methods: {
+    operation(value) {
+      this.operationValue = value
     }
   }
 }

@@ -14,7 +14,7 @@
         </router-link>
       </div>
       <span class="name">{{ $store.getters.name }}</span>
-      <svg-icon icon-class="s-operation" class="exit" />
+      <svg-icon icon-class="s-operation" class="exit" @click="operation" />
       <svg-icon icon-class="exit" class="exit" @click="logout()" />
     </div>
 
@@ -35,7 +35,8 @@ export default {
   },
   data() {
     return {
-      title: 'DotCode 1.0.0'
+      title: 'DotCode 1.0.0',
+      operationValue: 'basic'
     }
   },
   computed: {
@@ -67,6 +68,10 @@ export default {
           message: '太好了！我们就知道你舍不得走！😊'
         })
       })
+    },
+    operation() {
+      this.operationValue = this.operationValue === 'basic' ? 'more' : 'basic'
+      this.$emit('operation', this.operationValue)
     }
   }
 }
