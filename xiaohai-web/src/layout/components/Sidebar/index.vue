@@ -51,25 +51,25 @@ export default {
           if (routes[key].hidden) {
             continue
           }
-          // if (routes[key].name === this.operationValue) {
-          //   for (const route in routes[key].children) {
-          //     console.log('children', routes[key].children[route])
-          //     // 根据需要对每个 route 进行处理
-          //     processedRoutes.push({
-          //       name: key,
-          //       ...routes[key].children[route]
-          //     })
-          //   }
-          //   console.log(key, routes[key])
-          //   // return processedRoutes
-          // } else {
+          if (routes[key].name === this.operationValue) {
+            for (const route in routes[key].children) {
+              // console.log('children', routes[key].children[route])
+              // 根据需要对每个 route 进行处理
+              processedRoutes.push({
+                name: key,
+                ...routes[key].children[route]
+              })
+            }
+            // console.log(key, routes[key])
+            // return processedRoutes
+          } else {
           // 根据需要对每个 route 进行处理
-          processedRoutes.push({
-            name: key,
-            ...routes[key]
-          })
-          console.log(key, routes[key])
-          // }
+            processedRoutes.push({
+              name: key,
+              ...routes[key]
+            })
+            // console.log(key, routes[key])
+          }
         }
       }
       console.log('processedRoutes', processedRoutes)

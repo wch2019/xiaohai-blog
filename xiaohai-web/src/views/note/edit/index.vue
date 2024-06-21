@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container" style="padding: 20px">
+  <div class="app-container">
     <el-card class="box-card" :body-style="{ padding: 0 }">
       <div slot="header" class="clearfix">
         <el-input v-model="form.title" class="title" maxlength="100" placeholder="输入文章标题" prop="title" />
@@ -537,7 +537,7 @@ export default {
     },
     // 计算高度
     calculateHeight() {
-      return window.innerHeight - 170
+      return window.innerHeight - 190
     },
     // md文件读取值
     handleFileRead(fileData) {
