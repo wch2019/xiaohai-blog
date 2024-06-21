@@ -1,4 +1,5 @@
 import Layout from '@/layout/index'
+import ParentView from '@/components/ParentView'
 
 // 遍历后台传来的路由字符串，转换为组件对象
 export function filterAsyncRouter(asyncRouterMap) {
@@ -7,7 +8,8 @@ export function filterAsyncRouter(asyncRouterMap) {
       // Layout ParentView 组件特殊处理
       if (route.component === 'Layout') {
         route.component = Layout
-        route.path = '/' + route.path
+      } else if (route.component === 'ParentView') {
+        route.component = ParentView
       } else {
         // 添加字典不展示页面
         if (route.path === 'dictData/:id') {

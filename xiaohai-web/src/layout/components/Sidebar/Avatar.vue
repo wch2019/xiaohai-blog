@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       title: 'DotCode 1.0.0',
-      operationValue: 'basic'
+      operationValue: 'Basic'
     }
   },
   computed: {
@@ -70,7 +70,7 @@ export default {
       })
     },
     operation() {
-      this.operationValue = this.operationValue === 'basic' ? 'more' : 'basic'
+      this.operationValue = this.operationValue === 'Basic' ? 'More' : 'Basic'
       this.$emit('operation', this.operationValue)
     }
   }

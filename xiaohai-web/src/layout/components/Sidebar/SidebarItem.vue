@@ -2,8 +2,8 @@
   <div v-if="!item.hidden">
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
+        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown': !isNest}">
+          <item :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </app-link>
     </template>
@@ -82,6 +82,9 @@ export default {
       }
       return false
     },
+    shouldShowOnlyOneChild(item) {
+      return this.hasOneShowingChild(item.children, item) && (!this.onlyOneChild.children || this.onlyOneChild.noShowingChildren) && !item.alwaysShow
+    },
     resolvePath(routePath) {
       if (isExternal(routePath)) {
         return routePath
@@ -89,7 +92,6 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
-      // console.log('routePath', path.resolve(this.basePath, routePath))
       return path.resolve(this.basePath, routePath)
     }
   }

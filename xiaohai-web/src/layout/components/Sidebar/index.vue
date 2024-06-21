@@ -1,5 +1,8 @@
 <template>
-  <div :class="{'has-logo':showLogo}" :style="{ backgroundColor: settings.sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
+  <div
+    :class="{'has-logo':showLogo}"
+    :style="{ backgroundColor: settings.sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }"
+  >
     <logo v-if="showLogo" :collapse="isCollapse" />
 
     <el-scrollbar :class="settings.sideTheme" style="height: calc(100vh - 195px);" wrap-class="scrollbar-wrapper">
@@ -10,7 +13,13 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in processedPermissionRoutes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item
+          v-for="route in processedPermissionRoutes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+          :operation="operationValue"
+        />
       </el-menu>
     </el-scrollbar>
     <Avatar :collapse="isCollapse" @operation="operation" />
@@ -28,7 +37,7 @@ export default {
   components: { SidebarItem, Logo, Avatar },
   data() {
     return {
-      operationValue: 'basic'
+      operationValue: 'Basic'
     }
   },
   computed: {
@@ -43,37 +52,49 @@ export default {
       const routes = this.permission_routes
       // 根据指定规则将其转换为数组
       // 这里假设规则是将 routes 对象的键值对转换为数组元素
-      const processedRoutes = []
-
+      const processedRoutesBasic = []
+      const processedRoutesMore = []
+      const d = {}
       for (const key in routes) {
         if (Object.prototype.hasOwnProperty.call(routes, key)) {
           // 存在不展示的直接跳过
           if (routes[key].hidden) {
             continue
           }
-          if (routes[key].name === this.operationValue) {
-            for (const route in routes[key].children) {
-              // console.log('children', routes[key].children[route])
-              // 根据需要对每个 route 进行处理
-              processedRoutes.push({
-                name: key,
-                ...routes[key].children[route]
-              })
-            }
-            // console.log(key, routes[key])
-            // return processedRoutes
-          } else {
-          // 根据需要对每个 route 进行处理
-            processedRoutes.push({
+          // processedRoutes.push({
+          //   name: key,
+          //   ...routes[key]
+          // })
+          if (routes[key].name === 'Basic') {
+            processedRoutesBasic.push({
               name: key,
               ...routes[key]
             })
-            // console.log(key, routes[key])
+            // for (const routeBasic in routes[key].children) {
+            //   // 根据需要对每个 route 进行处理
+            //   processedRoutesBasic.push({
+            //     name: key,
+            //     ...routes[key].children[routeBasic]
+            //   })
+            // }
+          }
+          if (routes[key].name === 'More') {
+            processedRoutesMore.push({
+              name: key,
+              ...routes[key]
+            })
+            // for (const routeMore in routes[key].children) {
+            //   // 根据需要对每个 route 进行处理
+            //   processedRoutesMore.push({
+            //     name: key,
+            //     ...routes[key].children[routeMore]
+            //   })
+            // }
           }
         }
       }
-      console.log('processedRoutes', processedRoutes)
-      return processedRoutes
+      // console.log(processedRoutes)
+      return this.operationValue === 'Basic' ? processedRoutesBasic : processedRoutesMore
     },
     activeMenu() {
       const route = this.$route
@@ -101,5 +122,5 @@ export default {
   }
 }
 </script>
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 </style>
