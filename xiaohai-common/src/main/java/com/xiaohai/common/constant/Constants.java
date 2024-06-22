@@ -45,7 +45,7 @@ public class Constants {
     /**
      * 演示角色
      */
-    public static final String DEMO= "demo";
+    public static final String DEMO = "demo";
     /**
      * 文章内容高亮开始
      */
@@ -70,4 +70,29 @@ public class Constants {
      * SHA-256
      */
     public static final String SHA_256 = "SHA-256";
+
+    /**
+     * 菜单类型（目录）
+     */
+    public static final String TYPE_DIR = "M";
+
+    /**
+     * 菜单类型（菜单）
+     */
+    public static final String TYPE_MENU = "C";
+
+    /**
+     * 菜单类型（按钮）
+     */
+    public static final String TYPE_BUTTON = "F";
+
+    /**
+     * Layout组件标识
+     */
+    public final static String LAYOUT = "Layout";
+
+    /**
+     * ParentView组件标识
+     */
+    public final static String PARENT_VIEW = "ParentView";
 }

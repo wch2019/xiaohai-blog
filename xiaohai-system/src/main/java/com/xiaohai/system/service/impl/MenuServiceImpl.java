@@ -3,6 +3,7 @@ package com.xiaohai.system.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.common.utils.ListUtils;
 import com.xiaohai.common.utils.StringUtils;
@@ -48,7 +49,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public Integer delete(Long id) {
-        var count=roleMenuMapper.selectCount(new QueryWrapper<RoleMenu>().eq("menu_id",id));
+        var count = roleMenuMapper.selectCount(new QueryWrapper<RoleMenu>().eq("menu_id", id));
         Assert.isTrue(count == 0, "当前菜单存在绑定，无法删除");
         return baseMapper.deleteById(id);
     }
@@ -103,12 +104,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         for (MenuTree menu : list) {
             RouterDto router = new RouterDto();
             router.setHidden(false);
-            router.setName(menu.getPath());
-            router.setPath(menu.getPath());
-            router.setComponent(StringUtils.isNotBlank(menu.getComponent()) ? menu.getComponent() : "Layout");
+            router.setName(StringUtils.capitalize(menu.getPath()));
+            router.setPath(getRouterPath(menu));
+            router.setComponent(getComponent(menu));
             router.setMeta(new MetaDto(menu.getMenuName(), menu.getIcon(), true));
             List<MenuTree> cMenus = menu.getChildren();
-            if (!cMenus.isEmpty()) {
+            if (!cMenus.isEmpty() && Constants.TYPE_DIR.equals(menu.getMenuType())) {
                 router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
                 router.setChildren(buildMenus(cMenus));
@@ -116,5 +117,41 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             routers.add(router);
         }
         return routers;
+    }
+
+    /**
+     * 获取路由地址
+     *
+     * @param menu 菜单信息
+     * @return 路由地址
+     */
+    public String getRouterPath(MenuTree menu) {
+        String routerPath = menu.getPath();
+        // 是一级目录（类型为目录）
+        if (0 == menu.getParentId() && Constants.TYPE_DIR.equals(menu.getMenuType())) {
+            routerPath = "/" + menu.getPath();
+        }
+        //一级目录（类型为菜单）
+        if (menu.getParentId() == 0 && Constants.TYPE_MENU.equals(menu.getMenuType())) {
+            routerPath = "/";
+        }
+        return routerPath;
+    }
+
+    /**
+     * 获取组件信息
+     *
+     * @param menu 菜单信息
+     * @return 组件信息
+     */
+    public String getComponent(MenuTree menu) {
+        String component = Constants.LAYOUT;
+        if (StringUtils.isEmpty(menu.getComponent()) && menu.getParentId() != 0 && Constants.TYPE_DIR.equals(menu.getMenuType())) {
+            component = Constants.PARENT_VIEW;
+        }
+        if (StringUtils.isNotEmpty(menu.getComponent())) {
+            component = menu.getComponent();
+        }
+        return component;
     }
 }

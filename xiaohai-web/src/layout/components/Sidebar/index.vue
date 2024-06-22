@@ -9,8 +9,9 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :unique-opened="false"
+        :unique-opened="true"
         :collapse-transition="false"
+        :default-openeds="defaultOpeneds"
         mode="vertical"
       >
         <sidebar-item
@@ -18,7 +19,6 @@
           :key="route.path"
           :item="route"
           :base-path="route.path"
-          :operation="operationValue"
         />
       </el-menu>
     </el-scrollbar>
@@ -37,6 +37,7 @@ export default {
   components: { SidebarItem, Logo, Avatar },
   data() {
     return {
+      defaultOpeneds: ['/basic', '/more'],
       operationValue: 'Basic'
     }
   },
@@ -54,46 +55,44 @@ export default {
       // 这里假设规则是将 routes 对象的键值对转换为数组元素
       const processedRoutesBasic = []
       const processedRoutesMore = []
-      const d = {}
       for (const key in routes) {
         if (Object.prototype.hasOwnProperty.call(routes, key)) {
           // 存在不展示的直接跳过
           if (routes[key].hidden) {
             continue
           }
-          // processedRoutes.push({
-          //   name: key,
-          //   ...routes[key]
-          // })
-          if (routes[key].name === 'Basic') {
+          if (routes[key].redirect === '/dashboard') {
+            console.log('processedRoutesBasic', routes[key])
             processedRoutesBasic.push({
               name: key,
               ...routes[key]
             })
-            // for (const routeBasic in routes[key].children) {
-            //   // 根据需要对每个 route 进行处理
-            //   processedRoutesBasic.push({
-            //     name: key,
-            //     ...routes[key].children[routeBasic]
-            //   })
-            // }
+          }
+          if (routes[key].name === 'Basic') {
+            for (const routeBasic of routes[key].children) {
+              processedRoutesBasic.push({
+                path: routes[key].path + '/' + [routeBasic][0].path,
+                redirect: routes[key].redirect,
+                component: routes[key].component,
+                children: [routeBasic]
+              })
+            }
           }
           if (routes[key].name === 'More') {
-            processedRoutesMore.push({
-              name: key,
-              ...routes[key]
-            })
-            // for (const routeMore in routes[key].children) {
-            //   // 根据需要对每个 route 进行处理
-            //   processedRoutesMore.push({
-            //     name: key,
-            //     ...routes[key].children[routeMore]
-            //   })
-            // }
+            for (const routeMore of routes[key].children) {
+              processedRoutesMore.push({
+                path: `${routes[key].path}/${routeMore.path}`,
+                hidden: routeMore.hidden,
+                redirect: routeMore.redirect,
+                component: routes[key].component,
+                alwaysShow: routeMore.alwaysShow,
+                meta: routeMore.meta,
+                children: routeMore.children
+              })
+            }
           }
         }
       }
-      // console.log(processedRoutes)
       return this.operationValue === 'Basic' ? processedRoutesBasic : processedRoutesMore
     },
     activeMenu() {
@@ -122,5 +121,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-</style>

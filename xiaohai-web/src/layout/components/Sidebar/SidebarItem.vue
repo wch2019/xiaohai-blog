@@ -7,8 +7,7 @@
         </el-menu-item>
       </app-link>
     </template>
-
-    <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
+    <el-submenu v-else :index="resolvePath(item.path)" popper-append-to-body :class="{'custom-submenu': shouldHideTitle(resolvePath(item.path))}">
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
@@ -92,8 +91,24 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
-      return path.resolve(this.basePath, routePath)
+      // console.log(this.basePath, routePath, 'routePath')
+
+      if (this.basePath.endsWith(routePath)) {
+        // 基础
+        return path.resolve(this.basePath, '')
+      } else {
+        // 更多
+        return path.resolve(this.basePath, routePath)
+      }
+    },
+    shouldHideTitle(index) {
+      return index === '/basic' || index === '/more'
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+::v-deep .custom-submenu > .el-submenu__title {
+  //display: none;
+}
+</style>
