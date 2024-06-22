@@ -50,7 +50,7 @@
       </div>
       <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br/></div>
       <div class="preview"></div>
-<!--      <v-md-preview :text="articleOne.text" ></v-md-preview>-->
+      <!--      <v-md-preview :text="articleOne.text" ></v-md-preview>-->
       <hr class="divider"/>
       <h3 class="flex-center">推荐</h3>
       <el-row style="justify-content: center">
@@ -128,8 +128,8 @@
       原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站<br/>
     </div>
     <div v-else class="tip">转载 本文转载自{{ articleOne.originalUrl }}<br/></div>
-<!--    <v-md-preview :text="articleOne.text"></v-md-preview>-->
-    <div class="preview"></div>
+    <!--    <v-md-preview :text="articleOne.text"></v-md-preview>-->
+    <div id="mobile"></div>
     <hr class="divider"/>
     <h3 class="flex-center">推荐</h3>
     <el-card
@@ -233,14 +233,14 @@
 
           <div class="catalog">
             <div id="outline"></div>
-<!--            <div-->
-<!--              v-for="anchor in titles"-->
-<!--              :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"-->
-<!--              @click="handleAnchorClick(anchor)"-->
-<!--              :class="{ 'toc-item': true, 'active': anchor.highlight }"-->
-<!--            >-->
-<!--              <el-link :underline="false">{{ anchor.title }}</el-link>-->
-<!--            </div>-->
+            <!--            <div-->
+            <!--              v-for="anchor in titles"-->
+            <!--              :style="{ padding: `10px 0 10px ${anchor.indent * 20}px` }"-->
+            <!--              @click="handleAnchorClick(anchor)"-->
+            <!--              :class="{ 'toc-item': true, 'active': anchor.highlight }"-->
+            <!--            >-->
+            <!--              <el-link :underline="false">{{ anchor.title }}</el-link>-->
+            <!--            </div>-->
           </div>
         </el-card>
       </div>
@@ -520,6 +520,16 @@ function renderMarkdown(md: any) {
           outlineElement.style.display = 'block'
           initOutline()
         }
+        // 展示移动端
+        const previewDivElement = previewElement as HTMLDivElement;
+        // 获取 id 为 mobile 的元素
+        const mobileElement = document.getElementById("mobile");
+        if (mobileElement) {
+          // 将 .preview 元素的内容展示到 id 为 aaa 的元素上
+          mobileElement.innerHTML = previewDivElement.innerHTML;
+        } else {
+          console.error("Element with id 'mobile' not found");
+        }
       },
     })
 }
@@ -573,7 +583,6 @@ const initOutline = () => {
     }
   });
 }
-
 
 
 getListComment()
@@ -643,14 +652,17 @@ getListComment()
   color: #fd5a5a !important;
   background-color: #f6f8fa;
 }
-.vditor-outline  li > span:hover {
+
+.vditor-outline li > span:hover {
   color: #fd5a5a !important;
   background-color: #f6f8fa;
 }
+
 .vditor-outline {
   width: 100%;
 }
-.vditor-reset{
+
+.vditor-reset {
   color: var(--el-text-color-primary) !important;
 }
 </style>
