@@ -62,7 +62,7 @@
         </el-card>
       </el-col>
       <el-col :span="18" :xs="24">
-        <el-card>
+        <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>基本资料</span>
           </div>

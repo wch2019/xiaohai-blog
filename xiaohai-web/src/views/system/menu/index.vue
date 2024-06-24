@@ -1,149 +1,151 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="菜单名称" prop="menuName">
-        <el-input
-          v-model="queryParams.menuName"
-          placeholder="请输入菜单名称"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="状态"
-          clearable
-          size="small"
-          style="width: 240px"
-          @clear="queryParams.status = null"
-        >
-          <el-option
-            v-for="dict in $store.getters.dict.sys_normal_disable"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <el-card class="box-card box-card-height">
+      <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+        <el-form-item label="菜单名称" prop="menuName">
+          <el-input
+            v-model="queryParams.menuName"
+            placeholder="请输入菜单名称"
+            clearable
+            size="small"
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select
+            v-model="queryParams.status"
+            placeholder="状态"
+            clearable
+            size="small"
+            style="width: 240px"
+            @clear="queryParams.status = null"
+          >
+            <el-option
+              v-for="dict in $store.getters.dict.sys_normal_disable"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('system:menu:add')"
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          plain
-          icon="el-icon-sort"
-          size="mini"
-          @click="handleExpansion"
-        >展开/关闭
-        </el-button>
-      </el-col>
-    </el-row>
-    <el-table
-      v-if="refreshTable"
-      v-loading="loading"
-      :data="menuList"
-      style="width: 100%;margin-top: 10px; margin-bottom: 20px;"
-      row-key="id"
-      :default-expand-all="expansion"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-    >
-      <el-table-column prop="menuName" label="菜单名称" align="center" width="150" />
-      <el-table-column prop="icon" label="菜单图标" align="center" width="90">
-        <template slot-scope="scope">
-          <svg-icon
-            v-if="scope.row.icon && scope.row.icon.indexOf('el-icon')== -1"
-            :icon-class="scope.row.icon"
-          />
-          <i v-else-if="scope.row.icon" slot="prefix" :class="scope.row.icon" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="path" label="路由地址" align="center" />
-      <el-table-column prop="component" label="路径" align="center" />
-      <el-table-column prop="perms" label="权限标识" align="center" />
-      <el-table-column label="状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" width="180" />
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" />
-      <el-table-column label="顺序" width="50">
-        <template slot-scope="scope">
-          <div class="custom-input-number">
-            <div class="buttons">
-
-              <el-button
-                class="el-button-margin-left"
-                size="mini"
-                type="text"
-                :disabled="scope.row.menuSort === min"
-                icon="el-icon-arrow-up"
-                @click="sort(scope.row,'-')"
-              />
-              <span> {{ scope.row.menuSort }}</span>
-              <el-button
-                class="el-button-margin-left"
-                size="mini"
-                type="text"
-                icon="el-icon-arrow-down"
-                @click="sort(scope.row,'+')"
-              />
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            v-if="$store.getters.permission.includes('system:menu:update')"
-            class="el-button-margin-left"
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-          >修改
-          </el-button>
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
           <el-button
             v-if="$store.getters.permission.includes('system:menu:add')"
-            class="el-button-margin-left"
-            size="mini"
-            type="text"
+            type="primary"
+            plain
             icon="el-icon-plus"
-            @click="handleAdd(scope.row)"
+            size="mini"
+            @click="handleAdd"
           >新增
           </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
-            v-if="$store.getters.permission.includes('system:menu:delete')"
-            class="el-button-margin-left"
+            type="info"
+            plain
+            icon="el-icon-sort"
             size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-          >删除
+            @click="handleExpansion"
+          >展开/关闭
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-col>
+      </el-row>
+      <el-table
+        v-if="refreshTable"
+        v-loading="loading"
+        :data="menuList"
+        style="width: 100%;margin-top: 10px; margin-bottom: 20px;"
+        row-key="id"
+        :default-expand-all="expansion"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      >
+        <el-table-column prop="menuName" label="菜单名称" align="center" width="150" />
+        <el-table-column prop="icon" label="菜单图标" align="center" width="90">
+          <template slot-scope="scope">
+            <svg-icon
+              v-if="scope.row.icon && scope.row.icon.indexOf('el-icon')== -1"
+              :icon-class="scope.row.icon"
+            />
+            <i v-else-if="scope.row.icon" slot="prefix" :class="scope.row.icon" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="path" label="路由地址" align="center" />
+        <el-table-column prop="component" label="路径" align="center" />
+        <el-table-column prop="perms" label="权限标识" align="center" />
+        <el-table-column label="状态" align="center" prop="status">
+          <template slot-scope="scope">
+            <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" width="150" />
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createdTime" />
+        <el-table-column label="顺序" width="50">
+          <template slot-scope="scope">
+            <div class="custom-input-number">
+              <div class="buttons">
 
-    <MenuDialog ref="menuDialog" @closeDialog="closeDialog" />
+                <el-button
+                  class="el-button-margin-left"
+                  size="mini"
+                  type="text"
+                  :disabled="scope.row.menuSort === min"
+                  icon="el-icon-arrow-up"
+                  @click="sort(scope.row,'-')"
+                />
+                <span> {{ scope.row.menuSort }}</span>
+                <el-button
+                  class="el-button-margin-left"
+                  size="mini"
+                  type="text"
+                  icon="el-icon-arrow-down"
+                  @click="sort(scope.row,'+')"
+                />
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100">
+          <template slot-scope="scope">
+            <el-button
+              v-if="$store.getters.permission.includes('system:menu:update')"
+              class="el-button-margin-left"
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+            >修改
+            </el-button>
+            <el-button
+              v-if="$store.getters.permission.includes('system:menu:add')"
+              class="el-button-margin-left"
+              size="mini"
+              type="text"
+              icon="el-icon-plus"
+              @click="handleAdd(scope.row)"
+            >新增
+            </el-button>
+            <el-button
+              v-if="$store.getters.permission.includes('system:menu:delete')"
+              class="el-button-margin-left"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <MenuDialog ref="menuDialog" @closeDialog="closeDialog" />
+    </el-card>
   </div>
 
 </template>

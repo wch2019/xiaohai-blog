@@ -1,56 +1,57 @@
 <template>
   <div class="app-container">
-    <aside>
-      当前在线用户数  {{ total }} <br>
-    </aside>
+    <el-card class="box-card box-card-height">
+      <aside>
+        当前在线用户数  {{ total }} <br>
+      </aside>
 
-    <el-table
-      v-loading="loading"
-      border
-      style="margin-top: 10px"
-      :data="onLineUserList"
-    >
-      <el-table-column label="用户名" align="center" prop="username" />
-      <el-table-column label="用户昵称" align="center" prop="nickName" />
-      <el-table-column label="登录ip" align="center" prop="loginIp" />
-      <el-table-column label="ip来源" align="center" prop="loginSource" />
-      <el-table-column label="浏览器" align="center" prop="loginBrowser" />
-      <el-table-column label="操作系统" align="center" prop="loginOs" />
-      <el-table-column label="登录次数" align="center" prop="loginCount">
-        <template slot-scope="scope">
-          <el-tag type="success"> {{ scope.row.loginCount }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="有效时间(秒)" align="center" prop="time">
-        <template slot-scope="scope">
-          <el-tag type="warning"> {{ scope.row.time }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="登录时间" align="center" prop="loginDate" />
-      <el-table-column label="过期时间" align="center" prop="logoutDate" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            v-if="$store.getters.permission.includes('monitor:online:delete')"
-            size="mini"
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-          >退出
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <el-table
+        v-loading="loading"
+        border
+        style="margin-top: 10px"
+        :data="onLineUserList"
+      >
+        <el-table-column label="用户名" align="center" prop="username" />
+        <el-table-column label="用户昵称" align="center" prop="nickName" />
+        <el-table-column label="登录ip" align="center" prop="loginIp" />
+        <el-table-column label="ip来源" align="center" prop="loginSource" />
+        <el-table-column label="浏览器" align="center" prop="loginBrowser" />
+        <el-table-column label="操作系统" align="center" prop="loginOs" />
+        <el-table-column label="登录次数" align="center" prop="loginCount">
+          <template slot-scope="scope">
+            <el-tag type="success"> {{ scope.row.loginCount }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="有效时间(秒)" align="center" prop="time">
+          <template slot-scope="scope">
+            <el-tag type="warning"> {{ scope.row.time }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="登录时间" align="center" prop="loginDate" />
+        <el-table-column label="过期时间" align="center" prop="logoutDate" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              v-if="$store.getters.permission.includes('monitor:online:delete')"
+              size="mini"
+              type="danger"
+              plain
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+            >退出
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </el-card>
   </div>
 </template>
 

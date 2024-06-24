@@ -19,16 +19,14 @@ export default {
 
   .container {
     position: absolute;
-    top: 50px;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 70px;
+    left: 20px;
+    right: 20px;
+    height: calc(100vh - 110px);
   }
 
   .iframe {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 95%;
     border: none;

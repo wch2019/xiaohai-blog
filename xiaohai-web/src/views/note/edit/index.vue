@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container box-card-height">
     <el-card class="box-card" :body-style="{ padding: 0 }">
       <div slot="header" class="clearfix">
         <el-input v-model="form.title" class="title" maxlength="100" placeholder="输入文章标题" prop="title" />

@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
     <!-- 用户信息 -->
-    <el-card class="drop-shadow">
+    <el-card class="box-card">
       <div style="text-align: center">
         {{ a + word }}
       </div>

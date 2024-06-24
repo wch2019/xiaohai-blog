@@ -1,132 +1,136 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="标题名称" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          placeholder="请输入标题名称"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="审核状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="审核状态"
-          clearable
-          size="small"
-          style="width: 240px"
-          @clear="queryParams.status = null"
-        >
-          <el-option
-            v-for="dict in $store.getters.dict.sys_check_state"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <el-card class="box-card box-card-height">
+      <el-form ref="queryForm" :model="queryParams" :inline="true">
+        <el-form-item label="标题名称" prop="title">
+          <el-input
+            v-model="queryParams.title"
+            placeholder="请输入标题名称"
+            clearable
+            size="small"
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="审核状态" prop="status">
+          <el-select
+            v-model="queryParams.status"
+            placeholder="审核状态"
+            clearable
+            size="small"
+            style="width: 240px"
+            @clear="queryParams.status = null"
+          >
+            <el-option
+              v-for="dict in $store.getters.dict.sys_check_state"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('system:feedback:add')"
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('system:feedback:update')"
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('system:feedback:delete')"
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-        >删除
-        </el-button>
-      </el-col>
-    </el-row>
-
-    <el-table
-      v-loading="loading"
-      border
-      style="margin-top: 10px"
-      :data="linkList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="反馈人头像" align="center" width="120" prop="avatar">
-        <template slot-scope="scope">
-          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)" />
-          <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>
-        </template>
-      </el-table-column>
-      <el-table-column label="反馈人" align="center" prop="username" show-overflow-tooltip />
-      <el-table-column label="标题名称" align="center" prop="title" show-overflow-tooltip />
-      <el-table-column label="反馈内容" align="center" prop="content" show-overflow-tooltip />
-      <el-table-column label="回复" align="center" prop="reason" show-overflow-tooltip />
-      <el-table-column label="状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_check_state" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" />
-      <el-table-column v-if="$store.getters.roles.includes('admin')" label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button
+            v-if="$store.getters.permission.includes('system:feedback:add')"
+            type="primary"
+            plain
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd"
+          >新增
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
             v-if="$store.getters.permission.includes('system:feedback:update')"
-            size="mini"
-            type="text"
+            type="success"
+            plain
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
           >修改
           </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
             v-if="$store.getters.permission.includes('system:feedback:delete')"
-            size="mini"
-            type="text"
+            type="danger"
+            plain
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
           >删除
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-col>
+      </el-row>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      <el-table
+        v-loading="loading"
+        border
+        style="margin-top: 10px"
+        :data="linkList"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="反馈人头像" align="center" width="120" prop="avatar">
+          <template slot-scope="scope">
+            <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)" />
+            <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>
+          </template>
+        </el-table-column>
+        <el-table-column label="反馈人" align="center" prop="username" show-overflow-tooltip />
+        <el-table-column label="标题名称" align="center" prop="title" show-overflow-tooltip />
+        <el-table-column label="反馈内容" align="center" prop="content" show-overflow-tooltip />
+        <el-table-column label="回复" align="center" prop="reason" show-overflow-tooltip />
+        <el-table-column label="状态" align="center" prop="status">
+          <template slot-scope="scope">
+            <dict-tag :options="$store.getters.dict.sys_check_state" :value="scope.row.status" />
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createdTime" />
+        <el-table-column v-if="$store.getters.roles.includes('admin')" label="操作" align="center" class-name="small-padding fixed-width" width="140">
+          <template slot-scope="scope">
+            <el-button
+              v-if="$store.getters.permission.includes('system:feedback:update')"
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              class="el-button-margin-left"
+              @click="handleUpdate(scope.row)"
+            >修改
+            </el-button>
+            <el-button
+              v-if="$store.getters.permission.includes('system:feedback:delete')"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              class="el-button-margin-left"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <FeedbackDialog ref="feedbackDialog" @closeDialog="closeDialog" />
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+
+      <FeedbackDialog ref="feedbackDialog" @closeDialog="closeDialog" />
+    </el-card>
   </div>
 </template>
 

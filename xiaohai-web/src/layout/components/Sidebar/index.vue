@@ -62,7 +62,6 @@ export default {
             continue
           }
           if (routes[key].redirect === '/dashboard') {
-            console.log('processedRoutesBasic', routes[key])
             processedRoutesBasic.push({
               name: key,
               ...routes[key]

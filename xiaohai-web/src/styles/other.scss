@@ -11,3 +11,9 @@
 .el-button-margin-left {
   margin-left: 0 !important;
 }
+.box-card:hover{
+  box-shadow: 0 0 16px var(--color_box_shadow_hover);
+}
+.box-card-height{
+  min-height: calc(100vh - 110px)
+}

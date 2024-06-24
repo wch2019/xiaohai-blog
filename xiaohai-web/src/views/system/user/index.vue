@@ -1,160 +1,164 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="用户名称" prop="username">
-        <el-input
-          v-model="queryParams.username"
-          placeholder="请输入用户名称"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="nickName">
-        <el-input
-          v-model="queryParams.nickName"
-          placeholder="请输入用户昵称"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="状态"
-          clearable
-          size="small"
-          style="width: 240px"
-          @clear="queryParams.status = null"
-        >
-          <el-option
-            v-for="dict in $store.getters.dict.sys_normal_disable"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <el-card class="box-card box-card-height">
+      <el-form ref="queryForm" :model="queryParams" :inline="true">
+        <el-form-item label="用户名称" prop="username">
+          <el-input
+            v-model="queryParams.username"
+            placeholder="请输入用户名称"
+            clearable
+            size="small"
+            style="width: 140px"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="用户昵称" prop="nickName">
+          <el-input
+            v-model="queryParams.nickName"
+            placeholder="请输入用户昵称"
+            clearable
+            size="small"
+            style="width: 140px"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select
+            v-model="queryParams.status"
+            placeholder="状态"
+            clearable
+            size="small"
+            style="width: 100px"
+            @clear="queryParams.status = null"
+          >
+            <el-option
+              v-for="dict in $store.getters.dict.sys_normal_disable"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('system:user:add')"
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('system:user:update')"
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('system:user:delete')"
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-        >删除
-        </el-button>
-      </el-col>
-    </el-row>
-
-    <el-table v-loading="loading" border style="margin-top: 10px;width: 100%;" :data="roleList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" :selectable="judgeSelect" align="center" width="55" />
-      <el-table-column label="头像" align="center" prop="avatar" width="120">
-        <template slot-scope="scope">
-          <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)" />
-          <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
-        </template>
-      </el-table-column>
-      <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" width="120" />
-      <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" width="120" />
-      <el-table-column label="用户性别" align="center" prop="gender" width="120">
-        <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender" />
-        </template>
-      </el-table-column>
-      <el-table-column label="角色" align="center" prop="roleIds" width="120">
-        <template slot-scope="scope">
-          <template v-for="(item, index) in roleOptions">
-            <el-tag
-              v-if="scope.row.roleIds.includes(item.id)"
-              :key="item.id"
-              :index="index"
-            >
-              {{ item.name }}
-            </el-tag>
-          </template>
-        </template>
-      </el-table-column>
-      <el-table-column label="容量" align="center" prop="disk" min-width="150">
-        <template slot-scope="scope">
-          <span style="font-size: 12px">{{ scope.row.disk.used }} / {{ scope.row.disk.total }}</span>
-          <el-progress :percentage="scope.row.disk.usage" :stroke-width="14" :show-text="false" color="#6f7ad3" />
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" width="80">
-        <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
-      <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" min-width="150">
-        <template slot-scope="scope">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button
+            v-if="$store.getters.permission.includes('system:user:add')"
+            type="primary"
+            plain
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd"
+          >新增
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
             v-if="$store.getters.permission.includes('system:user:update')"
-            size="mini"
-            type="text"
+            type="success"
+            plain
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
           >修改
           </el-button>
-          <template v-if="scope.row.id!==1">
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            v-if="$store.getters.permission.includes('system:user:delete')"
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
+          >删除
+          </el-button>
+        </el-col>
+      </el-row>
+
+      <el-table v-loading="loading" border style="margin-top: 10px;width: 100%;" :data="roleList" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" :selectable="judgeSelect" align="center" width="55" />
+        <el-table-column label="头像" align="center" prop="avatar" width="120">
+          <template slot-scope="scope">
+            <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)" />
+            <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
+          </template>
+        </el-table-column>
+        <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" width="120" />
+        <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" width="120" />
+        <el-table-column label="用户性别" align="center" prop="gender" width="120">
+          <template slot-scope="scope">
+            <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender" />
+          </template>
+        </el-table-column>
+        <el-table-column label="角色" align="center" prop="roleIds" width="120">
+          <template slot-scope="scope">
+            <template v-for="(item, index) in roleOptions">
+              <el-tag
+                v-if="scope.row.roleIds.includes(item.id)"
+                :key="item.id"
+                :index="index"
+              >
+                {{ item.name }}
+              </el-tag>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column label="容量" align="center" prop="disk" min-width="150">
+          <template slot-scope="scope">
+            <span style="font-size: 12px">{{ scope.row.disk.used }} / {{ scope.row.disk.total }}</span>
+            <el-progress :percentage="scope.row.disk.usage" :stroke-width="14" :show-text="false" color="#6f7ad3" />
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" prop="status" width="80">
+          <template slot-scope="scope">
+            <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createdTime" width="160" />
+        <el-table-column label="最后登录时间" align="center" prop="loginDate" width="160" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" min-width="140">
+          <template slot-scope="scope">
             <el-button
-              v-if="$store.getters.permission.includes('system:user:delete')"
+              v-if="$store.getters.permission.includes('system:user:update')"
               size="mini"
               type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-            >删除
+              icon="el-icon-edit"
+              class="el-button-margin-left"
+              @click="handleUpdate(scope.row)"
+            >修改
             </el-button>
+            <template v-if="scope.row.id!==1">
+              <el-button
+                v-if="$store.getters.permission.includes('system:user:delete')"
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                class="el-button-margin-left"
+                @click="handleDelete(scope.row)"
+              >删除
+              </el-button>
+            </template>
           </template>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-table-column>
+      </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-    <UserDialog ref="userDialog" @closeDialog="closeDialog" />
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+      <UserDialog ref="userDialog" @closeDialog="closeDialog" />
+    </el-card>
   </div>
 
 </template>

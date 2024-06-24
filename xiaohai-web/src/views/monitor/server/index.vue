@@ -7,7 +7,7 @@
       element-loading-background="rgba(0, 0, 0, 0.8)"
     >
       <el-col :span="12" class="card-box">
-        <el-card style="margin: 10px 10px 10px 10px">
+        <el-card class="box-card" style="margin: 10px 10px 10px 10px">
           <div slot="header"><span>CPU</span></div>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;">
@@ -41,7 +41,7 @@
       </el-col>
 
       <el-col :span="12" class="card-box">
-        <el-card style="margin: 10px 10px 10px 10px">
+        <el-card class="box-card" style="margin: 10px 10px 10px 10px">
           <div slot="header"><span>内存</span></div>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;">
@@ -80,7 +80,7 @@
       </el-col>
 
       <el-col :span="24" class="card-box">
-        <el-card style="margin: 10px 10px 10px 10px">
+        <el-card class="box-card" style="margin: 10px 10px 10px 10px">
           <div slot="header">
             <span>服务器信息</span>
           </div>
@@ -106,7 +106,7 @@
       </el-col>
 
       <el-col :span="24" class="card-box">
-        <el-card style="margin: 10px 10px 10px 10px">
+        <el-card class="box-card" style="margin: 10px 10px 10px 10px">
           <div slot="header">
             <span>Java虚拟机信息</span>
           </div>
@@ -144,7 +144,7 @@
       </el-col>
 
       <el-col :span="24" class="card-box">
-        <el-card style="margin: 10px 10px 10px 10px">
+        <el-card class="box-card" style="margin: 10px 10px 10px 10px">
           <div slot="header">
             <span>磁盘状态</span>
           </div>

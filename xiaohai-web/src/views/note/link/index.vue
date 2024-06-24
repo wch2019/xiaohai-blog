@@ -1,131 +1,135 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="网站名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入网站名称"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="审核状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="审核状态"
-          clearable
-          size="small"
-          style="width: 240px"
-          @clear="queryParams.status = null"
-        >
-          <el-option
-            v-for="dict in $store.getters.dict.sys_check_state"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <el-card class="box-card box-card-height">
+      <el-form ref="queryForm" :model="queryParams" :inline="true">
+        <el-form-item label="网站名称" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入网站名称"
+            clearable
+            size="small"
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="审核状态" prop="status">
+          <el-select
+            v-model="queryParams.status"
+            placeholder="审核状态"
+            clearable
+            size="small"
+            style="width: 240px"
+            @clear="queryParams.status = null"
+          >
+            <el-option
+              v-for="dict in $store.getters.dict.sys_check_state"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('note:link:add')"
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('note:link:update')"
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          v-if="$store.getters.permission.includes('note:link:delete')"
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-        >删除
-        </el-button>
-      </el-col>
-    </el-row>
-
-    <el-table
-      v-loading="loading"
-      border
-      style="margin-top: 10px"
-      :data="linkList"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="网站名称" align="center" prop="name" />
-      <el-table-column label="网站地址" align="center" prop="url">
-        <template slot-scope="scope">
-          <el-link :underline="false" :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="网站描述" align="center" prop="info" />
-      <el-table-column label="站长邮箱" align="center" prop="email" />
-      <el-table-column label="审核回复" align="center" prop="reason" />
-      <el-table-column label="审核状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="$store.getters.dict.sys_check_state" :value="scope.row.status" />
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createdTime" />
-      <el-table-column v-if="$store.getters.roles.includes('admin')" label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button
+            v-if="$store.getters.permission.includes('note:link:add')"
+            type="primary"
+            plain
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd"
+          >新增
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
             v-if="$store.getters.permission.includes('note:link:update')"
-            size="mini"
-            type="text"
+            type="success"
+            plain
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
           >修改
           </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
             v-if="$store.getters.permission.includes('note:link:delete')"
-            size="mini"
-            type="text"
+            type="danger"
+            plain
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
           >删除
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-col>
+      </el-row>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      <el-table
+        v-loading="loading"
+        border
+        style="margin-top: 10px"
+        :data="linkList"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="网站名称" align="center" prop="name" />
+        <el-table-column label="网站地址" align="center" prop="url">
+          <template slot-scope="scope">
+            <el-link :underline="false" :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column label="网站描述" align="center" prop="info" />
+        <el-table-column label="站长邮箱" align="center" prop="email" />
+        <el-table-column label="审核回复" align="center" prop="reason" />
+        <el-table-column label="审核状态" align="center" prop="status">
+          <template slot-scope="scope">
+            <dict-tag :options="$store.getters.dict.sys_check_state" :value="scope.row.status" />
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createdTime" />
+        <el-table-column v-if="$store.getters.roles.includes('admin')" label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              v-if="$store.getters.permission.includes('note:link:update')"
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              class="el-button-margin-left"
+              @click="handleUpdate(scope.row)"
+            >修改
+            </el-button>
+            <el-button
+              v-if="$store.getters.permission.includes('note:link:delete')"
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              class="el-button-margin-left"
+              @click="handleDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <LinkDialog ref="linkDialog" @closeDialog="closeDialog" />
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+
+      <LinkDialog ref="linkDialog" @closeDialog="closeDialog" />
+    </el-card>
   </div>
 </template>
 

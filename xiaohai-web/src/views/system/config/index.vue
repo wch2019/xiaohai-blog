@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card" :body-style="{ height: 'calc(100vh - 120px)'}">
-      <el-tabs tab-position="left">
+    <el-card class="box-card box-card-height">
+      <el-tabs>
         <el-tab-pane label="网站信息">
           <span slot="label">
             <i class="el-icon-s-platform" /> 网站信息
@@ -270,7 +270,7 @@
           />
         </el-tab-pane>
         <el-tab-pane label="测试展示">
-          <Preview :md="form.content" :style="{height: calculateHeight()+'px'}" />
+          <Preview :md="form.content" />
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -369,7 +369,7 @@ export default {
     },
     // 计算高度
     calculateHeight() {
-      return window.innerHeight - 150
+      return window.innerHeight - 240
     },
     // md文件读取值
     handleFileRead(fileData) {
