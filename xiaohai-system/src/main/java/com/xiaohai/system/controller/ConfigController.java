@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
-import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.StringUtil;
 import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.vo.ConfigVo;
 import com.xiaohai.system.service.ConfigService;
@@ -51,7 +51,7 @@ public class ConfigController {
     @GetMapping()
     public Response<ConfigDto> findByOne() {
         ConfigDto configDto=configService.findByOne();
-        if(StringUtils.isNotEmpty(configDto.getEmailPassword())){
+        if(StringUtil.isNotEmpty(configDto.getEmailPassword())){
             //维护密码隐藏
             configDto.setEmailPassword(Constants.CONCEAL);
         }

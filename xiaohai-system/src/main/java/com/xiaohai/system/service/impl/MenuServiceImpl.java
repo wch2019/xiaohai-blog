@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.MenuTree;
 import com.xiaohai.common.utils.ListUtils;
-import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.StringUtil;
 import com.xiaohai.common.utils.TreeUtils;
 import com.xiaohai.system.dao.MenuMapper;
 import com.xiaohai.system.dao.RoleMapper;
@@ -69,8 +69,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<MenuTree> findListByPage(MenuQuery query) {
         List<Menu> menus = baseMapper.selectList(new QueryWrapper<Menu>()
-                .eq(StringUtils.isNotBlank(query.getStatus()), "status", query.getStatus())
-                .like(StringUtils.isNotBlank(query.getMenuName()), "menu_name", query.getMenuName())
+                .eq(StringUtil.isNotBlank(query.getStatus()), "status", query.getStatus())
+                .like(StringUtil.isNotBlank(query.getMenuName()), "menu_name", query.getMenuName())
                 .last(" order by menu_sort asc"));
         List<MenuTree> menuTrees = ListUtils.copyWithCollection(menus, MenuTree.class);
         return TreeUtils.getTree(menuTrees);
@@ -104,7 +104,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         for (MenuTree menu : list) {
             RouterDto router = new RouterDto();
             router.setHidden(false);
-            router.setName(StringUtils.capitalize(menu.getPath()));
+            router.setName(StringUtil.capitalize(menu.getPath()));
             router.setPath(getRouterPath(menu));
             router.setComponent(getComponent(menu));
             router.setMeta(new MetaDto(menu.getMenuName(), menu.getIcon(), true));
@@ -146,10 +146,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      */
     public String getComponent(MenuTree menu) {
         String component = Constants.LAYOUT;
-        if (StringUtils.isEmpty(menu.getComponent()) && menu.getParentId() != 0 && Constants.TYPE_DIR.equals(menu.getMenuType())) {
+        if (StringUtil.isEmpty(menu.getComponent()) && menu.getParentId() != 0 && Constants.TYPE_DIR.equals(menu.getMenuType())) {
             component = Constants.PARENT_VIEW;
         }
-        if (StringUtils.isNotEmpty(menu.getComponent())) {
+        if (StringUtil.isNotEmpty(menu.getComponent())) {
             component = menu.getComponent();
         }
         return component;

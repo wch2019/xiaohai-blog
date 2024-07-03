@@ -37,8 +37,8 @@ public class DictUtils {
      */
     public static List<DictDataEntity> getDictCache(String key) {
         Object cacheObj = SpringUtils.getBean(RedisUtils.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(cacheObj)) {
-            return StringUtils.cast(cacheObj) ;
+        if (StringUtil.isNotNull(cacheObj)) {
+            return StringUtil.cast(cacheObj) ;
         }
         return Collections.emptyList();
     }
@@ -77,8 +77,8 @@ public class DictUtils {
         StringBuilder propertyString = new StringBuilder();
         List<DictDataEntity> datas = getDictCache(dictType);
 
-        if (StringUtils.isNotNull(datas)) {
-            if (StringUtils.containsAny(separator, dictValue)) {
+        if (StringUtil.isNotNull(datas)) {
+            if (StringUtil.containsAny(separator, dictValue)) {
                 for (DictDataEntity dict : datas) {
                     for (String value : dictValue.split(separator)) {
                         if (value.equals(dict.getDictValue())) {
@@ -95,7 +95,7 @@ public class DictUtils {
                 }
             }
         }
-        return StringUtils.stripEnd(propertyString.toString(), separator);
+        return StringUtil.stripEnd(propertyString.toString(), separator);
     }
 
     /**
@@ -110,7 +110,7 @@ public class DictUtils {
         StringBuilder propertyString = new StringBuilder();
         List<DictDataEntity> datas = getDictCache(dictType);
 
-        if (StringUtils.containsAny(separator, dictLabel) && StringUtils.isNotEmpty(datas)) {
+        if (StringUtil.containsAny(separator, dictLabel) && StringUtil.isNotEmpty(datas)) {
             for (DictDataEntity dict : datas) {
                 for (String label : dictLabel.split(separator)) {
                     if (label.equals(dict.getDictLabel())) {
@@ -126,7 +126,7 @@ public class DictUtils {
                 }
             }
         }
-        return StringUtils.stripEnd(propertyString.toString(), separator);
+        return StringUtil.stripEnd(propertyString.toString(), separator);
     }
 
     /**

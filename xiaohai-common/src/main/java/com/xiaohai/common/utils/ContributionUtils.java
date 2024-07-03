@@ -1,20 +1,11 @@
 package com.xiaohai.common.utils;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.daomain.Contribution;
-import com.xiaohai.common.daomain.OnLineUser;
-import com.xiaohai.common.daomain.PageData;
-import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 持续创作管理户工具类
@@ -61,8 +52,8 @@ public class ContributionUtils {
     public static Contribution getContribution() {
         int year=LocalDate.now().getYear();
         Object cacheObj = SpringUtils.getBean(RedisUtils.class).getCacheObject(getCacheKey(String.valueOf(year)));
-        if (StringUtils.isNotNull(cacheObj)) {
-            return StringUtils.cast(cacheObj) ;
+        if (StringUtil.isNotNull(cacheObj)) {
+            return StringUtil.cast(cacheObj) ;
         }
         return new Contribution();
     }

@@ -2,19 +2,15 @@ package com.xiaohai.common.utils;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.xiaohai.common.constant.RedisConstants;
-import com.xiaohai.common.daomain.DictDataEntity;
 import com.xiaohai.common.daomain.OnLineUser;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.Spring.SpringUtils;
-import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 在线用户工具类
@@ -41,8 +37,8 @@ public class OnLineUtils {
      */
     public static OnLineUser getOnLineCache(String key) {
         Object cacheObj = SpringUtils.getBean(RedisUtils.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(cacheObj)) {
-            return StringUtils.cast(cacheObj) ;
+        if (StringUtil.isNotNull(cacheObj)) {
+            return StringUtil.cast(cacheObj) ;
         }
         return null;
     }

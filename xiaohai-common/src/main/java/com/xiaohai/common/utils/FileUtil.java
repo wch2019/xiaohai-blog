@@ -31,11 +31,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import static org.springframework.util.FileCopyUtils.BUFFER_SIZE;
 
 /**
  * @description: 文件操作工具类
@@ -43,7 +44,7 @@ import java.util.regex.Pattern;
  * @date: 2023-03-18 09:39
  **/
 @Slf4j
-public class FileUtils extends org.apache.commons.io.FileUtils {
+public class FileUtil extends org.apache.commons.io.FileUtils {
     /**
      * 获取文件创建时间的方法
      *
@@ -299,7 +300,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
      * @return 唯一的文件名
      */
     public static String generateUniqueFileName(String fileExtension) {
-        String fileName = StringUtils.generateUUIDWithoutHyphens();
+        String fileName = StringUtil.generateUUIDWithoutHyphens();
         return fileName + "." + fileExtension;
     }
 
@@ -600,6 +601,31 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     /**
+     * 复制文件到指定目录
+     *
+     * @param sourceFilePath      源文件路径
+     * @param targetDirectoryPath 目标目录路径
+     * @param replaceExisting     如果目标文件已存在，是否替换
+     * @return 复制后的文件路径
+     */
+    public static String copyFile(String sourceFilePath, String targetDirectoryPath, boolean replaceExisting) {
+        Path sourcePath = Paths.get(sourceFilePath);
+        Path targetDirectory = Paths.get(targetDirectoryPath);
+        Path targetPath = targetDirectory.resolve(sourcePath.getFileName());
+
+        CopyOption[] options = replaceExisting ? new CopyOption[]{StandardCopyOption.REPLACE_EXISTING} : new CopyOption[]{};
+        try {
+            // 复制文件
+            Files.copy(sourcePath, targetPath, options);
+        } catch (IOException e) {
+            throw new RuntimeException("复制文件时出错：" + e.getMessage(), e);
+        }
+
+        // 返回复制后的文件路径
+        return targetPath.toString();
+    }
+
+    /**
      * 获取硬盘使用量
      *
      * @param path 路径
@@ -674,20 +700,20 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     }
 
     public static void main(String[] args) throws Exception {
-//        String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
-//        String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";
-//        File file = new File(filePath);
-//        long fileSize = file.length();
-//        System.out.println("文件大小：" + formatFileSize(fileSize));
-//        System.out.println("文件创建时间：" + fileCreationTime(filePath));
-//        String a = extractChecksum(filePath, "SHA-256");
-//        String b = extractChecksum(filePath1, "SHA-256");
-//        if (a.equals(b)) {
-//            System.out.println("相同");
-//        } else {
-//            System.out.println("不同");
-//        }
-//        calculateHashesInFolder("Z:\\Linux\\blog\\dev\\files\\1\\markdown", Constants.MD5);
+        //        String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
+        //        String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";
+        //        File file = new File(filePath);
+        //        long fileSize = file.length();
+        //        System.out.println("文件大小：" + formatFileSize(fileSize));
+        //        System.out.println("文件创建时间：" + fileCreationTime(filePath));
+        //        String a = extractChecksum(filePath, "SHA-256");
+        //        String b = extractChecksum(filePath1, "SHA-256");
+        //        if (a.equals(b)) {
+        //            System.out.println("相同");
+        //        } else {
+        //            System.out.println("不同");
+        //        }
+        //        calculateHashesInFolder("Z:\\Linux\\blog\\dev\\files\\1\\markdown", Constants.MD5);
         String input = "/files/1/markdown";
         String result = getLastSegmentStart(input);
 

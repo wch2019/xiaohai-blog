@@ -12,7 +12,7 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.server.Disk;
 import com.xiaohai.common.utils.EncryptUtils;
-import com.xiaohai.common.utils.FileUtils;
+import com.xiaohai.common.utils.FileUtil;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
@@ -96,7 +96,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     private Long disk(Integer userId, Long diskSize) {
         Long newDiskSize = null;
-        Long free = FileUtils.getSystemDiskSizeFree(fileConfig.getProfile());
+        Long free = FileUtil.getSystemDiskSizeFree(fileConfig.getProfile());
         Long size = baseMapper.getTotalDiskSizeExcludeUserId(userId);
         if (diskSize != 0) {
             if (free > size + diskSize) {

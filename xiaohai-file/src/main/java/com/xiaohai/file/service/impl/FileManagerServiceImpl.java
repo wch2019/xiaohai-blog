@@ -13,7 +13,7 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.server.Disk;
-import com.xiaohai.common.utils.FileUtils;
+import com.xiaohai.common.utils.FileUtil;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.file.dao.FileManagerMapper;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
@@ -69,8 +69,8 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
                 if (!file.getCreatedBy().equals(userId) && !StpUtil.hasRole(Constants.ADMIN)) {
                     throw new ServiceException("非当前用户数据无法删除");
                 }
-                String pathFile = FileUtils.systemFilePath(fileConfig.getProfile() + file.getFilePath());
-                boolean isTrue = FileUtils.deleteFile(pathFile);
+                String pathFile = FileUtil.systemFilePath(fileConfig.getProfile() + file.getFilePath());
+                boolean isTrue = FileUtil.deleteFile(pathFile);
                 Assert.isTrue(isTrue, "当前路径:" + file.getFilePath() + ",删除失败");
                 baseMapper.deleteById(file.getId());
             }
@@ -97,19 +97,19 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
             throw new ServiceException("非当前用户数据无法重命名");
         }
         List<FileManager> list = baseMapper.selectChildHierarchy(fileManager.getId());
-        var newPath = FileUtils.getLastSegmentStart(fileManager.getFilePath()) + vo.getFileName();
+        var newPath = FileUtil.getLastSegmentStart(fileManager.getFilePath()) + vo.getFileName();
         //获取唯一名称
-        var targetPath = FileUtils.renameFile(fileConfig.getProfile() + newPath);
-        newPath = FileUtils.normalizeFilePath(targetPath.replace(fileConfig.getProfile(), ""));
+        var targetPath = FileUtil.renameFile(fileConfig.getProfile() + newPath);
+        newPath = FileUtil.normalizeFilePath(targetPath.replace(fileConfig.getProfile(), ""));
 
-        FileUtils.renamePath(fileConfig.getProfile() + fileManager.getFilePath(), fileConfig.getProfile() + newPath);
+        FileUtil.renamePath(fileConfig.getProfile() + fileManager.getFilePath(), fileConfig.getProfile() + newPath);
         var path = fileManager.getFilePath();
         for (FileManager file : list) {
             file.setFilePath(file.getFilePath().replace(path, newPath));
             baseMapper.updateById(file);
         }
         fileManager.setFilePath(newPath);
-        fileManager.setFileName(FileUtils.getLastSegmentEnd(newPath));
+        fileManager.setFileName(FileUtil.getLastSegmentEnd(newPath));
         fileManager.setId(vo.getId());
         baseMapper.updateById(fileManager);
         return fileManager.getFileName();
@@ -158,7 +158,7 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         for (FileManager fileManagers : iPage.getRecords()) {
             FileManagerDto fileManagerDto = new FileManagerDto();
             BeanUtils.copyProperties(fileManagers, fileManagerDto);
-            fileManagerDto.setFileSize(fileManagers.getFileSize() == 0 ? "" : FileUtils.formatFileSize(fileManagers.getFileSize()));
+            fileManagerDto.setFileSize(fileManagers.getFileSize() == 0 ? "" : FileUtil.formatFileSize(fileManagers.getFileSize()));
             list.add(fileManagerDto);
         }
         PageData pageData = new PageData();
@@ -168,7 +168,7 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
 
     @Override
     public Disk getHardDiskSize() {
-        return FileUtils.getSystemDiskSize(fileConfig.getProfile());
+        return FileUtil.getSystemDiskSize(fileConfig.getProfile());
     }
 
     @Override
@@ -183,10 +183,10 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         if (used == null) {
             used = 0L;
         }
-        Disk disk = FileUtils.getUserDiskSize(total, used);
+        Disk disk = FileUtil.getUserDiskSize(total, used);
         Long other = used - markUsed;
-        disk.setOtherUsed(FileUtils.formatFileSize(other));
-        disk.setMarkUsed(FileUtils.formatFileSize(markUsed));
+        disk.setOtherUsed(FileUtil.formatFileSize(other));
+        disk.setMarkUsed(FileUtil.formatFileSize(markUsed));
         if (total == 0) {
             disk.setOtherUsage(100);
             disk.setMarkUsage(100);
@@ -205,7 +205,7 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         if (used == null) {
             used = 0L;
         }
-        return FileUtils.getUserDiskSize(total, used);
+        return FileUtil.getUserDiskSize(total, used);
     }
 
     @Override

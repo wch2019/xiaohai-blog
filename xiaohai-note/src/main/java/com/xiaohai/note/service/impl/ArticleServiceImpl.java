@@ -16,6 +16,7 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.*;
+import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileService;
 import com.xiaohai.note.dao.*;
 import com.xiaohai.note.pojo.dto.*;
@@ -33,6 +34,7 @@ import com.xiaohai.spider.article.Acquire;
 import com.xiaohai.spider.pojo.ArticleAcquire;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +46,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -259,7 +263,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         Assert.isTrue(!"https://cn.bing.com".equals(url), "获取图片失败");
         String fileName = name + ".jpg";
-        MultipartFile multipartFile = FileUtils.getFileFromUrl(url, fileName);
+        MultipartFile multipartFile = FileUtil.getFileFromUrl(url, fileName);
         //指定公共markdown图片上传目录
         String path = fileConfig.getProfile() + FileConstants.IMAGE_FILE + File.separator + FileConstants.BING_FILE;
         //        fileService.uploadBing(multipartFile, path, fileName);
@@ -405,22 +409,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         assert originalFilename != null;
 
         // 获取文件后缀名
-        String fileExtension = FileUtils.getFileExtension(originalFilename);
+        String fileExtension = FileUtil.getFileExtension(originalFilename);
 
         // 判断文件后缀名是否为压缩类型
-        if (!FileUtils.isCompressExtension(fileExtension)) {
+        if (!FileUtil.isCompressExtension(fileExtension)) {
             throw new ServiceException("请查看压缩类型是否正确" + Arrays.toString(FileConstants.COMPRESS_EXTENSION));
         }
 
-        String tempFile = StringUtils.generateUUIDWithoutHyphens();
+        String tempFile = StringUtil.generateUUIDWithoutHyphens();
 
         //压缩文件临时路径
         String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE;
         fileService.createFolderIfNotExists(path);
         path = path + File.separator + tempFile;
-        FileUtils.directory(path);
+        FileUtil.directory(path);
         // 保存文件并返回文件路径
-        String filePath = FileUtils.saveFile(path, file.getOriginalFilename(), file);
+        String filePath = FileUtil.saveFile(path, file.getOriginalFilename(), file);
         try {
             // 解压缩文件到指定文件夹
             MarkdownUtils.unZip(new File(filePath), path);
@@ -445,7 +449,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                         article.setTitle(entry.getValue().toString());
                     }
                     if (entry.getKey().equals("cover")) {
-                        if (StringUtils.isNotBlank(entry.getValue().toString())) {
+                        if (StringUtil.isNotBlank(entry.getValue().toString())) {
                             if (entry.getValue().toString().startsWith("http")) {
                                 //封面
                                 article.setCover(entry.getValue().toString());
@@ -457,7 +461,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                         }
                     }
                     if (entry.getKey().equals("categories")) {
-                        if (StringUtils.isNotBlank(entry.getValue().toString())) {
+                        if (StringUtil.isNotBlank(entry.getValue().toString())) {
                             //分类
                             Category category = categoryMapper.selectOne(new QueryWrapper<Category>().eq("name", entry.getValue().toString()));
                             if (category == null) {
@@ -474,7 +478,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                         article.setCreatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
                     }
                     if (entry.getKey().equals("content")) {
-                        if (StringUtils.isNotBlank(entry.getValue().toString())) {
+                        if (StringUtil.isNotBlank(entry.getValue().toString())) {
                             //文章内容
                             article.setText(entry.getValue().toString());
                             List<String> photoList = MarkdownUtils.photoList(article.getText());
@@ -493,7 +497,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     }
                 }
                 //封面
-                if (StringUtils.isBlank(article.getCover())) {
+                if (StringUtil.isBlank(article.getCover())) {
                     //为空手动添加一个封面
                     article.setCover(wallpaper());
                 }
@@ -512,45 +516,46 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         } finally {
             //都要执行删除临时文件
-            FileUtils.deleteFiles(new File(path));
+            FileUtil.deleteFiles(new File(path));
             //删除当前目录
-            FileUtils.deleteFile(path);
+            FileUtil.deleteFile(path);
         }
     }
 
     @Override
-    public void downloadCompressedFile(HttpServletResponse response) {
+    public void downloadCompressedFile() {
         List<Article> articles = baseMapper.selectList(new QueryWrapper<Article>().
                 eq("user_id", StpUtil.getLoginId()).
-                eq("is_push", 1).
                 orderByDesc("is_top").
                 orderByDesc("top_time").
                 orderByDesc("created_time"));
-        String tempFile = StringUtils.generateUUIDWithoutHyphens();
+        String tempFile = StringUtil.generateUUIDWithoutHyphens();
         //压缩文件临时路径
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE + File.separator + tempFile + File.separator;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.EXPORT_FILE + File.separator + tempFile + File.separator;
         try {
             for (Article article : articles) {
                 //图片路径
                 String image = fileConfig.getProfile() + article.getCover();
                 String newImage = path + FileConstants.IMAGE_FILE + File.separator;
                 //创建目录
-                FileUtils.directory(newImage);
+                FileUtil.directory(newImage);
                 //新图片位置
-                String newPhotoPath = MarkdownUtils.copyImage(image, newImage);
+                String newPhotoPath = FileUtil.copyFile(image, newImage, true);
                 //封面图片
                 String cover = ".." + newPhotoPath.replace(path, "/").replace("\\", "/");
                 //获取分类名称
                 Category category = categoryMapper.selectById(article.getCategoryId());
                 //获取标签名称列表
                 List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
+                //获取转载地址
+                String originalUrl = StringUtils.isBlank(article.getOriginalUrl()) ? "" : article.getOriginalUrl();
                 //组装Front-matter头
-                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover);
+                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover, originalUrl);
                 //将文章里面的图片获取并存到临时位置，并替换路径
                 List<String> photoList = MarkdownUtils.photoList(article.getText());
                 for (String fileName : photoList) {
                     //新图片位置
-                    String notePhotoPath = MarkdownUtils.copyImage(fileConfig.getProfile() + fileName.replace("..", ""), newImage);
+                    String notePhotoPath = FileUtil.copyFile(fileConfig.getProfile() + fileName.replace("..", ""), newImage, true);
                     //去掉前缀
                     notePhotoPath = ".." + notePhotoPath.replace(path, File.separator);
                     article.setText(article.getText().replaceAll(fileName, notePhotoPath.replace("\\", "/")));
@@ -559,17 +564,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 //md文件路径
                 String note = path + FileConstants.NOTE_FILE + File.separator;
                 //创建目录
-                FileUtils.directory(note);
-                note = note + FileUtils.sanitizeFileName(article.getTitle()) + "." + FileConstants.MARKDOWN_EXTENSION;
+                FileUtil.directory(note);
+                note = note + FileUtil.sanitizeFileName(article.getTitle()) + "." + FileConstants.MARKDOWN_EXTENSION;
                 // 替换文件名中的不支持字符
                 //本地创建md文件
                 MarkdownUtils.createMarkdownFile(note, text);
             }
+            String zipFile = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.EXPORT_FILE;
+            var vo = new UploadVo();
+            vo.setFile(ZipUtils.zipDirectoryToMultipartFile(path, DateUtils.getCurrentTime()));
+            vo.setPath(zipFile);
+//            fileService.upload(vo);
         } finally {
-            //都要执行删除临时文件
-            //            FileUtils.deleteFiles(new File(path));
-            //            //删除当前目录
-            //            FileUtils.deleteFile(path);
+            //执行删除临时文件
+            FileUtil.deleteFiles(new File(path));
+            //删除当前目录
+            FileUtil.deleteFile(path);
         }
     }
 
@@ -591,7 +601,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (vo.getType().equals("zhihu")) {
             articleAcquire = Acquire.zhihu(vo.getUrl());
         }
-        if(StringUtils.isBlank(articleAcquire.getTitle())){
+        if (StringUtil.isBlank(articleAcquire.getTitle())) {
             throw new ServiceException("没有获取到数据请检查链接");
         }
         Article article = new Article();

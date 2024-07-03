@@ -138,10 +138,10 @@ public class MarkdownUtils {
                     // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
                     File targetFile = new File(destDirPath + "/" + entry.getName());
                     // 获取文件后缀名
-                    String fileExtension = FileUtils.getFileExtension(entry.getName());
+                    String fileExtension = FileUtil.getFileExtension(entry.getName());
 
                     // 判断文件后缀名是否为图片类型类型
-                    if (!FileUtils.isImageExtension(fileExtension) && !fileExtension.equals(FileConstants.MARKDOWN_EXTENSION)) {
+                    if (!FileUtil.isImageExtension(fileExtension) && !fileExtension.equals(FileConstants.MARKDOWN_EXTENSION)) {
                         throw new ServiceException("请查看上传文件格式是否正确");
                     }
                     // 保证这个文件的父文件夹必须要存在
@@ -204,7 +204,7 @@ public class MarkdownUtils {
                     } else {
                         log.info("文件：" + file.getName());
                         // md文件才获取
-                        if (FileUtils.getFileExtension(file.getName()).equals(FileConstants.MARKDOWN_EXTENSION)) {
+                        if (FileUtil.getFileExtension(file.getName()).equals(FileConstants.MARKDOWN_EXTENSION)) {
                             list.add(file.getPath());
                         }
                     }
@@ -259,7 +259,7 @@ public class MarkdownUtils {
     /**
      * 将图片复制到指定位置并重命名
      *
-     * @param sourcePath    文件
+     * @param sourcePath      文件
      * @param targetDirectory 位置
      * @return java.lang.String
      * @author xiaohai
@@ -267,9 +267,9 @@ public class MarkdownUtils {
      */
     public static String copyImage(String sourcePath, String targetDirectory) {
         // 获取文件后缀名
-        String fileExtension = FileUtils.getFileExtension(sourcePath);
+        String fileExtension = FileUtil.getFileExtension(sourcePath);
         // 生成唯一的文件名
-        String fileName = FileUtils.generateUniqueFileName(fileExtension);
+        String fileName = FileUtil.generateUniqueFileName(fileExtension);
         // 构建目标文件路径
         String targetPath = Paths.get(targetDirectory, fileName).toString();
         try {
@@ -285,17 +285,18 @@ public class MarkdownUtils {
     /**
      * 组装一个 Markdown 文件的描述头（Front Matter）
      *
-     * @param title      标题
-     * @param date       建立日期
-     * @param updated    更新日期
-     * @param tags       标签
-     * @param categories 分类
-     * @param cover      封面
+     * @param title       标题
+     * @param date        建立日期
+     * @param updated     更新日期
+     * @param tags        标签
+     * @param categories  分类
+     * @param cover       封面
+     * @param originalUrl 转载地址
      * @return java.lang.String
      * @author xiaohai
      * @date 2023/12/4 15:12
      */
-    public static String buildMarkdownHeader(String title, LocalDateTime date, LocalDateTime updated, List<String> tags, String categories, String cover) {
+    public static String buildMarkdownHeader(String title, LocalDateTime date, LocalDateTime updated, List<String> tags, String categories, String cover, String originalUrl) {
         StringBuilder header = new StringBuilder();
         header.append("---\n");
         header.append("title: ").append(title).append("\n");
@@ -315,6 +316,7 @@ public class MarkdownUtils {
 
         header.append("categories: ").append(categories).append("\n");
         header.append("cover: ").append(cover).append("\n");
+        header.append("originalUrl: ").append(originalUrl).append("\n");
         header.append("---\n");
 
         return header.toString();
@@ -354,7 +356,8 @@ public class MarkdownUtils {
         List<String> tags = List.of("Java", "SpringBoot");
         String categories = "Java技术";
         String cover = "ccccccccccccccc";
-        String markdownHeader = buildMarkdownHeader(title, LocalDateTime.now(), LocalDateTime.now(), tags, categories, cover);
+        String originalUrl = "ccccccccccccccc";
+        String markdownHeader = buildMarkdownHeader(title, LocalDateTime.now(), LocalDateTime.now(), tags, categories, cover, originalUrl);
         System.out.println(markdownHeader);
     }
 }

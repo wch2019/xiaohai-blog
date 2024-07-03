@@ -3,15 +3,13 @@ package com.xiaohai.common.utils.ip;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.StringUtil;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +43,7 @@ public class AddressUtils {
         }
         try {
             String rspStr = HttpUtil.get(IP_URL + "?ip=" + ip + "&json=true");
-            if (StringUtils.isEmpty(rspStr)) {
+            if (StringUtil.isEmpty(rspStr)) {
                 log.error("获取地理位置异常 {}", ip);
                 return UNKNOWN;
             }

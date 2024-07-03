@@ -7,9 +7,9 @@ import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.server.Disk;
-import com.xiaohai.common.utils.FileUtils;
+import com.xiaohai.common.utils.FileUtil;
 import com.xiaohai.common.utils.MarkdownUtils;
-import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.StringUtil;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
 import com.xiaohai.file.pojo.entity.FileManager;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
@@ -47,10 +47,10 @@ public class FileServiceImpl implements FileService {
         //根据用户区分文件夹
         String path = fileConfig.getFilePath() + userId + File.separator + FileConstants.AVATAR_FILE;
         //计算hash
-        String hash = FileUtils.extractChecksum(file, SHA_256);
+        String hash = FileUtil.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
         String url = getFile(path, hash);
-        if (StringUtils.isNotBlank(url)) {
+        if (StringUtil.isNotBlank(url)) {
             return url;
         }
         Disk disk = fileManagerService.getUserHardDiskSize(userId);
@@ -64,10 +64,10 @@ public class FileServiceImpl implements FileService {
     public String uploadLogo(MultipartFile file) {
         String path = fileConfig.getProfile() + FileConstants.SYSTEM_FILE;
         //计算hash
-        String hash = FileUtils.extractChecksum(file, SHA_256);
+        String hash = FileUtil.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
         String url = getFile(path, hash);
-        if (StringUtils.isNotBlank(url)) {
+        if (StringUtil.isNotBlank(url)) {
             return url;
         }
         return addLogo(path, file, hash);
@@ -82,10 +82,10 @@ public class FileServiceImpl implements FileService {
         //指定markdown图片上传目录,根据用户区分文件夹
         String path = fileConfig.getFilePath() + userId + File.separator + FileConstants.MARKDOWN_FILE;
         //计算hash
-        String hash = FileUtils.extractChecksum(file, SHA_256);
+        String hash = FileUtil.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
         String url = getFile(path, hash);
-        if (StringUtils.isNotBlank(url)) {
+        if (StringUtil.isNotBlank(url)) {
             return url;
         }
         Disk disk = fileManagerService.getUserHardDiskSize(userId);
@@ -107,10 +107,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadBing(MultipartFile file, String path, String fileName) {
         //计算hash
-        String hash = FileUtils.extractChecksum(file, SHA_256);
+        String hash = FileUtil.extractChecksum(file, SHA_256);
         //验证是否存在当前文件
         String url = getFile(path, hash);
-        if (StringUtils.isNotBlank(url)) {
+        if (StringUtil.isNotBlank(url)) {
             return url;
         }
         return addFile(path, file, fileName, hash);
@@ -135,27 +135,27 @@ public class FileServiceImpl implements FileService {
         assert originalFilename != null;
 
         // 获取文件后缀名
-        String fileExtension = FileUtils.getFileExtension(originalFilename);
+        String fileExtension = FileUtil.getFileExtension(originalFilename);
 
         // 判断文件类型是否为图片
-        if (!FileUtils.isImageExtension(fileExtension)) {
+        if (!FileUtil.isImageExtension(fileExtension)) {
             throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(FileConstants.IMAGE_EXTENSION));
         }
 
         // 生成唯一的文件名
         //        String fileName = FileUtils.generateUniqueFileName(fileExtension);
         //验证当前目录文件名是否唯一
-        String fileName = FileUtils.getUniqueFileName(path, originalFilename);
+        String fileName = FileUtil.getUniqueFileName(path, originalFilename);
 
         // 保存文件并返回文件路径
-        String filePath = FileUtils.saveFile(path, fileName, file);
+        String filePath = FileUtil.saveFile(path, fileName, file);
         filePath = filePath.replace(fileConfig.getProfile(), File.separator);
         log.info("保存图片--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
-        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
+        FileManager manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
         fileManagerVo.setParentId(manager.getId());
-        fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
+        fileManagerVo.setFilePath(FileUtil.normalizeFilePath(filePath));
         fileManagerVo.setFileName(fileName);
         fileManagerVo.setFileSize((int) file.getSize());
         fileManagerVo.setFileHash(hash);
@@ -184,28 +184,28 @@ public class FileServiceImpl implements FileService {
         assert originalFilename != null;
 
         // 获取文件后缀名
-        String fileExtension = FileUtils.getFileExtension(originalFilename);
+        String fileExtension = FileUtil.getFileExtension(originalFilename);
 
         //没有传入
         if (org.apache.commons.lang3.StringUtils.isBlank(fileName)) {
             // 生成唯一的文件名
-            fileName = FileUtils.generateUniqueFileName(fileExtension);
+            fileName = FileUtil.generateUniqueFileName(fileExtension);
         } else {
             //验证当前目录文件名是否唯一
-            fileName = FileUtils.getUniqueFileName(path, originalFilename);
+            fileName = FileUtil.getUniqueFileName(path, originalFilename);
         }
 
         // 保存文件并返回文件路径
-        String filePath = FileUtils.saveFile(path, fileName, file);
+        String filePath = FileUtil.saveFile(path, fileName, file);
         filePath = filePath.replace(fileConfig.getProfile(), File.separator);
         log.info("保存文件--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
-        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
+        FileManager manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
         if(manager!=null){
             fileManagerVo.setParentId(manager.getId());
         }
-        fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
+        fileManagerVo.setFilePath(FileUtil.normalizeFilePath(filePath));
         fileManagerVo.setFileName(fileName);
         fileManagerVo.setFileSize((int) file.getSize());
         fileManagerVo.setFileHash(hash);
@@ -233,24 +233,24 @@ public class FileServiceImpl implements FileService {
         assert originalFilename != null;
 
         // 获取文件后缀名
-        String fileExtension = FileUtils.getFileExtension(originalFilename);
+        String fileExtension = FileUtil.getFileExtension(originalFilename);
 
         // 判断文件类型是否为图片
-        if (!FileUtils.isImageExtension(fileExtension)) {
+        if (!FileUtil.isImageExtension(fileExtension)) {
             throw new ServiceException("请查看图片类型是否正确" + Arrays.toString(FileConstants.IMAGE_EXTENSION));
         }
 
         // 保存文件并返回文件路径
-        String filePath = FileUtils.saveFile(path, FileConstants.LOGO, file);
+        String filePath = FileUtil.saveFile(path, FileConstants.LOGO, file);
         filePath = filePath.replace(fileConfig.getProfile(), File.separator);
         log.info("保存图片--------->{}", filePath);
         FileManagerVo fileManagerVo = new FileManagerVo();
-        FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(filePath));
+        FileManager fileManager = fileManagerService.findByPath(FileUtil.normalizeFilePath(filePath));
         if (fileManager == null) {
             //查询父类
-            FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
+            FileManager manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
             fileManagerVo.setParentId(manager.getId());
-            fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
+            fileManagerVo.setFilePath(FileUtil.normalizeFilePath(filePath));
             fileManagerVo.setFileName(FileConstants.LOGO);
             fileManagerVo.setFileSize((int) file.getSize());
             fileManagerVo.setFileHash(hash);
@@ -258,7 +258,7 @@ public class FileServiceImpl implements FileService {
             fileManagerService.add(fileManagerVo);
         } else {
             fileManagerVo.setId(fileManager.getId());
-            fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
+            fileManagerVo.setFilePath(FileUtil.normalizeFilePath(filePath));
             fileManagerVo.setFileSize((int) file.getSize());
             fileManagerVo.setFileHash(hash);
             fileManagerService.updateData(fileManagerVo);
@@ -287,11 +287,11 @@ public class FileServiceImpl implements FileService {
         //根据用户区分文件夹
         path = fileConfig.getProfile() + path;
         //计算hash
-        String hash = FileUtils.extractChecksum(file, SHA_256);
+        String hash = FileUtil.extractChecksum(file, SHA_256);
         if(!path.equals(fileConfig.getProfile())){
             //验证是否存在当前文件
             String url = getFile(path, hash);
-            if (StringUtils.isNotBlank(url)) {
+            if (StringUtil.isNotBlank(url)) {
                 return url;
             }
         }
@@ -305,7 +305,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String userPath() {
         var userPath = fileConfig.getFilePath() + StpUtil.getLoginId();
-        return FileUtils.normalizeFilePath(userPath.replace(fileConfig.getProfile(), File.separator));
+        return FileUtil.normalizeFilePath(userPath.replace(fileConfig.getProfile(), File.separator));
     }
 
     @Override
@@ -323,7 +323,7 @@ public class FileServiceImpl implements FileService {
 
         // 指定文件夹路径
         //        String folderPath = fileConfig.getProfile() + path;
-        FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path));
+        FileManager fileManager = fileManagerService.findByPath(FileUtil.normalizeFilePath(path));
         if (fileManager == null) {
             return new ReturnPageData<>();
         }
@@ -358,7 +358,7 @@ public class FileServiceImpl implements FileService {
     public ReturnPageData<FileManagerDto> getMarkdownImageListByPage() {
         // 指定文件夹路径
         String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE;
-        FileManager fileManager = fileManagerService.findByPath(FileUtils.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
+        FileManager fileManager = fileManagerService.findByPath(FileUtil.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
         if (fileManager == null) {
             return new ReturnPageData<>();
         }
@@ -391,10 +391,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public Integer deletePathMarkdownImage(String path) {
         String pathFile = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator;
-        pathFile = FileUtils.systemFilePath(pathFile + path);
-        boolean isTrue = FileUtils.deleteFile(pathFile);
-        pathFile = FileUtils.normalizeFilePath(pathFile);
-        var profile = FileUtils.normalizeFilePath(fileConfig.getProfile());
+        pathFile = FileUtil.systemFilePath(pathFile + path);
+        boolean isTrue = FileUtil.deleteFile(pathFile);
+        pathFile = FileUtil.normalizeFilePath(pathFile);
+        var profile = FileUtil.normalizeFilePath(fileConfig.getProfile());
         path = pathFile.replace(profile, "/");
         Assert.isTrue(isTrue, "当前路径:" + path + ",删除失败");
         return fileManagerService.deletePath(path);
@@ -409,7 +409,7 @@ public class FileServiceImpl implements FileService {
      */
     public String getFile(String path, String hash) {
         //判断路径
-        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
+        FileManager manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
         if (manager != null) {
             //获取当前目录下相同的文件信息
             FileManager fileManager = fileManagerService.findByHash(manager.getId(), hash);
@@ -437,15 +437,15 @@ public class FileServiceImpl implements FileService {
         StringBuilder parent = new StringBuilder();
         for (String patch : listPatch) {
             parent.append(File.separator).append(patch);
-            FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(parent.toString()));
+            FileManager manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(parent.toString()));
             if (manager == null) {
                 FileManagerVo fileManagerVo = new FileManagerVo();
                 //当前文件夹不存在，查询有没有父类文件夹
-                if (StringUtils.isNotBlank(parentPath.toString())) {
-                    manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(parentPath.toString()));
+                if (StringUtil.isNotBlank(parentPath.toString())) {
+                    manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(parentPath.toString()));
                     fileManagerVo.setParentId(manager.getId());
                 }
-                fileManagerVo.setFilePath(FileUtils.normalizeFilePath(parent.toString()));
+                fileManagerVo.setFilePath(FileUtil.normalizeFilePath(parent.toString()));
                 fileManagerVo.setFileName(patch);
                 fileManagerVo.setFileType(1);
                 fileManagerService.add(fileManagerVo);
@@ -453,17 +453,17 @@ public class FileServiceImpl implements FileService {
             parentPath.append(File.separator).append(patch);
         }
         //创建目录
-        FileUtils.directory(fileConfig.getProfile() + path);
+        FileUtil.directory(fileConfig.getProfile() + path);
     }
 
     @Override
     public String getCopyImage(String sourcePath, String newPath) {
         log.info("{}:{}",sourcePath,newPath);
         //计算hash
-        String hash = FileUtils.extractChecksum(sourcePath, SHA_256);
+        String hash = FileUtil.extractChecksum(sourcePath, SHA_256);
         //验证是否存在当前文件
         String url = getFile(newPath, hash);
-        if (StringUtils.isNotBlank(url)) {
+        if (StringUtil.isNotBlank(url)) {
             return url;
         }
         //新图片位置
@@ -473,9 +473,9 @@ public class FileServiceImpl implements FileService {
         filePath = filePath.replace(fileConfig.getProfile(), File.separator);
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
-        FileManager manager = fileManagerService.findByPath(FileUtils.normalizeFilePath(newPath.replace(fileConfig.getProfile(), File.separator)));
+        FileManager manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(newPath.replace(fileConfig.getProfile(), File.separator)));
         fileManagerVo.setParentId(manager.getId());
-        fileManagerVo.setFilePath(FileUtils.normalizeFilePath(filePath));
+        fileManagerVo.setFilePath(FileUtil.normalizeFilePath(filePath));
         fileManagerVo.setFileName(file.getName());
         fileManagerVo.setFileSize((int) file.length());
         fileManagerVo.setFileHash(hash);

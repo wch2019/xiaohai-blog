@@ -15,6 +15,7 @@ import java.util.List;
  * @date 2023/03/02 10:34:52
  */
 public class TreeUtils {
+    TreeUtils(){}
     /**
      * 根节点,parentId
      */

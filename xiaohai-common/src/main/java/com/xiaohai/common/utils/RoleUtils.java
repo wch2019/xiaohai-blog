@@ -9,6 +9,7 @@ import com.xiaohai.common.constant.Constants;
  * @date 2024-05-30 23:33
  **/
 public class RoleUtils {
+    RoleUtils(){}
     /**
      * 角色验证
      * @return

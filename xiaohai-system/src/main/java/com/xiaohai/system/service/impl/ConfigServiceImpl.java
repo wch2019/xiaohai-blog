@@ -7,7 +7,7 @@ import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.confing.MailSenderConfig;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.EmailDto;
-import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.StringUtil;
 import com.xiaohai.system.dao.ConfigMapper;
 import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.dto.ConfigShowDto;
@@ -49,7 +49,7 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
     public Integer updateData(ConfigVo vo) {
         Config config = new Config();
         BeanUtils.copyProperties(vo, config);
-        if (StringUtils.isNotEmpty(config.getEmailPassword()) && config.getEmailPassword().equals(Constants.CONCEAL)) {
+        if (StringUtil.isNotEmpty(config.getEmailPassword()) && config.getEmailPassword().equals(Constants.CONCEAL)) {
             //维护密码隐藏熟悉不保存
             config.setEmailPassword(null);
         }

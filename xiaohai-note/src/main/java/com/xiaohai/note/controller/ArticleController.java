@@ -129,8 +129,8 @@ public class ArticleController {
     @SaCheckPermission("note:article:download")
     @Log(title = "导出markdown压缩文件")
     @GetMapping(value = "/markdown")
-    public void downloadCompressedFile(HttpServletResponse response) {
-        articleService.downloadCompressedFile(response);
+    public void downloadCompressedFile() {
+        articleService.downloadCompressedFile();
     }
 
     @Operation(summary = "抓取文章爬虫", security = {@SecurityRequirement(name = Constants.SESSION_ID)})

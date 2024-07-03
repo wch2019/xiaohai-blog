@@ -9,7 +9,7 @@ import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.exception.ServiceException;
 import com.xiaohai.common.utils.PageUtils;
-import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.StringUtil;
 import com.xiaohai.system.dao.MenuMapper;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserRoleMapper;
@@ -106,8 +106,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public ReturnPageData<Role> findListByPage(RoleQuery query) {
         IPage<Role> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<Role> iPage = baseMapper.selectPage(wherePage, new QueryWrapper<Role>()
-                .eq(StringUtils.isNotBlank(query.getStatus()), "status", query.getStatus())
-                .like(StringUtils.isNotBlank(query.getName()), "name", query.getName()));
+                .eq(StringUtil.isNotBlank(query.getStatus()), "status", query.getStatus())
+                .like(StringUtil.isNotBlank(query.getName()), "name", query.getName()));
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, iPage.getRecords());

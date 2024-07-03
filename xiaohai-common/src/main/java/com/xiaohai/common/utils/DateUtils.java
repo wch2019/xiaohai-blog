@@ -117,6 +117,22 @@ public class DateUtils {
         return dateTime.format(formatter);
     }
 
+    /**
+     * 获取当前时间，并返回格式化后的字符串
+     *
+     * @return 当前时间的字符串表示形式
+     */
+    public static String getCurrentTime() {
+        // 获取当前时间
+        LocalDateTime now = LocalDateTime.now();
+
+        // 定义时间格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss");
+
+        // 格式化当前时间并返回
+        return now.format(formatter);
+    }
+
     public static void main(String[] args) {
         System.out.println(millisToDateTime(1625686800000L));
         System.out.println(getToDayEndTime());

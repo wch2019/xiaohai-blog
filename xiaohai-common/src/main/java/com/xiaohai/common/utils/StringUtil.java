@@ -1,5 +1,7 @@
 package com.xiaohai.common.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Collection;
 import java.util.UUID;
 
@@ -7,7 +9,7 @@ import java.util.UUID;
  * @author wangchenghai
  * @date 2023/02/24 17:33:38
  */
-public class StringUtils extends org.apache.commons.lang3.StringUtils {
+public class StringUtil extends StringUtils {
     /**
      * 判断字符串是否为空
      *

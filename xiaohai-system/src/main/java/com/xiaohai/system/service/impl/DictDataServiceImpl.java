@@ -12,7 +12,7 @@ import com.xiaohai.common.utils.DictUtils;
 import com.xiaohai.common.utils.PageUtils;
 import com.xiaohai.common.utils.RedisUtils;
 import com.xiaohai.common.utils.Spring.SpringUtils;
-import com.xiaohai.common.utils.StringUtils;
+import com.xiaohai.common.utils.StringUtil;
 import com.xiaohai.system.dao.DictDataMapper;
 import com.xiaohai.system.pojo.entity.DictData;
 import com.xiaohai.system.pojo.query.DictDataQuery;
@@ -88,11 +88,11 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
     @Override
     public List<DictDataEntity> dictType(String dictType) {
         List<DictDataEntity> dictDataEntities = DictUtils.getDictCache(dictType);
-        if (StringUtils.isNotEmpty(dictDataEntities)) {
+        if (StringUtil.isNotEmpty(dictDataEntities)) {
             return dictDataEntities;
         }
         dictDataEntities = baseMapper.selectDictTypeList(dictType);
-        if (StringUtils.isNotEmpty(dictDataEntities)) {
+        if (StringUtil.isNotEmpty(dictDataEntities)) {
             DictUtils.setDictCache(dictType, dictDataEntities);
             return dictDataEntities;
         }
@@ -106,11 +106,11 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
         for (String key : keys) {
             key=key.replace(RedisConstants.SYS_DICT_KEY,"");
             List<DictDataEntity> dictDataEntities = DictUtils.getDictCache(key);
-            if (StringUtils.isNotEmpty(dictDataEntities)) {
+            if (StringUtil.isNotEmpty(dictDataEntities)) {
                 map.put(key, dictDataEntities);
             } else {
                 dictDataEntities = baseMapper.selectDictTypeList(key);
-                if (StringUtils.isNotEmpty(dictDataEntities)) {
+                if (StringUtil.isNotEmpty(dictDataEntities)) {
                     DictUtils.setDictCache(key, dictDataEntities);
                     map.put(key, dictDataEntities);
                 }
