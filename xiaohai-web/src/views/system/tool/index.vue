@@ -1,37 +1,37 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="5">
+      <el-col :span="6">
         <el-card class="box-card min-height">
           <div slot="header" class="clearfix">
             <span>系统备份</span>
           </div>
-          <p class="text">支持 Front Matter 数据导入解析</p>
+          <p class="text">支持备份全站数据和数据导出，支持下载到本地.</p>
           <div class="float-right">
             <el-button
               icon="el-icon-upload"
               size="small"
               @click="handleImport"
-            >导 入
+            >备 份
             </el-button>
           </div></el-card>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="6">
         <el-card class="box-card min-height">
           <div slot="header" class="clearfix">
             <span>Markdown 文章导出</span>
           </div>
-          <p class="text">支持 Front Matter 数据导入解析</p>
+          <p class="text">支持 Front Matter 文章数据导出</p>
           <div class="float-right">
             <el-button
               icon="el-icon-upload"
               size="small"
               @click="handleImport"
-            >导 入
+            >导 出
             </el-button>
           </div></el-card>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="6">
         <el-card v-if="$store.getters.permission.includes('note:article:import')" class="box-card min-height">
           <div slot="header" class="clearfix">
             <span>Markdown 文章导入</span>
@@ -86,7 +86,6 @@ export default {
   margin-bottom: 20px
 }
 .text {
-  text-align: center;
   font-size: 14px;
 }
 .float-right {

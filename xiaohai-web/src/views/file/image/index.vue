@@ -24,6 +24,7 @@
       v-infinite-scroll="loadMore"
       :gutter="5"
       infinite-scroll-disabled="loading"
+      infinite-scroll-distance="4"
       class="scroll"
     >
       <el-checkbox-group v-model="selectedItems" @change="handleCheckedCitiesChange">
@@ -33,7 +34,7 @@
           :span="4"
           style="height: 250px;"
         >
-          <el-card shadow="hover" :body-style="{ padding: '0px'}">
+          <el-card class="box-card" :body-style="{ padding: '0px'}">
             <div style="position: relative" class="hover-element">
               <el-checkbox
                 v-if="selectedItems.length!==0"
