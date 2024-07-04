@@ -419,7 +419,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String tempFile = StringUtil.generateUUIDWithoutHyphens();
 
         //压缩文件临时路径
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.MARKDOWN_FILE + File.separator + FileConstants.TEMPORARY_FILE;
+        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.IMPORT_FILE;
         fileService.createFolderIfNotExists(path);
         path = path + File.separator + tempFile;
         FileUtil.directory(path);
@@ -473,10 +473,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                             article.setCategoryId(category.getId());
                         }
                     }
-                    if (entry.getKey().equals("date")) {
+                    if (entry.getKey().equals("date") && StringUtils.isNotBlank(entry.getValue().toString())) {
                         //创建时间
                         article.setCreatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
+                    }else{
+                        article.setCreatedTime(LocalDateTime.now());
                     }
+                    if (entry.getKey().equals("updated") && StringUtils.isNotBlank(entry.getValue().toString())) {
+                        //更新时间
+                        article.setUpdatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
+                    }
+                    if (entry.getKey().equals("original") && StringUtils.isNotBlank(entry.getValue().toString())) {
+                        //转载地址
+                        article.setOriginalUrl(entry.getValue().toString());
+                        article.setIsOriginal(1);
+                    }
+
                     if (entry.getKey().equals("content")) {
                         if (StringUtil.isNotBlank(entry.getValue().toString())) {
                             //文章内容
@@ -548,9 +560,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 //获取标签名称列表
                 List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
                 //获取转载地址
-                String originalUrl = StringUtils.isBlank(article.getOriginalUrl()) ? "" : article.getOriginalUrl();
+                String original = StringUtils.isBlank(article.getOriginalUrl()) ? "" : article.getOriginalUrl();
                 //组装Front-matter头
-                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover, originalUrl);
+                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover, original);
                 //将文章里面的图片获取并存到临时位置，并替换路径
                 List<String> photoList = MarkdownUtils.photoList(article.getText());
                 for (String fileName : photoList) {
@@ -573,8 +585,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             String zipFile = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.EXPORT_FILE;
             var vo = new UploadVo();
             vo.setFile(ZipUtils.zipDirectoryToMultipartFile(path, DateUtils.getCurrentTime()));
-            vo.setPath(zipFile);
-//            fileService.upload(vo);
+            vo.setPath(zipFile.replace(fileConfig.getProfile(), File.separator));
+            fileService.upload(vo);
         } finally {
             //执行删除临时文件
             FileUtil.deleteFiles(new File(path));

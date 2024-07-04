@@ -258,7 +258,7 @@ export default {
         for (const element of response.data.records) {
           const suffix = getFileExtension(element.fileName)
           element.suffix = suffix
-          if (VerifyIsPictureType(suffix)) {
+          if (VerifyIsPictureType(suffix) || element.fileType === 0) {
             element.filePath = getFileAddress(element.filePath)
             this.srcList.push(element.filePath)
           }
@@ -365,6 +365,7 @@ export default {
       const ids = o.id ? [o.id] : this.selectedItems.map(item => item.id)
       this.fileList.forEach(element => {
         if (ids.includes(element.id)) {
+          console.log(element.filePath)
           downloadFile(element.fileName, window.location.origin + element.filePath)
         }
       })

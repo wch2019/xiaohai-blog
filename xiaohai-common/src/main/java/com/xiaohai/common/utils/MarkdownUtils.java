@@ -4,6 +4,7 @@ import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.*;
@@ -36,9 +37,13 @@ public class MarkdownUtils {
      */
     public static Map<String, Object> parseHexoPost(String filePath) {
         Map<String, Object> postData = new HashMap<>();
-
+        // 获取文件名称
+        Path path = Paths.get(filePath);
+        String fileName = path.getFileName().toString();
+        postData.put("title", fileName.replace(".md", ""));
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
+            String frontMatter = "";
             int frontMatterCount = 0;
             StringBuilder contentBuilder = new StringBuilder();
 
@@ -47,8 +52,9 @@ public class MarkdownUtils {
 
                 if (line.equals("---")) {
                     frontMatterCount++;
+                    frontMatter = line;
                 }
-                if (frontMatterCount < 2 || line.equals("---")) {
+                if (frontMatterCount < 2 && frontMatter.equals("---")) {
                     // 解析Front Matter的属性
                     Pattern pattern = Pattern.compile("(\\w+)\\s*:\\s*(.*)");
                     Matcher matcher = pattern.matcher(line);
@@ -285,18 +291,18 @@ public class MarkdownUtils {
     /**
      * 组装一个 Markdown 文件的描述头（Front Matter）
      *
-     * @param title       标题
-     * @param date        建立日期
-     * @param updated     更新日期
-     * @param tags        标签
-     * @param categories  分类
-     * @param cover       封面
-     * @param originalUrl 转载地址
+     * @param title      标题
+     * @param date       建立日期
+     * @param updated    更新日期
+     * @param tags       标签
+     * @param categories 分类
+     * @param cover      封面
+     * @param original   转载地址
      * @return java.lang.String
      * @author xiaohai
      * @date 2023/12/4 15:12
      */
-    public static String buildMarkdownHeader(String title, LocalDateTime date, LocalDateTime updated, List<String> tags, String categories, String cover, String originalUrl) {
+    public static String buildMarkdownHeader(String title, LocalDateTime date, LocalDateTime updated, List<String> tags, String categories, String cover, String original) {
         StringBuilder header = new StringBuilder();
         header.append("---\n");
         header.append("title: ").append(title).append("\n");
@@ -316,7 +322,7 @@ public class MarkdownUtils {
 
         header.append("categories: ").append(categories).append("\n");
         header.append("cover: ").append(cover).append("\n");
-        header.append("originalUrl: ").append(originalUrl).append("\n");
+        header.append("original: ").append(original).append("\n");
         header.append("---\n");
 
         return header.toString();
