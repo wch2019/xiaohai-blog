@@ -1,9 +1,7 @@
 package com.xiaohai.file.service;
 
 import com.xiaohai.common.daomain.ReturnPageData;
-import com.xiaohai.file.pojo.dto.FileDto;
 import com.xiaohai.file.pojo.dto.FileManagerDto;
-import com.xiaohai.file.pojo.dto.FileMarkdownDto;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -105,4 +103,17 @@ public interface FileService {
      * @return
      */
     String getCopyImage(String sourcePath, String newPath);
+
+    /**
+     * markdown文件导入列表
+     *
+     * @return
+     */
+    List<FileManagerDto> getImportFiles();
+
+    /**
+     * markdown文件导出列表
+     * @return
+     */
+    List<FileManagerDto> getExportFiles();
 }

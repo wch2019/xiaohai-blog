@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.xiaohai.common.constant.Constants.SHA_256;
@@ -74,8 +75,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String  uploadImage(MultipartFile file) {
-        if(file.getSize()/ 1024 / 1024 > 2){
+    public String uploadImage(MultipartFile file) {
+        if (file.getSize() / 1024 / 1024 > 2) {
             throw new ServiceException("只能上传图片大小小于2M");
         }
         Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
@@ -202,7 +203,7 @@ public class FileServiceImpl implements FileService {
         FileManagerVo fileManagerVo = new FileManagerVo();
         //查询父类
         FileManager manager = fileManagerService.findByPath(FileUtil.normalizeFilePath(path.replace(fileConfig.getProfile(), File.separator)));
-        if(manager!=null){
+        if (manager != null) {
             fileManagerVo.setParentId(manager.getId());
         }
         fileManagerVo.setFilePath(FileUtil.normalizeFilePath(filePath));
@@ -280,15 +281,15 @@ public class FileServiceImpl implements FileService {
         if (file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
-        if(file.getSize()/ 1024 / 1024 > 500){
+        if (file.getSize() / 1024 / 1024 > 500) {
             throw new ServiceException("只能上传大小小于500MB的文件");
         }
-        path = path.isEmpty() ?  path : path.substring(1);
+        path = path.isEmpty() ? path : path.substring(1);
         //根据用户区分文件夹
         path = fileConfig.getProfile() + path;
         //计算hash
         String hash = FileUtil.extractChecksum(file, SHA_256);
-        if(!path.equals(fileConfig.getProfile())){
+        if (!path.equals(fileConfig.getProfile())) {
             //验证是否存在当前文件
             String url = getFile(path, hash);
             if (StringUtil.isNotBlank(url)) {
@@ -313,7 +314,7 @@ public class FileServiceImpl implements FileService {
         var userPath = userPath();
         if (org.apache.commons.lang3.StringUtils.isBlank(path)) {
             if (StpUtil.hasRole(Constants.ADMIN)) {
-                return fileManagerService.getParentIdPath(0,true);
+                return fileManagerService.getParentIdPath(0, true);
             }
             path = userPath;
         }
@@ -327,7 +328,7 @@ public class FileServiceImpl implements FileService {
         if (fileManager == null) {
             return new ReturnPageData<>();
         }
-        return fileManagerService.getParentIdPath(fileManager.getId(),true);
+        return fileManagerService.getParentIdPath(fileManager.getId(), true);
 
         //        List<FileDto> list = new ArrayList<>();
         //        // 指定文件夹路径
@@ -362,7 +363,7 @@ public class FileServiceImpl implements FileService {
         if (fileManager == null) {
             return new ReturnPageData<>();
         }
-        return fileManagerService.getParentIdPath(fileManager.getId(),false);
+        return fileManagerService.getParentIdPath(fileManager.getId(), false);
 
         //        File folder = new File(folderPath);
         //        if (folder.isDirectory()) {
@@ -458,7 +459,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String getCopyImage(String sourcePath, String newPath) {
-        log.info("{}:{}",sourcePath,newPath);
+        log.info("{}:{}", sourcePath, newPath);
         //计算hash
         String hash = FileUtil.extractChecksum(sourcePath, SHA_256);
         //验证是否存在当前文件
@@ -482,6 +483,28 @@ public class FileServiceImpl implements FileService {
         fileManagerVo.setFileType(0);
         fileManagerService.add(fileManagerVo);
         return fileManagerVo.getFilePath();
+    }
+
+    @Override
+    public List<FileManagerDto> getImportFiles() {
+        // 指定文件夹路径
+        String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.IMPORT_FILE;
+        FileManager fileManager = fileManagerService.findByPath(FileUtil.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
+        if (fileManager == null) {
+            return List.of();
+        }
+        return fileManagerService.getParentIdPathList(fileManager.getId(), false);
+    }
+
+    @Override
+    public List<FileManagerDto> getExportFiles() {
+        // 指定文件夹路径
+        String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.EXPORT_FILE;
+        FileManager fileManager = fileManagerService.findByPath(FileUtil.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
+        if (fileManager == null) {
+            return List.of();
+        }
+        return fileManagerService.getParentIdPathList(fileManager.getId(), false);
     }
 
 }

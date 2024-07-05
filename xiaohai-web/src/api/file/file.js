@@ -94,3 +94,18 @@ export function userHardDiskSize() {
     method: 'get'
   })
 }
+// markdown文件导入列表
+export function getImportFiles() {
+  return request({
+    url: api + '/import/markdownFile',
+    method: 'get'
+  })
+}
+// markdown文件导出列表
+export function getExportFiles() {
+  return request({
+    url: api + '/export/markdownFile',
+    method: 'get'
+  })
+}
+

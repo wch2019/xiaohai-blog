@@ -9,6 +9,8 @@ import com.xiaohai.file.pojo.query.FileManagerQuery;
 import com.xiaohai.file.pojo.vo.FileManagerNameVo;
 import com.xiaohai.file.pojo.vo.FileManagerVo;
 
+import java.util.List;
+
 /**
  * 文件管理 服务类
  *
@@ -91,6 +93,16 @@ public interface FileManagerService extends IService<FileManager> {
      * @return
      */
     ReturnPageData<FileManagerDto> getParentIdPath(Integer parentId, Boolean isAsc);
+
+    /**
+     *
+     * 根据parentId获取列表
+     *
+     * @param parentId
+     * @param isAsc    一个布尔值，表示排序方向。true 表示升序（ASC），false 表示降序（DESC）。
+     * @return
+     */
+    List<FileManagerDto> getParentIdPathList(Integer parentId, Boolean isAsc);
 
     /**
      * 获取当前系统硬盘使用情况

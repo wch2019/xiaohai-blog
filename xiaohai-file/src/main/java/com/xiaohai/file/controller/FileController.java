@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author wangchenghai
@@ -104,7 +105,7 @@ public class FileController {
     }
 
     @Operation(summary = "重命名文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @SaCheckPermission(value = {"file:image:update","file:files:update"}, mode = SaMode.OR)
+    @SaCheckPermission(value = {"file:image:update", "file:files:update"}, mode = SaMode.OR)
     @PutMapping("/renameFile")
     public Response<String> renameFile(@RequestBody @Validated FileManagerNameVo vo) {
         return Response.success("重命名文件成功！", fileManagerService.renameFile(vo));
@@ -116,12 +117,13 @@ public class FileController {
     public Response<Integer> newFolder(@RequestBody @Validated FolderVO vo) {
         var userPath = fileService.userPath().replace("/", File.separator);
         var path = vo.getPath().replace("/", File.separator);
-        if (!path.contains(userPath)&&!StpUtil.hasRole(Constants.ADMIN)) {
-            path=userPath+path;
+        if (!path.contains(userPath) && !StpUtil.hasRole(Constants.ADMIN)) {
+            path = userPath + path;
         }
         fileService.createFolderIfNotExists(path.substring(1));
         return Response.success("新建文件夹成功！", 1);
     }
+
     @Operation(summary = "获取当前系统硬盘使用情况", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping(value = "/hardDiskSize")
     public Response<Disk> getHardDiskSize() {
@@ -132,5 +134,21 @@ public class FileController {
     @GetMapping(value = "/userHardDiskSize")
     public Response<Disk> getUserHardDiskSize() {
         return Response.success("获取当前用户存储使用情况！", fileManagerService.getUserHardDiskSize());
+    }
+
+    @Operation(summary = "markdown文件导入列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Parameter(name = "pageNum", description = "页码", required = true)
+    @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @GetMapping(value = "/import/markdownFile")
+    public Response<List<FileManagerDto>> getImportFiles() {
+        return Response.success("获取markdown导入列表成功！", fileService.getImportFiles());
+    }
+
+    @Operation(summary = "markdown文件导出列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Parameter(name = "pageNum", description = "页码", required = true)
+    @Parameter(name = "pageSize", description = "每页数量", required = true)
+    @GetMapping(value = "/export/markdownFile")
+    public Response<List<FileManagerDto>> getExportFiles() {
+        return Response.success("获取markdown文件导出列表成功！", fileService.getExportFiles());
     }
 }

@@ -45,3 +45,18 @@ export function VerifyIsPictureType(name) {
   const acceptedImageTypes = ['jpeg', 'png', 'gif', 'bmp', 'jpg']
   return acceptedImageTypes.indexOf(name) !== -1
 }
+// 计算时间差
+export function calculateTimeDifference(targetTime) {
+  const targetDate = new Date(targetTime)
+  const currentDate = new Date()
+
+  const differenceInMilliseconds = currentDate - targetDate
+  const differenceInHours = Math.floor(differenceInMilliseconds / (1000 * 60 * 60))
+  const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24))
+
+  if (differenceInDays < 1) {
+    return `${differenceInHours} 小时前`
+  } else {
+    return `${differenceInDays} 天前`
+  }
+}

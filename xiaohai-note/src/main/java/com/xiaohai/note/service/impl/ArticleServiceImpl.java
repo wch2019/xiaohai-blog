@@ -419,9 +419,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String tempFile = StringUtil.generateUUIDWithoutHyphens();
 
         //压缩文件临时路径
-        String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.IMPORT_FILE;
-        fileService.createFolderIfNotExists(path);
-        path = path + File.separator + tempFile;
+        String pathFile = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.IMPORT_FILE;
+        fileService.createFolderIfNotExists(pathFile);
+        var path = pathFile + File.separator + tempFile;
         FileUtil.directory(path);
         // 保存文件并返回文件路径
         String filePath = FileUtil.saveFile(path, file.getOriginalFilename(), file);
@@ -525,7 +525,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 //统计持续创作天数
                 ContributionUtils.setContribution();
             }
-
+            var vo = new UploadVo();
+            vo.setFile(file);
+            vo.setPath(pathFile.replace(fileConfig.getProfile(), File.separator));
+            fileService.upload(vo);
         } finally {
             //都要执行删除临时文件
             FileUtil.deleteFiles(new File(path));

@@ -165,6 +165,21 @@ public class FileManagerServiceImpl extends ServiceImpl<FileManagerMapper, FileM
         BeanUtils.copyProperties(iPage, pageData);
         return ReturnPageData.fillingData(pageData, list);
     }
+    @Override
+    public List<FileManagerDto> getParentIdPathList(Integer parentId, Boolean isAsc) {
+        List<FileManager> fileManagers = baseMapper.selectList(new LambdaQueryWrapper<FileManager>()
+                .eq(FileManager::getParentId, parentId)
+                .orderBy(true,isAsc,FileManager::getCreatedTime)
+        );
+        List<FileManagerDto> list = new ArrayList<>();
+        for (FileManager fileManager : fileManagers) {
+            FileManagerDto fileManagerDto = new FileManagerDto();
+            BeanUtils.copyProperties(fileManager, fileManagerDto);
+            fileManagerDto.setFileSize(fileManager.getFileSize() == 0 ? "" : FileUtil.formatFileSize(fileManager.getFileSize()));
+            list.add(fileManagerDto);
+        }
+        return list;
+    }
 
     @Override
     public Disk getHardDiskSize() {
