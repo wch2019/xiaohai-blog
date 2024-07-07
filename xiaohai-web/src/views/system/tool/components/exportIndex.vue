@@ -1,15 +1,15 @@
 <template>
   <el-drawer
-    title="Markdown 文章导入"
-    :visible.sync="importInfo.drawer"
+    title="Markdown 文章导出"
+    :visible.sync="exportInfo.drawer"
     size="50%"
   >
     <el-container style="height: 100%;">
       <el-main>
-        <el-divider>历史文章导入</el-divider>
-        <el-row>
+        <el-divider>历史文章导出</el-divider>
+        <el-row v-loading="loading">
           <el-col :span="24">
-            <el-empty v-if="files.length===0" description="没有导入数据" />
+            <el-empty v-if="files.length===0" description="没有导出数据" />
             <el-card v-for="file in files" v-else :key="file.id" class="box-card file-card">
               <div class="file-info">
                 <div>
@@ -31,29 +31,34 @@
         </el-row>
 
       </el-main>
-      <el-footer style="">
-        <el-button type="primary" class="el-icon-upload2" @click="handleImport">导 入</el-button>
+      <el-footer>
+        <el-popover v-model="visible" placement="top">
+          <p>是否同时为 Markdown 文档生成 Front Matter？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="handleExport()">否</el-button>
+            <el-button type="primary" size="mini" @click="handleExport()">是</el-button>
+          </div>
+          <el-button slot="reference" type="primary" class="el-icon-upload2">导 出</el-button>
+        </el-popover>
+
         <el-button class="el-icon-refresh" @click="getList">刷 新</el-button>
       </el-footer>
     </el-container>
-    <to-lead-into v-if="leadInfo.show" :lead-info="leadInfo" @getList="getList" />
   </el-drawer>
 </template>
 <script>
-import ToLeadInto from '@/views/system/tool/components/toLeadInto.vue'
-import { delFileIds, getImportFiles } from '@/api/file/file'
+import { delFileIds, getExportFiles } from '@/api/file/file'
 import { calculateTimeDifference, downloadFile, getFileAddress } from '@/utils/common'
+import { exportMarkdown } from '@/api/note/article'
 
 export default {
-  name: 'ImportIndex',
-  components: { ToLeadInto },
-  props: ['importInfo'],
+  name: 'ExportIndex',
+  props: ['exportInfo'],
   data() {
     return {
       files: [],
-      leadInfo: {
-        show: false
-      }
+      visible: false,
+      loading: false
     }
   },
   mounted() {
@@ -63,13 +68,23 @@ export default {
   },
   methods: {
     calculateTimeDifference,
-    // 导入
-    handleImport() {
-      this.leadInfo.show = true
+    // 导出
+    handleExport() {
+      console.log('yy')
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      exportMarkdown().then(response => {
+        loading.close()
+      })
+      this.visible = false
     },
     getList() {
       this.loading = true
-      getImportFiles().then(response => {
+      getExportFiles().then(response => {
         for (const element of response.data) {
           if (element.fileType === 0) {
             element.filePath = getFileAddress(element.filePath)

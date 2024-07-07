@@ -120,7 +120,7 @@ public class ArticleController {
     @Operation(summary = "导入markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:import")
     @Log(title = "导入markdown压缩文件")
-    @PostMapping(value = "/markdown", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/import/markdown", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<Integer> uploadCompressedFile(MultipartFile file) {
         articleService.uploadCompressedFile(file);
         return Response.success("解析markdown压缩文件成功！");
@@ -128,7 +128,7 @@ public class ArticleController {
     @Operation(summary = "导出markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:download")
     @Log(title = "导出markdown压缩文件")
-    @GetMapping(value = "/markdown")
+    @PostMapping(value = "/export/markdown")
     public void downloadCompressedFile() {
         articleService.downloadCompressedFile();
     }

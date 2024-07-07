@@ -51,10 +51,15 @@ export function calculateTimeDifference(targetTime) {
   const currentDate = new Date()
 
   const differenceInMilliseconds = currentDate - targetDate
+  const differenceInMinute = Math.floor(differenceInMilliseconds / (1000 * 60))
   const differenceInHours = Math.floor(differenceInMilliseconds / (1000 * 60 * 60))
   const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24))
 
-  if (differenceInDays < 1) {
+  if (differenceInMinute === 0) {
+    return `刚刚`
+  } else if (differenceInMinute >= 1 && differenceInHours <= 1) {
+    return `${differenceInMinute} 分钟前`
+  } else if (differenceInDays < 1) {
     return `${differenceInHours} 小时前`
   } else {
     return `${differenceInDays} 天前`

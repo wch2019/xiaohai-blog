@@ -239,7 +239,6 @@
         :limit.sync="queryParams.pageSize"
         @pagination="getList"
       />
-      <to-lead-into v-if="leadInfo.show" :lead-info="leadInfo" @getList="getList" />
       <reptile-article v-if="reptileInfo.show" :reptile-info="reptileInfo" @getList="getList" />
     </el-card>
   </div>
@@ -249,12 +248,11 @@
 import { listArticle, delArticle, updatePush, updateTop } from '@/api/note/article'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
-import ToLeadInto from '@/views/note/article/components/toLeadInto.vue'
 import ReptileArticle from '@/views/note/article/components/ReptileArticle.vue'
 
 export default {
   name: 'Index',
-  components: { ReptileArticle, ToLeadInto },
+  components: { ReptileArticle },
   data() {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,
@@ -285,9 +283,6 @@ export default {
         tagId: null
       },
       srcList: [],
-      leadInfo: {
-        show: false
-      },
       reptileInfo: {
         show: false
       }
@@ -375,10 +370,6 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
-    },
-    // 导入
-    handleImport() {
-      this.leadInfo.show = true
     },
     // 抓取
     handleReptile() {

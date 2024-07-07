@@ -476,7 +476,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     if (entry.getKey().equals("date") && StringUtils.isNotBlank(entry.getValue().toString())) {
                         //创建时间
                         article.setCreatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
-                    }else{
+                    } else {
                         article.setCreatedTime(LocalDateTime.now());
                     }
                     if (entry.getKey().equals("updated") && StringUtils.isNotBlank(entry.getValue().toString())) {
@@ -549,23 +549,30 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         String path = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.EXPORT_FILE + File.separator + tempFile + File.separator;
         try {
             for (Article article : articles) {
-                //图片路径
-                String image = fileConfig.getProfile() + article.getCover();
                 String newImage = path + FileConstants.IMAGE_FILE + File.separator;
                 //创建目录
                 FileUtil.directory(newImage);
-                //新图片位置
-                String newPhotoPath = FileUtil.copyFile(image, newImage, true);
-                //封面图片
-                String cover = ".." + newPhotoPath.replace(path, "/").replace("\\", "/");
+                String cover = "";
+                if (StringUtil.isNotBlank(article.getCover())) {
+                    //图片路径
+                    String image = fileConfig.getProfile() + article.getCover();
+                    //新图片位置
+                    String newPhotoPath = FileUtil.copyFile(image, newImage, true);
+                    //封面图片
+                    cover = ".." + newPhotoPath.replace(path, "/").replace("\\", "/");
+                }
                 //获取分类名称
                 Category category = categoryMapper.selectById(article.getCategoryId());
+                var categoryName = "";
+                if (category != null) {
+                    categoryName = category.getName();
+                }
                 //获取标签名称列表
                 List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
                 //获取转载地址
                 String original = StringUtils.isBlank(article.getOriginalUrl()) ? "" : article.getOriginalUrl();
                 //组装Front-matter头
-                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, category.getName(), cover, original);
+                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, categoryName, cover, original);
                 //将文章里面的图片获取并存到临时位置，并替换路径
                 List<String> photoList = MarkdownUtils.photoList(article.getText());
                 for (String fileName : photoList) {

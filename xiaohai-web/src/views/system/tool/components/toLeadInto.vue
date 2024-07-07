@@ -89,7 +89,7 @@ original: https://www.dotcode.top
           name: '转载信息，可不填写'
         }
       ],
-      fileAction: process.env.VUE_APP_BASE_API + '/note/article/markdown'
+      fileAction: process.env.VUE_APP_BASE_API + '/note/article/import/markdown'
     }
   },
   mounted() {
