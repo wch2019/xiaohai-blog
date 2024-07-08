@@ -95,10 +95,10 @@ export function reptileArticle(data) {
     data
   })
 }
-
-export function exportMarkdown() {
+// 导出markdown压缩文件
+export function exportMarkdown(status) {
   return request({
-    url: api + '/export/markdown',
+    url: api + '/export/markdown/' + status,
     method: 'post'
   })
 }

@@ -44,7 +44,7 @@ public class ArticleController {
     @SaCheckPermission(value = {"note:article:add"}, mode = SaMode.OR)
     @Log(title = "新增草稿文章")
     @PostMapping("/add-draft")
-    public Response<Integer> addDraft(@Validated  @RequestBody ArticleDraftVo vo) {
+    public Response<Integer> addDraft(@Validated @RequestBody ArticleDraftVo vo) {
         return Response.success("新增草稿成功！", articleService.addDraft(vo));
     }
 
@@ -52,7 +52,7 @@ public class ArticleController {
     @SaCheckPermission(value = {"note:article:add"}, mode = SaMode.OR)
     @Log(title = "新增发布文章")
     @PostMapping()
-    public Response<Integer> add(@Validated  @RequestBody ArticleVo vo) {
+    public Response<Integer> add(@Validated @RequestBody ArticleVo vo) {
         return Response.success("新增发布文章成功！", articleService.add(vo));
     }
 
@@ -83,7 +83,7 @@ public class ArticleController {
     @Operation(summary = "id查询文章表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @GetMapping("{id}")
     public Response<ArticleDtoAll> findById(@PathVariable Long id) {
-        return Response.success("id查询文章成功！", articleService.findById(id,1));
+        return Response.success("id查询文章成功！", articleService.findById(id, 1));
     }
 
     @Operation(summary = "查询文章表列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -125,12 +125,15 @@ public class ArticleController {
         articleService.uploadCompressedFile(file);
         return Response.success("解析markdown压缩文件成功！");
     }
+
     @Operation(summary = "导出markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:download")
+    @Parameter(name = "status", description = "是否生成 Front Matter，0否 1是")
     @Log(title = "导出markdown压缩文件")
-    @PostMapping(value = "/export/markdown")
-    public void downloadCompressedFile() {
-        articleService.downloadCompressedFile();
+    @PostMapping(value = "/export/markdown/{status}")
+    public Response<Integer>  downloadCompressedFile(@PathVariable Long status) {
+        articleService.downloadCompressedFile(status);
+        return Response.success("导出markdown压缩文件成功！");
     }
 
     @Operation(summary = "抓取文章爬虫", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -138,6 +141,6 @@ public class ArticleController {
     @Log(title = "抓取文章爬虫")
     @PostMapping(value = "/reptile-article")
     public Response<Integer> reptileArticle(@Validated @RequestBody ArticleReptileVo vo) {
-        return Response.success("抓取文章成功！",articleService.reptileArticle(vo));
+        return Response.success("抓取文章成功！", articleService.reptileArticle(vo));
     }
 }

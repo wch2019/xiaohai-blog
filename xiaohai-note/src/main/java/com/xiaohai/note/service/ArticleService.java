@@ -158,7 +158,7 @@ public interface ArticleService extends IService<Article> {
      * 导出markdown压缩文件
      *
      */
-    void downloadCompressedFile();
+    void downloadCompressedFile(Long status);
 
     /**
      * 抓取文章爬虫

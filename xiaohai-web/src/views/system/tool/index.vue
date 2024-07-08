@@ -25,7 +25,8 @@
             <div slot="header" class="clearfix">
               <span>Markdown 文章导出</span>
             </div>
-            <p class="text">支持文章数据导出</p>
+            <div class="text">支持文章源数据导出</div>
+            <div class="text">支持文章Front Matter数据导出</div>
             <div class="float-right">
               <el-button
                 icon="el-icon-upload"
@@ -42,9 +43,9 @@
             <div slot="header" class="clearfix">
               <span class="text">Markdown 文章导入</span>
             </div>
-            <h2 class="text">1.请严格按照要求导入，只能上传zip文件</h2>
-            <h2 class="text">2.支持普通文章数据导入解析</h2>
-            <h2 class="text">3.支持Front Matter文章数据导入解析</h2>
+            <div class="text">请严格按照要求导入，只能上传zip文件</div>
+            <div class="text">支持普通文章数据导入解析</div>
+            <div class="text">支持Front Matter文章数据导入解析</div>
             <div class="float-right">
               <el-button
                 icon="el-icon-upload"
@@ -112,6 +113,7 @@ export default {
 }
 
 .text {
+  margin-bottom: 2px;
   font-size: 14px;
 }
 

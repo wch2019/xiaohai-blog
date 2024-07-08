@@ -242,7 +242,7 @@ public class MarkdownUtils {
             String imageUrl = matcher.group(1);
             list.add(imageUrl);
         }
-        return list.stream().distinct().collect(Collectors.toList());
+        return list.stream().distinct().toList();
     }
 
     /**

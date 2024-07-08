@@ -487,12 +487,12 @@ export default {
           if (this.cache.id !== '') {
             updateArticle(this.cache).then(response => {
               this.$message.success(response.msg)
-              this.$router.push('/note/article')
+              this.$router.push('/basic/article')
             })
           } else {
             addArticle(this.cache).then(response => {
               this.$message.success(response.msg)
-              this.$router.push('/note/article')
+              this.$router.push('/basic/article')
             })
           }
         }

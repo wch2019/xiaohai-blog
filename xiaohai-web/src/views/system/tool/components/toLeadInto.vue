@@ -4,7 +4,7 @@
       title="Markdown 压缩包导入"
       :visible.sync="leadInfo.show"
       :append-to-body="true"
-      size="40%"
+      size="30%"
     >
       <el-card style="min-height: 100%">
         <el-upload
@@ -21,9 +21,8 @@
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
 
-        <p>压缩包中存在两个文件夹， <em style="color: red">image</em>（存放图片）和 <em style="color: red">note</em>（存放Markdown）
-        </p>
-
+        <p>请严格按照样例导入，只能上传zip文件  <el-button type="text" @click="deriveFile('markdown导入压缩包模板.zip')">下载模板</el-button></p>
+        <p>压缩包中存在两个文件夹， <em style="color: red">image</em>（存放图片）和 <em style="color: red">note</em>（存放Markdown）</p>
         <el-table :data="tableData">
           <el-table-column align="center" label="MarkDown文件Front Matter区域参数">
             <el-table-column prop="key" label="参数" width="90px" />
@@ -34,16 +33,13 @@
         <div class="text">
           <pre><code>{{ frontMatter }}</code></pre>
         </div>
-
-        请严格按照样例导入，只能上传zip文件
-        <el-button type="text" @click="deriveFile('markdown导入压缩包模板.zip')">下载模板</el-button>
       </el-card>
     </el-drawer>
   </div>
 </template>
 <script>
-import { deriveFile } from '@/utils'
 import { getToken } from '@/utils/auth'
+import { downloadFile } from '@/utils/common'
 
 export default {
   name: 'ToleadInfo',
@@ -82,7 +78,7 @@ original: https://www.dotcode.top
         {
           key: 'cover',
           value: '../image/1684113802808.jpg',
-          name: '封面图，不上传默认获取bing图片'
+          name: '封面图，不填写默认获取bing图片'
         }, {
           key: 'original',
           value: 'http://www.dotcode.top',
@@ -96,7 +92,10 @@ original: https://www.dotcode.top
   },
   methods: {
     getToken,
-    deriveFile,
+    // 下载模板文件
+    deriveFile(name) {
+      downloadFile(name, window.location.origin + '/template/markdown导入压缩包模板.zip')
+    },
     handleAvatarSuccess(res, file) {
       if (res.code === 200) {
         this.$message.success(res.msg)

@@ -509,7 +509,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     }
                 }
                 //封面
-                if (StringUtil.isBlank(article.getCover())) {
+                if (StringUtils.isBlank(article.getCover())) {
                     //为空手动添加一个封面
                     article.setCover(wallpaper());
                 }
@@ -538,7 +538,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public void downloadCompressedFile() {
+    public void downloadCompressedFile(Long status) {
         List<Article> articles = baseMapper.selectList(new QueryWrapper<Article>().
                 eq("user_id", StpUtil.getLoginId()).
                 orderByDesc("is_top").
@@ -552,37 +552,43 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 String newImage = path + FileConstants.IMAGE_FILE + File.separator;
                 //创建目录
                 FileUtil.directory(newImage);
-                String cover = "";
-                if (StringUtil.isNotBlank(article.getCover())) {
-                    //图片路径
-                    String image = fileConfig.getProfile() + article.getCover();
-                    //新图片位置
-                    String newPhotoPath = FileUtil.copyFile(image, newImage, true);
-                    //封面图片
-                    cover = ".." + newPhotoPath.replace(path, "/").replace("\\", "/");
+                var matter = "";
+                //生成Front Matter
+                if (status == 1) {
+                    String cover = "";
+                    if (StringUtil.isNotBlank(article.getCover())) {
+                        //图片路径
+                        String image = fileConfig.getProfile() + article.getCover();
+                        //新图片位置
+                        String newPhotoPath = FileUtil.copyFile(image, newImage, true);
+                        //封面图片
+                        cover = ".." + newPhotoPath.replace(path, "/").replace("\\", "/");
+                    }
+                    //获取分类名称
+                    Category category = categoryMapper.selectById(article.getCategoryId());
+                    var categoryName = "";
+                    if (category != null) {
+                        categoryName = category.getName();
+                    }
+                    //获取标签名称列表
+                    List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
+                    //获取转载地址
+                    String original = StringUtils.isBlank(article.getOriginalUrl()) ? "" : article.getOriginalUrl();
+                    //组装Front-matter头
+                    matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, categoryName, cover, original);
                 }
-                //获取分类名称
-                Category category = categoryMapper.selectById(article.getCategoryId());
-                var categoryName = "";
-                if (category != null) {
-                    categoryName = category.getName();
-                }
-                //获取标签名称列表
-                List<String> tags = tagsMapper.searchAllByArticleId(Long.valueOf(article.getId()));
-                //获取转载地址
-                String original = StringUtils.isBlank(article.getOriginalUrl()) ? "" : article.getOriginalUrl();
-                //组装Front-matter头
-                String matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, categoryName, cover, original);
+
+                var text=StringUtils.isBlank(article.getText()) ? "" : article.getText();
                 //将文章里面的图片获取并存到临时位置，并替换路径
-                List<String> photoList = MarkdownUtils.photoList(article.getText());
+                List<String> photoList = MarkdownUtils.photoList(text);
                 for (String fileName : photoList) {
                     //新图片位置
                     String notePhotoPath = FileUtil.copyFile(fileConfig.getProfile() + fileName.replace("..", ""), newImage, true);
                     //去掉前缀
                     notePhotoPath = ".." + notePhotoPath.replace(path, File.separator);
-                    article.setText(article.getText().replaceAll(fileName, notePhotoPath.replace("\\", "/")));
+                    text=text.replaceAll(fileName, notePhotoPath.replace("\\", "/"));
                 }
-                String text = matter + article.getText();
+                text = matter + text;
                 //md文件路径
                 String note = path + FileConstants.NOTE_FILE + File.separator;
                 //创建目录

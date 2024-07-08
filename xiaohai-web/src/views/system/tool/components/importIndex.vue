@@ -2,7 +2,7 @@
   <el-drawer
     title="Markdown 文章导入"
     :visible.sync="importInfo.drawer"
-    size="50%"
+    size="40%"
   >
     <el-container style="height: 100%;">
       <el-main>

@@ -42,6 +42,8 @@ DotCode(点码），是一个前后分离的博客系统。
 
 - 采用**Markdown** 编辑器([vditor](https://b3log.org/vditor/)），更符合开发者的编辑方式
 
+- 一键建站，快速迁移，数据备份，Markdown导入，Markdown导出
+
 ##  项目目录
 
 - doc：资源文件；
@@ -86,6 +88,7 @@ DotCode(点码），是一个前后分离的博客系统。
 - [X] 第三方平台获取、CSDN、掘金、简书、博客园、知乎
 - [ ] 第三方平台同步
 - [ ] 大模型辅助写博客
+- [ ] 数据备份，Markdown导入，Markdown导出
 - [ ] ...
 
 ## nginx配置

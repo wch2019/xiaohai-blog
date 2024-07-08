@@ -2,7 +2,7 @@
   <el-drawer
     title="Markdown 文章导出"
     :visible.sync="exportInfo.drawer"
-    size="50%"
+    size="40%"
   >
     <el-container style="height: 100%;">
       <el-main>
@@ -35,8 +35,8 @@
         <el-popover v-model="visible" placement="top">
           <p>是否同时为 Markdown 文档生成 Front Matter？</p>
           <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="handleExport()">否</el-button>
-            <el-button type="primary" size="mini" @click="handleExport()">是</el-button>
+            <el-button size="mini" type="text" @click="handleExport(0)">否</el-button>
+            <el-button type="primary" size="mini" @click="handleExport(1)">是</el-button>
           </div>
           <el-button slot="reference" type="primary" class="el-icon-upload2">导 出</el-button>
         </el-popover>
@@ -69,18 +69,24 @@ export default {
   methods: {
     calculateTimeDifference,
     // 导出
-    handleExport() {
-      console.log('yy')
+    handleExport(status) {
+      this.visible = false
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      exportMarkdown().then(response => {
+      exportMarkdown(status).then(response => {
         loading.close()
+        this.$message.success(response.msg)
+        this.getList()
+      }).catch(error => {
+        console.log(error)
+        loading.close()
+        this.$message.error('导出失败')
+        console.error(error)
       })
-      this.visible = false
     },
     getList() {
       this.loading = true
