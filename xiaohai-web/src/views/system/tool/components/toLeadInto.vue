@@ -21,7 +21,7 @@
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
 
-        <p>请严格按照样例导入，只能上传zip文件  <el-button type="text" @click="deriveFile('markdown导入压缩包模板.zip')">下载模板</el-button></p>
+        <p>请严格按照样例导入，只能上传不超过500MB的zip文件，  <el-button type="text" @click="deriveFile('markdown导入压缩包模板.zip')">下载模板</el-button></p>
         <p>压缩包中存在两个文件夹， <em style="color: red">image</em>（存放图片）和 <em style="color: red">note</em>（存放Markdown）</p>
         <el-table :data="tableData">
           <el-table-column align="center" label="MarkDown文件Front Matter区域参数">

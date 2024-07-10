@@ -36,13 +36,13 @@ public interface FileService {
      */
     String uploadImage(MultipartFile file);
 
-//    /**
-//     * markdown图片删除
-//     *
-//     * @param path
-//     * @return
-//     */
-//    Integer deleteImage(String path);
+    //    /**
+    //     * markdown图片删除
+    //     *
+    //     * @param path
+    //     * @return
+    //     */
+    //    Integer deleteImage(String path);
 
     /**
      * Bing图片上传
@@ -62,6 +62,7 @@ public interface FileService {
 
     /**
      * 获取用户路径
+     *
      * @return
      */
     String userPath();
@@ -91,6 +92,7 @@ public interface FileService {
 
     /**
      * 如果文件夹不存在，则创建它，并存入数据库
+     *
      * @param path
      * @return
      */
@@ -98,6 +100,7 @@ public interface FileService {
 
     /**
      * 将图片复制到指定位置并重命名
+     *
      * @param sourcePath 文件
      * @param newPath    新位置
      * @return
@@ -113,7 +116,15 @@ public interface FileService {
 
     /**
      * markdown文件导出列表
+     *
      * @return
      */
     List<FileManagerDto> getExportFiles();
+
+    /**
+     * 系统备份
+     *
+     * @return
+     */
+    List<FileManagerDto> getBackupFiles();
 }

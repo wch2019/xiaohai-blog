@@ -137,18 +137,19 @@ public class FileController {
     }
 
     @Operation(summary = "markdown文件导入列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "pageNum", description = "页码", required = true)
-    @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping(value = "/import/markdownFile")
     public Response<List<FileManagerDto>> getImportFiles() {
         return Response.success("获取markdown导入列表成功！", fileService.getImportFiles());
     }
 
     @Operation(summary = "markdown文件导出列表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @Parameter(name = "pageNum", description = "页码", required = true)
-    @Parameter(name = "pageSize", description = "每页数量", required = true)
     @GetMapping(value = "/export/markdownFile")
     public Response<List<FileManagerDto>> getExportFiles() {
         return Response.success("获取markdown文件导出列表成功！", fileService.getExportFiles());
+    }
+    @Operation(summary = "系统备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping(value = "/backup/system")
+    public Response<List<FileManagerDto>> getBackupFiles() {
+        return Response.success("获取系统备份列表成功！", fileService.getBackupFiles());
     }
 }

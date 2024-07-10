@@ -21,10 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/system/backup")
 public class BackupController {
     private final BackupService backupService;
-    @Operation(summary = "备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+
+    @Operation(summary = "系统备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @PostMapping()
     public Response<Integer> add() {
-        backupService.add();
+        backupService.backupDatabase();
         return Response.success("系统备份成功！");
+    }
+
+    @Operation(summary = "还原备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @PostMapping("/restore")
+    public Response<Integer> restore() {
+        backupService.restore();
+        return Response.success("恢复系统成功！");
     }
 }

@@ -64,5 +64,19 @@ public class FileConstants {
      * zip类型
      */
     public static final String CONTENT_TYPE_ZIP = "application/zip";
+
+    /**
+     * 文件备份路径
+     */
+    public static final String BACKUP_FILE = "backup";
+    /**
+     * 备份sql名称
+     */
+    public static final String BLOG_SQL = "blog.sql";
+    /**
+     * 备份上传文件压缩名称
+     */
+    public static final String FILE_ZIP = "file.zip";
+
 }
 

@@ -602,6 +602,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             var vo = new UploadVo();
             vo.setFile(ZipUtils.zipDirectoryToMultipartFile(path, DateUtils.getCurrentTime()));
             vo.setPath(zipFile.replace(fileConfig.getProfile(), File.separator));
+            vo.setFileSizeIgnore(true);
             fileService.upload(vo);
         } finally {
             //执行删除临时文件

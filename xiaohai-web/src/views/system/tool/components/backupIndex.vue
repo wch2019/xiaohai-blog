@@ -1,20 +1,20 @@
 <template>
   <el-drawer
-    title="Markdown 文章导入"
-    :visible.sync="importInfo.drawer"
+    title="系统备份"
+    :visible.sync="backupInfo.drawer"
     size="40%"
   >
     <el-container style="height: 100%;">
       <el-main>
         <el-alert
-          title="导入时保证硬盘容量充足"
+          title="备份时保证硬盘容量充足,历史系统备份文件不会备份"
           type="warning"
           show-icon
         />
-        <el-divider>历史文章导入</el-divider>
-        <el-row>
+        <el-divider>历史系统备份</el-divider>
+        <el-row v-loading="loading">
           <el-col :span="24">
-            <el-empty v-if="files.length===0" description="没有导入数据" />
+            <el-empty v-if="files.length===0" description="没有备份数据" />
             <el-card v-for="file in files" v-else :key="file.id" class="box-card file-card">
               <div class="file-info">
                 <div>
@@ -36,29 +36,27 @@
         </el-row>
 
       </el-main>
-      <el-footer style="">
-        <el-button type="primary" class="el-icon-upload2" @click="handleImport">导 入</el-button>
+      <el-footer>
+        <el-button type="primary" class="el-icon-download" @click="handleBackup">备 份</el-button>
         <el-button class="el-icon-refresh" @click="getList">刷 新</el-button>
       </el-footer>
     </el-container>
-    <to-lead-into v-if="leadInfo.show" :lead-info="leadInfo" @getList="getList" />
   </el-drawer>
 </template>
 <script>
-import ToLeadInto from '@/views/system/tool/components/toLeadInto.vue'
-import { delFileIds, getImportFiles } from '@/api/file/file'
+import { delFileIds, getBackupFiles, getExportFiles } from '@/api/file/file'
 import { calculateTimeDifference, downloadFile, getFileAddress } from '@/utils/common'
+import { exportMarkdown } from '@/api/note/article'
+import { addBackup } from '@/api/system/buckup'
 
 export default {
-  name: 'ImportIndex',
-  components: { ToLeadInto },
-  props: ['importInfo'],
+  name: 'ExportIndex',
+  props: ['backupInfo'],
   data() {
     return {
       files: [],
-      leadInfo: {
-        show: false
-      }
+      visible: false,
+      loading: false
     }
   },
   mounted() {
@@ -68,13 +66,29 @@ export default {
   },
   methods: {
     calculateTimeDifference,
-    // 导入
-    handleImport() {
-      this.leadInfo.show = true
+    // 备份
+    handleBackup() {
+      this.visible = false
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      addBackup().then(response => {
+        loading.close()
+        this.$message.success(response.msg)
+        this.getList()
+      }).catch(error => {
+        console.log(error)
+        loading.close()
+        this.$message.error('备份失败')
+        console.error(error)
+      })
     },
     getList() {
       this.loading = true
-      getImportFiles().then(response => {
+      getBackupFiles().then(response => {
         for (const element of response.data) {
           if (element.fileType === 0) {
             element.filePath = getFileAddress(element.filePath)

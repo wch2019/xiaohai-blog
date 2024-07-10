@@ -6,6 +6,11 @@
   >
     <el-container style="height: 100%;">
       <el-main>
+        <el-alert
+          title="导出时保证硬盘容量充足"
+          type="warning"
+          show-icon
+        />
         <el-divider>历史文章导出</el-divider>
         <el-row v-loading="loading">
           <el-col :span="24">
@@ -38,10 +43,10 @@
             <el-button size="mini" type="text" @click="handleExport(0)">否</el-button>
             <el-button type="primary" size="mini" @click="handleExport(1)">是</el-button>
           </div>
-          <el-button slot="reference" type="primary" class="el-icon-upload2">导 出</el-button>
+          <el-button slot="reference" type="primary" class="el-icon-download">导 出</el-button>
+          <el-button slot="reference" class="el-icon-refresh" @click="getList">刷 新</el-button>
         </el-popover>
 
-        <el-button class="el-icon-refresh" @click="getList">刷 新</el-button>
       </el-footer>
     </el-container>
   </el-drawer>

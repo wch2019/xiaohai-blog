@@ -47,7 +47,7 @@ DotCode(点码），是一个前后分离的博客系统。
 ##  项目目录
 
 - doc：资源文件；
-- xiaohai_admin: 系统入口；
+- xiaohai_admin: 系统入口； 
 - xiaohai_common：提供公共类；
 - xiaohai_file：提供文件上传相关服务；
 - xiaohai_generator：提供mybatis-plus代码生成相关服务；

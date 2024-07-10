@@ -63,6 +63,7 @@ export function delFileIds(data) {
     method: 'delete'
   })
 }
+
 // 重命名文件
 export function renameFile(data) {
   return request({
@@ -71,6 +72,7 @@ export function renameFile(data) {
     data
   })
 }
+
 // 新建文件夹
 export function newFolder(data) {
   return request({
@@ -87,6 +89,7 @@ export function hardDiskSize() {
     method: 'get'
   })
 }
+
 // 获取当前用户存储使用情况
 export function userHardDiskSize() {
   return request({
@@ -94,6 +97,7 @@ export function userHardDiskSize() {
     method: 'get'
   })
 }
+
 // markdown文件导入列表
 export function getImportFiles() {
   return request({
@@ -101,10 +105,19 @@ export function getImportFiles() {
     method: 'get'
   })
 }
+
 // markdown文件导出列表
 export function getExportFiles() {
   return request({
     url: api + '/export/markdownFile',
+    method: 'get'
+  })
+}
+
+// 系统备份列表
+export function getBackupFiles() {
+  return request({
+    url: api + '/backup/system',
     method: 'get'
   })
 }

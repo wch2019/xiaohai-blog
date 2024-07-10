@@ -21,4 +21,7 @@ public class UploadVo {
     @Schema(description = "上传路径")
     @NotNull
     private String path;
+
+    @Schema(description = "文件大小是否忽略",hidden = true)
+    private Boolean fileSizeIgnore;
 }

@@ -281,7 +281,7 @@ public class FileServiceImpl implements FileService {
         if (file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
-        if (file.getSize() / 1024 / 1024 > 500) {
+        if (file.getSize() / 1024 / 1024 > 500 || !vo.getFileSizeIgnore()) {
             throw new ServiceException("只能上传大小小于500MB的文件");
         }
         path = path.isEmpty() ? path : path.substring(1);
@@ -500,6 +500,17 @@ public class FileServiceImpl implements FileService {
     public List<FileManagerDto> getExportFiles() {
         // 指定文件夹路径
         String folderPath = fileConfig.getFilePath() + StpUtil.getLoginId() + File.separator + FileConstants.TEMPORARY_FILE + File.separator + FileConstants.EXPORT_FILE;
+        FileManager fileManager = fileManagerService.findByPath(FileUtil.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
+        if (fileManager == null) {
+            return List.of();
+        }
+        return fileManagerService.getParentIdPathList(fileManager.getId(), false);
+    }
+
+    @Override
+    public List<FileManagerDto> getBackupFiles() {
+        // 指定文件夹路径
+        String folderPath = fileConfig.getProfile() + FileConstants.BACKUP_FILE;
         FileManager fileManager = fileManagerService.findByPath(FileUtil.normalizeFilePath(folderPath.replace(fileConfig.getProfile(), File.separator)));
         if (fileManager == null) {
             return List.of();
