@@ -1,10 +1,11 @@
 package com.xiaohai.system.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wangchenghai
@@ -18,6 +19,9 @@ public interface BackupMapper {
     @Select("SHOW CREATE TABLE ${tableName}")
     Map<String, String> showCreateTable(String tableName);
 
+    @Select("SELECT column_name FROM information_schema.columns WHERE table_schema = #{dbName} AND table_name = #{tableName} ORDER BY ordinal_position")
+    List<String> getTableColumns(@Param("dbName") String dbName, @Param("tableName") String tableName);
+
     @Select("SELECT * FROM ${tableName}")
-    List<Map<String, Object>> selectAll(String tableName);
+    List<LinkedHashMap<String, Object>> selectAll(String tableName);
 }

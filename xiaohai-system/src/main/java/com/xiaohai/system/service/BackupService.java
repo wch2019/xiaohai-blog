@@ -1,5 +1,7 @@
 package com.xiaohai.system.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * @author wangchenghai
  * @date 2024/07/08 17:39:46
@@ -13,5 +15,11 @@ public interface BackupService {
     /**
      * 还原备份
      */
-    void restore();
+    void restore(String filePath);
+
+    /**
+     * 备份文件还原
+     * @param file
+     */
+    void backupFile(MultipartFile file);
 }

@@ -699,6 +699,41 @@ public class FileUtil extends org.apache.commons.io.FileUtils {
         return disk;
     }
 
+    /**
+     * 删除指定目录下所有文件，排除指定路径
+     *
+     * @param folder         文件夹
+     * @param excludePaths   要排除的路径集合
+     * @since 2023/7/9 9:14
+     */
+    public static void deleteFiles(File folder, Set<String> excludePaths) {
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                // 检查是否需要排除
+                if (excludePaths.contains(file.getAbsolutePath())) {
+                    continue; // 跳过排除的文件或文件夹
+                }
+                if (file.isDirectory()) {
+                    deleteFiles(file, excludePaths); // 递归调用删除子目录中的文件
+                    boolean deleted = file.delete();
+                    if (deleted) {
+                        log.error("已删除文件夹: " + file.getAbsolutePath());
+                    } else {
+                        log.error("无法删除文件夹: " + file.getAbsolutePath());
+                    }
+                } else {
+                    boolean deleted = file.delete();
+                    if (deleted) {
+                        log.error("已删除文件: " + file.getAbsolutePath());
+                    } else {
+                        log.error("无法删除文件: " + file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         //        String filePath = "C:\\Users\\wangchenghai\\Pictures\\1.jpg";
         //        String filePath1 = "C:\\Users\\wangchenghai\\Pictures\\4.jpg";

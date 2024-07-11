@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author wangchenghai
@@ -29,10 +29,17 @@ public class BackupController {
         return Response.success("系统备份成功！");
     }
 
-    @Operation(summary = "还原备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-    @PostMapping("/restore")
-    public Response<Integer> restore() {
-        backupService.restore();
+    @Operation(summary = "路径还原备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @PutMapping("/restore/path/{filePath}")
+    public Response<Integer> restore(@PathVariable String filePath) {
+        backupService.restore(filePath);
+        return Response.success("恢复系统成功！");
+    }
+
+    @Operation(summary = "上传还原备份文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @PostMapping(value = "/restore/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Response<Integer> restore(MultipartFile file) {
+        backupService.backupFile(file);
         return Response.success("恢复系统成功！");
     }
 }
