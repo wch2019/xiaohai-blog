@@ -111,7 +111,7 @@ public class BackupServiceImpl implements BackupService {
             //删除文件
             FileUtil.deleteFiles(new File(fileConfig.getProfile()), excludePaths);
             //恢复文件
-//            ZipUtils.unzip(path + FILE_ZIP, fileConfig.getProfile());
+            ZipUtils.unzip(path + FILE_ZIP, fileConfig.getProfile());
         } finally {
             //执行删除临时文件
             FileUtil.deleteFiles(new File(path));

@@ -212,56 +212,53 @@ public class ZipUtils {
     /**
      * 解压缩指定的ZIP文件到目标目录
      *
-     * @param zipFilePath ZIP文件路径
-     * @param destDir 目标目录
+     * @param zipFilePath   ZIP文件路径
+     * @param destDirectory 目标目录
      */
-    public static void unzip(String zipFilePath, String destDir){
-        File dir = new File(destDir);
-        // 如果目标目录不存在，则创建
-        if (!dir.exists()) dir.mkdirs();
-
-        // 用于读取和写入文件的缓冲区
-        byte[] buffer = new byte[1024];
-
-        // 使用 try-with-resources 来确保资源关闭
-        try (FileInputStream fis = new FileInputStream(zipFilePath);
-             ZipInputStream zis = new ZipInputStream(fis)) {
-
-            ZipEntry ze = zis.getNextEntry();
-            // 遍历ZIP文件中的每个条目
-            while (ze != null) {
-                String fileName = ze.getName();
-                File newFile = new File(destDir + File.separator + fileName);
-                log.info("解压到 " + newFile.getAbsolutePath());
-
-                // 为ZIP中的子目录创建目录
-                new File(newFile.getParent()).mkdirs();
-
-                // 使用 try-with-resources 来管理 FileOutputStream
-                try (FileOutputStream fos = new FileOutputStream(newFile)) {
-                    int len;
-                    // 将条目数据写入文件
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
+    public static void unzip(String zipFilePath, String destDirectory) {
+        File destDir = new File(destDirectory);
+        if (!destDir.exists()) {
+            destDir.mkdirs(); // Create directories if they don't exist
+        }
+        try (ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath))) {
+            ZipEntry entry = zipIn.getNextEntry();
+            // Iterates over entries in the ZIP file
+            while (entry != null) {
+                String filePath = destDirectory + File.separator + entry.getName();
+                if (!entry.isDirectory()) {
+                    // If the entry is a file, extract it
+                    extractFile(zipIn, filePath);
+                } else {
+                    // If the entry is a directory, make the directory
+                    File dir = new File(filePath);
+                    dir.mkdirs();
                 }
-
-                // 关闭当前的ZIP条目
-                zis.closeEntry();
-                ze = zis.getNextEntry();
+                zipIn.closeEntry();
+                entry = zipIn.getNextEntry();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }  catch (IOException e) {
+            log.error("解压缩操作出错", e);
+            throw new ServiceException("解压缩操作出错", e);
+        }
+    }
+
+    public static void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath))) {
+            byte[] bytesIn = new byte[4096];
+            int read;
+            while ((read = zipIn.read(bytesIn)) != -1) {
+                bos.write(bytesIn, 0, read);
+            }
         }
     }
 
 
     public static void main(String[] args) {
-        String sourceDir = "D:\\blog\\dev\\backup";
-        String zipFile = "D:\\blog\\dev\\backup\\2024-07-10 133225.zip";
+        String sourceDir = "D:\\blog\\dev\\";
+        String zipFile = "D:\\blog\\dev\\backup\\file.zip";
 
 
-        unzip(zipFile,sourceDir);
+        unzip(zipFile, sourceDir);
 
 
     }
