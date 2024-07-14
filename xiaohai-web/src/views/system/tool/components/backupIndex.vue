@@ -23,13 +23,22 @@
                   </el-button>
                   <div class="file-date">{{ calculateTimeDifference(file.createdTime) }} / {{ file.fileSize }}</div>
                 </div>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  icon="el-icon-delete"
-                  @click="deleteFile(file.id)"
-                >删除
-                </el-button>
+                <div>
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    icon="el-icon-refresh-right"
+                    @click="restore(file.fileName)"
+                  >还原
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    icon="el-icon-delete"
+                    @click="deleteFile(file.id)"
+                  >删除
+                  </el-button>
+                </div>
               </div>
             </el-card>
           </el-col>
@@ -47,7 +56,7 @@
 import { delFileIds, getBackupFiles, getExportFiles } from '@/api/file/file'
 import { calculateTimeDifference, downloadFile, getFileAddress } from '@/utils/common'
 import { exportMarkdown } from '@/api/note/article'
-import { addBackup } from '@/api/system/buckup'
+import { addBackup, restoreFileName } from '@/api/system/buckup'
 
 export default {
   name: 'ExportIndex',
@@ -71,7 +80,7 @@ export default {
       this.visible = false
       const loading = this.$loading({
         lock: true,
-        text: 'Loading',
+        text: '正在备份中，请耐心等待',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
@@ -117,6 +126,25 @@ export default {
         })
       }).catch(() => {
         this.$message.info('已取消删除')
+      })
+    },
+    // 还原
+    restore(fileName) {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在还原中，请耐心等待',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      restoreFileName(fileName).then(response => {
+        loading.close()
+        this.$message.success(response.msg)
+        this.getList()
+      }).catch(error => {
+        console.log(error)
+        loading.close()
+        this.$message.error('还原失败')
+        console.error(error)
       })
     }
   }

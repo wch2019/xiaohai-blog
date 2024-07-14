@@ -86,8 +86,23 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public void restore(String filePath) {
-        //        backupFile(file);
+    public void restoreFileName(String fileName) {
+        String path = fileConfig.getProfile() + FileConstants.BACKUP_FILE + File.separator + fileName;
+        String tempFile = StringUtil.generateUUIDWithoutHyphens();
+        //备份文件还原临时路径
+        String backup = fileConfig.getProfile() + FileConstants.BACKUP_FILE + File.separator + tempFile + File.separator;
+        try {
+            //创建目录
+            FileUtil.directory(backup);
+            // 保存文件并返回文件路径
+            String filePath = FileUtil.copyFile(path, backup, true);
+            backupRestore(filePath, backup);
+        } finally {
+            //执行删除临时文件
+            FileUtil.deleteFiles(new File(backup));
+            //删除当前目录
+            FileUtil.deleteFile(backup);
+        }
     }
 
     /**
@@ -95,29 +110,41 @@ public class BackupServiceImpl implements BackupService {
      *
      * @param file
      */
-    public void backupFile(MultipartFile file) {
+    @Override
+    public void restoreBackupFile(MultipartFile file) {
         String tempFile = StringUtil.generateUUIDWithoutHyphens();
         //备份文件还原临时路径
         String path = fileConfig.getProfile() + FileConstants.BACKUP_FILE + File.separator + tempFile + File.separator;
-        //创建目录
-        FileUtil.directory(path);
-        // 保存文件并返回文件路径
-        String filePath = FileUtil.saveFile(path, file.getOriginalFilename(), file);
-        ZipUtils.unzip(filePath, path);
         try {
-            //还原sql
-            executeSqlScript(path + BLOG_SQL, url, username, password);
-            Set<String> excludePaths = Set.of(fileConfig.getProfile() + FileConstants.BACKUP_FILE);
-            //删除文件
-            FileUtil.deleteFiles(new File(fileConfig.getProfile()), excludePaths);
-            //恢复文件
-            ZipUtils.unzip(path + FILE_ZIP, fileConfig.getProfile());
+            //创建目录
+            FileUtil.directory(path);
+            // 保存文件并返回文件路径
+            String filePath = FileUtil.saveFile(path, file.getOriginalFilename(), file);
+            backupRestore(filePath, path);
         } finally {
             //执行删除临时文件
             FileUtil.deleteFiles(new File(path));
             //删除当前目录
             FileUtil.deleteFile(path);
         }
+    }
+
+    /**
+     * 备份还原
+     *
+     * @param filePath 备份文件路径
+     * @param path     备份文件还原临时路径
+     */
+    public void backupRestore(String filePath, String path) {
+        ZipUtils.unzip(filePath, path);
+        //还原sql
+        executeSqlScript(path + BLOG_SQL, url, username, password);
+        Set<String> excludePaths = Set.of(fileConfig.getProfile() + FileConstants.BACKUP_FILE);
+        //删除文件
+        FileUtil.deleteFiles(new File(fileConfig.getProfile()), excludePaths);
+        //恢复文件
+        ZipUtils.unzip(path + FILE_ZIP, fileConfig.getProfile());
+
     }
 
     /**
@@ -251,10 +278,10 @@ public class BackupServiceImpl implements BackupService {
                 }
             }
         } catch (IOException e) {
-            log.error("读取SQL文件时发生错误: " + e.getMessage());
+            log.error("读取SQL文件时发生错误: " + e);
             throw new ServiceException("读取SQL文件时发生错误");
         } catch (SQLException e) {
-            log.error("执行SQL时发生错误: " + e.getMessage());
+            log.error("执行SQL时发生错误: " + e);
             throw new ServiceException("执行SQL时发生错误");
         }
     }

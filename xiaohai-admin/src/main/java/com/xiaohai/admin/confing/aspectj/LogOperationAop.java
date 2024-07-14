@@ -183,7 +183,7 @@ public class LogOperationAop {
             }
             //返回参数
             if (jsonResult != null) {
-                log.setJsonResult(StringUtils.substring(new JSONObject(jsonResult).toString(), 0, 2000));
+                log.setJsonResult(new JSONObject(jsonResult).toString());
             }
             // 当前操作用户
             if(StpUtil.getLoginIdDefaultNull()!=null){

@@ -78,7 +78,7 @@ export default {
       this.visible = false
       const loading = this.$loading({
         lock: true,
-        text: 'Loading',
+        text: '正在导出中，请耐心等待',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })

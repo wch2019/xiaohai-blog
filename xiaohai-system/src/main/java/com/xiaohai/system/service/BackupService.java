@@ -15,11 +15,11 @@ public interface BackupService {
     /**
      * 还原备份
      */
-    void restore(String filePath);
+    void restoreFileName(String fileName);
 
     /**
      * 备份文件还原
      * @param file
      */
-    void backupFile(MultipartFile file);
+    void restoreBackupFile(MultipartFile file);
 }

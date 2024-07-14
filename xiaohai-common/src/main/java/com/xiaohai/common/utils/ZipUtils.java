@@ -14,6 +14,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -170,10 +171,13 @@ public class ZipUtils {
      */
     public static void compressDirectories(String sourceDirPath, String skipDirectory, String zipFilePath) {
         long startTime = System.currentTimeMillis();
+        log.info("正在进行压缩操作，耐心等待");
         try {
             // Create a temporary file for the zip
             Path zipPath = Files.createFile(Paths.get(zipFilePath));
-            try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zipPath))) {
+            try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(zipPath)))) {
+                // 设置压缩级别
+                zos.setLevel(Deflater.DEFAULT_COMPRESSION);
                 Path sourceDir = Paths.get(sourceDirPath);
                 Files.walkFileTree(sourceDir, new SimpleFileVisitor<Path>() {
                     @Override
@@ -181,7 +185,13 @@ public class ZipUtils {
                         // Create zip entry
                         zos.putNextEntry(new ZipEntry(sourceDir.relativize(file).toString()));
                         // Write file to zip
-                        Files.copy(file, zos);
+                        try (BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file))) {
+                            byte[] buffer = new byte[16384];
+                            int length;
+                            while ((length = bis.read(buffer)) > 0) {
+                                zos.write(buffer, 0, length);
+                            }
+                        }
                         zos.closeEntry();
                         return FileVisitResult.CONTINUE;
                     }
@@ -199,7 +209,6 @@ public class ZipUtils {
                         return FileVisitResult.CONTINUE;
                     }
                 });
-
             }
         } catch (IOException e) {
             throw new ServiceException("压缩操作出错", e);
@@ -220,7 +229,7 @@ public class ZipUtils {
         if (!destDir.exists()) {
             destDir.mkdirs(); // Create directories if they don't exist
         }
-        try (ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFilePath))) {
+        try (ZipInputStream zipIn = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFilePath)))) {
             ZipEntry entry = zipIn.getNextEntry();
             // Iterates over entries in the ZIP file
             while (entry != null) {
@@ -236,7 +245,7 @@ public class ZipUtils {
                 zipIn.closeEntry();
                 entry = zipIn.getNextEntry();
             }
-        }  catch (IOException e) {
+        } catch (IOException e) {
             log.error("解压缩操作出错", e);
             throw new ServiceException("解压缩操作出错", e);
         }
@@ -254,11 +263,10 @@ public class ZipUtils {
 
 
     public static void main(String[] args) {
-        String sourceDir = "D:\\blog\\dev\\";
-        String zipFile = "D:\\blog\\dev\\backup\\file.zip";
-
-
-        unzip(zipFile, sourceDir);
+        String dirPath = "Y:\\files\\blog\\dev"; // 要压缩的目录路径
+        String zipFilePath = "Y:\\files\\blog\\dev\\backup\\archive.zip"; // 压缩文件输出路径
+        String[] excludePaths = {"Y:\\files\\blog\\dev\\backup"}; // 需要排除的路径，相对于dirPath
+        compressDirectories(dirPath, "Y:\\files\\blog\\dev\\backup",zipFilePath );
 
 
     }
