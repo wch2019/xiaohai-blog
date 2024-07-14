@@ -1,5 +1,6 @@
 package com.xiaohai.system.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xiaohai.common.confing.FileConfig;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
@@ -10,11 +11,14 @@ import com.xiaohai.common.utils.ZipUtils;
 import com.xiaohai.file.pojo.vo.UploadVo;
 import com.xiaohai.file.service.FileService;
 import com.xiaohai.system.dao.BackupMapper;
+import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.service.BackupService;
+import com.xiaohai.system.service.ConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -24,11 +28,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static com.xiaohai.common.constant.FileConstants.*;
+import static com.xiaohai.common.constant.FileConstants.BLOG_SQL;
+import static com.xiaohai.common.constant.FileConstants.FILE_ZIP;
 
 /**
  * @author wangchenghai
@@ -44,6 +52,8 @@ public class BackupServiceImpl implements BackupService {
     private final FileService fileService;
 
     private final FileConfig fileConfig;
+
+    private final ConfigService configService;
 
     /**
      * 读取衔接地址
@@ -112,6 +122,8 @@ public class BackupServiceImpl implements BackupService {
      */
     @Override
     public void restoreBackupFile(MultipartFile file) {
+        ConfigDto configDto = configService.findByOne();
+        Assert.isTrue(configDto.getInitial().equals(0), "无法再次初始化！");
         String tempFile = StringUtil.generateUUIDWithoutHyphens();
         //备份文件还原临时路径
         String path = fileConfig.getProfile() + FileConstants.BACKUP_FILE + File.separator + tempFile + File.separator;
@@ -206,8 +218,15 @@ public class BackupServiceImpl implements BackupService {
                             } else {
                                 if (value instanceof Long || value instanceof Integer) {
                                     rowSql.append(value).append(",");
+                                } else if (value instanceof LocalDateTime) {
+                                    rowSql.append("'");
+                                    rowSql.append(LocalDateTime.parse(value.toString()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    rowSql.append("'");
+                                    rowSql.append(",");
                                 } else {
-                                    rowSql.append("'").append(value.toString().replace("'", "''").replace("\n", "\\n")).append("',");
+                                    rowSql.append("'");
+                                    rowSql.append(valueResult(value));
+                                    rowSql.append("',");
                                 }
                             }
                         }
@@ -234,6 +253,43 @@ public class BackupServiceImpl implements BackupService {
         } catch (URISyntaxException e) {
             log.error("数据库衔接URL格局过错！", e);
             throw new ServiceException("数据库衔接URL格局过错！");
+        }
+    }
+
+    /**
+     * 对字符数据处理
+     *
+     * @param value
+     * @return
+     */
+    public static String valueResult(Object value) {
+        var str = "";
+        if (StringUtil.isNotBlank(value.toString()) && isValidJsonObject(value.toString())) {
+            JSONObject jsonObject = JSONObject.parseObject(value.toString());
+            str = jsonObject.toJSONString()
+                    .replace("'", "\'")
+                    .replace("'", "\\'")
+                    .replace("\"", "\\\"")
+                    .replace("\\n", "\\\\n");
+            ;
+            return str;
+        }
+        str = value.toString().replace("'", "\\'").replace("\n", "\\n");
+        return str;
+    }
+
+    /**
+     * 验证是不是Json
+     *
+     * @param jsonString
+     * @return
+     */
+    public static boolean isValidJsonObject(String jsonString) {
+        try {
+            JSONObject.parseObject(jsonString);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -295,11 +351,15 @@ public class BackupServiceImpl implements BackupService {
     }
 
     public static void main(String[] args) throws URISyntaxException {
-        // Example JDBC URL
-        String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/xiaohai_blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false";
-
-        // Extract and print the database name
-        String databaseName = getDatabaseName(jdbcUrl);
-        System.out.println("Database name: " + databaseName);
+        var value = """
+                {"msg":"站点信息展示成功！","code":200,"data":{"website":{"keywords":"DoteCode,点码,开源博客,Java技术分享,Spring教程","name":"xiaohai","logo":"/system/favicon.ico","description":"一个专注于技术分享的博客平台，大家以共同学习，乐于分享，拥抱开源的价值观进行学习交流","title":"DoteCode | 点码","securityRecordNum":" 鲁公网安备37021302001217","recordNum":" \\n鲁ICP备2024067656号","content":"console.log('Connected: ' + frame);"},"basic":{"summary":"用一点点代码，改变生活","tagsCount":37,"github":"https://github.com/wch2019","messageCount":15,"categoryCount":5,"weChat":"1","articleCount":86,"avatar":"/files/1/avatar/e8eca782392e4a95b91297270dbce11e.png","qqNumber":"1372195290","gitee":"https://gitee.com/wch2019","username":"小海"}}}
+                """;
+        valueResult(value);
+//        // Example JDBC URL
+//        String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/xiaohai_blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false";
+//
+//        // Extract and print the database name
+//        String databaseName = getDatabaseName(jdbcUrl);
+//        System.out.println("Database name: " + databaseName);
     }
 }

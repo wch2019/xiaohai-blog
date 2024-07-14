@@ -476,8 +476,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     if (entry.getKey().equals("date") && StringUtils.isNotBlank(entry.getValue().toString())) {
                         //创建时间
                         article.setCreatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
-                    } else {
-                        article.setCreatedTime(LocalDateTime.now());
                     }
                     if (entry.getKey().equals("updated") && StringUtils.isNotBlank(entry.getValue().toString())) {
                         //更新时间
@@ -513,9 +511,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     //为空手动添加一个封面
                     article.setCover(wallpaper());
                 }
-
+                //写入创建时间
+                article.setCreatedTime(article.getCreatedTime()==null?LocalDateTime.now():article.getCreatedTime());
                 //写入更新时间
-                article.setUpdatedTime(LocalDateTime.now());
+                article.setUpdatedTime(article.getUpdatedTime()==null?LocalDateTime.now():article.getUpdatedTime());
                 //写入作者
                 article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
                 //写入文章
@@ -578,7 +577,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     matter = MarkdownUtils.buildMarkdownHeader(article.getTitle(), article.getCreatedTime(), article.getUpdatedTime(), tags, categoryName, cover, original);
                 }
 
-                var text=StringUtils.isBlank(article.getText()) ? "" : article.getText();
+                var text = StringUtils.isBlank(article.getText()) ? "" : article.getText();
                 //将文章里面的图片获取并存到临时位置，并替换路径
                 List<String> photoList = MarkdownUtils.photoList(text);
                 for (String fileName : photoList) {
@@ -586,7 +585,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     String notePhotoPath = FileUtil.copyFile(fileConfig.getProfile() + fileName.replace("..", ""), newImage, true);
                     //去掉前缀
                     notePhotoPath = ".." + notePhotoPath.replace(path, File.separator);
-                    text=text.replaceAll(fileName, notePhotoPath.replace("\\", "/"));
+                    text = text.replaceAll(fileName, notePhotoPath.replace("\\", "/"));
                 }
                 text = matter + text;
                 //md文件路径

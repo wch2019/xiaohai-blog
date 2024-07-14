@@ -37,7 +37,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/home/show/**")
                 //websocket
                 .excludePathPatterns("/messages/**")
-                .excludePathPatterns("/index","/version");
+                .excludePathPatterns("/index","/version")
+                //还原备份初始化
+                .excludePathPatterns("/system/backup/restore/upload");
         //分页拦截器
         registry.addInterceptor(new PageableInterceptor());
     }

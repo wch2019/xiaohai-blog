@@ -29,7 +29,7 @@ public class MySQLDumpChecker {
         }
         //mysqldump -hlocalhost -uroot -p123456 db > /home/back.sql
         StringBuffer sb = new StringBuffer();
-        sb.append("mysqldump ");
+        sb.append("'D:\\SoftWare\\mysql-8.0.23-winx64\\bin\\mysqldump.exe' ");
         sb.append(" -h"+url);
         sb.append(" -u"+username);
         sb.append(" -p"+pwd);
@@ -104,7 +104,7 @@ public class MySQLDumpChecker {
 
 
     public static void main(String[] args) throws Exception {
-        dbBackUpMysql("root","123456","127.0.0.1","C:\\Users\\wangchenghai\\Downloads\\backup\\","xiaohai_blog");
+        dbBackUpMysql("root","123456","127.0.0.1","C:\\Users\\Lenovo\\Downloads\\","xiaohai_blog");
 //        if (isMySQLDumpAvailable()) {
 //            System.out.println("mysqldump is available.");
 //        } else {

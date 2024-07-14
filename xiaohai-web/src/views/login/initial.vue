@@ -94,9 +94,10 @@
           <span v-if="!loading">初始化</span>
           <span v-else>初 始 中...</span>
         </el-button>
-
+        <div style="text-align: right;color: white;">
+          <el-link type="warning" @click="dialogVisible = true">备份还原</el-link>
+        </div>
       </el-form>
-
     </div>
     <!--引入粒子特效-->
     <vue-particles
@@ -116,12 +117,35 @@
       :click-effect="true"
       click-mode="push"
     />
+    <el-dialog
+      title="备份还原"
+      :visible.sync="dialogVisible"
+      width="25%"
+      :close-on-click-modal="false"
+      center
+    >
+      <el-upload
+        class="upload-demo"
+        drag
+        accept=".zip"
+        :headers="{
+          'authorization':getToken()
+        }"
+        :action="fileAction"
+        :on-success="handleAvatarSuccess"
+      >
+        <i class="el-icon-upload" />
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { initial } from '@/api/login'
 import { Message } from 'element-ui'
+import { getToken } from '@/utils/auth'
+
 export default {
   name: 'Initial',
   data() {
@@ -176,13 +200,16 @@ export default {
         ],
         email: [{ validator: validateEmail, trigger: 'blur' }]
       },
-      loading: false
+      loading: false,
+      dialogVisible: false,
+      fileAction: process.env.VUE_APP_BASE_API + '/system/backup/restore/upload'
     }
   },
   created() {
     this.getImg()
   },
   methods: {
+    getToken,
     // 背景随机
     getImg() {
       const num = Math.floor(Math.random() * 5 + 1)
@@ -205,6 +232,14 @@ export default {
           return false
         }
       })
+    },
+    handleAvatarSuccess(res, file) {
+      if (res.code === 200) {
+        this.$message.success(res.msg)
+        this.$router.push('/login')
+      } else {
+        this.$message.error(res.msg)
+      }
     }
   }
 }

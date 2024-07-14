@@ -281,9 +281,12 @@ public class FileServiceImpl implements FileService {
         if (file.isEmpty()) {
             throw new ServiceException("文件为空");
         }
-        if (file.getSize() / 1024 / 1024 > 500 || !vo.getFileSizeIgnore()) {
-            throw new ServiceException("只能上传大小小于500MB的文件");
+        if (file.getSize() / 1024 / 1024 > 500) {
+            if (!vo.getFileSizeIgnore()) {
+                throw new ServiceException("只能上传大小小于500MB的文件");
+            }
         }
+
         path = path.isEmpty() ? path : path.substring(1);
         //根据用户区分文件夹
         path = fileConfig.getProfile() + path;
