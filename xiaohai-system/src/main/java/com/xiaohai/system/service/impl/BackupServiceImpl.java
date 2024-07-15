@@ -161,13 +161,12 @@ public class BackupServiceImpl implements BackupService {
 
     /**
      * sql数据备份
-     *
-     * @return
+     * @param path 文件路径
      */
     private void backupSQL(String path) {
 
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(path + BLOG_SQL)))) {
-
+            //获取所有表名
             List<String> tableNames = backupMapper.showTables();
             for (String table : tableNames) {
                 // 获取表结构
@@ -271,7 +270,6 @@ public class BackupServiceImpl implements BackupService {
                     .replace("'", "\\'")
                     .replace("\"", "\\\"")
                     .replace("\\n", "\\\\n");
-            ;
             return str;
         }
         str = value.toString().replace("'", "\\'").replace("\n", "\\n");
