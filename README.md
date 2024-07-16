@@ -17,6 +17,7 @@
       <img src="https://img.shields.io/badge/redis-6.0.5-green"/>
    </a>
 </p>
+<img src="./doc/docs/image/web/editCenter.png"/>
 
 ## 前言
 

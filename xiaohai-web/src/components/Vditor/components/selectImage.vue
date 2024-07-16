@@ -1,5 +1,6 @@
 <template>
   <el-drawer
+    style="z-index: 2001;"
     :visible.sync="localVisible"
     :with-header="false"
     :wrapper-closable="true"
@@ -129,6 +130,7 @@ export default {
     // 复制markdown操作
     copy(name, path) {
       navigator.clipboard.writeText(getMarkdownAddress(name, path)).then(() => {
+        this.localVisible = false
         this.$message.success('复制markdown路径成功')
       }).catch(() => {
         this.$message.error('复制markdown路径失败')

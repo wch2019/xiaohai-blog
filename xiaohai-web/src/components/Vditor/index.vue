@@ -75,7 +75,7 @@ export default {
     fullscreenConfig: {
       type: Object,
       default: () => ({
-        index: 10000
+        index: 2000
       })
     },
     // 是否禁用编辑器
