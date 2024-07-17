@@ -113,7 +113,7 @@
         </el-col>
       </el-row>
     </el-alert>
-    <ImageUpload @getList="getList" @hardDiskSize="hardDiskSize" />
+    <ImageUpload @getList="getListOne" @hardDiskSize="hardDiskSize" />
     <image-details v-if="imageDetails.show" :image-details="imageDetails" />
   </div>
 </template>
@@ -165,6 +165,11 @@ export default {
     this.getList()
   },
   methods: {
+    getListOne() {
+      this.queryParams.pageNum = 1
+      this.fileList = []
+      this.getList()
+    },
     getList() {
       this.loading = true
       markdownImage(this.queryParams).then(response => {
