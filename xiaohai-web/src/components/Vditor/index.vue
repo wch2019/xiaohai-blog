@@ -38,7 +38,7 @@ export default {
     uploadConfig: {
       type: Object,
       default: () => ({
-        url: 'api/file/image',
+        url: process.env.VUE_APP_BASE_API + '/file/image',
         headers: {
           'authorization': getToken()
         },
@@ -104,7 +104,8 @@ export default {
         console.log(this.editor)
         if (newVal) {
           this.editor.disabled()
-        } else {
+        }
+        if (newVal === false && this.value === '') {
           this.editor.enable()
         }
       }
