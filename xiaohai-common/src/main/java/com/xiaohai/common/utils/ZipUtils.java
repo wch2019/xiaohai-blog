@@ -119,7 +119,7 @@ public class ZipUtils {
             log.info("压缩操作耗时: " + duration + " 毫秒");
             return multipartFile;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServiceException("压缩操作出错", e);
         }
     }
 
@@ -162,7 +162,7 @@ public class ZipUtils {
     }
 
     /**
-     * 将指定文件夹下的所有文件和子文件夹打包到一个ZIP文件，并转换为MultipartFile
+     * 将指定文件夹下的所有文件和子文件夹打包到一个ZIP文件
      *
      * @param sourceDirPath 源文件夹路径
      * @param skipDirectory 跳过文件夹路径

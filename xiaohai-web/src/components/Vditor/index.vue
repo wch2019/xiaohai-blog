@@ -268,13 +268,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
-::v-deep .vditor-toolbar {
+ .vditor-toolbar {
   background-color: var(--toolbar-background-color);
   box-shadow: 2px 2px 5px 1px var(--border-color);
   padding: 0 5px;
   line-height: 1;
   border-bottom: 0;
+}
+.vditor-img{
+  z-index: 10000;
 }
 </style>

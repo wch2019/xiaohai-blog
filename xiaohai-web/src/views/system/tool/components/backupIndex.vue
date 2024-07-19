@@ -130,21 +130,29 @@ export default {
     },
     // 还原
     restore(fileName) {
-      const loading = this.$loading({
-        lock: true,
-        text: '正在还原中，请耐心等待',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      restoreFileName(fileName).then(response => {
-        loading.close()
-        this.$message.success(response.msg)
-        this.getList()
-      }).catch(error => {
-        console.log(error)
-        loading.close()
-        this.$message.error('还原失败')
-        console.error(error)
+      this.$confirm('是否确认还原', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const loading = this.$loading({
+          lock: true,
+          text: '正在还原中，请耐心等待',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+        restoreFileName(fileName).then(response => {
+          loading.close()
+          this.$message.success(response.msg)
+          this.getList()
+        }).catch(error => {
+          console.log(error)
+          loading.close()
+          this.$message.error('还原失败')
+          console.error(error)
+        })
+      }).catch(() => {
+        this.$message.info('已取消还原')
       })
     }
   }
