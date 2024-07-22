@@ -227,6 +227,9 @@ export default {
           // 是否支持大小拖拽
           enable: false
         },
+        outline: {
+          enable: true
+        },
         input: () => {
           // 返回Markdown数据
           this.$emit('markdown', this.editor.getValue())

@@ -64,7 +64,7 @@ service.interceptors.response.use(
       // 登录异常
       if (res.code === 401) {
         // to re-login
-        MessageBox.confirm('您已注销，您可以取消以留在此页面，或重新登录', '确认注销', {
+        MessageBox.confirm('您已注销，您可以取消以留在此页面，或重新登录', '重新登录', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
@@ -73,8 +73,9 @@ service.interceptors.response.use(
             location.reload()
           })
         })
+      } else {
+        message.error(res.msg)
       }
-      message.error(res.msg)
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return res
