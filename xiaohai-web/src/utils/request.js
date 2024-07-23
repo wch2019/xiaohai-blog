@@ -1,9 +1,11 @@
 import axios from 'axios'
-import { MessageBox } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import message from 'element-ui/packages/message'
 import qs from 'qs'
+
+import Vue from 'vue'
+import LoginDialog from '@/views/login/components/LoginDialog.vue'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
@@ -64,15 +66,7 @@ service.interceptors.response.use(
       // 登录异常
       if (res.code === 401) {
         // to re-login
-        MessageBox.confirm('您已注销，您可以取消以留在此页面，或重新登录', '重新登录', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
+        openLoginBox()
       } else {
         message.error(res.msg)
       }
@@ -94,15 +88,7 @@ service.interceptors.response.use(
       // 登录异常
       if (error.response.data.code === 401) {
         // to re-login
-        MessageBox.confirm('您已注销，您可以取消以留在此页面，或重新登录', '确认注销', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
+        openLoginBox()
       }
       return Promise.reject(error.response.data.msg)
     } else {
@@ -114,5 +100,14 @@ service.interceptors.response.use(
     return Promise.reject('系统异常')
   }
 )
+
+// 弹出登录对话框
+export function openLoginBox() {
+  const LoginDialogConstructor = Vue.extend(LoginDialog)
+  const instance = new LoginDialogConstructor()
+  instance.$mount()
+  document.body.appendChild(instance.$el)
+  instance.open()
+}
 
 export default service

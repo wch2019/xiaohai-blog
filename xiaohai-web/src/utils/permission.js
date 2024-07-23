@@ -15,6 +15,10 @@ export function filterAsyncRouter(asyncRouterMap) {
         if (route.path === 'dictData/:id') {
           route.hidden = true
         }
+        // 写作中心不展示页面
+        if (route.path === 'edit') {
+          route.hidden = true
+        }
         route.component = loadView(route.component)
       }
     }
