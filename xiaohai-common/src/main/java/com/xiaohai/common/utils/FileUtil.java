@@ -33,10 +33,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import static org.springframework.util.FileCopyUtils.BUFFER_SIZE;
 
 /**
  * @description: 文件操作工具类
