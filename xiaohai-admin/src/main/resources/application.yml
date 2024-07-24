@@ -112,5 +112,5 @@ springdoc:
       packages-to-scan: com.xiaohai.system,com.xiaohai.admin.confing,com.xiaohai.admin.home,com.xiaohai.admin.monitor,com.xiaohai.file,com.xiaohai.note
 #==============================系统文件存放配置=======================================
 file:
-  #文件地址最后加斜杠,注意，示例：window是D:\blog\prod\而linux是/blog/prod/
+  # 文件地址最后加斜杠,注意，示例：window是D:\blog\prod\而linux是/blog/prod/
   profile: /mnt/data/files/blog/dev/
