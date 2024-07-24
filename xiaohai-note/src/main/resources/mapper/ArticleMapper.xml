@@ -29,6 +29,10 @@
     <select id="selectPageArticleQuery" resultType="com.xiaohai.note.pojo.dto.ArticleDto">
         SELECT
             a.id,
+            a.user_id as userId,
+            (SELECT username from sys_user where id=a.user_id) as userName,
+            (SELECT nick_name from sys_user where id=a.user_id) as nickName,
+            (SELECT avatar from sys_user where id=a.user_id) as avatar,
             a.cover,
             a.title,
             a.category_id,

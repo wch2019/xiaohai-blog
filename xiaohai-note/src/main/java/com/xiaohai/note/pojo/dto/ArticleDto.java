@@ -26,6 +26,18 @@ public class ArticleDto implements Serializable {
     @Schema(description = "id")
     private Integer id;
 
+    @Schema(description = "用户id")
+    private Integer userId;
+
+    @Schema(description = "用户名")
+    private String username;
+
+    @Schema(description = "用户昵称")
+    private String nickName;
+
+    @Schema(description = "头像地址")
+    private String avatar;
+
     @Schema(description = "封面")
     private String cover;
 
@@ -55,5 +67,4 @@ public class ArticleDto implements Serializable {
 
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
-
 }

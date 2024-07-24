@@ -89,7 +89,7 @@ DotCode(点码），是一个前后分离的博客系统。
 - [X] 第三方平台获取、CSDN、掘金、简书、博客园、知乎
 - [ ] 第三方平台同步
 - [ ] 大模型辅助写博客
-- [ ] 数据备份，Markdown导入，Markdown导出
+- [X] 数据备份，Markdown导入，Markdown导出
 - [ ] ...
 
 ## nginx配置

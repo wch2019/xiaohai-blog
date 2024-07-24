@@ -17,3 +17,14 @@
 .box-card-height{
   min-height: calc(100vh - 110px)
 }
+// 最小文字
+.text-xs {
+  font-size: .75rem;
+}
+// 小文字
+.text-sm {
+  font-size: .875rem;
+}
+.text-color {
+  color: #6B7280 !important;
+}

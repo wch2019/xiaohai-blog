@@ -152,6 +152,7 @@
 <script>
 import { listComment, delComment } from '@/api/note/comment'
 import CommentDialog from '@/views/note/comment/componets/commentDialog.vue'
+import { image } from '@/utils/common'
 
 export default {
   name: 'Index',
@@ -192,6 +193,8 @@ export default {
     this.getList()
   },
   methods: {
+    // 头像展示
+    image,
     /** 查询留言列表 */
     getList() {
       this.loading = true
@@ -245,10 +248,6 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
-    },
-    // 头像展示
-    image(avatar) {
-      return process.env.VUE_APP_BASE_API_FILE + avatar
     },
     /** 回调*/
     closeDialog() {

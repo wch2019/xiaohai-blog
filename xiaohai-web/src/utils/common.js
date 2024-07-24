@@ -65,3 +65,7 @@ export function calculateTimeDifference(targetTime) {
     return `${differenceInDays} 天前`
   }
 }
+// 头像展示
+export function image(avatar) {
+  return process.env.VUE_APP_BASE_API_FILE + avatar
+}

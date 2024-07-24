@@ -86,58 +86,9 @@
         </el-form-item>
       </el-form>
 
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:article:add')"
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAdd"
-          >新增
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:article:update')"
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-          >修改
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:article:delete')"
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-          >删除
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:article:reptile')"
-            type="info"
-            plain
-            icon="el-icon-attract"
-            size="mini"
-            @click="handleReptile"
-          >抓取
-          </el-button>
-        </el-col>
-      </el-row>
-
       <el-table
         v-loading="loading"
-        border
+
         style="margin-top: 10px;width: 100%;"
         :row-class-name="tableRowClassName"
         :data="articleList"
@@ -145,89 +96,146 @@
         @row-dblclick="handle"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="封面" align="center" prop="cover" :render-header="renderHeader">
+        <el-table-column align="center" class-name="small-padding fixed-width">
+          <template slot="header">
+            <el-row :gutter="10" class="mb8">
+              <el-col :span="1.5">
+                <el-button
+                  v-if="$store.getters.permission.includes('note:article:add')"
+                  type="primary"
+                  plain
+                  icon="el-icon-plus"
+                  size="mini"
+                  @click="handleAdd"
+                >新增
+                </el-button>
+              </el-col>
+              <el-col :span="1.5">
+                <el-button
+                  v-if="$store.getters.permission.includes('note:article:update')"
+                  type="success"
+                  plain
+                  icon="el-icon-edit"
+                  size="mini"
+                  :disabled="single"
+                  @click="handleUpdate"
+                >修改
+                </el-button>
+              </el-col>
+              <el-col :span="1.5">
+                <el-button
+                  v-if="$store.getters.permission.includes('note:article:delete')"
+                  type="danger"
+                  plain
+                  icon="el-icon-delete"
+                  size="mini"
+                  :disabled="multiple"
+                  @click="handleDelete"
+                >删除
+                </el-button>
+              </el-col>
+              <el-col :span="1.5">
+                <el-button
+                  v-if="$store.getters.permission.includes('note:article:reptile')"
+                  type="info"
+                  plain
+                  icon="el-icon-attract"
+                  size="mini"
+                  @click="handleReptile"
+                >抓取
+                </el-button>
+              </el-col>
+            </el-row>
+          </template>
           <template slot-scope="scope">
-            <div style="position: relative">
-              <el-image :src="scope.row.cover" style="border-radius:4px" :preview-src-list="srcList" />
-              <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
-              <svg-icon v-if="scope.row.isOriginal===1 " icon-class="original" style="position: absolute; bottom: 7px; right: 0;font-size: 10px;" />
+            <div class="entity-body">
+              <div class="entity-start">
+                <div style="position: relative; width: 130px">
+                  <el-image :src="scope.row.cover" style="border-radius:4px" :preview-src-list="srcList" />
+                  <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
+                  <svg-icon v-if="scope.row.isOriginal===1 " icon-class="original" style="position: absolute; bottom: 7px; right: 0;font-size: 10px;" />
+                </div>
+                <div class="entity-field-wrapper">
+                  <div class="entity-field-title-body">
+                    <el-link :underline="false" @click="handleUpdate(scope.row)">{{ scope.row.title }}</el-link>
+                    <el-link v-if="scope.row.categoryId" :underline="false" style="font-size: 16px" class="el-icon-link" @click="onClick(scope.row)" />
+                  </div>
+                  <div class="entity-field-description-body">
+                    <template v-for="(item,index) in CategoryList">
+                      <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
+                    </template>
+                    <template v-for="(item,index) in TagsList">
+                      <el-tag
+                        v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
+                        :key="index"
+                        style="margin-right:4px"
+                        type="success"
+                        size="small"
+                        :label="index"
+                        border
+                      >{{ item.name }}
+                      </el-tag>
+                    </template>
+                  </div>
+                </div>
+              </div>
+              <div class="entity-end">
+                <span class="text-xs text-color">访问量 {{ scope.row.pageView }}</span>
+                <span>
+                  <el-tooltip class="item" effect="dark" :content="scope.row.nickName" placement="top">
+                    <el-avatar v-if="scope.row.avatar" size="small" :src="image(scope.row.avatar)" />
+                    <el-avatar v-else size="small"> {{ scope.row.nickName }}</el-avatar>
+                  </el-tooltip>
+                </span>
+                <span class="text-xs text-color">{{ scope.row.isPush?"已发布":"未发布" }}</span>
+                <span class="text-xs text-color">{{ scope.row.isPush?scope.row.createdTime:"" }}</span>
+              </div>
+              <div class="entity-dropdown">
+                <el-dropdown trigger="click" @visible-change>
+                  <el-button
+                    style="padding: 5px; border: none;"
+                    class="el-icon-more"
+                    size="mini"
+                    @click.native.stop
+                  />
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      v-if="scope.row.categoryId && !scope.row.isPush"
+                      icon="el-icon-s-promotion"
+                      @click.native="push(scope.row)"
+                    >
+                      发 布
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="$store.getters.permission.includes('note:article:update')"
+                      icon="el-icon-edit"
+                      @click.native="handleUpdate(scope.row)"
+                    >
+                      编 辑
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="$store.getters.permission.includes('note:article:delete')"
+                      divided
+                      icon="el-icon-delete"
+                      style="color: red;"
+                      hover-colo="red"
+                      @click.native="handleDelete(scope.row)"
+                    >
+                      删 除
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="scope.row.categoryId && scope.row.isPush"
+                      icon="el-icon-delete"
+                      style="color: red;"
+                      hover-colo="red"
+                      @click.native="push(scope.row)"
+                    >
+                      取消发布
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="文章标题" align="center" prop="title" show-overflow-tooltip>
-          <template slot-scope="scope">
-            <el-link v-if="scope.row.categoryId" :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
-            <span v-else>{{ scope.row.title }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="分类" align="center" prop="categoryId">
-          <template slot-scope="scope">
-            <template v-for="(item,index) in CategoryList">
-              <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
-            </template>
-          </template>
-        </el-table-column>
-        <el-table-column label="标签" align="center" prop="tags" width="180">
-          <template slot-scope="scope">
-            <template v-for="(item,index) in TagsList">
-              <el-tag
-                v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
-                :key="index"
-                style="margin-right:4px"
-                type="success"
-                size="small"
-                :label="index"
-                border
-              >{{ item.name }}
-              </el-tag>
-            </template>
-          </template>
-        </el-table-column>
-        <el-table-column label="发布" align="center">
-          <template slot-scope="scope">
-            <el-switch
-              v-if="scope.row.categoryId"
-              v-model="scope.row.isPush"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              @change="push(scope.row)"
-            />
-            <el-switch
-              v-else
-              v-model="scope.row.isPush"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              disabled
-              @change="push(scope.row)"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="浏览量" align="center" prop="pageView">
-          <template slot-scope="scope">
-            <el-tag type="warning"> {{ scope.row.pageView }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createdTime" width="160" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" min-width="100">
-          <template slot-scope="scope">
-            <el-button
-              v-if="$store.getters.permission.includes('note:article:update')"
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              class="el-button-margin-left"
-              @click="handleUpdate(scope.row)"
-            >修改
-            </el-button>
-            <el-button
-              v-if="$store.getters.permission.includes('note:article:delete')"
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              class="el-button-margin-left"
-              @click="handleDelete(scope.row)"
-            >删除
-            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -249,6 +257,7 @@ import { listArticle, delArticle, updatePush, updateTop } from '@/api/note/artic
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 import ReptileArticle from '@/views/note/article/components/ReptileArticle.vue'
+import { image } from '@/utils/common'
 
 export default {
   name: 'Index',
@@ -294,6 +303,7 @@ export default {
     this.getList()
   },
   methods: {
+    image,
     /**
      * 查询分类下拉选
      */
@@ -386,6 +396,7 @@ export default {
     push(row) {
       updatePush(row.id).then(response => {
         this.$message.success(response.msg)
+        this.getList()
       })
     },
     renderHeader(h, { column, $index }) {
@@ -426,5 +437,43 @@ export default {
 <style scoped>
 ::v-deep .el-table .success-row {
   background-color: #f0f9eb
+}
+
+.entity-body{
+  display: flex;
+  width: 100%;
+}
+.entity-start{
+  display: flex;
+  flex: 1 1 0%;
+  align-items: center;
+  gap: 1rem;
+}
+.entity-field-wrapper{
+  display: inline-flex;
+  max-width: 20rem;
+  flex-direction: column;
+  gap: .25rem;
+}
+.entity-field-title-body{
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+}
+.entity-field-description-body{
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.entity-end{
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+}
+.entity-dropdown{
+  margin-left: 1rem;
+   display: flex;
+   align-items: center;
 }
 </style>
