@@ -95,12 +95,19 @@ public interface ArticleService extends IService<Article> {
     Integer top(Long id);
 
     /**
-     * 是否发布
+     * 发布
      *
      * @param id
      * @return
      */
-    Integer push(Long id);
+    Integer push( Long[] id);
+
+    /**
+     * 取消发布
+     * @param ids
+     * @return
+     */
+    Integer unpublish( Long[] ids);
 
     /**
      * 获取所有或指定用户文章的阅读量

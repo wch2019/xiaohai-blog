@@ -1,154 +1,206 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item label="标题" prop="title">
-          <el-input
-            v-model="queryParams.title"
-            placeholder="请输入文章名称"
-            clearable
-            size="small"
-            style="width: 250px;"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="分类" prop="categoryId">
-          <el-select
-            v-model="queryParams.categoryId"
-            placeholder="分类"
-            clearable
-            size="small"
-            style="width: 100px;"
-            @clear="queryParams.categoryId = null"
-          >
-            <el-option
-              v-for="tags in CategoryList"
-              :key="tags.id"
-              :label="tags.name"
-              :value="tags.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="标签" prop="tagId">
-          <el-select
-            v-model="queryParams.tagId"
-            placeholder="标签"
-            clearable
-            size="small"
-            style="width: 100px;"
-            @clear="queryParams.tagId = []"
-          >
-            <el-option
-              v-for="tag in TagsList"
-              :key="tag.id"
-              :label="tag.name"
-              :value="tag.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="发布" prop="isPush">
-          <el-select
-            v-model="queryParams.isPush"
-            placeholder="发布"
-            clearable
-            size="small"
-            style="width: 100px;"
-            @clear="queryParams.isPush = null"
-          >
-            <el-option
-              v-for="(item,index) in isPush"
-              :key="index"
-              :label="item"
-              :value="index"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="类型" prop="isOriginal">
-          <el-select
-            v-model="queryParams.isOriginal"
-            placeholder="类型"
-            clearable
-            size="small"
-            style="width: 100px;"
-            @clear="queryParams.isOriginal = null"
-          >
-            <el-option
-              v-for="(item,index) in isOriginal"
-              :key="index"
-              :label="item"
-              :value="index"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-
       <el-table
-        v-loading="loading"
 
         style="margin-top: 10px;width: 100%;"
         :row-class-name="tableRowClassName"
         :data="articleList"
         @selection-change="handleSelectionChange"
-        @row-dblclick="handle"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column align="center" class-name="small-padding fixed-width">
           <template slot="header">
-            <el-row :gutter="10" class="mb8">
-              <el-col :span="1.5">
-                <el-button
-                  v-if="$store.getters.permission.includes('note:article:add')"
-                  type="primary"
-                  plain
-                  icon="el-icon-plus"
-                  size="mini"
-                  @click="handleAdd"
-                >新增
-                </el-button>
-              </el-col>
-              <el-col :span="1.5">
-                <el-button
-                  v-if="$store.getters.permission.includes('note:article:update')"
-                  type="success"
-                  plain
-                  icon="el-icon-edit"
-                  size="mini"
-                  :disabled="single"
-                  @click="handleUpdate"
-                >修改
-                </el-button>
-              </el-col>
-              <el-col :span="1.5">
-                <el-button
-                  v-if="$store.getters.permission.includes('note:article:delete')"
-                  type="danger"
-                  plain
-                  icon="el-icon-delete"
-                  size="mini"
-                  :disabled="multiple"
-                  @click="handleDelete"
-                >删除
-                </el-button>
-              </el-col>
-              <el-col :span="1.5">
-                <el-button
-                  v-if="$store.getters.permission.includes('note:article:reptile')"
-                  type="info"
-                  plain
-                  icon="el-icon-attract"
-                  size="mini"
-                  @click="handleReptile"
-                >抓取
-                </el-button>
-              </el-col>
+            <el-row :gutter="10">
+              <span>
+                <el-col :span="1.5">
+                  <el-button
+                    v-if="$store.getters.permission.includes('note:article:add')&&!ids.length"
+                    type="primary"
+                    plain
+                    icon="el-icon-plus"
+                    size="mini"
+                    @click="handleAdd"
+                  >新增
+                  </el-button>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-button
+                    v-if="$store.getters.permission.includes('note:article:reptile')&&!ids.length"
+                    type="info"
+                    plain
+                    icon="el-icon-attract"
+                    size="mini"
+                    @click="handleReptile"
+                  >抓取
+                  </el-button>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-button
+                    v-if="$store.getters.permission.includes('note:article:push')&&ids.length"
+                    type="success"
+                    plain
+                    size="mini"
+                    icon="el-icon-s-promotion"
+                    @click="push"
+                  >
+                    发 布
+                  </el-button>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-button
+                    v-if="$store.getters.permission.includes('note:article:push')&&ids.length"
+                    type="warning"
+                    plain
+                    size="mini"
+                    icon="el-icon-circle-close"
+                    @click="unpush"
+                  >
+                    取消发布
+                  </el-button>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-button
+                    v-if="$store.getters.permission.includes('note:article:delete')&&ids.length"
+                    type="danger"
+                    plain
+                    icon="el-icon-delete"
+                    size="mini"
+                    :disabled="multiple"
+                    @click="handleDelete"
+                  >删除
+                  </el-button>
+                </el-col>
+              </span>
+              <span style="float: right">
+                <el-col :span="1.5">
+                  <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+                    <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+                  </el-tooltip>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-input
+                    v-model="queryParams.title"
+                    placeholder="请输入文章名称"
+                    clearable
+                    size="small"
+                    style="width: 150px;"
+                    @input="handleQuery"
+                  />
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.isOriginal"
+                    placeholder="类型"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    @clear="queryParams.isOriginal = null"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="(item,index) in isOriginal"
+                      :key="index"
+                      :label="item"
+                      :value="index"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.isPush"
+                    placeholder="发布"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    @clear="queryParams.isPush = null"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="(item,index) in isPush"
+                      :key="index"
+                      :label="item"
+                      :value="index"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.tagId"
+                    placeholder="标签"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    filterable
+                    @clear="queryParams.tagId = []"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="tag in TagsList"
+                      :key="tag.id"
+                      :label="tag.name"
+                      :value="tag.id"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.categoryId"
+                    placeholder="分类"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    filterable
+                    @clear="queryParams.categoryId = null"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="tags in CategoryList"
+                      :key="tags.id"
+                      :label="tags.name"
+                      :value="tags.id"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.userId"
+                    placeholder="作者"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    filterable
+                    @clear="queryParams.userId = null"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="user in this.$store.getters.users"
+                      :key="user.id"
+                      :label="user.nickName"
+                      :value="user.id"
+                    >
+                      <span
+                        class="text-xs users"
+                      >
+                        <el-avatar v-if="user.avatar" size="small" :src="image(user.avatar)" />
+                        <el-avatar v-else size="small"> {{ user.nickName }}</el-avatar>
+                        <span>  {{ user.nickName }}</span>
+                      </span>
+
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+                    <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+                  </el-tooltip>
+
+                </el-col></span>
+
             </el-row>
           </template>
           <template slot-scope="scope">
-            <div class="entity-body">
+            <div v-loading="loading" class="entity-body">
               <div class="entity-start">
                 <div style="position: relative; width: 130px">
                   <el-image :src="scope.row.cover" style="border-radius:4px" :preview-src-list="srcList">
@@ -182,7 +234,7 @@
                     <template v-for="(item,index) in TagsList">
                       <el-tag
                         v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
-                        :key="index"
+                        :key="item.id"
                         style="margin-right:4px"
                         type="success"
                         size="small"
@@ -215,7 +267,7 @@
                   />
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item
-                      v-if="scope.row.categoryId && !scope.row.isPush"
+                      v-if="$store.getters.permission.includes('note:article:push')&&scope.row.categoryId && !scope.row.isPush"
                       icon="el-icon-s-promotion"
                       @click.native="push(scope.row)"
                     >
@@ -229,6 +281,13 @@
                       编 辑
                     </el-dropdown-item>
                     <el-dropdown-item
+                      v-if="$store.getters.permission.includes('note:article:top')&&scope.row.isTop!==1"
+                      icon="el-icon-caret-top"
+                      @click.native="top(scope.row)"
+                    >
+                      置 顶
+                    </el-dropdown-item>
+                    <el-dropdown-item
                       v-if="$store.getters.permission.includes('note:article:delete')"
                       divided
                       icon="el-icon-delete"
@@ -239,8 +298,8 @@
                       删 除
                     </el-dropdown-item>
                     <el-dropdown-item
-                      v-if="scope.row.categoryId && scope.row.isPush"
-                      icon="el-icon-delete"
+                      v-if="$store.getters.permission.includes('note:article:push')&&scope.row.categoryId && scope.row.isPush"
+                      icon="el-icon-circle-close"
                       style="color: red;"
                       hover-colo="red"
                       @click.native="push(scope.row)"
@@ -268,7 +327,7 @@
 </template>
 
 <script>
-import { listArticle, delArticle, updatePush, updateTop } from '@/api/note/article'
+import { listArticle, delArticle, updatePush, updateTop, updateUnPublish } from '@/api/note/article'
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 import ReptileArticle from '@/views/note/article/components/ReptileArticle.vue'
@@ -360,9 +419,14 @@ export default {
       this.queryParams.pageNum = 1
       this.getList()
     },
-    /** 重置按钮操作 */
-    resetQuery(formName) {
-      this.$refs[formName].resetFields()
+    /** 重置操作 */
+    resetQuery() {
+      this.queryParams.title = null
+      this.queryParams.categoryId = null
+      this.queryParams.tagId = null
+      this.queryParams.isOriginal = null
+      this.queryParams.isPush = null
+      this.queryParams.userId = null
       this.handleQuery()
     },
     /** 新增按钮操作 */
@@ -377,8 +441,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      const id = row.id || this.ids
-      this.$router.push({ path: '/basic/edit', query: { id: id }})
+      this.$router.push({ path: '/basic/edit', query: { id: row.id }})
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -407,9 +470,41 @@ export default {
       // }
       return ''
     },
-    // 是否发布
+    // 发布
     push(row) {
-      updatePush(row.id).then(response => {
+      const ids = row.id || this.ids
+      this.$confirm('发布文章，所选文章会被设置为发布状态', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        updatePush(ids).then(response => {
+          this.$message.success(response.msg)
+          this.getList()
+        })
+      }).catch(() => {
+        this.$message.info('取消操作')
+      })
+    },
+    // 取消发布
+    unpush(row) {
+      const ids = row.id || this.ids
+      this.$confirm('取消发布文章，所选文章会被设置为未发布状态', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        updateUnPublish(ids).then(response => {
+          this.$message.success(response.msg)
+          this.getList()
+        })
+      }).catch(() => {
+        this.$message.info('取消操作')
+      })
+    },
+    // 置顶
+    top(row) {
+      updateTop(row.id).then(response => {
         this.$message.success(response.msg)
         this.getList()
       })
@@ -453,7 +548,11 @@ export default {
 ::v-deep .el-table .success-row {
   background-color: #f0f9eb
 }
-
+.users{
+ display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .entity-body{
   display: flex;
   width: 100%;

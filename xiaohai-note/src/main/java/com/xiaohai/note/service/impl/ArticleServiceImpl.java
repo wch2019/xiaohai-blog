@@ -4,7 +4,10 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -222,9 +225,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
-        Integer userId = null;
+        Integer userId = query.getUserId();
         //判断角色是否是管理员和demo
-        if (RoleUtils.checkRole()) {
+        if (RoleUtils.checkRole()&&userId==null) {
             //不是管理员、demo只查询当前用户数据
             userId = Integer.valueOf((String) StpUtil.getLoginId());
         }
@@ -271,6 +274,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer top(Long id) {
         Article article = baseMapper.selectById(id);
         if (article.getIsTop() == 1) {
@@ -278,7 +282,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             article.setTopTime(null);
         } else {
             var countTop = baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top", 1));
-            Assert.isTrue(countTop < 1, "已存在顶置");
+            if(countTop!=0){
+                LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<>();
+                updateWrapper.eq(Article::getIsTop, 1).set(Article::getIsTop,0).set(Article::getTopTime,null);
+                baseMapper.update(null,updateWrapper);
+            }
             article.setIsTop(1);
             article.setTopTime(LocalDateTime.now());
         }
@@ -286,15 +294,32 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public Integer push(Long id) {
-        Article article = baseMapper.selectById(id);
-        Assert.isTrue(article.getCategoryId() != null, "数据不完整无法发布");
-        if (article.getIsPush() == 1) {
-            article.setIsPush(0);
-        } else {
-            article.setIsPush(1);
+    public Integer push(Long[] ids) {
+        for (Long id : ids) {
+            if(ids.length==1){
+                Article article = baseMapper.selectById(id);
+                Assert.isTrue(article.getCategoryId() != null, "数据不完整无法发布");
+                article.setIsPush(1);
+                return baseMapper.updateById(article);
+            }
+            Article article = baseMapper.selectById(id);
+            if(article.getCategoryId() != null){
+                article.setIsPush(1);
+                baseMapper.updateById(article);
+            }
         }
-        return baseMapper.updateById(article);
+        return ids.length;
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer unpublish(Long[] ids) {
+        for (Long id : ids) {
+            Article article = new Article();
+            article.setId(Math.toIntExact(id));
+            article.setIsPush(0);
+            baseMapper.updateById(article);
+        }
+        return ids.length;
     }
 
     @Override

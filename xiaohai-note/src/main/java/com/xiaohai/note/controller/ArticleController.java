@@ -109,12 +109,19 @@ public class ArticleController {
         return Response.success("修改成功！", articleService.top(id));
     }
 
-    @Operation(summary = "是否发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:push")
-    @Log(title = "是否发布")
-    @PutMapping("/push/{id}")
-    public Response<Integer> push(@PathVariable Long id) {
-        return Response.success("调整成功！", articleService.push(id));
+    @Log(title = "发布")
+    @PutMapping("/push/{ids}")
+    public Response<Integer> push(@PathVariable Long[] ids) {
+        return Response.success("发布成功！", articleService.push(ids));
+    }
+    @Operation(summary = "取消发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:article:push")
+    @Log(title = "取消发布")
+    @PutMapping("/unpublish/{ids}")
+    public Response<Integer> unpublish(@PathVariable Long[] ids) {
+        return Response.success("取消发布成功！", articleService.unpublish(ids));
     }
 
     @Operation(summary = "导入markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
