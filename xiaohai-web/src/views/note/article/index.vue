@@ -151,14 +151,29 @@
             <div class="entity-body">
               <div class="entity-start">
                 <div style="position: relative; width: 130px">
-                  <el-image :src="scope.row.cover" style="border-radius:4px" :preview-src-list="srcList" />
+                  <el-image :src="scope.row.cover" style="border-radius:4px" :preview-src-list="srcList">
+                    <div
+                      slot="error"
+                      style="display: flex;
+                             justify-content: center;
+                             align-items: center;
+                             font-size: 14px;
+                             color: #c0c4cc;
+                             vertical-align: middle;
+                             height: 70px"
+                    >
+                      <i class="el-icon-picture-outline" />
+                    </div>
+                  </el-image>
                   <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
                   <svg-icon v-if="scope.row.isOriginal===1 " icon-class="original" style="position: absolute; bottom: 7px; right: 0;font-size: 10px;" />
                 </div>
                 <div class="entity-field-wrapper">
                   <div class="entity-field-title-body">
-                    <el-link :underline="false" @click="handleUpdate(scope.row)">{{ scope.row.title }}</el-link>
-                    <el-link v-if="scope.row.categoryId" :underline="false" style="font-size: 16px" class="el-icon-link" @click="onClick(scope.row)" />
+                    <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
+                      <el-link class="entity-field-title" :underline="false" @click="handleUpdate(scope.row)">{{ scope.row.title }}</el-link>
+                    </el-tooltip>
+                    <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="onClick(scope.row)" />
                   </div>
                   <div class="entity-field-description-body">
                     <template v-for="(item,index) in CategoryList">
@@ -188,12 +203,12 @@
                   </el-tooltip>
                 </span>
                 <span class="text-xs text-color">{{ scope.row.isPush?"已发布":"未发布" }}</span>
-                <span class="text-xs text-color">{{ scope.row.isPush?scope.row.createdTime:"" }}</span>
+                <span class="text-xs text-color">{{ scope.row.createdTime }}</span>
               </div>
               <div class="entity-dropdown">
                 <el-dropdown trigger="click" @visible-change>
                   <el-button
-                    style="padding: 5px; border: none;"
+                    style="min-width:5px;padding: 5px; border: none;"
                     class="el-icon-more"
                     size="mini"
                     @click.native.stop
@@ -451,9 +466,19 @@ export default {
 }
 .entity-field-wrapper{
   display: inline-flex;
-  max-width: 20rem;
+  max-width: 30rem;
   flex-direction: column;
   gap: .25rem;
+}
+.entity-field-title{
+  margin-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
 }
 .entity-field-title-body{
   display: inline-flex;
@@ -472,8 +497,19 @@ export default {
   gap: 1.5rem;
 }
 .entity-dropdown{
-  margin-left: 1rem;
+   margin-left: 1rem;
+   margin-right: 1rem;
    display: flex;
    align-items: center;
+}
+.know-button {
+  font-size: 10px;
+  margin-left: 10px;
+  display: none; /* 默认隐藏按钮 */
+  cursor: pointer;
+}
+
+.entity-body:hover .know-button {
+  display: inline-block; /* 鼠标悬停时显示按钮 */
 }
 </style>
