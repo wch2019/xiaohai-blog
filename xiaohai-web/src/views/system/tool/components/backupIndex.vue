@@ -25,6 +25,7 @@
                 </div>
                 <div>
                   <el-button
+                    v-if="$store.getters.permission.includes('system:tool:restore')"
                     size="mini"
                     type="primary"
                     icon="el-icon-refresh-right"
@@ -32,6 +33,7 @@
                   >还原
                   </el-button>
                   <el-button
+                    v-if="$store.getters.permission.includes('file:files:delete')"
                     size="mini"
                     type="danger"
                     icon="el-icon-delete"

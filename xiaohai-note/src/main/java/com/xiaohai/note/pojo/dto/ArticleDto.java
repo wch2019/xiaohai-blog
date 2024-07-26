@@ -65,6 +65,12 @@ public class ArticleDto implements Serializable {
     @Schema(description = "浏览量")
     private Integer pageView;
 
+    @Schema(description = "消息数")
+    private Integer commentCount;
+
+    @Schema(description = "点赞数")
+    private Integer likeCount;
+
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
 }

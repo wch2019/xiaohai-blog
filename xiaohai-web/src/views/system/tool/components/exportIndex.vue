@@ -24,6 +24,7 @@
                   <div class="file-date">{{ calculateTimeDifference(file.createdTime) }} / {{ file.fileSize }}</div>
                 </div>
                 <el-button
+                  v-if="$store.getters.permission.includes('file:files:delete')"
                   size="mini"
                   type="danger"
                   icon="el-icon-delete"

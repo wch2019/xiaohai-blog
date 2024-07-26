@@ -1,5 +1,7 @@
 package com.xiaohai.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import com.xiaohai.common.annotation.Log;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.system.service.BackupService;
@@ -24,6 +26,8 @@ public class BackupController {
     private final BackupService backupService;
 
     @Operation(summary = "系统备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:tool:backup")
+    @Log(title = "系统备份")
     @PostMapping()
     public Response<Integer> add() {
         backupService.backupDatabase();
@@ -31,6 +35,8 @@ public class BackupController {
     }
 
     @Operation(summary = "文件名称还原备份", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("system:tool:restore")
+    @Log(title = "系统备份")
     @PostMapping("/restore/path/{fileName}")
     public Response<Integer> restoreFileName(@PathVariable String fileName) {
         backupService.restoreFileName(fileName);

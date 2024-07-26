@@ -2,7 +2,10 @@
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="6">
-        <el-card class="box-card min-height">
+        <el-card
+          v-if="$store.getters.permission.includes('system:tool:backup')"
+          class="box-card min-height"
+        >
           <div slot="header" class="clearfix">
             <span>系统备份</span>
           </div>
@@ -22,7 +25,10 @@
       </el-col>
       <el-col :span="6">
 
-        <el-card class="box-card min-height">
+        <el-card
+          v-if="$store.getters.permission.includes('note:article:download')"
+          class="box-card min-height"
+        >
           <div slot="header" class="clearfix">
             <span>Markdown 文章导出</span>
           </div>
@@ -41,7 +47,10 @@
 
       </el-col>
       <el-col :span="6">
-        <el-card v-if="$store.getters.permission.includes('note:article:import')" class="box-card min-height">
+        <el-card
+          v-if="$store.getters.permission.includes('note:article:import')"
+          class="box-card min-height"
+        >
           <div slot="header" class="clearfix">
             <span class="text">Markdown 文章导入</span>
           </div>

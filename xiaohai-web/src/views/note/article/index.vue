@@ -228,26 +228,32 @@
                     <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="onClick(scope.row)" />
                   </div>
                   <div class="entity-field-description-body">
-                    <template v-for="(item,index) in CategoryList">
-                      <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
-                    </template>
-                    <template v-for="(item,index) in TagsList">
-                      <el-tag
-                        v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
-                        :key="item.id"
-                        style="margin-right:4px"
-                        type="success"
-                        size="small"
-                        :label="index"
-                        border
-                      >{{ item.name }}
-                      </el-tag>
-                    </template>
+                    <span class="entity-field-description-view">
+                      <span class="text-xs text-color">访问量 {{ scope.row.pageView }}</span>
+                      <span class="text-xs text-color">评论数 {{ scope.row.commentCount }}</span>
+                      <span class="text-xs text-color">点赞量 {{ scope.row.likeCount }}</span>
+                    </span>
+                    <span class="entity-field-description-tag">
+                      <template v-for="(item,index) in CategoryList">
+                        <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
+                      </template>
+                      <template v-for="(item,index) in TagsList">
+                        <el-tag
+                          v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
+                          :key="item.id"
+                          style="margin-right:4px"
+                          type="success"
+                          size="small"
+                          :label="index"
+                          border
+                        >{{ item.name }}
+                        </el-tag>
+                      </template>
+                    </span>
                   </div>
                 </div>
               </div>
               <div class="entity-end">
-                <span class="text-xs text-color">访问量 {{ scope.row.pageView }}</span>
                 <span>
                   <el-tooltip class="item" effect="dark" :content="scope.row.nickName" placement="top">
                     <el-avatar v-if="scope.row.avatar" size="small" :src="image(scope.row.avatar)" />
@@ -586,7 +592,16 @@ export default {
 }
 .entity-field-description-body{
   display: inline-flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.entity-field-description-tag{
+  display: inline-flex;
   align-items: center;
+  gap: .5rem;
+}
+.entity-field-description-view{
+  display: inline-flex;
   gap: .5rem;
 }
 .entity-end{
