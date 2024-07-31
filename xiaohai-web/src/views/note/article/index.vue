@@ -2,7 +2,6 @@
   <div class="app-container">
     <el-card class="box-card box-card-height">
       <el-table
-
         style="margin-top: 10px;width: 100%;"
         :row-class-name="tableRowClassName"
         :data="articleList"
@@ -223,9 +222,9 @@
                 <div class="entity-field-wrapper">
                   <div class="entity-field-title-body">
                     <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
-                      <el-link class="entity-field-title" :underline="false" @click="handleUpdate(scope.row)">{{ scope.row.title }}</el-link>
+                      <el-link class="entity-field-title" :underline="false" @click="articleEdit(scope.row)">{{ scope.row.title }}</el-link>
                     </el-tooltip>
-                    <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="onClick(scope.row)" />
+                    <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="articleView(scope.row)" />
                   </div>
                   <div class="entity-field-description-body">
                     <span class="entity-field-description-view">
@@ -282,7 +281,7 @@
                     <el-dropdown-item
                       v-if="$store.getters.permission.includes('note:article:update')"
                       icon="el-icon-edit"
-                      @click.native="handleUpdate(scope.row)"
+                      @click.native="articleEdit(scope.row)"
                     >
                       编 辑
                     </el-dropdown-item>
@@ -337,7 +336,7 @@ import { listArticle, delArticle, updatePush, updateTop, updateUnPublish } from 
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 import ReptileArticle from '@/views/note/article/components/ReptileArticle.vue'
-import { image } from '@/utils/common'
+import { articleEdit, articleView, image } from '@/utils/common'
 
 export default {
   name: 'Index',
@@ -383,6 +382,8 @@ export default {
     this.getList()
   },
   methods: {
+    articleView,
+    articleEdit,
     image,
     /**
      * 查询分类下拉选
@@ -444,10 +445,6 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.$router.push({ path: '/basic/edit', query: { id: row.id }})
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -542,10 +539,6 @@ export default {
         this.$message.success(response.msg)
         this.getList()
       })
-    },
-    // 跳转展示文章页
-    onClick(row) {
-      window.open(this.url + '/article/' + row.id)
     }
   }
 }
@@ -559,22 +552,6 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.entity-body{
-  display: flex;
-  width: 100%;
-}
-.entity-start{
-  display: flex;
-  flex: 1 1 0%;
-  align-items: center;
-  gap: 1rem;
-}
-.entity-field-wrapper{
-  display: inline-flex;
-  max-width: 30rem;
-  flex-direction: column;
-  gap: .25rem;
-}
 .entity-field-title{
   margin-right: 0;
   overflow: hidden;
@@ -584,11 +561,6 @@ export default {
   line-height: 1.25rem;
   font-weight: 500;
   --tw-text-opacity: 1;
-}
-.entity-field-title-body{
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
 }
 .entity-field-description-body{
   display: inline-flex;
@@ -603,27 +575,5 @@ export default {
 .entity-field-description-view{
   display: inline-flex;
   gap: .5rem;
-}
-.entity-end{
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1.5rem;
-}
-.entity-dropdown{
-   margin-left: 1rem;
-   margin-right: 1rem;
-   display: flex;
-   align-items: center;
-}
-.know-button {
-  font-size: 10px;
-  margin-left: 10px;
-  display: none; /* 默认隐藏按钮 */
-  cursor: pointer;
-}
-
-.entity-body:hover .know-button {
-  display: inline-block; /* 鼠标悬停时显示按钮 */
 }
 </style>

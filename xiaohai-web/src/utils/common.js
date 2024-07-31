@@ -69,3 +69,12 @@ export function calculateTimeDifference(targetTime) {
 export function image(avatar) {
   return process.env.VUE_APP_BASE_API_FILE + avatar
 }
+
+/** 文章编辑页跳转 */
+export function articleEdit(row) {
+  this.$router.push({ path: '/basic/edit', query: { id: row.id }})
+}
+/** 跳转展示文章页*/
+export function articleView(row) {
+  window.open(this.url + '/article/' + row.id)
+}

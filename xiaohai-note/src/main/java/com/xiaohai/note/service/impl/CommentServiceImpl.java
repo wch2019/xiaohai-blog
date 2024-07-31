@@ -10,6 +10,7 @@ import com.xiaohai.common.daomain.CommentTree;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.PageUtils;
+import com.xiaohai.common.utils.RoleUtils;
 import com.xiaohai.common.utils.TreeUtils;
 import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.dao.CommentMapper;
@@ -104,17 +105,24 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public Comment findById(Long id) {
-        return baseMapper.selectById(id);
+    public List<CommentDto> findById(Long id) {
+        return findCommentList(Math.toIntExact(id));
+    }
+    private List<CommentDto> findCommentList(Integer id) {
+        List<CommentDto> commentList =  baseMapper.findCommentParentId(id);
+        for(CommentDto comment : commentList){
+            commentList.addAll(findCommentList(comment.getId()));
+        }
+        return commentList;
     }
 
     @Override
     public ReturnPageData<CommentDto> findListByPage(CommentQuery query) {
-        //当前登录用户
-        Integer userId = Integer.valueOf((String) StpUtil.getLoginId());
-        //判断角色是否是管理员
-        if (!StpUtil.hasRole(Constants.ADMIN) && query.getDiscussant() == null) {
-            query.setDiscussant(1);
+        Integer userId = query.getUserId();
+        //判断角色是否是管理员和demo
+        if (RoleUtils.checkRole()&&userId==null) {
+            //不是管理员、demo只查询当前用户数据
+            userId = Integer.valueOf((String) StpUtil.getLoginId());
         }
         IPage<CommentDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<CommentDto> iPage = baseMapper.findCommentListByPage(wherePage, query, userId);

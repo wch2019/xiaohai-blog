@@ -56,6 +56,32 @@
             />
           </el-select>
         </el-form-item>
+        <el-select
+          v-model="queryParams.userId"
+          placeholder="作者"
+          clearable
+          size="small"
+          style="width: 100px;"
+          filterable
+          @clear="queryParams.userId = null"
+          @change="handleQuery"
+        >
+          <el-option
+            v-for="user in this.$store.getters.users"
+            :key="user.id"
+            :label="user.nickName"
+            :value="user.id"
+          >
+            <span
+              class="text-xs users"
+            >
+              <el-avatar v-if="user.avatar" size="small" :src="image(user.avatar)" />
+              <el-avatar v-else size="small"> {{ user.nickName }}</el-avatar>
+              <span>  {{ user.nickName }}</span>
+            </span>
+
+          </el-option>
+        </el-select>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
@@ -76,63 +102,109 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-table v-loading="loading" border style="margin-top: 10px" :data="commentList" @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" style="margin-top: 10px" :data="commentList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="评论人头像" align="center" width="120" prop="avatar">
+        <!--        <el-table-column label="评论人头像" align="center" width="120" prop="avatar">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)" />-->
+        <!--            <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
+        <!--        <el-table-column label="评论人" align="center" prop="username" :show-overflow-tooltip="true" />-->
+        <!--        <el-table-column label="回复人头像" align="center" width="120" prop="avatar">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <el-avatar v-if="scope.row.replyAvatar" shape="square" :src="image(scope.row.replyAvatar)" />-->
+        <!--            <el-avatar v-else shape="square"> {{ scope.row.replyUsername }}</el-avatar>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
+        <!--        <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <div>{{ scope.row.replyUsername || '无' }}</div>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
+        <!--        <el-table-column v-if="title" label="文章" align="center" prop="title" :show-overflow-tooltip="true">-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <el-link :underline="false" @click="articleView(scope.row)">{{ scope.row.title }}</el-link>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
+        <!--        <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true" />-->
+        <el-table-column align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)" />
-            <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>
-          </template>
-        </el-table-column>
-        <el-table-column label="评论人" align="center" prop="username" :show-overflow-tooltip="true" />
-        <el-table-column label="回复人头像" align="center" width="120" prop="avatar">
-          <template slot-scope="scope">
-            <el-avatar v-if="scope.row.replyAvatar" shape="square" :src="image(scope.row.replyAvatar)" />
-            <el-avatar v-else shape="square"> {{ scope.row.replyUsername }}</el-avatar>
-          </template>
-        </el-table-column>
-        <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            <div>{{ scope.row.replyUsername || '无' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="title" label="文章" align="center" prop="title" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
-          </template>
-        </el-table-column>
-        <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true" />
-        <el-table-column label="创建时间" align="center" prop="createdTime" width="180" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-          <template slot-scope="scope">
-            <el-button
-              v-if="$store.getters.permission.includes('note:comment:add')"
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleAdd(scope.row)"
-            >回复
-            </el-button>
-            <template v-if="$store.getters.name.includes(scope.row.username)&&$store.getters.roles.includes('user')">
-              <el-button
-                v-if="$store.getters.permission.includes('note:comment:delete')"
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-              >删除
-              </el-button>
-            </template>
-            <template v-if="$store.getters.roles.includes('admin')">
-              <el-button
-                v-if="$store.getters.permission.includes('note:comment:delete')"
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-              >删除
-              </el-button>
-            </template>
+            <div v-loading="loading" class="entity-body">
+              <div class="entity-start">
+                <div class="entity-field-wrapper">
+                  <el-avatar v-if="scope.row.avatar" :src="image(scope.row.avatar)" />
+                  <el-avatar v-else> {{ scope.row.username }}</el-avatar>
+                  {{ scope.row.username }}
+                </div>
+                <div class="entity-field-wrapper">
+                  <div v-if="scope.row.title">
+                    <el-tag size="mini">文 章</el-tag>
+                    <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
+                      <el-link class="entity-field-title" :underline="false" @click="articleEdit(scope.row)">{{ scope.row.title }}</el-link>
+                    </el-tooltip>
+                    <svg-icon class="know-button" icon-class="link" @click="articleView(scope.row)" />
+                  </div>
+                  <div v-else>
+                    <el-tag size="mini">留 言</el-tag>
+                    <svg-icon class="know-button" icon-class="link" @click="articleView(scope.row)" />
+                  </div>
+                  <span style="display: flex;" class="gap-2">{{ scope.row.content }}</span>
+                  <span style="display: flex;" class="gap-2">
+                    <span class="text-xs" style="cursor: pointer;">{{ scope.row.contentCount==null?0: scope.row.contentCount }}条回复</span>
+                    <span v-if="$store.getters.permission.includes('note:comment:add')" class="text-xs" style="cursor: pointer;" @click="handleAdd(scope.row)">回复</span>
+                  </span>
+
+                </div>
+              </div>
+              <div class="entity-end">
+                {{ scope.row.createdTime }}
+              </div>
+              <div class="entity-dropdown">
+                <el-dropdown trigger="click" @visible-change>
+                  <el-button
+                    style="min-width:5px;padding: 5px; border: none;"
+                    class="el-icon-more"
+                    size="mini"
+                    @click.native.stop
+                  />
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      v-if="$store.getters.permission.includes('note:comment:add')"
+                      icon="el-icon-edit"
+                      @click.native="handleAdd(scope.row)"
+                    >
+                      回 复
+                    </el-dropdown-item>
+                    <template v-if="$store.getters.name.includes(scope.row.username)&&$store.getters.roles.includes('user')">
+                      <el-dropdown-item
+                        v-if="$store.getters.permission.includes('note:comment:delete')"
+                        divided
+                        icon="el-icon-delete"
+                        style="color: red;"
+                        hover-colo="red"
+                        @click.native="handleDelete(scope.row)"
+                      >
+                        删 除
+                      </el-dropdown-item>
+                    </template>
+                    <template v-if="$store.getters.roles.includes('admin')">
+                      <el-dropdown-item
+                        v-if="$store.getters.permission.includes('note:comment:delete')"
+                        icon="el-icon-delete"
+                        divided
+                        style="color: red;"
+                        hover-colo="red"
+                        @click.native="handleDelete(scope.row)"
+                      >
+                        删 除
+                      </el-dropdown-item>
+                    </template>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+            </div>
+
           </template>
         </el-table-column>
       </el-table>
@@ -150,9 +222,9 @@
 </template>
 
 <script>
-import { listComment, delComment } from '@/api/note/comment'
+import { listComment, delComment, getComment } from '@/api/note/comment'
 import CommentDialog from '@/views/note/comment/componets/commentDialog.vue'
-import { image } from '@/utils/common'
+import { articleEdit, articleView, image } from '@/utils/common'
 
 export default {
   name: 'Index',
@@ -193,6 +265,8 @@ export default {
     this.getList()
   },
   methods: {
+    articleView,
+    articleEdit,
     // 头像展示
     image,
     /** 查询留言列表 */
@@ -253,10 +327,19 @@ export default {
     closeDialog() {
       this.getList()
     },
-    // 跳转展示文章页
-    onClick(row) {
-      window.open(this.url + '/article/' + row.articleId)
+    /** 查询当前id下所有评论*/
+    f(id) {
+      getComment(id).then(response => {
+        this.commentList = response.data.records
+        this.total = response.data.total
+        this.loading = false
+      })
     }
   }
 }
 </script>
+<style scoped>
+.gap-2 {
+  gap: .5rem;
+}
+</style>

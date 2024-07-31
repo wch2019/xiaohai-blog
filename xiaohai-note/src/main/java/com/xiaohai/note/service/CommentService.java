@@ -8,6 +8,8 @@ import com.xiaohai.note.pojo.entity.Comment;
 import com.xiaohai.note.pojo.query.CommentQuery;
 import com.xiaohai.note.pojo.vo.CommentVo;
 
+import java.util.List;
+
 /**
  * 评论表 服务类
  *
@@ -47,7 +49,7 @@ public interface CommentService extends IService<Comment> {
      * @param id id
      * @return Comment
      */
-    Comment findById(Long id);
+    List<CommentDto> findById(Long id);
 
     /**
      * 查询评论表列表数据

@@ -58,4 +58,7 @@ public class CommentDto implements Serializable {
     
     @Schema(description = "文章标题")
     private String title;
+
+    @Schema(description = "评论数")
+    private Integer commentCount;
 }
