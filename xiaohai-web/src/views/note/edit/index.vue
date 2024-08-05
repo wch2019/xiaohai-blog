@@ -545,7 +545,8 @@ export default {
       const { fileName, content } = fileData
       // 在这里处理文件内容，例如将内容显示在页面上或者做其他操作
       console.log('文件名:', fileName)
-      this.form.text = content
+      this.form.title = fileName
+      this.oldText = content
     },
     // 返回文章信息
     markdownText(content) {
