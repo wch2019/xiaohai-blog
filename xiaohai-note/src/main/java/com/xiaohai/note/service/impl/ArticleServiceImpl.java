@@ -227,7 +227,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ReturnPageData<ArticleDto> findListByPage(ArticleQuery query) {
         Integer userId = query.getUserId();
         //判断角色是否是管理员和demo
-        if (RoleUtils.checkRole()&&userId==null) {
+        if (RoleUtils.checkRole() && userId == null) {
             //不是管理员、demo只查询当前用户数据
             userId = Integer.valueOf((String) StpUtil.getLoginId());
         }
@@ -282,10 +282,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             article.setTopTime(null);
         } else {
             var countTop = baseMapper.selectCount(new QueryWrapper<Article>().eq("is_top", 1));
-            if(countTop!=0){
+            if (countTop != 0) {
                 LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<>();
-                updateWrapper.eq(Article::getIsTop, 1).set(Article::getIsTop,0).set(Article::getTopTime,null);
-                baseMapper.update(null,updateWrapper);
+                updateWrapper.eq(Article::getIsTop, 1).set(Article::getIsTop, 0).set(Article::getTopTime, null);
+                baseMapper.update(null, updateWrapper);
             }
             article.setIsTop(1);
             article.setTopTime(LocalDateTime.now());
@@ -296,20 +296,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public Integer push(Long[] ids) {
         for (Long id : ids) {
-            if(ids.length==1){
+            if (ids.length == 1) {
                 Article article = baseMapper.selectById(id);
                 Assert.isTrue(article.getCategoryId() != null, "数据不完整无法发布");
                 article.setIsPush(1);
                 return baseMapper.updateById(article);
             }
             Article article = baseMapper.selectById(id);
-            if(article.getCategoryId() != null){
+            if (article.getCategoryId() != null) {
                 article.setIsPush(1);
                 baseMapper.updateById(article);
             }
         }
         return ids.length;
     }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer unpublish(Long[] ids) {
@@ -464,82 +465,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
             for (String mdFilePath : list) {
                 //获取markdown解析文件
-                Map<String, Object> postData = MarkdownUtils.parseHexoPost(mdFilePath);
+                Map<String, Object> postData = MarkdownUtils.parseFontMatterPost(mdFilePath);
                 Article article = new Article();
                 List<String> tags = new ArrayList<>();
-                // 打印博文数据
-                for (Map.Entry<String, Object> entry : postData.entrySet()) {
-                    if (entry.getKey().equals("title")) {
-                        //标题
-                        article.setTitle(entry.getValue().toString());
-                    }
-                    if (entry.getKey().equals("cover")) {
-                        if (StringUtil.isNotBlank(entry.getValue().toString())) {
-                            if (entry.getValue().toString().startsWith("http")) {
-                                //封面
-                                article.setCover(entry.getValue().toString());
-                            } else {
-                                String sourcePath = path + entry.getValue().toString().replace("..", "");
-                                //封面
-                                article.setCover(fileService.getCopyImage(sourcePath, newPath));
-                            }
-                        }
-                    }
-                    if (entry.getKey().equals("categories")) {
-                        if (StringUtil.isNotBlank(entry.getValue().toString())) {
-                            //分类
-                            Category category = categoryMapper.selectOne(new QueryWrapper<Category>().eq("name", entry.getValue().toString()));
-                            if (category == null) {
-                                //不存在就创建
-                                category = new Category();
-                                category.setName(entry.getValue().toString());
-                                categoryMapper.insert(category);
-                            }
-                            article.setCategoryId(category.getId());
-                        }
-                    }
-                    if (entry.getKey().equals("date") && StringUtils.isNotBlank(entry.getValue().toString())) {
-                        //创建时间
-                        article.setCreatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
-                    }
-                    if (entry.getKey().equals("updated") && StringUtils.isNotBlank(entry.getValue().toString())) {
-                        //更新时间
-                        article.setUpdatedTime(DateUtils.getLocalDateTimeToString(entry.getValue().toString()));
-                    }
-                    if (entry.getKey().equals("original") && StringUtils.isNotBlank(entry.getValue().toString())) {
-                        //转载地址
-                        article.setOriginalUrl(entry.getValue().toString());
-                        article.setIsOriginal(1);
-                    }
-
-                    if (entry.getKey().equals("content")) {
-                        if (StringUtil.isNotBlank(entry.getValue().toString())) {
-                            //文章内容
-                            article.setText(entry.getValue().toString());
-                            List<String> photoList = MarkdownUtils.photoList(article.getText());
-                            for (String fileName : photoList) {
-                                String sourcePath = path + fileName.replace("..", "");
-                                //新图片位置
-                                String newPhotoPath = ".." + fileService.getCopyImage(sourcePath, newPath);
-                                article.setText(article.getText().replaceAll(fileName, newPhotoPath));
-                            }
-                            article.setSummary(MarkdownUtils.truncateText(article.getText(), 100));
-                        }
-                    }
-                    if (entry.getKey().equals("tags")) {
-                        //标签
-                        tags = (List<String>) entry.getValue();
-                    }
-                }
-                //封面
-                if (StringUtils.isBlank(article.getCover())) {
-                    //为空手动添加一个封面
-                    article.setCover(wallpaper());
-                }
+                //处理数据
+                processPostData(article, postData, path, newPath, tags);
+                //为空手动添加一个封面
+                article.setCover(StringUtils.isBlank(article.getCover()) ? wallpaper() : article.getCover());
                 //写入创建时间
-                article.setCreatedTime(article.getCreatedTime()==null?LocalDateTime.now():article.getCreatedTime());
+                article.setCreatedTime(article.getCreatedTime() == null ? LocalDateTime.now() : article.getCreatedTime());
                 //写入更新时间
-                article.setUpdatedTime(article.getUpdatedTime()==null?LocalDateTime.now():article.getUpdatedTime());
+                article.setUpdatedTime(article.getUpdatedTime() == null ? LocalDateTime.now() : article.getUpdatedTime());
                 //写入作者
                 article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
                 //写入文章
@@ -671,5 +607,80 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //统计持续创作天数
         ContributionUtils.setContribution();
         return article.getId();
+    }
+
+
+    /**
+     * 处理文章数据
+     *
+     * @param article  文章
+     * @param postData Front Matter
+     * @param path     源文件路径
+     * @param newPath  新文件路径
+     * @param tags     分类
+     */
+    public void processPostData(Article article, Map<String, Object> postData, String path, String newPath, List<String> tags) {
+        postData.forEach((key, value) -> {
+            String valueStr = value != null ? value.toString() : "";
+
+            switch (key) {
+                case "title":
+                    article.setTitle(valueStr);
+                    break;
+                case "cover":
+                    if (StringUtil.isNotBlank(valueStr)) {
+                        if (valueStr.startsWith("http")) {
+                            article.setCover(valueStr);
+                        } else {
+                            String sourcePath = path + valueStr.replace("..", "");
+                            article.setCover(fileService.getCopyImage(sourcePath, newPath));
+                        }
+                    }
+                    break;
+                case "categories":
+                    if (StringUtil.isNotBlank(valueStr)) {
+                        Category category = categoryMapper.selectOne(new QueryWrapper<Category>().eq("name", valueStr));
+                        if (category == null) {
+                            category = new Category();
+                            category.setName(valueStr);
+                            categoryMapper.insert(category);
+                        }
+                        article.setCategoryId(category.getId());
+                    }
+                    break;
+                case "date":
+                    if (StringUtils.isNotBlank(valueStr)) {
+                        article.setCreatedTime(DateUtils.getLocalDateTimeToString(valueStr));
+                    }
+                    break;
+                case "updated":
+                    if (StringUtils.isNotBlank(valueStr)) {
+                        article.setUpdatedTime(DateUtils.getLocalDateTimeToString(valueStr));
+                    }
+                    break;
+                case "original":
+                    if (StringUtils.isNotBlank(valueStr)) {
+                        article.setOriginalUrl(valueStr);
+                        article.setIsOriginal(1);
+                    }
+                    break;
+                case "content":
+                    if (StringUtil.isNotBlank(valueStr)) {
+                        String text = valueStr;
+                        List<String> photoList = MarkdownUtils.photoList(text);
+                        for (String fileName : photoList) {
+                            String sourcePath = path + fileName.replace("..", "");
+                            String newPhotoPath = ".." + fileService.getCopyImage(sourcePath, newPath);
+                            text = text.replaceAll(fileName, newPhotoPath);
+                        }
+                        article.setText(text);
+                        article.setSummary(MarkdownUtils.truncateText(text, 100));
+                    }
+                    break;
+                case "tags":
+                    tags.addAll((List<String>) value);
+                    break;
+            }
+        });
     }
 }
