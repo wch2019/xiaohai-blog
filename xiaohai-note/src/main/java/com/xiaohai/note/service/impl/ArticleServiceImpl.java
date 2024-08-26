@@ -27,6 +27,7 @@ import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.ArticleLike;
 import com.xiaohai.note.pojo.entity.Category;
 import com.xiaohai.note.pojo.entity.Tags;
+import com.xiaohai.note.pojo.query.ArticleExistQuery;
 import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleReptileVo;
@@ -607,6 +608,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         //统计持续创作天数
         ContributionUtils.setContribution();
         return article.getId();
+    }
+
+    @Override
+    public ArticleExistDto existState(ArticleExistQuery query) {
+        Article article = baseMapper.selectOne(new LambdaQueryWrapper<Article>()
+                .eq(Article::getCreatedTime, query.getDate())
+                .eq(Article::getTitle, query.getTitle())
+                .eq(Article::getUserId, StpUtil.getLoginId())
+        );
+        ArticleExistDto articleExist = new ArticleExistDto();
+        if(article!=null){
+            BeanUtils.copyProperties(article, articleExist);
+            return articleExist;
+        }
+        return articleExist;
     }
 
 

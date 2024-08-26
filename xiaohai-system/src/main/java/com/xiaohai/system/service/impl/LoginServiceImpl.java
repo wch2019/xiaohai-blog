@@ -60,7 +60,9 @@ public class LoginServiceImpl implements LoginService {
 
         if (Boolean.TRUE.equals(vo.getRememberMe())) {
             //记住我 7天有效
-            StpUtil.login(user.getId().longValue(), new SaLoginModel().setIsLastingCookie(true).setTimeout(60 * 60 * 24 * 7));
+            StpUtil.login(user.getId().longValue(), new SaLoginModel()
+                    .setIsLastingCookie(true)
+                    .setTimeout(60 * 60 * 24 * 7));
         } else {
             StpUtil.login(user.getId().longValue());
         }

@@ -5,12 +5,12 @@ import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.query.ArticleQuery;
+import com.xiaohai.note.pojo.query.ArticleExistQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -100,14 +100,15 @@ public interface ArticleService extends IService<Article> {
      * @param id
      * @return
      */
-    Integer push( Long[] id);
+    Integer push(Long[] id);
 
     /**
      * 取消发布
+     *
      * @param ids
      * @return
      */
-    Integer unpublish( Long[] ids);
+    Integer unpublish(Long[] ids);
 
     /**
      * 获取所有或指定用户文章的阅读量
@@ -163,14 +164,22 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 导出markdown压缩文件
-     *
      */
     void downloadCompressedFile(Long status);
 
     /**
      * 抓取文章爬虫
+     *
      * @param vo
      * @return
      */
     Integer reptileArticle(ArticleReptileVo vo);
+
+    /**
+     * 查询文章存在状态
+     *
+     * @param query
+     * @return
+     */
+    ArticleExistDto existState(ArticleExistQuery query);
 }

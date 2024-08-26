@@ -39,7 +39,7 @@ const data = reactive({
 const { queryParams } = toRefs(data)
 const { carouselParams } = toRefs(data)
 
-/**
+/**'
  * 轮播
  * @param type
  */

@@ -15,6 +15,8 @@ import com.xiaohai.common.server.Disk;
 import com.xiaohai.common.utils.*;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.file.service.FileManagerService;
+import com.xiaohai.note.dao.ArticleMapper;
+import com.xiaohai.note.pojo.dto.UserBasicDto;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.ConfigDto;
@@ -53,6 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final ConfigService configService;
     private final FileConfig fileConfig;
     private final FileManagerService fileManagerService;
+    private final ArticleMapper articleMapper;
 
     @Override
     public Map<String, Object> findByInfo() {
@@ -76,6 +79,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         map.put("users", userNames);
         return map;
     }
+
+    @Override
+    public UserBasicDto articleInfo() {
+        Long userId = StpUtil.getLoginIdDefaultNull() == null ? null : Long.valueOf((String) StpUtil.getLoginId());
+        return articleMapper.findUserBasic(userId);
+    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

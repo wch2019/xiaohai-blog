@@ -8,7 +8,9 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
+import com.xiaohai.note.pojo.dto.ArticleExistDto;
 import com.xiaohai.note.pojo.query.ArticleQuery;
+import com.xiaohai.note.pojo.query.ArticleExistQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
@@ -23,8 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 文章表Controller
@@ -116,6 +116,7 @@ public class ArticleController {
     public Response<Integer> push(@PathVariable Long[] ids) {
         return Response.success("发布成功！", articleService.push(ids));
     }
+
     @Operation(summary = "取消发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:push")
     @Log(title = "取消发布")
@@ -138,7 +139,7 @@ public class ArticleController {
     @Parameter(name = "status", description = "是否生成 Front Matter，0否 1是")
     @Log(title = "导出markdown压缩文件")
     @PostMapping(value = "/export/markdown/{status}")
-    public Response<Integer>  downloadCompressedFile(@PathVariable Long status) {
+    public Response<Integer> downloadCompressedFile(@PathVariable Long status) {
         articleService.downloadCompressedFile(status);
         return Response.success("导出markdown压缩文件成功！");
     }
@@ -149,5 +150,11 @@ public class ArticleController {
     @PostMapping(value = "/reptile-article")
     public Response<Integer> reptileArticle(@Validated @RequestBody ArticleReptileVo vo) {
         return Response.success("抓取文章成功！", articleService.reptileArticle(vo));
+    }
+
+    @Operation(summary = "查询文章存在状态", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping("/exist/state")
+    public Response<ArticleExistDto> existState(@ParameterObject @Validated  ArticleExistQuery query) {
+        return Response.success("查询文章存在状态成功！", articleService.existState(query));
     }
 }

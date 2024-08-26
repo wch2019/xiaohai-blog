@@ -6,6 +6,7 @@ import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.utils.EncryptUtils;
+import com.xiaohai.note.pojo.dto.UserBasicDto;
 import com.xiaohai.system.pojo.dto.UserDto;
 import com.xiaohai.system.pojo.query.UserQuery;
 import com.xiaohai.system.pojo.vo.EmailVo;
@@ -40,6 +41,12 @@ public class UserController {
     @GetMapping("/info")
     public Response<Map<String, Object>> findByInfo() {
         return Response.success("获取用户登录信息成功！", userService.findByInfo());
+    }
+
+    @Operation(summary = "获取用户文章基础信息", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping("/article/info")
+    public Response<UserBasicDto> articleInfo() {
+        return Response.success("获取用户文章基础信息成功！", userService.articleInfo());
     }
 
     @Operation(summary = "新增用户表", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
