@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.*;
 import com.xiaohai.note.pojo.entity.Article;
-import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.query.ArticleExistQuery;
+import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
+import com.xiaohai.note.pojo.vo.LocalArticleVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -182,4 +183,11 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     ArticleExistDto existState(ArticleExistQuery query);
+
+    /**
+     * 本地上传文章
+     * @param vo
+     * @return
+     */
+    Integer localUpload(LocalArticleVo vo);
 }

@@ -32,6 +32,7 @@ import com.xiaohai.note.pojo.query.ArticleQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
+import com.xiaohai.note.pojo.vo.LocalArticleVo;
 import com.xiaohai.note.service.ArticleService;
 import com.xiaohai.note.service.ArticleTagService;
 import com.xiaohai.spider.article.Acquire;
@@ -481,7 +482,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
                 //写入文章
                 baseMapper.insert(article);
-                //新增标签
+                //添加标签关联
                 articleTagService.addTagName(tags, article.getId());
                 //统计持续创作天数
                 ContributionUtils.setContribution();
@@ -618,11 +619,62 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .eq(Article::getUserId, StpUtil.getLoginId())
         );
         ArticleExistDto articleExist = new ArticleExistDto();
-        if(article!=null){
+        if (article != null) {
             BeanUtils.copyProperties(article, articleExist);
             return articleExist;
         }
         return articleExist;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer localUpload(LocalArticleVo vo) {
+        Article article = new Article();
+        BeanUtils.copyProperties(vo, article);
+        article.setTitle(vo.getTitle());
+        article.setIsOriginal(0);
+        if (StringUtils.isNotBlank(vo.getOriginal())) {
+            article.setIsOriginal(1);
+            article.setOriginalUrl(vo.getOriginal());
+        }
+        // 创建时间
+        article.setCreatedTime(DateUtils.getLocalDateTimeToString(vo.getDate()));
+        // 更新时间
+        article.setUpdatedTime(DateUtils.getLocalDateTimeToString(vo.getUpdated()));
+        article.setText(vo.getContent());
+        article.setCategoryId(getCategoryId(vo.getCategories()));
+        List<String> tags = new ArrayList<>(vo.getTags() != null ? vo.getTags() : Collections.emptyList());
+
+        //发布
+        if (article.getIsPush() == 1) {
+            if (StringUtils.isBlank(vo.getCategories())) {
+                throw new ServiceException("发布状态，分类不能为空");
+            }
+            if (StringUtils.isBlank(vo.getCover())) {
+                throw new ServiceException("发布状态，封面不能为空");
+            }
+            if (tags.isEmpty()) {
+                throw new ServiceException("发布状态，标签不能为空");
+            }
+        }
+
+        if (vo.getId() != null) {
+            Article oldArticle = baseMapper.selectById(vo.getId());
+            if (!Objects.equals(oldArticle.getUserId(), Integer.valueOf((String) StpUtil.getLoginId())) && !StpUtil.hasRole(Constants.ADMIN)) {
+                throw new ServiceException("非当前用户数据无法更新");
+            }
+            baseMapper.updateById(article);
+        } else {
+            //写入作者
+            article.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
+            baseMapper.insert(article);
+        }
+        //添加标签关联
+        articleTagService.addTagName(tags, article.getId());
+        //统计持续创作天数
+        ContributionUtils.setContribution();
+
+        return article.getId();
     }
 
 
@@ -654,15 +706,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     }
                     break;
                 case "categories":
-                    if (StringUtil.isNotBlank(valueStr)) {
-                        Category category = categoryMapper.selectOne(new QueryWrapper<Category>().eq("name", valueStr));
-                        if (category == null) {
-                            category = new Category();
-                            category.setName(valueStr);
-                            categoryMapper.insert(category);
-                        }
-                        article.setCategoryId(category.getId());
-                    }
+                    article.setCategoryId(getCategoryId(valueStr));
                     break;
                 case "date":
                     if (StringUtils.isNotBlank(valueStr)) {
@@ -698,5 +742,24 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     break;
             }
         });
+    }
+
+    /**
+     * 获取分类id
+     *
+     * @param valueStr
+     * @return
+     */
+    private Integer getCategoryId(String valueStr) {
+        if (StringUtil.isNotBlank(valueStr)) {
+            Category category = categoryMapper.selectOne(new QueryWrapper<Category>().eq("name", valueStr));
+            if (category == null) {
+                category = new Category();
+                category.setName(valueStr);
+                categoryMapper.insert(category);
+            }
+            return category.getId();
+        }
+        return null;
     }
 }

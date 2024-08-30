@@ -14,6 +14,7 @@ import com.xiaohai.note.pojo.query.ArticleExistQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
+import com.xiaohai.note.pojo.vo.LocalArticleVo;
 import com.xiaohai.note.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -156,5 +157,11 @@ public class ArticleController {
     @GetMapping("/exist/state")
     public Response<ArticleExistDto> existState(@ParameterObject @Validated  ArticleExistQuery query) {
         return Response.success("查询文章存在状态成功！", articleService.existState(query));
+    }
+    @Operation(summary = "本地上传文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission(value = {"note:article:add","note:article:update"}, mode = SaMode.AND)
+    @PostMapping("/local/upload")
+    public Response<Integer> localUpload(@Validated @RequestBody LocalArticleVo vo) {
+        return Response.success("上传文章成功！", articleService.localUpload(vo));
     }
 }

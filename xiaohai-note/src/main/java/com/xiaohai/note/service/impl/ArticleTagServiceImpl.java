@@ -94,6 +94,9 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, Article
 
     @Override
     public void addTagName(List<String> names, Integer articleId) {
+        //删除关联
+        delete(articleId);
+
         //写入标签
         for (String name : names) {
             if(StringUtil.isNotBlank(name)){
