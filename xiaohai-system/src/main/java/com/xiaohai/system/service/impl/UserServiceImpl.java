@@ -114,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long newDiskSize = null;
         Long free = FileUtil.getSystemDiskSizeFree(fileConfig.getProfile());
         Long size = baseMapper.getTotalDiskSizeExcludeUserId(userId);
-        if (diskSize != 0) {
+        if (diskSize != null && diskSize != 0) {
             if (free > size + diskSize) {
                 newDiskSize = diskSize;
             }
