@@ -73,4 +73,7 @@ public class ArticleDto implements Serializable {
 
     @Schema(description = "创建时间")
     private LocalDateTime createdTime;
+
+    @Schema(description = "更新时间")
+    private LocalDateTime updatedTime;
 }

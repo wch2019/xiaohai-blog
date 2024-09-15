@@ -1,163 +1,145 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-        <el-form-item label="评论类型" prop="discussant">
-          <el-select
-            v-model="queryParams.discussant"
-            placeholder="评论类型"
-            clearable
-            size="small"
-            style="width: 130px"
-            @clear="queryParams.discussant = null"
-          >
-            <el-option
-              v-for="discussant in discussantList"
-              :key="discussant.value"
-              :label="discussant.label"
-              :value="discussant.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="评论用户" prop="username">
-          <el-input
-            v-model="queryParams.username"
-            placeholder="请输入评论用户"
-            clearable
-            size="small"
-            style="width: 150px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="评论内容" prop="content">
-          <el-input
-            v-model="queryParams.content"
-            placeholder="请输入评论内容"
-            clearable
-            size="small"
-            style="width: 160px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="评论来源" prop="source">
-          <el-select
-            v-model="queryParams.source"
-            placeholder="评论来源"
-            clearable
-            size="small"
-            style="width: 130px"
-            @clear="queryParams.source = 0"
-          >
-            <el-option
-              v-for="source in sourceList"
-              :key="source.value"
-              :label="source.label"
-              :value="source.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-select
-          v-model="queryParams.userId"
-          placeholder="作者"
-          clearable
-          size="small"
-          style="width: 100px;"
-          filterable
-          @clear="queryParams.userId = null"
-          @change="handleQuery"
-        >
-          <el-option
-            v-for="user in this.$store.getters.users"
-            :key="user.id"
-            :label="user.nickName"
-            :value="user.id"
-          >
-            <span
-              class="text-xs users"
-            >
-              <el-avatar v-if="user.avatar" size="small" :src="image(user.avatar)" />
-              <el-avatar v-else size="small"> {{ user.nickName }}</el-avatar>
-              <span>  {{ user.nickName }}</span>
-            </span>
-
-          </el-option>
-        </el-select>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:comment:delete')"
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-          >删除
-          </el-button>
-        </el-col>
-      </el-row>
-      <el-table v-loading="loading" style="margin-top: 10px" :data="commentList" @selection-change="handleSelectionChange">
+      <el-table
+        v-loading="loading"
+        style="margin-top: 10px"
+        :data="commentList"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="55" align="center" />
-        <!--        <el-table-column label="评论人头像" align="center" width="120" prop="avatar">-->
-        <!--          <template slot-scope="scope">-->
-        <!--            <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row.avatar)" />-->
-        <!--            <el-avatar v-else shape="square"> {{ scope.row.username }}</el-avatar>-->
-        <!--          </template>-->
-        <!--        </el-table-column>-->
-        <!--        <el-table-column label="评论人" align="center" prop="username" :show-overflow-tooltip="true" />-->
-        <!--        <el-table-column label="回复人头像" align="center" width="120" prop="avatar">-->
-        <!--          <template slot-scope="scope">-->
-        <!--            <el-avatar v-if="scope.row.replyAvatar" shape="square" :src="image(scope.row.replyAvatar)" />-->
-        <!--            <el-avatar v-else shape="square"> {{ scope.row.replyUsername }}</el-avatar>-->
-        <!--          </template>-->
-        <!--        </el-table-column>-->
-        <!--        <el-table-column label="回复人" align="center" prop="replyUsername" :show-overflow-tooltip="true">-->
-        <!--          <template slot-scope="scope">-->
-        <!--            <div>{{ scope.row.replyUsername || '无' }}</div>-->
-        <!--          </template>-->
-        <!--        </el-table-column>-->
-        <!--        <el-table-column v-if="title" label="文章" align="center" prop="title" :show-overflow-tooltip="true">-->
-        <!--          <template slot-scope="scope">-->
-        <!--            <el-link :underline="false" @click="articleView(scope.row)">{{ scope.row.title }}</el-link>-->
-        <!--          </template>-->
-        <!--        </el-table-column>-->
-        <!--        <el-table-column label="评论内容" align="center" prop="content" :show-overflow-tooltip="true" />-->
-        <el-table-column align="center" class-name="small-padding fixed-width">
+        <el-table-column class-name="small-padding fixed-width">
+          <template slot="header">
+            <el-row :gutter="10">
+              <span>
+                <el-col :span="1.5">
+                  <el-button
+                    v-if="$store.getters.permission.includes('note:comment:delete')"
+                    type="danger"
+                    plain
+                    icon="el-icon-delete"
+                    size="mini"
+                    :disabled="multiple"
+                    @click="handleDelete"
+                  >删除
+                  </el-button>
+                </el-col>
+              </span>
+              <span style="float: right">
+                <el-col :span="1.5">
+                  <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+                    <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+                  </el-tooltip>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-input
+                    v-model="queryParams.content"
+                    placeholder="请输入评论内容"
+                    clearable
+                    size="small"
+                    style="width: 150px;"
+                    @input="handleQuery"
+                  />
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.source"
+                    placeholder="评论来源"
+                    clearable
+                    size="small"
+                    style="width: 100px"
+                    @clear="queryParams.source = 0"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="source in sourceList"
+                      :key="source.value"
+                      :label="source.label"
+                      :value="source.value"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.userId"
+                    placeholder="作者"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    filterable
+                    @clear="queryParams.userId = null"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="user in this.$store.getters.users"
+                      :key="user.id"
+                      :label="user.nickName"
+                      :value="user.id"
+                    >
+                      <span
+                        class="text-xs users"
+                      >
+                        <el-avatar v-if="user.avatar" size="small" :src="image(user.avatar)" />
+                        <el-avatar v-else size="small"> {{ user.nickName }}</el-avatar>
+                        <span>  {{ user.nickName }}</span>
+                      </span>
+
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+                    <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+                  </el-tooltip>
+
+                </el-col></span>
+
+            </el-row>
+          </template>
           <template slot-scope="scope">
             <div v-loading="loading" class="entity-body">
               <div class="entity-start">
                 <div class="entity-field-wrapper">
                   <el-avatar v-if="scope.row.avatar" :src="image(scope.row.avatar)" />
                   <el-avatar v-else> {{ scope.row.username }}</el-avatar>
+                </div>
+                <div class="entity-field-wrapper" style="width: 100px; ">
                   {{ scope.row.username }}
                 </div>
                 <div class="entity-field-wrapper">
-                  <div v-if="scope.row.title">
-                    <el-tag size="mini">文 章</el-tag>
-                    <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
-                      <el-link class="entity-field-title" :underline="false" @click="articleEdit(scope.row)">{{ scope.row.title }}</el-link>
-                    </el-tooltip>
-                    <svg-icon class="know-button" icon-class="link" @click="articleView(scope.row)" />
+                  <div style="display: flex;">
+                    <div v-if="scope.row.title" class="gap-2">
+                      <el-tag size="mini">文 章</el-tag>
+                      <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
+                        <el-link class="entity-field-title" :underline="false" @click="articleEdit(scope.row)">
+                          {{ scope.row.title }}
+                        </el-link>
+                      </el-tooltip>
+                      <svg-icon class="know-button" icon-class="link" @click="articleView(scope.row.articleId)" />
+                    </div>
+                    <div v-else>
+                      <el-tag size="mini">留 言</el-tag>
+                      <svg-icon class="know-button" icon-class="link" @click="messageView()" />
+                    </div>
                   </div>
-                  <div v-else>
-                    <el-tag size="mini">留 言</el-tag>
-                    <svg-icon class="know-button" icon-class="link" @click="articleView(scope.row)" />
-                  </div>
-                  <span style="display: flex;" class="gap-2">{{ scope.row.content }}</span>
-                  <span style="display: flex;" class="gap-2">
-                    <span class="text-xs" style="cursor: pointer;">{{ scope.row.contentCount==null?0: scope.row.contentCount }}条回复</span>
-                    <span v-if="$store.getters.permission.includes('note:comment:add')" class="text-xs" style="cursor: pointer;" @click="handleAdd(scope.row)">回复</span>
+                  <span style="display: flex;">{{ scope.row.content }}</span>
+                  <span class="gap-2">
+                    <span
+                      slot="reference"
+                      class="text-xs"
+                      style="cursor: pointer;"
+                      @click="handleReply(scope.row)"
+                    > {{ scope.row.children == null ? 0 : scope.row.children.length }}条回复</span>
+                    <span
+                      v-if="$store.getters.permission.includes('note:comment:add')"
+                      class="text-xs"
+                      style="cursor: pointer;"
+                      @click="handleAdd(scope.row)"
+                    >回复</span>
                   </span>
-
                 </div>
               </div>
-              <div class="entity-end">
+              <div class="entity-end text-xs text-color">
                 {{ scope.row.createdTime }}
               </div>
               <div class="entity-dropdown">
@@ -176,7 +158,9 @@
                     >
                       回 复
                     </el-dropdown-item>
-                    <template v-if="$store.getters.name.includes(scope.row.username)&&$store.getters.roles.includes('user')">
+                    <template
+                      v-if="$store.getters.name.includes(scope.row.username)&&$store.getters.roles.includes('user')"
+                    >
                       <el-dropdown-item
                         v-if="$store.getters.permission.includes('note:comment:delete')"
                         divided
@@ -217,6 +201,7 @@
         @pagination="getList"
       />
       <CommentDialog ref="commentDialog" @closeDialog="closeDialog" />
+      <ReplyDialog :reply-dialog="replyDialog" />
     </el-card>
   </div>
 </template>
@@ -224,11 +209,12 @@
 <script>
 import { listComment, delComment, getComment } from '@/api/note/comment'
 import CommentDialog from '@/views/note/comment/componets/commentDialog.vue'
-import { articleEdit, articleView, image } from '@/utils/common'
+import ReplyDialog from '@/views/note/comment/componets/ReplyDialog.vue'
+import { articleEdit, articleView, image, messageView } from '@/utils/common'
 
 export default {
   name: 'Index',
-  components: { CommentDialog },
+  components: { CommentDialog, ReplyDialog },
   data() {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,
@@ -236,8 +222,6 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
       // 非多个禁用
       multiple: true,
       // 总条数
@@ -255,9 +239,15 @@ export default {
         pageNum: 1,
         pageSize: 10,
         discussant: 1,
-        username: null,
         content: null,
+        userId: null,
         source: 0
+      },
+      replyDialog: {
+        open: false,
+        title: '回复',
+        id: null,
+        commentList: []
       }
     }
   },
@@ -266,13 +256,14 @@ export default {
   },
   methods: {
     articleView,
+    messageView,
     articleEdit,
     // 头像展示
     image,
     /** 查询留言列表 */
     getList() {
       this.loading = true
-      if (this.queryParams.source == 2) {
+      if (this.queryParams.source === 2) {
         this.title = false
       } else {
         this.title = true
@@ -289,14 +280,18 @@ export default {
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery(formName) {
-      this.$refs[formName].resetFields()
+    resetQuery() {
+      this.queryParams.title = null
+      this.queryParams.categoryId = null
+      this.queryParams.tagId = null
+      this.queryParams.isOriginal = null
+      this.queryParams.isPush = null
+      this.queryParams.userId = null
       this.handleQuery()
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 回复按钮操作 */
@@ -327,19 +322,18 @@ export default {
     closeDialog() {
       this.getList()
     },
-    /** 查询当前id下所有评论*/
-    f(id) {
-      getComment(id).then(response => {
-        this.commentList = response.data.records
-        this.total = response.data.total
-        this.loading = false
-      })
+    // /** 查询当前id下所有评论*/
+    handleReply(row) {
+      this.replyDialog.commentList = row.children
+      this.replyDialog.id = row.id
+      this.replyDialog.open = true
     }
   }
 }
 </script>
 <style scoped>
 .gap-2 {
+  display: inline-flex;
   gap: .5rem;
 }
 </style>

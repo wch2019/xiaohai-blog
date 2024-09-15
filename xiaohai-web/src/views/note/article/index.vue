@@ -224,7 +224,7 @@
                     <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
                       <el-link class="entity-field-title" :underline="false" @click="articleEdit(scope.row)">{{ scope.row.title }}</el-link>
                     </el-tooltip>
-                    <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="articleView(scope.row)" />
+                    <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="articleView(scope.row.id)" />
                   </div>
                   <div class="entity-field-description-body">
                     <span class="entity-field-description-view">
@@ -259,8 +259,12 @@
                     <el-avatar v-else size="small"> {{ scope.row.nickName }}</el-avatar>
                   </el-tooltip>
                 </span>
-                <span class="text-xs text-color">{{ scope.row.isPush?"已发布":"未发布" }}</span>
+                <span class="text-xs text-color">
+                  <el-tag v-if="scope.row.isPush" size="medium" type="success">已发布</el-tag>
+                  <el-tag v-else size="medium" type="danger">未发布</el-tag>
+                </span>
                 <span class="text-xs text-color">{{ scope.row.createdTime }}</span>
+
               </div>
               <div class="entity-dropdown">
                 <el-dropdown trigger="click" @visible-change>

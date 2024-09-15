@@ -37,7 +37,9 @@
         LEFT JOIN b_article a ON a.id = c.article_id
         LEFT JOIN sys_user u ON u.id = c.user_id
         <where>
-            c.reply_user_id  IS NULL
+            <if test="query.content != null and query.content != ''">
+                and c.content like CONCAT(#{query.content},'%')
+            </if>
             <!--我的评论-->
             <if test="userId != null ">
                 and c.user_id = #{userId}

@@ -29,6 +29,9 @@ public class CommentQuery implements Serializable {
     @Parameter(description = "用户id")
     private Integer userId;
 
+    @Parameter(description = "评论内容")
+    private String content;
+
     @Parameter(description = "评论来源 0:全部,1:文章,2:留言")
     private Integer source;
 }
