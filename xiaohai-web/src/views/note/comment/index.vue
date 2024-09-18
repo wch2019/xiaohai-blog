@@ -207,7 +207,7 @@
 </template>
 
 <script>
-import { listComment, delComment, getComment } from '@/api/note/comment'
+import { listComment, delComment } from '@/api/note/comment'
 import CommentDialog from '@/views/note/comment/componets/commentDialog.vue'
 import ReplyDialog from '@/views/note/comment/componets/ReplyDialog.vue'
 import { articleEdit, articleView, image, messageView } from '@/utils/common'

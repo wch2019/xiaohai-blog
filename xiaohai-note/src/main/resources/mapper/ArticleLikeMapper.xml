@@ -16,6 +16,9 @@
     <select id="selectArticleLikePage" resultType="com.xiaohai.note.pojo.dto.ArticleLikeDto">
         SELECT
         l.id,
+        (SELECT username from sys_user where id=a.user_id) as userName,
+        (SELECT nick_name from sys_user where id=a.user_id) as nickName,
+        (SELECT avatar from sys_user where id=a.user_id) as avatar,
         a.id as articleId,
         a.cover,
         a.title,

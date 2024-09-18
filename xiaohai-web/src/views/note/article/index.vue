@@ -2,7 +2,6 @@
   <div class="app-container">
     <el-card class="box-card box-card-height">
       <el-table
-        style="margin-top: 10px;width: 100%;"
         :row-class-name="tableRowClassName"
         :data="articleList"
         @selection-change="handleSelectionChange"
@@ -193,8 +192,8 @@
                   <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
                     <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
                   </el-tooltip>
-
-                </el-col></span>
+                </el-col>
+              </span>
 
             </el-row>
           </template>

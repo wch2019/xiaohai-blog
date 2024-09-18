@@ -28,6 +28,15 @@ public class ArticleLikeDto implements Serializable {
     @Schema(description = "文章id")
     private Integer articleId;
 
+    @Schema(description = "用户名")
+    private String username;
+
+    @Schema(description = "用户昵称")
+    private String nickName;
+
+    @Schema(description = "头像地址")
+    private String avatar;
+
     @Schema(description = "封面")
     private String cover;
 

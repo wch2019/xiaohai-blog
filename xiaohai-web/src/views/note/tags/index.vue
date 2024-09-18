@@ -1,76 +1,87 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item label="标签" prop="name">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="请输入标签名称"
-            clearable
-            size="small"
-            style="width: 240px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="状态"
-            clearable
-            size="small"
-            style="width: 240px"
-            @clear="queryParams.status = null"
-          >
-            <el-option
-              v-for="dict in $store.getters.dict.sys_normal_disable"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
 
       <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:tags:add')"
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAdd"
-          >新增
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:tags:update')"
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-          >修改
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:tags:delete')"
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-          >删除
-          </el-button>
-        </el-col>
+        <span>
+          <el-col :span="1.5">
+            <el-button
+              v-if="$store.getters.permission.includes('note:tags:add')"
+              type="primary"
+              plain
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+            >新增
+            </el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              v-if="$store.getters.permission.includes('note:tags:update')"
+              type="success"
+              plain
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="single"
+              @click="handleUpdate"
+            >修改
+            </el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              v-if="$store.getters.permission.includes('note:tags:delete')"
+              type="danger"
+              plain
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete"
+            >删除
+            </el-button>
+          </el-col>
+        </span>
+
+        <span style="float: right">
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+            </el-tooltip>
+          </el-col>
+          <el-col :span="1.5">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入标签名称"
+              clearable
+              size="small"
+              style="width: 150px;"
+              @input="handleQuery"
+            />
+          </el-col>
+          <el-col :span="1.5">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="状态"
+              clearable
+              size="small"
+              style="width: 100px;"
+              @clear="queryParams.status = null"
+              @change="handleQuery"
+            >
+              <el-option
+                v-for="dict in $store.getters.dict.sys_normal_disable"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+            </el-tooltip>
+          </el-col>
+        </span>
+
       </el-row>
 
       <el-table
@@ -178,15 +189,13 @@ export default {
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery(formName) {
-      this.$refs[formName].resetFields()
+    resetQuery() {
+      this.queryParams = Object.assign({}, this.$options.data().queryParams)
       this.handleQuery()
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.$refs.tagsDialog.reset()
-      this.$refs.tagsDialog.open = true
-      this.$refs.tagsDialog.title = '添加标签数据'
+      this.$refs.tagsDialog.open({ type: 'add' })
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -197,14 +206,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       const dictId = row.id || this.ids
-      getTags(dictId).then(response => {
-        if (this.$refs.tagsDialog.$refs['form'] !== undefined) {
-          this.$refs.tagsDialog.$refs['form'].resetFields()
-        }
-        this.$refs.tagsDialog.form = response.data
-        this.$refs.tagsDialog.open = true
-        this.$refs.tagsDialog.title = '修改标签数据'
-      })
+      this.$refs.tagsDialog.open({ dictId: dictId, type: 'update' })
     },
 
     /** 删除按钮操作 */

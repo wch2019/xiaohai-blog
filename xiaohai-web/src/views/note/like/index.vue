@@ -1,135 +1,176 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item label="标题" prop="title">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="请输入文章名称"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="分类" prop="categoryId">
-          <el-select
-            v-model="queryParams.categoryId"
-            placeholder="分类"
-            clearable
-            size="small"
-            @clear="queryParams.categoryId = null"
-          >
-            <el-option
-              v-for="tags in CategoryList"
-              :key="tags.id"
-              :label="tags.name"
-              :value="tags.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="标签" prop="tagId">
-          <el-select
-            v-model="queryParams.tagId"
-            placeholder="标签"
-            clearable
-            size="small"
-            @clear="queryParams.tagId = []"
-          >
-            <el-option
-              v-for="tag in TagsList"
-              :key="tag.id"
-              :label="tag.name"
-              :value="tag.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:like:delete')"
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-          >删除
-          </el-button>
-        </el-col>
-      </el-row>
-
       <el-table
         v-loading="loading"
-        border
-        style="margin-top: 10px;width: 100%"
         :data="articleList"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="封面" align="center" prop="cover">
+        <el-table-column align="center" class-name="small-padding fixed-width">
+          <template slot="header">
+            <el-row :gutter="10">
+              <span>
+                <el-col :span="1.5">
+                  <el-button
+                    v-if="$store.getters.permission.includes('note:like:delete')"
+                    type="danger"
+                    plain
+                    icon="el-icon-delete"
+                    size="mini"
+                    :disabled="multiple"
+                    @click="handleDelete"
+                  >删除
+                  </el-button>
+                </el-col>
+              </span>
+              <span style="float: right">
+                <el-col :span="1.5">
+                  <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+                    <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+                  </el-tooltip>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-input
+                    v-model="queryParams.title"
+                    placeholder="请输入文章名称"
+                    clearable
+                    size="small"
+                    style="width: 150px;"
+                    @input="handleQuery"
+                  />
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.tagId"
+                    placeholder="标签"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    filterable
+                    @clear="queryParams.tagId = []"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="tag in TagsList"
+                      :key="tag.id"
+                      :label="tag.name"
+                      :value="tag.id"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-select
+                    v-model="queryParams.categoryId"
+                    placeholder="分类"
+                    clearable
+                    size="small"
+                    style="width: 100px;"
+                    filterable
+                    @clear="queryParams.categoryId = null"
+                    @change="handleQuery"
+                  >
+                    <el-option
+                      v-for="tags in CategoryList"
+                      :key="tags.id"
+                      :label="tags.name"
+                      :value="tags.id"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="1.5">
+                  <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+                    <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+                  </el-tooltip>
+
+                </el-col></span>
+
+            </el-row>
+          </template>
           <template slot-scope="scope">
-            <div style="position: relative">
-              <el-image :src="scope.row.cover" :preview-src-list="srcList" />
-              <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
-              <svg-icon v-if="scope.row.isOriginal===1 " icon-class="original" style="position: absolute; bottom: 7px; right: 0;font-size: 10px;" />
+            <div v-loading="loading" class="entity-body">
+              <div class="entity-start">
+                <div style="position: relative; width: 130px">
+                  <el-image :src="scope.row.cover" style="border-radius:4px" :preview-src-list="srcList">
+                    <div
+                      slot="error"
+                      style="display: flex;
+                             justify-content: center;
+                             align-items: center;
+                             font-size: 14px;
+                             color: #c0c4cc;
+                             vertical-align: middle;
+                             height: 70px"
+                    >
+                      <i class="el-icon-picture-outline" />
+                    </div>
+                  </el-image>
+                </div>
+                <div class="entity-field-wrapper">
+                  <div class="entity-field-title-body">
+                    <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
+                      <el-link class="entity-field-title" :underline="false" @click="articleView(scope.row.id)">{{ scope.row.title }}</el-link>
+                    </el-tooltip>
+                    <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="articleView(scope.row.id)" />
+                  </div>
+                  <div class="entity-field-description-body">
+                    <span class="entity-field-description-view">
+                      <span class="text-xs text-color">访问量 {{ scope.row.pageView }}</span>
+                      <span class="text-xs text-color">评论数 {{ scope.row.commentCount }}</span>
+                      <span class="text-xs text-color">点赞量 {{ scope.row.likeCount }}</span>
+                    </span>
+                    <span class="entity-field-description-tag">
+                      <template v-for="(item,index) in CategoryList">
+                        <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
+                      </template>
+                      <template v-for="(item,index) in TagsList">
+                        <el-tag
+                          v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
+                          :key="item.id"
+                          style="margin-right:4px"
+                          type="success"
+                          size="small"
+                          :label="index"
+                          border
+                        >{{ item.name }}
+                        </el-tag>
+                      </template>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="entity-end">
+                <span>
+                  <el-tooltip class="item" effect="dark" :content="scope.row.nickName" placement="top">
+                    <el-avatar v-if="scope.row.avatar" size="small" :src="image(scope.row.avatar)" />
+                    <el-avatar v-else size="small"> {{ scope.row.nickName }}</el-avatar>
+                  </el-tooltip>
+                </span>
+                <span class="text-xs text-color">{{ scope.row.createdTime }}</span>
+
+              </div>
+              <div class="entity-dropdown">
+                <el-dropdown trigger="click" @visible-change>
+                  <el-button
+                    style="min-width:5px;padding: 5px; border: none;"
+                    class="el-icon-more"
+                    size="mini"
+                    @click.native.stop
+                  />
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      v-if="$store.getters.permission.includes('note:like:delete')"
+                      icon="el-icon-delete"
+                      style="color: red;"
+                      hover-colo="red"
+                      @click.native="handleDelete(scope.row)"
+                    >
+                      删 除
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="文章标题" align="center" prop="title">
-          <template slot-scope="scope">
-            <el-link :underline="false" @click="onClick(scope.row)">{{ scope.row.title }}</el-link>
-          </template>
-        </el-table-column>
-        <el-table-column label="分类" align="center" prop="categoryId">
-          <template slot-scope="scope">
-            <template v-for="(item,index) in CategoryList">
-              <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
-            </template>
-          </template>
-        </el-table-column>
-        <el-table-column label="标签" align="center" prop="tags">
-          <template slot-scope="scope">
-            <template v-for="(item,index) in TagsList">
-              <el-tag
-                v-if="scope.row.tags&&scope.row.tags.split(',').map(Number).includes(item.id)"
-                :key="index"
-                style="margin-right:4px"
-                type="success"
-                size="small"
-                :label="index"
-                border
-              >{{ item.name }}
-              </el-tag>
-            </template>
-          </template>
-        </el-table-column>
-        <el-table-column label="浏览量" align="center" prop="pageView">
-          <template slot-scope="scope">
-            <el-tag type="warning"> {{ scope.row.pageView }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="点赞量" align="center" prop="likeCount">
-          <template slot-scope="scope">
-            <el-tag type="danger"> {{ scope.row.likeCount }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="写作时间" align="center" prop="createdTime" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-          <template slot-scope="scope">
-            <el-button
-              v-if="$store.getters.permission.includes('note:like:delete')"
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-            >删除
-            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -149,6 +190,7 @@
 import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 import { delLike, listLikes } from '@/api/note/like'
+import { articleView, image } from '@/utils/common'
 
 export default {
   name: 'Index',
@@ -186,6 +228,8 @@ export default {
     this.getList()
   },
   methods: {
+    image,
+    articleView,
     /**
      * 查询分类下拉选
      */
@@ -252,10 +296,6 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
-    },
-    // 跳转展示文章页
-    onClick(row) {
-      window.open(this.url + '/article/' + row.articleId)
     }
   }
 }
@@ -270,5 +310,30 @@ export default {
   width: 10px;
   height: 10px;
   background: #39C178;
+}
+
+.entity-field-title{
+  margin-right: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+}
+.entity-field-description-body{
+  display: inline-flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.entity-field-description-tag{
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.entity-field-description-view{
+  display: inline-flex;
+  gap: .5rem;
 }
 </style>

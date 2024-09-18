@@ -93,6 +93,7 @@ public class ArticleLikeServiceImpl extends ServiceImpl<ArticleLikeMapper, Artic
         query.setUserId(Long.valueOf((String) StpUtil.getLoginId()));
         IPage<ArticleLikeDto> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<ArticleLikeDto> iPage = baseMapper.selectArticleLikePage(wherePage,query);
+
         PageData pageData=new PageData();
         BeanUtils.copyProperties(iPage,pageData);
         return ReturnPageData.fillingData(pageData,iPage.getRecords());

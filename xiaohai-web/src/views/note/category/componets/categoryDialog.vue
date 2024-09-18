@@ -1,31 +1,36 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="分类名称" prop="name">
-        <el-input v-model="form.name" placeholder="请输入分类名称" />
-      </el-form-item>
-      <template v-if="$store.getters.roles.includes('admin')">
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in $store.getters.dict.sys_normal_disable"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </template>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
-  </el-dialog>
+  <el-drawer :title="title" :visible.sync="open">
+    <el-container style="height: 100%;">
+      <el-main>
+        <el-form ref="form" label-position="top" :model="form" :rules="rules">
+          <el-form-item label="分类名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入分类名称" />
+          </el-form-item>
+          <template v-if="$store.getters.roles.includes('admin')">
+            <el-form-item label="排序" prop="sort">
+              <el-input-number v-model="form.sort" :min="0" />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in $store.getters.dict.sys_normal_disable"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                  border
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </template>
+        </el-form>
+      </el-main>
+      <el-footer>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </el-footer>
+    </el-container>
+  </el-drawer>
 </template>
 
 <script>
@@ -47,14 +52,8 @@ export default {
       },
       // 表单校验
       rules: {
-        dictLabel: [
-          { required: true, message: '数据标签不能为空', trigger: 'blur' }
-        ],
-        dictValue: [
-          { required: true, message: '数据键值不能为空', trigger: 'blur' }
-        ],
-        dictSort: [
-          { required: true, message: '数据顺序不能为空', trigger: 'blur' }
+        name: [
+          { required: true, message: '分类不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -101,5 +100,9 @@ export default {
 </script>
 
 <style scoped>
-
+.el-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
 </style>
