@@ -4,6 +4,7 @@
       <el-table
         :row-class-name="tableRowClassName"
         :data="articleList"
+        class="table-height"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />

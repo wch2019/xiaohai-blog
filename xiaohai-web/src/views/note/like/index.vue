@@ -3,6 +3,7 @@
     <el-card class="box-card box-card-height">
       <el-table
         v-loading="loading"
+        class="table-height"
         :data="articleList"
         @selection-change="handleSelectionChange"
       >

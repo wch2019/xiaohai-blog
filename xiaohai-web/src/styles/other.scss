@@ -17,6 +17,13 @@
 .box-card-height{
   min-height: calc(100vh - 110px)
 }
+.table-height{
+  min-height:calc(100vh - 220px)
+}
+.table-margin-top-height{
+  margin-top: 1rem;
+  min-height:calc(100vh - 260px)
+}
 // 最小文字
 .text-xs {
   font-size: .75rem;

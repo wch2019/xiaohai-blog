@@ -1,43 +1,49 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="网站名称" prop="name">
-        <el-input v-model="form.name" placeholder="请输入网站名称" />
-      </el-form-item>
-      <el-form-item label="网站地址" prop="url">
-        <el-input v-model="form.url" placeholder="请输入网站地址" />
-      </el-form-item>
-      <el-form-item label="站长邮箱" prop="email">
-        <el-input v-model="form.email" placeholder="请输入站长邮箱" />
-      </el-form-item>
-      <el-form-item label="网站描述" prop="info">
-        <el-input v-model="form.info" placeholder="请输入网站描述" />
-      </el-form-item>
-      <template v-if="$store.getters.roles.includes('admin')">
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
-        </el-form-item>
-        <el-form-item label="审核回复" prop="reason">
-          <el-input v-model="form.reason" placeholder="请输入回复" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in $store.getters.dict.sys_check_state"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </template>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
-  </el-dialog>
+  <el-drawer :title="title" :visible.sync="open">
+    <!--  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
+    <el-container style="height: 100%;">
+      <el-main>
+        <el-form ref="form" label-position="top" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="网站名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入网站名称" />
+          </el-form-item>
+          <el-form-item label="网站地址" prop="url">
+            <el-input v-model="form.url" placeholder="请输入网站地址" />
+          </el-form-item>
+          <el-form-item label="站长邮箱" prop="email">
+            <el-input v-model="form.email" placeholder="请输入站长邮箱" />
+          </el-form-item>
+          <el-form-item label="网站描述" prop="info">
+            <el-input v-model="form.info" placeholder="请输入网站描述" />
+          </el-form-item>
+          <template v-if="$store.getters.roles.includes('admin')">
+            <el-form-item label="排序" prop="sort">
+              <el-input-number v-model="form.sort" :min="0" />
+            </el-form-item>
+            <el-form-item label="审核回复" prop="reason">
+              <el-input v-model="form.reason" placeholder="请输入回复" />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in $store.getters.dict.sys_check_state"
+                  :key="dict.dictValue"
+                  border
+                  :label="dict.dictValue"
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </template>
+        </el-form>
+      </el-main>
+      <el-footer>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </el-footer>
+    </el-container>
+  </el-drawer>
 </template>
 
 <script>
@@ -135,5 +141,9 @@ export default {
 </script>
 
 <style scoped>
-
+.el-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
 </style>

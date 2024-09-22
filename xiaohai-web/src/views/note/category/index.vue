@@ -87,7 +87,7 @@
       <el-table
         v-loading="loading"
         border
-        style="margin-top: 10px"
+        class="table-margin-top-height"
         :data="categoryList"
         @selection-change="handleSelectionChange"
       >
@@ -103,7 +103,7 @@
             <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column v-if="$store.getters.permission.includes('note:category:update')||$store.getters.permission.includes('note:category:delete')" label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
               v-if="$store.getters.permission.includes('note:category:update')"

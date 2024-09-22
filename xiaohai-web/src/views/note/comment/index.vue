@@ -3,7 +3,7 @@
     <el-card class="box-card box-card-height">
       <el-table
         v-loading="loading"
-        style="margin-top: 10px"
+        class="table-height"
         :data="commentList"
         @selection-change="handleSelectionChange"
       >

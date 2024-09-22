@@ -1,13 +1,16 @@
 package com.xiaohai.note.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.xiaohai.common.constant.Constants;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.utils.RoleUtils;
 import com.xiaohai.note.pojo.entity.Article;
 import com.xiaohai.note.pojo.entity.FriendLink;
 import com.xiaohai.note.dao.FriendLinkMapper;
+import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.note.pojo.vo.NotificationsVo;
 import com.xiaohai.note.service.FriendLinkService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -121,7 +124,9 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
         if (RoleUtils.checkRole()) {
             friendLink.setUserId(Integer.valueOf((String) StpUtil.getLoginId()));
         }
-        IPage<FriendLink> iPage = baseMapper.selectPage(wherePage, Wrappers.query(friendLink));
+        IPage<FriendLink> iPage = baseMapper.selectPage(wherePage, new LambdaQueryWrapper<FriendLink>()
+                .eq(StringUtils.isNotBlank(query.getName()), FriendLink::getName, query.getName())
+                .eq(StringUtils.isNotBlank(query.getStatus()), FriendLink::getStatus, query.getStatus()));
         List<FriendLinkDto> list = new ArrayList<>();
         for (FriendLink friendLinks : iPage.getRecords()) {
             FriendLinkDto friendLinkDto = new FriendLinkDto();

@@ -3,6 +3,7 @@ package com.xiaohai.note.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 标签表 服务实现类
  *
  * @author xiaohai
@@ -42,17 +42,17 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
     private final ArticleTagMapper articleTagMapper;
 
     @Override
-    public Integer add(TagsVo vo){
-        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Tags>().eq(Tags::getName,vo.getName()));
+    public Integer add(TagsVo vo) {
+        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Tags>().eq(Tags::getName, vo.getName()));
         Assert.isTrue(codeCount == 0, "当前标签已存在");
-        Tags tags=new Tags();
-        BeanUtils.copyProperties(vo,tags);
+        Tags tags = new Tags();
+        BeanUtils.copyProperties(vo, tags);
         baseMapper.insert(tags);
         return tags.getId();
     }
 
     @Override
-    public Integer delete(Long[] ids){
+    public Integer delete(Long[] ids) {
         for (Long id : ids) {
             Long codeCount = articleTagMapper.selectCount(new QueryWrapper<ArticleTag>().eq("tag_id", id));
             Assert.isTrue(codeCount == 0, "当前标签已引用，无法删除");
@@ -62,44 +62,45 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements Ta
     }
 
     @Override
-    public Integer updateData(TagsVo vo){
-        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Tags>().eq(Tags::getName,vo.getName()).ne(Tags::getId, vo.getId()));
+    public Integer updateData(TagsVo vo) {
+        Long codeCount = baseMapper.selectCount(new LambdaQueryWrapper<Tags>().eq(Tags::getName, vo.getName()).ne(Tags::getId, vo.getId()));
         Assert.isTrue(codeCount == 0, "当前标签已存在");
-        Tags tags=new Tags();
-        BeanUtils.copyProperties(vo,tags);
+        Tags tags = new Tags();
+        BeanUtils.copyProperties(vo, tags);
         return baseMapper.updateById(tags);
     }
 
     @Override
-    public Tags findById(Long id){
+    public Tags findById(Long id) {
         return baseMapper.selectById(id);
     }
 
     @Override
-    public ReturnPageData<TagsDto> findListByPage(TagsQuery query){
-        Tags tags=new Tags();
-        BeanUtils.copyProperties(query,tags);
+    public ReturnPageData<TagsDto> findListByPage(TagsQuery query) {
         IPage<Tags> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Tags> iPage = baseMapper.selectPage(wherePage,Wrappers.query(tags).orderByAsc("sort")
-                .orderByAsc("id"));
-        List<TagsDto> list=new ArrayList<>();
-        for(Tags tagss:iPage.getRecords()){
-            TagsDto tagsDto=new TagsDto();
-            BeanUtils.copyProperties(tagss,tagsDto);
+        IPage<Tags> iPage = baseMapper.selectPage(wherePage, new LambdaQueryWrapper<Tags>()
+                .eq(StringUtils.isNotBlank(query.getName()), Tags::getName, query.getName())
+                .eq(StringUtils.isNotBlank(query.getStatus()), Tags::getStatus, query.getStatus())
+                .orderByAsc(Tags::getSort)
+                .orderByAsc(Tags::getId));
+        List<TagsDto> list = new ArrayList<>();
+        for (Tags tags : iPage.getRecords()) {
+            TagsDto tagsDto = new TagsDto();
+            BeanUtils.copyProperties(tags, tagsDto);
             list.add(tagsDto);
         }
-        PageData pageData=new PageData();
-        BeanUtils.copyProperties(iPage,pageData);
-        return ReturnPageData.fillingData(pageData,list);
+        PageData pageData = new PageData();
+        BeanUtils.copyProperties(iPage, pageData);
+        return ReturnPageData.fillingData(pageData, list);
     }
 
     @Override
     public List<TagsDto> optionSelect() {
-        List<Tags> tags=baseMapper.selectList(new QueryWrapper<Tags>().eq("status",0).orderByAsc("sort"));
-        List<TagsDto> list=new ArrayList<>();
-        for(Tags tagss:tags){
-            TagsDto tagsDto=new TagsDto();
-            BeanUtils.copyProperties(tagss,tagsDto);
+        List<Tags> tags = baseMapper.selectList(new QueryWrapper<Tags>().eq("status", 0).orderByAsc("sort"));
+        List<TagsDto> list = new ArrayList<>();
+        for (Tags tag : tags) {
+            TagsDto tagsDto = new TagsDto();
+            BeanUtils.copyProperties(tag, tagsDto);
             list.add(tagsDto);
         }
         return list;
