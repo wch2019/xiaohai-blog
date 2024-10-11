@@ -18,6 +18,8 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 评论Controller
  *
@@ -56,11 +58,11 @@ public class CommentController {
 //    }
 
 
-//    @Operation(summary = "id查询评论",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
-//    @GetMapping("{id}")
-//    public Response<Comment> findById(@PathVariable Long id){
-//        return  Response.success("id查询评论成功！",commentService.findById(id));
-//    }
+    @Operation(summary = "查询当前id下所有评论",security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping("{id}")
+    public Response<List<CommentDto>> findById(@PathVariable Long id){
+        return  Response.success("id查询评论成功！",commentService.findById(id));
+    }
 
     @Operation(summary = "查询评论列表数据", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @Parameter(name = "pageNum", description = "页码", required = true)

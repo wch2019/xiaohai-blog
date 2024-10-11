@@ -28,20 +28,23 @@ const data = reactive({
     pageSize: 10,
     type: 1,
     id:null
+  },
+  carouselParams:{
+    type: 2,
+    pageNum: 1,
+    pageSize: 3
   }
 })
 
 const { queryParams } = toRefs(data)
+const { carouselParams } = toRefs(data)
 
-/**
+/**'
  * 轮播
  * @param type
  */
 function getCarouselList() {
-  queryParams.value.type = 2
-  queryParams.value.pageNum = 1
-  queryParams.value.pageSize = 3
-  listArticles(queryParams.value).then((response) => {
+  listArticles(carouselParams.value).then((response) => {
     carouselList.value = response.data.data.records
   })
 }

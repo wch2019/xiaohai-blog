@@ -66,6 +66,7 @@ service.interceptors.response.use(
       // 登录异常
       if (res.code === 401) {
         // to re-login
+        message.error('登录已过期，请重新登录')
         openLoginBox()
       } else {
         message.error(res.msg)
@@ -88,6 +89,7 @@ service.interceptors.response.use(
       // 登录异常
       if (error.response.data.code === 401) {
         // to re-login
+        message.error('登录已过期，请重新登录')
         openLoginBox()
       }
       return Promise.reject(error.response.data.msg)

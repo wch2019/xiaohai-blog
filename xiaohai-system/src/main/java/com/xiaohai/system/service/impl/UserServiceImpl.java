@@ -1,6 +1,7 @@
 package com.xiaohai.system.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -11,16 +12,16 @@ import com.xiaohai.common.constant.RedisConstants;
 import com.xiaohai.common.daomain.PageData;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.common.server.Disk;
-import com.xiaohai.common.utils.EncryptUtils;
-import com.xiaohai.common.utils.FileUtil;
-import com.xiaohai.common.utils.PageUtils;
-import com.xiaohai.common.utils.RedisUtils;
+import com.xiaohai.common.utils.*;
 import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.file.service.FileManagerService;
+import com.xiaohai.note.dao.ArticleMapper;
+import com.xiaohai.note.pojo.dto.UserBasicDto;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.ConfigDto;
 import com.xiaohai.system.pojo.dto.UserDto;
+import com.xiaohai.system.pojo.dto.UserNameDto;
 import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.query.UserQuery;
 import com.xiaohai.system.pojo.vo.EmailVo;
@@ -54,6 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final ConfigService configService;
     private final FileConfig fileConfig;
     private final FileManagerService fileManagerService;
+    private final ArticleMapper articleMapper;
 
     @Override
     public Map<String, Object> findByInfo() {
@@ -68,8 +70,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(null);
         //获取当前用户信息
         map.put("info", user);
+        var users = baseMapper.selectList(new LambdaQueryWrapper<User>()
+                .select(User::getId, User::getUsername, User::getAvatar, User::getNickName)
+                .eq(RoleUtils.checkRole(), User::getId, Integer.valueOf((String) StpUtil.getLoginId()))
+        );
+        List<UserNameDto> userNames = ListUtils.copyWithCollection(users, UserNameDto.class);
+        //用户信息
+        map.put("users", userNames);
         return map;
     }
+
+    @Override
+    public UserBasicDto articleInfo() {
+        Long userId = StpUtil.getLoginIdDefaultNull() == null ? null : Long.valueOf((String) StpUtil.getLoginId());
+        return articleMapper.findUserBasic(userId);
+    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -98,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long newDiskSize = null;
         Long free = FileUtil.getSystemDiskSizeFree(fileConfig.getProfile());
         Long size = baseMapper.getTotalDiskSizeExcludeUserId(userId);
-        if (diskSize != 0) {
+        if (diskSize != null && diskSize != 0) {
             if (free > size + diskSize) {
                 newDiskSize = diskSize;
             }
@@ -119,7 +135,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         for (Long id : ids) {
             Assert.isTrue(!Objects.equals(1L, id), "不可删除管理员");
             Assert.isTrue(!Objects.equals(userId, id), "不可删除当前登录用户");
-            Assert.isTrue(0==baseMapper.getUserArticleCount(id), "存在文章不可删除");
+            Assert.isTrue(0 == baseMapper.getUserArticleCount(id), "存在文章不可删除");
             Assert.isTrue(!fileManagerService.getUserFileCount(id), "存在文件数据不可删除");
             //删除角色
             userRoleService.delete(Math.toIntExact(id));
@@ -179,7 +195,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(users, userDto);
             userDto.setRoleIds(roleMapper.listByRoleIds(users.getId()));
-            Disk disk=fileManagerService.getUserHardDiskSize(users.getId());
+            Disk disk = fileManagerService.getUserHardDiskSize(users.getId());
             userDto.setDisk(disk);
             list.add(userDto);
         }

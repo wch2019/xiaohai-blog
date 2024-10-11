@@ -24,6 +24,7 @@
                   <div class="file-date">{{ calculateTimeDifference(file.createdTime) }} / {{ file.fileSize }}</div>
                 </div>
                 <el-button
+                  v-if="$store.getters.permission.includes('file:files:delete')"
                   size="mini"
                   type="danger"
                   icon="el-icon-delete"
@@ -36,7 +37,7 @@
         </el-row>
 
       </el-main>
-      <el-footer style="">
+      <el-footer>
         <el-button type="primary" class="el-icon-upload2" @click="handleImport">导 入</el-button>
         <el-button class="el-icon-refresh" @click="getList">刷 新</el-button>
       </el-footer>

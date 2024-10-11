@@ -10,6 +10,7 @@ const getDefaultState = () => {
     menu: [],
     permission: [],
     roles: [],
+    users: [],
     userId: ''
 
   }
@@ -38,6 +39,9 @@ const mutations = {
   },
   SET_ROLES: (state, role) => {
     state.roles = role
+  },
+  SET_USERS: (state, users) => {
+    state.users = users
   },
   SET_ID: (state, id) => {
     state.userId = id
@@ -74,6 +78,7 @@ const actions = {
         commit('SET_MENU', data.menu)
         commit('SET_PERMISSION', data.permission)
         commit('SET_ROLES', data.role)
+        commit('SET_USERS', data.users)
         commit('SET_ID', id)
         resolve(data)
       }).catch(error => {

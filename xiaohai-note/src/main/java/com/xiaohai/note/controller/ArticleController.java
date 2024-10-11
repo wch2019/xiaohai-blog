@@ -8,10 +8,13 @@ import com.xiaohai.common.daomain.Response;
 import com.xiaohai.common.daomain.ReturnPageData;
 import com.xiaohai.note.pojo.dto.ArticleDto;
 import com.xiaohai.note.pojo.dto.ArticleDtoAll;
+import com.xiaohai.note.pojo.dto.ArticleExistDto;
 import com.xiaohai.note.pojo.query.ArticleQuery;
+import com.xiaohai.note.pojo.query.ArticleExistQuery;
 import com.xiaohai.note.pojo.vo.ArticleDraftVo;
 import com.xiaohai.note.pojo.vo.ArticleReptileVo;
 import com.xiaohai.note.pojo.vo.ArticleVo;
+import com.xiaohai.note.pojo.vo.LocalArticleVo;
 import com.xiaohai.note.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,8 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 文章表Controller
@@ -109,12 +110,20 @@ public class ArticleController {
         return Response.success("修改成功！", articleService.top(id));
     }
 
-    @Operation(summary = "是否发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @Operation(summary = "发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
     @SaCheckPermission("note:article:push")
-    @Log(title = "是否发布")
-    @PutMapping("/push/{id}")
-    public Response<Integer> push(@PathVariable Long id) {
-        return Response.success("调整成功！", articleService.push(id));
+    @Log(title = "发布")
+    @PutMapping("/push/{ids}")
+    public Response<Integer> push(@PathVariable Long[] ids) {
+        return Response.success("发布成功！", articleService.push(ids));
+    }
+
+    @Operation(summary = "取消发布", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission("note:article:push")
+    @Log(title = "取消发布")
+    @PutMapping("/unpublish/{ids}")
+    public Response<Integer> unpublish(@PathVariable Long[] ids) {
+        return Response.success("取消发布成功！", articleService.unpublish(ids));
     }
 
     @Operation(summary = "导入markdown压缩文件", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
@@ -131,7 +140,7 @@ public class ArticleController {
     @Parameter(name = "status", description = "是否生成 Front Matter，0否 1是")
     @Log(title = "导出markdown压缩文件")
     @PostMapping(value = "/export/markdown/{status}")
-    public Response<Integer>  downloadCompressedFile(@PathVariable Long status) {
+    public Response<Integer> downloadCompressedFile(@PathVariable Long status) {
         articleService.downloadCompressedFile(status);
         return Response.success("导出markdown压缩文件成功！");
     }
@@ -142,5 +151,17 @@ public class ArticleController {
     @PostMapping(value = "/reptile-article")
     public Response<Integer> reptileArticle(@Validated @RequestBody ArticleReptileVo vo) {
         return Response.success("抓取文章成功！", articleService.reptileArticle(vo));
+    }
+
+    @Operation(summary = "查询文章存在状态", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @GetMapping("/exist/state")
+    public Response<ArticleExistDto> existState(@ParameterObject @Validated  ArticleExistQuery query) {
+        return Response.success("查询文章存在状态成功！", articleService.existState(query));
+    }
+    @Operation(summary = "本地上传文章", security = {@SecurityRequirement(name = Constants.SESSION_ID)})
+    @SaCheckPermission(value = {"note:article:add","note:article:update"}, mode = SaMode.AND)
+    @PostMapping("/local/upload")
+    public Response<Integer> localUpload(@Validated @RequestBody LocalArticleVo vo) {
+        return Response.success("上传文章成功！", articleService.localUpload(vo));
     }
 }

@@ -17,6 +17,13 @@
 .box-card-height{
   min-height: calc(100vh - 110px)
 }
+.table-height{
+  min-height:calc(100vh - 220px)
+}
+.table-margin-top-height{
+  margin-top: 1rem;
+  min-height:calc(100vh - 260px)
+}
 // 最小文字
 .text-xs {
   font-size: .75rem;
@@ -27,4 +34,50 @@
 }
 .text-color {
   color: #6B7280 !important;
+}
+
+.entity-body{
+  display: flex;
+  width: 100%;
+}
+.entity-start{
+  display: flex;
+  flex: 1 1 0%;
+  align-items: center;
+  gap: 1rem;
+}
+.entity-field-wrapper{
+  display: inline-flex;
+  max-width: 60rem;
+  flex-direction: column;
+  gap: .25rem;
+}
+.entity-field-title-body{
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.entity-end{
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+}
+.entity-dropdown{
+  margin-left: 1rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.know-button {
+  font-size: 10px;
+  margin-left: 10px;
+  display: none; /* 默认隐藏按钮 */
+  cursor: pointer;
+}
+
+.entity-body:hover .know-button {
+  display: inline-block; /* 鼠标悬停时显示按钮 */
 }

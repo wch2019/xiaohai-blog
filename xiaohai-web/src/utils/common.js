@@ -69,3 +69,30 @@ export function calculateTimeDifference(targetTime) {
 export function image(avatar) {
   return process.env.VUE_APP_BASE_API_FILE + avatar
 }
+
+/** 文章编辑页跳转 */
+export function articleEdit(row) {
+  this.$router.push({ path: '/basic/edit', query: { id: row.id }})
+}
+/** 跳转展示文章页*/
+export function articleView(id) {
+  window.open(this.url + '/article/' + id)
+}
+/** 跳转留言页*/
+export function messageView() {
+  window.open(this.url + '/message')
+}
+/** 获取当前时间 */
+export function getFormattedDate() {
+  const now = new Date()
+
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0') // 月份从0开始，所以需要加1
+  const day = String(now.getDate()).padStart(2, '0')
+
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  const seconds = String(now.getSeconds()).padStart(2, '0')
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}

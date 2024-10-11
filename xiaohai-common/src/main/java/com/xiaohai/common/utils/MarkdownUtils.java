@@ -3,6 +3,7 @@ package com.xiaohai.common.utils;
 import com.xiaohai.common.constant.FileConstants;
 import com.xiaohai.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.swing.*;
 import java.io.*;
@@ -308,18 +309,10 @@ public class MarkdownUtils {
         header.append("title: ").append(title).append("\n");
         header.append("date: ").append(DateUtils.formatDateTime(date)).append("\n");
         header.append("updated: ").append(DateUtils.formatDateTime(updated)).append("\n");
-
-        if (tags != null && !tags.isEmpty()) {
-            header.append("tags: [");
-            for (int i = 0; i < tags.size(); i++) {
-                header.append(tags.get(i));
-                if (i < tags.size() - 1) {
-                    header.append(",");
-                }
-            }
-            header.append("]\n");
+        header.append("tags: \n");
+        for (String tag : tags) {
+            header.append("  - ").append(tag).append("\n");
         }
-
         header.append("categories: ").append(categories).append("\n");
         header.append("cover: ").append(cover).append("\n");
         header.append("original: ").append(original).append("\n");
@@ -348,16 +341,106 @@ public class MarkdownUtils {
         }
     }
 
+    /**
+     * 解析Markdown文件，获取Front Matter部分和内容
+     *
+     * @param filePath
+     * @return
+     */
+    public static Map<String, Object> parseFontMatterPost(String filePath) {
+        Map<String, Object> resultMap = new HashMap<>();
+        StringBuilder contentBuilder = new StringBuilder();
+        // 获取文件名称
+        Path path = Paths.get(filePath);
+        String fileName = path.getFileName().toString();
+        resultMap.put("title", fileName.replace(".md", ""));
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)))) {
+            String line;
+            boolean isYamlBlock = false;
+            boolean isContentBlock = false;
+            StringJoiner yamlContent = new StringJoiner("\n");
+
+            // 检查首行是否为 "---"，确认是否有 YAML 块
+            line = reader.readLine();
+            if (line != null && line.trim().equals("---")) {
+                isYamlBlock = true;
+            } else {
+                // 如果首行不是 "---"，直接将其添加到内容中
+                if (line != null) {
+                    contentBuilder.append(line).append("\n");
+                }
+                isContentBlock = true;
+            }
+
+            while ((line = reader.readLine()) != null) {
+                // 检查是否是 YAML 块的结束
+                if (line.trim().equals("---") && isYamlBlock) {
+                    isYamlBlock = false;
+                    isContentBlock = true;
+                    continue;
+                }
+
+                if (isYamlBlock) {
+                    yamlContent.add(line);
+                }
+                if (isContentBlock) {
+                    contentBuilder.append(line).append("\n");
+                }
+            }
+
+            // 使用 SnakeYAML 解析提取的 YAML 数据
+            if (yamlContent.length() > 0) {
+                Yaml yaml = new Yaml();
+                Map<String, Object> yamlMap = yaml.load(yamlContent.toString());
+                resultMap.putAll(yamlMap);
+            } else {
+                log.warn("YAML block not found in the file.");
+            }
+
+            // 添加内容到 resultMap 中
+            resultMap.put("content", contentBuilder.toString().trim());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+       // 将日期转换为字符串格式
+        if (resultMap.get("date") instanceof Date) {
+            resultMap.put("date", DateUtils.millisToDateTime(((Date) resultMap.get("date")).getTime()));
+        }
+        if (resultMap.get("updated") instanceof Date) {
+            resultMap.put("updated", DateUtils.millisToDateTime(((Date) resultMap.get("updated")).getTime()));
+        }
+        return resultMap;
+    }
+
+
+
+
     public static void main(String[] args) {
         //        String markdown = "这是一段Markdown文章，其中包含图片：\n\n![图片1](../images/1684113802808.jpg)\n\n![图片2](../images/16841138028.jpg)![1](https://raw.githubusercontent.com/xiaohai-store/notes-img/main/1.png)";
         //        System.out.println(photoList(markdown));
-        String filePath = "Y:\\files\\blog\\dev\\files\\1\\markdown\\temporary\\0b0329b2d35642f68f19d76cb50dfdce\\note\\Java针对MultipartFile上传图片获取宽、高.md";
-        Map<String, Object> postData = parseHexoPost(filePath);
+        String filePath = "C:\\Users\\Lenovo\\Downloads\\markdown导入压缩包模板\\note\\导入模板示例.md";
+        Map<String, Object> postData = parseFontMatterPost(filePath);
+        // 输出解析结果
+        System.out.println("YAML Data:");
+        System.out.println("Title: " + postData.get("title"));
+        System.out.println("Date: " + postData.get("date"));
+        System.out.println("Tags: " + postData.get("tags"));
+        System.out.println("Categories: " + postData.get("categories"));
+        System.out.println("Cover: " + postData.get("cover"));
+        System.out.println("Updated: " + postData.get("updated"));
+
+        // 输出内容数据
+        System.out.println("Content:");
+        System.out.println(postData.get("content"));
+//        Map<String, Object> postData = parseHexoPost(filePath);
 
         // 打印博文数据
-        for (Map.Entry<String, Object> entry : postData.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
+//        for (Map.Entry<String, Object> entry : postData.entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
         String title = "Java单文件下载与打包zip文件下载";
         List<String> tags = List.of("Java", "SpringBoot");
         String categories = "Java技术";

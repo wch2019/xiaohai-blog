@@ -20,7 +20,7 @@ export function addComment(data) {
   })
 }
 
-// id查询留言
+// 查询当前id下所有评论
 export function getComment(data) {
   return request({
     url: api + '/' + data,

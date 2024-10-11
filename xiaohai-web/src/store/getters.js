@@ -7,6 +7,7 @@ const getters = {
   permission: state => state.user.permission,
   menu: state => state.user.menu,
   roles: state => state.user.roles,
+  users: state => state.user.users,
   userId: state => state.user.userId,
   dict: state => state.dict.dict,
   permission_routes: state => state.permission.routes

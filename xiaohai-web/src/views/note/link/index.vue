@@ -1,82 +1,91 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item label="网站名称" prop="name">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="请输入网站名称"
-            clearable
-            size="small"
-            style="width: 240px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="审核状态" prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="审核状态"
-            clearable
-            size="small"
-            style="width: 240px"
-            @clear="queryParams.status = null"
-          >
-            <el-option
-              v-for="dict in $store.getters.dict.sys_check_state"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-
       <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:link:add')"
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAdd"
-          >新增
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:link:update')"
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-          >修改
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('note:link:delete')"
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-          >删除
-          </el-button>
-        </el-col>
+        <span>
+          <el-col :span="1.5">
+            <el-button
+              v-if="$store.getters.permission.includes('note:link:add')"
+              type="primary"
+              plain
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+            >新增
+            </el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              v-if="$store.getters.permission.includes('note:link:update')"
+              type="success"
+              plain
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="single"
+              @click="handleUpdate"
+            >修改
+            </el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              v-if="$store.getters.permission.includes('note:link:delete')"
+              type="danger"
+              plain
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete"
+            >删除
+            </el-button>
+          </el-col>
+        </span>
+
+        <span style="float: right">
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+            </el-tooltip>
+          </el-col>
+          <el-col :span="1.5">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入网站名称"
+              clearable
+              size="small"
+              style="width: 150px;"
+              @input="handleQuery"
+            />
+          </el-col>
+          <el-col :span="1.5">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="状态"
+              clearable
+              size="small"
+              style="width: 100px;"
+              @clear="queryParams.status = null"
+              @change="handleQuery"
+            >
+              <el-option
+                v-for="dict in $store.getters.dict.sys_check_state"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+            </el-tooltip>
+          </el-col>
+        </span>
       </el-row>
 
       <el-table
         v-loading="loading"
         border
-        style="margin-top: 10px"
+        class="table-margin-top-height"
         :data="linkList"
         @selection-change="handleSelectionChange"
       >
@@ -182,8 +191,8 @@ export default {
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery(formName) {
-      this.$refs[formName].resetFields()
+    resetQuery() {
+      this.queryParams = Object.assign({}, this.$options.data().queryParams)
       this.handleQuery()
     },
     /** 新增按钮操作 */

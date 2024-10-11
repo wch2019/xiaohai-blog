@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -58,4 +59,7 @@ public class CommentDto implements Serializable {
     
     @Schema(description = "文章标题")
     private String title;
+
+    @Schema(description = "回复列表")
+    private List<CommentDto> children;
 }

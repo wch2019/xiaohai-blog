@@ -3,7 +3,7 @@ blog:
   # 名称
   name: xiaohai-blog
   # 版本
-  version: 0.0.1
+  version: 1.0.0
 
 server:
   # 服务器的HTTP端口，默认为80
@@ -14,7 +14,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.68.207:3308/xiaohai_blog_dev?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    url: jdbc:mysql://192.168.31.5:3308/xiaohai_blog_dev?characterEncoding=UTF-8&useUnicode=true&useSSL=false
     username: root
     password: xiao=123
   jackson:
@@ -30,7 +30,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 1
     # Redis服务器地址
-    host: 192.168.68.207
+    host: 192.168.31.5
     # Redis服务器连接端口
     port: 6380
     # Redis服务器连接密码（默认为空）
@@ -112,5 +112,5 @@ springdoc:
       packages-to-scan: com.xiaohai.system,com.xiaohai.admin.confing,com.xiaohai.admin.home,com.xiaohai.admin.monitor,com.xiaohai.file,com.xiaohai.note
 #==============================系统文件存放配置=======================================
 file:
-  # 文件地址最后加斜杠,注意，示例：window是D:\blog\prod\而linux是/blog/prod/
-  profile: /mnt/data/files/blog/dev/
+  #文件地址最后加斜杠,注意，示例：window是D:\blog\prod\而linux是/blog/prod/
+  profile: /opt/blog/dev/

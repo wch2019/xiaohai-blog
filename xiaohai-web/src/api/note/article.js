@@ -71,10 +71,18 @@ export function getBingWallpaper() {
   })
 }
 
-// id更新发布状态
-export function updatePush(id) {
+// 发布
+export function updatePush(data) {
   return request({
-    url: api + '/push/' + id,
+    url: api + '/push/' + data,
+    method: 'put'
+  })
+}
+
+// 取消发布
+export function updateUnPublish(data) {
+  return request({
+    url: api + '/unpublish/' + data,
     method: 'put'
   })
 }

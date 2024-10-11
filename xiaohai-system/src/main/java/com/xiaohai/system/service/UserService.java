@@ -1,5 +1,6 @@
 package com.xiaohai.system.service;
 
+import com.xiaohai.note.pojo.dto.UserBasicDto;
 import com.xiaohai.system.pojo.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaohai.common.daomain.ReturnPageData;
@@ -26,6 +27,13 @@ public interface UserService extends IService<User> {
      * @return
      */
     Map<String,Object> findByInfo();
+
+    /**
+     * 获取用户文章信息
+     * @return
+     */
+    UserBasicDto articleInfo();
+
     /**
      * 添加用户表
      *

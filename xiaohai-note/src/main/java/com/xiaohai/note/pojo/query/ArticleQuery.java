@@ -45,4 +45,7 @@ public class ArticleQuery implements Serializable {
 
     @Parameter(description = "是否原创 (0原创，1转载)")
     private Integer isOriginal;
+
+    @Parameter(description = "用户id")
+    private Integer userId;
 }

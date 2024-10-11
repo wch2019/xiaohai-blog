@@ -40,16 +40,9 @@
             <if test="query.content != null and query.content != ''">
                 and c.content like CONCAT(#{query.content},'%')
             </if>
-            <if test="query.username != null and query.username != ''">
-               and u.username  like CONCAT(#{query.username},'%') or u.nick_name like CONCAT(#{query.username},'%')
-            </if>
-            <!--1:我的评论-->
-            <if test="(query.discussant != null and query.discussant == 1)">
+            <!--我的评论-->
+            <if test="userId != null ">
                 and c.user_id = #{userId}
-            </if>
-            <!--2:回复我的-->
-            <if test="query.discussant != null and query.discussant ==2">
-                and c.reply_user_id = #{userId}
             </if>
             <!--来源-留言-->
             <if test="query.source != null and query.source ==2">
@@ -103,6 +96,29 @@
                 LEFT JOIN sys_user u ON u.id = c.user_id
         where
             c.id=#{id}
+        ORDER BY
+            c.created_time ASC
+    </select>
+    <select id="findCommentParentId" resultType="com.xiaohai.note.pojo.dto.CommentDto">
+        SELECT
+            c.id,
+            c.parent_id AS parentId,
+            c.article_id AS articleId,
+            c.user_id AS userId,
+            CASE WHEN u.nick_name IS NULL || u.nick_name = '' THEN u.username ELSE u.nick_name END AS username,
+            u.avatar,
+            c.reply_user_id AS replyUserId,
+            ( SELECT  CASE WHEN nick_name IS NULL || nick_name = '' THEN username ELSE nick_name END FROM sys_user WHERE id = replyUserId ) AS replyUsername,
+            (SELECT avatar FROM sys_user WHERE id = replyUserId) AS replyAvatar,
+            c.content,
+            a.title,
+            c.created_time AS createdTime
+        FROM
+            b_comment c
+                LEFT JOIN b_article a ON a.id = c.article_id
+                LEFT JOIN sys_user u ON u.id = c.user_id
+        where
+            c.parent_id=#{id}
         ORDER BY
             c.created_time ASC
     </select>

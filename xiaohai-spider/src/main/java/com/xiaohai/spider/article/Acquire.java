@@ -52,6 +52,7 @@ public class Acquire {
                 articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
             }
         } catch (Exception e) {
+            log.error("CSDN爬虫出现意外", e);
             throw new ServiceException("CSDN爬虫出现意外", e);
         }
         return articleAcquire;
@@ -85,6 +86,7 @@ public class Acquire {
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
         } catch (Exception e) {
+            log.error("掘金爬虫出现意外", e);
             throw new ServiceException("掘金爬虫出现意外", e);
         }
         return articleAcquire;
@@ -117,6 +119,7 @@ public class Acquire {
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
         } catch (Exception e) {
+            log.error("简书爬虫出现意外", e);
             throw new ServiceException("简书爬虫出现意外", e);
         }
         return articleAcquire;
@@ -148,6 +151,7 @@ public class Acquire {
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
         } catch (Exception e) {
+            log.error("博客园爬虫出现意外", e);
             throw new ServiceException("简书爬虫出现意外", e);
         }
         return articleAcquire;
@@ -178,6 +182,7 @@ public class Acquire {
             articleAcquire.setText(result);
             articleAcquire.setSummary(MarkdownUtils.truncateText(result, 100));
         } catch (Exception e) {
+            log.error("知乎爬虫出现意外", e);
             throw new ServiceException("知乎爬虫出现意外", e);
         }
         return articleAcquire;

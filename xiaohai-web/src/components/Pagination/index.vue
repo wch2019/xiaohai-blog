@@ -100,7 +100,7 @@ export default {
 <style scoped>
 .pagination-container {
   background: #fff;
-  padding: 20px 0;
+  //padding: 20px 0;
   text-align: right;
 }
 .pagination-container.hidden {
