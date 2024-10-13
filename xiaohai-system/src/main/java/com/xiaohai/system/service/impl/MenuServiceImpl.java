@@ -73,7 +73,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .like(StringUtil.isNotBlank(query.getMenuName()), "menu_name", query.getMenuName())
                 .last(" order by menu_sort asc"));
         List<MenuTree> menuTrees = ListUtils.copyWithCollection(menus, MenuTree.class);
-        return TreeUtils.getTree(menuTrees);
+        int type = 0;
+        if (StringUtil.isNotBlank(query.getStatus()) || StringUtil.isNotBlank(query.getMenuName())) {
+            type = 1;
+        }
+        return TreeUtils.getTree(menuTrees, type);
     }
 
     @Override
@@ -86,7 +90,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         //获取菜单
         List<MenuTree> menuTrees = ListUtils.copyWithCollection(menus, MenuTree.class);
-        List<MenuTree> list = TreeUtils.getTree(menuTrees);
+        List<MenuTree> list = TreeUtils.getTree(menuTrees, 0);
         return buildMenus(list);
     }
 

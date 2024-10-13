@@ -60,32 +60,7 @@
                   </el-select>
                 </el-col>
                 <el-col :span="1.5">
-                  <el-select
-                    v-model="queryParams.userId"
-                    placeholder="作者"
-                    clearable
-                    size="small"
-                    style="width: 100px;"
-                    filterable
-                    @clear="queryParams.userId = null"
-                    @change="handleQuery"
-                  >
-                    <el-option
-                      v-for="user in this.$store.getters.users"
-                      :key="user.id"
-                      :label="user.nickName"
-                      :value="user.id"
-                    >
-                      <span
-                        class="text-xs users"
-                      >
-                        <el-avatar v-if="user.avatar" size="small" :src="image(user.avatar)" />
-                        <el-avatar v-else size="small"> {{ user.nickName }}</el-avatar>
-                        <span>  {{ user.nickName }}</span>
-                      </span>
-
-                    </el-option>
-                  </el-select>
+                  <UserSelect v-model="queryParams.userId" @change="handleQuery" />
                 </el-col>
                 <el-col :span="1.5">
                   <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
@@ -211,10 +186,11 @@ import { listComment, delComment } from '@/api/note/comment'
 import CommentDialog from '@/views/note/comment/componets/commentDialog.vue'
 import ReplyDialog from '@/views/note/comment/componets/ReplyDialog.vue'
 import { articleEdit, articleView, image, messageView } from '@/utils/common'
+import UserSelect from '@/components/Select/UserSelect.vue'
 
 export default {
   name: 'Index',
-  components: { CommentDialog, ReplyDialog },
+  components: { UserSelect, CommentDialog, ReplyDialog },
   data() {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,

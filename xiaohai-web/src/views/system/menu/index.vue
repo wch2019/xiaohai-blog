@@ -1,40 +1,6 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-        <el-form-item label="菜单名称" prop="menuName">
-          <el-input
-            v-model="queryParams.menuName"
-            placeholder="请输入菜单名称"
-            clearable
-            size="small"
-            style="width: 240px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="状态"
-            clearable
-            size="small"
-            style="width: 240px"
-            @clear="queryParams.status = null"
-          >
-            <el-option
-              v-for="dict in $store.getters.dict.sys_normal_disable"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button
@@ -57,12 +23,52 @@
           >展开/关闭
           </el-button>
         </el-col>
+        <span style="float: right">
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+            </el-tooltip>
+          </el-col>
+          <el-col :span="1.5">
+            <el-input
+              v-model="queryParams.menuName"
+              placeholder="请输入菜单名称"
+              clearable
+              size="small"
+              style="width: 140px"
+              @input="handleQuery"
+            />
+          </el-col>
+          <el-col :span="1.5">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="状态"
+              clearable
+              size="small"
+              style="width: 100px;"
+              @clear="queryParams.status = null"
+              @change="handleQuery"
+            >
+              <el-option
+                v-for="dict in $store.getters.dict.sys_normal_disable"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+            </el-tooltip>
+          </el-col>
+        </span>
       </el-row>
       <el-table
         v-if="refreshTable"
         v-loading="loading"
         :data="menuList"
-        style="width: 100%;margin-top: 10px; margin-bottom: 20px;"
+        class="table-margin-top-height"
         row-key="id"
         :default-expand-all="expansion"
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
@@ -77,41 +83,41 @@
             <i v-else-if="scope.row.icon" slot="prefix" :class="scope.row.icon" />
           </template>
         </el-table-column>
-        <el-table-column prop="path" label="路由地址" align="center" />
-        <el-table-column prop="component" label="路径" align="center" />
+        <!--        <el-table-column prop="path" label="路由地址" align="center" />-->
         <el-table-column prop="perms" label="权限标识" align="center" />
+        <el-table-column prop="component" label="路径" align="center" />
         <el-table-column label="状态" align="center" prop="status">
           <template slot-scope="scope">
             <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" width="150" />
           </template>
         </el-table-column>
         <el-table-column label="创建时间" align="center" prop="createdTime" />
-        <el-table-column label="顺序" width="50">
+        <el-table-column label="顺序" align="center" width="150">
           <template slot-scope="scope">
-            <div class="custom-input-number">
-              <div class="buttons">
-
-                <el-button
-                  class="el-button-margin-left"
-                  size="mini"
-                  type="text"
-                  :disabled="scope.row.menuSort === min"
-                  icon="el-icon-arrow-up"
-                  @click="sort(scope.row,'-')"
-                />
-                <span> {{ scope.row.menuSort }}</span>
-                <el-button
-                  class="el-button-margin-left"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-arrow-down"
-                  @click="sort(scope.row,'+')"
-                />
-              </div>
-            </div>
+            <el-input-number v-model="scope.row.menuSort" style="width: 100px" size="mini" :min="0" @change="sort(scope.row)" />
+            <!--            <div class="custom-input-number">-->
+            <!--              <div class="buttons">-->
+            <!--                <el-button-->
+            <!--                  class="el-button-margin-left"-->
+            <!--                  size="mini"-->
+            <!--                  type="text"-->
+            <!--                  :disabled="scope.row.menuSort === min"-->
+            <!--                  icon="el-icon-minus"-->
+            <!--                  @click="sort(scope.row,'-')"-->
+            <!--                />-->
+            <!--                <span> {{ scope.row.menuSort }}</span>-->
+            <!--                <el-button-->
+            <!--                  class="el-button-margin-left"-->
+            <!--                  size="mini"-->
+            <!--                  type="text"-->
+            <!--                  icon="el-icon-plus"-->
+            <!--                  @click="sort(scope.row,'+')"-->
+            <!--                />-->
+            <!--              </div>-->
+            <!--            </div>-->
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200">
           <template slot-scope="scope">
             <el-button
               v-if="$store.getters.permission.includes('system:menu:update')"
@@ -192,8 +198,8 @@ export default {
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery(formName) {
-      this.$refs[formName].resetFields()
+    resetQuery() {
+      this.queryParams = Object.assign({}, this.$options.data().queryParams)
       this.handleQuery()
     },
     /** 新增按钮操作 */
@@ -256,12 +262,12 @@ export default {
       this.getList()
     },
     sort(row, operation) {
-      if (operation === '-') {
-        row.menuSort = row.menuSort - 1
-      }
-      if (operation === '+') {
-        row.menuSort = row.menuSort + 1
-      }
+      // if (operation === '-') {
+      //   row.menuSort = row.menuSort - 1
+      // }
+      // if (operation === '+') {
+      //   row.menuSort = row.menuSort + 1
+      // }
       const form = {
         id: row.id,
         menuSort: row.menuSort
@@ -293,7 +299,8 @@ export default {
 
 .buttons {
   display: flex;
-  flex-direction: column;
   text-align: center;
+  flex-direction: row;
+  align-items: center;
 }
 </style>

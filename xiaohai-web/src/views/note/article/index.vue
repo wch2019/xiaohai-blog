@@ -162,32 +162,7 @@
                   </el-select>
                 </el-col>
                 <el-col :span="1.5">
-                  <el-select
-                    v-model="queryParams.userId"
-                    placeholder="作者"
-                    clearable
-                    size="small"
-                    style="width: 100px;"
-                    filterable
-                    @clear="queryParams.userId = null"
-                    @change="handleQuery"
-                  >
-                    <el-option
-                      v-for="user in this.$store.getters.users"
-                      :key="user.id"
-                      :label="user.nickName"
-                      :value="user.id"
-                    >
-                      <span
-                        class="text-xs users"
-                      >
-                        <el-avatar v-if="user.avatar" size="small" :src="image(user.avatar)" />
-                        <el-avatar v-else size="small"> {{ user.nickName }}</el-avatar>
-                        <span>  {{ user.nickName }}</span>
-                      </span>
-
-                    </el-option>
-                  </el-select>
+                  <UserSelect v-model="queryParams.userId" @change="handleQuery" />
                 </el-col>
                 <el-col :span="1.5">
                   <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
@@ -216,15 +191,30 @@
                       <i class="el-icon-picture-outline" />
                     </div>
                   </el-image>
-                  <svg-icon v-if="scope.row.isTop===1" icon-class="top" style="position: absolute;top: 0;right: 0; font-size: 40px" />
-                  <svg-icon v-if="scope.row.isOriginal===1 " icon-class="original" style="position: absolute; bottom: 7px; right: 0;font-size: 10px;" />
+                  <svg-icon
+                    v-if="scope.row.isTop===1"
+                    icon-class="top"
+                    style="position: absolute;top: 0;right: 0; font-size: 40px"
+                  />
+                  <svg-icon
+                    v-if="scope.row.isOriginal===1 "
+                    icon-class="original"
+                    style="position: absolute; bottom: 7px; right: 0;font-size: 10px;"
+                  />
                 </div>
                 <div class="entity-field-wrapper">
                   <div class="entity-field-title-body">
                     <el-tooltip class="item" effect="dark" :content="scope.row.title" placement="top-start">
-                      <el-link class="entity-field-title" :underline="false" @click="articleEdit(scope.row)">{{ scope.row.title }}</el-link>
+                      <el-link class="entity-field-title" :underline="false" @click="articleEdit(scope.row)">
+                        {{ scope.row.title }}
+                      </el-link>
                     </el-tooltip>
-                    <svg-icon v-if="scope.row.categoryId" class="know-button" icon-class="link" @click="articleView(scope.row.id)" />
+                    <svg-icon
+                      v-if="scope.row.categoryId"
+                      class="know-button"
+                      icon-class="link"
+                      @click="articleView(scope.row.id)"
+                    />
                   </div>
                   <div class="entity-field-description-body">
                     <span class="entity-field-description-view">
@@ -234,7 +224,13 @@
                     </span>
                     <span class="entity-field-description-tag">
                       <template v-for="(item,index) in CategoryList">
-                        <el-tag v-if="item.id===scope.row.categoryId" :key="index" size="small" :label="index" border>{{ item.name }}</el-tag>
+                        <el-tag
+                          v-if="item.id===scope.row.categoryId"
+                          :key="index"
+                          size="small"
+                          :label="index"
+                          border
+                        >{{ item.name }}</el-tag>
                       </template>
                       <template v-for="(item,index) in TagsList">
                         <el-tag
@@ -341,10 +337,11 @@ import { optionSelectCategory } from '@/api/note/category'
 import { optionSelectTags } from '@/api/note/tags'
 import ReptileArticle from '@/views/note/article/components/ReptileArticle.vue'
 import { articleEdit, articleView, image } from '@/utils/common'
+import UserSelect from '@/components/Select/UserSelect.vue'
 
 export default {
   name: 'Index',
-  components: { ReptileArticle },
+  components: { UserSelect, ReptileArticle },
   data() {
     return {
       url: process.env.VUE_APP_BLOG_WEB_API,
@@ -551,12 +548,8 @@ export default {
 ::v-deep .el-table .success-row {
   background-color: #f0f9eb
 }
-.users{
- display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.entity-field-title{
+
+.entity-field-title {
   margin-right: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -566,17 +559,20 @@ export default {
   font-weight: 500;
   --tw-text-opacity: 1;
 }
-.entity-field-description-body{
+
+.entity-field-description-body {
   display: inline-flex;
   flex-direction: column;
   gap: .5rem;
 }
-.entity-field-description-tag{
+
+.entity-field-description-tag {
   display: inline-flex;
   align-items: center;
   gap: .5rem;
 }
-.entity-field-description-view{
+
+.entity-field-description-view {
   display: inline-flex;
   gap: .5rem;
 }

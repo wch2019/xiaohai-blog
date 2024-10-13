@@ -1,53 +1,62 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="角色编码" prop="code">
-        <el-input v-model="form.code" placeholder="请输入角色编码" />
-      </el-form-item>
-      <el-form-item label="角色名称" prop="name">
-        <el-input v-model="form.name" placeholder="请输入角色名称" />
-      </el-form-item>
-      <el-form-item label="角色描述">
-        <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
-      </el-form-item>
-      <el-form-item label="菜单权限" prop="menuIds" style="text-align: right;">
-        <el-button
-          type="primary"
-          circle
-          plain
-          icon="el-icon-sort"
-          size="mini"
-          @click="defaultExpandAll"
-        />
-        <el-tree
-          v-if="refreshTable"
-          ref="permsTree"
-          class="test-1"
-          :data="menuList"
-          show-checkbox
-          :default-expand-all="expansion"
-          node-key="id"
-          :check-strictly="isCheck"
-          :props="defaultProps"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-radio-group v-model="form.status">
-          <el-radio
-            v-for="dict in $store.getters.dict.sys_normal_disable"
-            :key="dict.dictValue"
-            :label="dict.dictValue"
-          >{{ dict.dictLabel }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
-  </el-dialog>
+  <el-drawer :title="title" :visible.sync="open">
+    <!--  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
+    <el-container style="height: 100%;">
+      <el-main>
+        <el-form ref="form" label-position="top" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="角色编码" prop="code">
+            <el-input v-model="form.code" placeholder="请输入角色编码" />
+          </el-form-item>
+          <el-form-item label="角色名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入角色名称" />
+          </el-form-item>
+          <el-form-item label="角色描述">
+            <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
+          </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-radio-group v-model="form.status">
+              <el-radio
+                v-for="dict in $store.getters.dict.sys_normal_disable"
+                :key="dict.dictValue"
+                :label="dict.dictValue"
+                border
+              >{{ dict.dictLabel }}
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="菜单权限" prop="menuIds">
+            <div style="text-align: right;">
+              <el-button
+                type="primary"
+                circle
+                plain
+                icon="el-icon-sort"
+                size="mini"
+
+                @click="defaultExpandAll"
+              />
+              <el-tree
+                v-if="refreshTable"
+                ref="permsTree"
+                :data="menuList"
+                show-checkbox
+                :default-expand-all="expansion"
+                node-key="id"
+                :check-strictly="isCheck"
+                :props="defaultProps"
+              />
+            </div>
+          </el-form-item>
+
+        </el-form>
+      </el-main>
+      <el-footer>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </el-footer>
+    </el-container>
+  </el-drawer>
 </template>
 
 <script>
@@ -196,7 +205,12 @@ export default {
 
 <style scoped>
 .test-1{
-  height: 200px;
+  height: 300px;
   overflow-y: scroll;
+}
+.el-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
 }
 </style>

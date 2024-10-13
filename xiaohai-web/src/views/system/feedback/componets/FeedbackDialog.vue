@@ -1,34 +1,40 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="标题名称" prop="title">
-        <el-input v-model="form.title" maxlength="20" show-word-limit placeholder="请输入标题名称" />
-      </el-form-item>
-      <el-form-item label="反馈内容" prop="content">
-        <el-input v-model="form.content" maxlength="1000" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入反馈内容" />
-      </el-form-item>
-      <template v-if="$store.getters.roles.includes('admin')">
-        <el-form-item label="审核回复" prop="reason">
-          <el-input v-model="form.reason" maxlength="255" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入回复" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in $store.getters.dict.sys_check_state"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </template>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
-  </el-dialog>
+  <el-drawer :title="title" :visible.sync="open">
+    <!--  <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>-->
+    <el-container style="height: 100%">
+      <el-main>
+        <el-form ref="form" label-position="top" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="标题名称" prop="title">
+            <el-input v-model="form.title" maxlength="20" show-word-limit placeholder="请输入标题名称" />
+          </el-form-item>
+          <el-form-item label="反馈内容" prop="content">
+            <el-input v-model="form.content" maxlength="1000" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入反馈内容" />
+          </el-form-item>
+          <template v-if="$store.getters.roles.includes('admin')">
+            <el-form-item label="审核回复" prop="reason">
+              <el-input v-model="form.reason" maxlength="255" show-word-limit type="textarea" :autosize="{ minRows: 4}" placeholder="请输入回复" />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in $store.getters.dict.sys_check_state"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                  border
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </template>
+        </el-form>
+      </el-main>
+      <el-footer>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </el-footer>
+    </el-container>
+  </el-drawer>
 </template>
 
 <script>
@@ -103,5 +109,9 @@ export default {
 </script>
 
 <style scoped>
-
+.el-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
 </style>

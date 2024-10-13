@@ -1,6 +1,8 @@
 package com.xiaohai.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,6 +15,7 @@ import com.xiaohai.common.utils.ip.AddressUtils;
 import com.xiaohai.system.dao.LogMapper;
 import com.xiaohai.system.pojo.dto.LogDto;
 import com.xiaohai.system.pojo.entity.Log;
+import com.xiaohai.system.pojo.entity.User;
 import com.xiaohai.system.pojo.query.LogQuery;
 import com.xiaohai.system.pojo.vo.LogVo;
 import com.xiaohai.system.service.LogService;
@@ -60,8 +63,8 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
 
     @Override
     public Log findById(Long id) {
-        Log log=baseMapper.selectById(id);
-        log.setOperIp(log.getOperIp()+ "("+AddressUtils.getIp2region(log.getOperIp())+")");
+        Log log = baseMapper.selectById(id);
+        log.setOperIp(log.getOperIp() + "(" + AddressUtils.getIp2region(log.getOperIp()) + ")");
         return log;
     }
 
@@ -70,12 +73,16 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         Log log = new Log();
         BeanUtils.copyProperties(query, log);
         IPage<Log> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<Log> iPage = baseMapper.selectPage(wherePage, Wrappers.query(log).orderByDesc("created_time"));
+        IPage<Log> iPage = baseMapper.selectPage(wherePage, new LambdaQueryWrapper<Log>()
+                .eq(StringUtils.isNotBlank(query.getTitle()), Log::getTitle, query.getTitle())
+                .eq(StringUtils.isNotBlank(query.getStatus()), Log::getStatus, query.getStatus())
+                .eq(StringUtils.isNotBlank(query.getRequestMethod()), Log::getRequestMethod, query.getRequestMethod())
+                .orderByDesc(Log::getCreatedTime));
         List<LogDto> list = new ArrayList<>();
         for (Log logs : iPage.getRecords()) {
             LogDto logDto = new LogDto();
             BeanUtils.copyProperties(logs, logDto);
-            logDto.setOperIp(logs.getOperIp()+ "("+AddressUtils.getIp2region(logs.getOperIp())+")");
+            logDto.setOperIp(logs.getOperIp() + "(" + AddressUtils.getIp2region(logs.getOperIp()) + ")");
             list.add(logDto);
         }
         PageData pageData = new PageData();
@@ -86,7 +93,7 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
     @Override
     public Map<String, Object> getVisitWeek(Integer count) {
         //等于0默认查询redis
-        if(count==0){
+        if (count == 0) {
             // 从Redis中获取一周访问量
             Map<String, Object> weekVisitJson = SpringUtils.getBean(RedisUtils.class).getCacheObject(RedisConstants.WEEK_VISIT);
             if (weekVisitJson != null && !weekVisitJson.isEmpty()) {

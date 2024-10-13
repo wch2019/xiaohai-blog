@@ -1,57 +1,6 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item label="模块名称" prop="title">
-          <el-input
-            v-model="queryParams.title"
-            placeholder="请输入模块名称"
-            clearable
-            size="small"
-            style="width: 240px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="请求方式" prop="requestMethod">
-          <el-select
-            v-model="queryParams.requestMethod"
-            placeholder="状态"
-            clearable
-            size="small"
-            style="width: 240px"
-            @clear="queryParams.requestMethod = null"
-          >
-            <el-option
-              v-for="dict in $store.getters.dict.sys_request_method"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="状态"
-            clearable
-            size="small"
-            style="width: 240px"
-            @clear="queryParams.status = null"
-          >
-            <el-option
-              v-for="dict in states"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button
@@ -76,17 +25,74 @@
           >清空全部
           </el-button>
         </el-col>
+        <span style="float: right">
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+            </el-tooltip>
+          </el-col>
+          <el-col :span="1.5">
+            <el-input
+              v-model="queryParams.title"
+              placeholder="请输入模块名称"
+              clearable
+              size="small"
+              style="width: 140px"
+              @input="handleQuery"
+            />
+          </el-col>
+          <el-col :span="1.5">
+            <el-select
+              v-model="queryParams.requestMethod"
+              placeholder="请求方式"
+              clearable
+              size="small"
+              style="width: 140px;"
+              @clear="queryParams.requestMethod = null"
+              @change="handleQuery"
+            >
+              <el-option
+                v-for="dict in $store.getters.dict.sys_request_method"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="1.5">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="状态"
+              clearable
+              size="small"
+              style="width: 100px;"
+              @clear="queryParams.status = null"
+              @change="handleQuery"
+            >
+              <el-option
+                v-for="dict in states"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+            </el-tooltip>
+          </el-col>
+        </span>
       </el-row>
 
       <el-table
         v-loading="loading"
-        border
-        style="margin-top: 10px"
+        class="table-margin-top-height"
         :data="logList"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="模块名称" align="center" prop="title" :show-overflow-tooltip="true" />
+        <el-table-column label="模块名称" align="center" prop="title" :show-overflow-tooltip="true" width="200" />
         <el-table-column label="请求方式" align="center" prop="requestMethod" width="90">
           <template slot-scope="scope">
             <dict-tag :options="$store.getters.dict.sys_request_method" :value="scope.row.requestMethod" />
@@ -197,8 +203,8 @@ export default {
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery(formName) {
-      this.$refs[formName].resetFields()
+    resetQuery() {
+      this.queryParams = Object.assign({}, this.$options.data().queryParams)
       this.handleQuery()
     },
     /** 多选框选中数据 */

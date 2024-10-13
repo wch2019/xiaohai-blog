@@ -1,79 +1,84 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-    <div v-if="open" />
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="form.username" placeholder="请输入用户名" />
-      </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
-      </el-form-item>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="角色" prop="roleIds">
-            <el-select v-model="form.roleIds" multiple>
-              <el-option
-                v-for="item in roleOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
+  <el-drawer :title="title" :visible.sync="open">
+    <!--  <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>-->
+    <el-container style="height: 100%;">
+      <el-main>
+        <el-form ref="form" label-position="top" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="form.username" placeholder="请输入用户名" />
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="状态" prop="status">
-            <el-radio-group v-model="form.status">
-              <el-radio
-                v-for="dict in $store.getters.dict.sys_normal_disable"
-                :key="dict.dictValue"
-                :label="dict.dictValue"
-              >{{ dict.dictLabel }}
-              </el-radio>
-            </el-radio-group>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
           </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="用户昵称" prop="nickName">
-            <el-input v-model="form.nickName" placeholder="请输入用户昵称" maxlength="30" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="用户性别">
-            <el-select v-model="form.gender" placeholder="请选择">
-              <el-option
-                v-for="dict in $store.getters.dict.sys_user_sex"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="存储容量" class="input-with-select">
-            <el-input v-model="form.disk" oninput="value=value.replace(/[^\d.]/g,'')">
-              <el-select slot="append" v-model="form.diskProperty" placeholder="请选择">
-                <el-option label="B" value="B" />
-                <el-option label="KB" value="KB" />
-                <el-option label="MB" value="MB" />
-                <el-option label="GB" value="GB" />
-                <el-option label="TB" value="TB" />
-              </el-select>
-            </el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="角色" prop="roleIds">
+                <el-select v-model="form.roleIds" multiple>
+                  <el-option
+                    v-for="item in roleOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="状态" prop="status">
+                <el-radio-group v-model="form.status">
+                  <el-radio
+                    v-for="dict in $store.getters.dict.sys_normal_disable"
+                    :key="dict.dictValue"
+                    :label="dict.dictValue"
+                    border
+                  >{{ dict.dictLabel }}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="用户昵称" prop="nickName">
+                <el-input v-model="form.nickName" placeholder="请输入用户昵称" maxlength="30" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="用户性别">
+                <el-select v-model="form.gender" placeholder="请选择">
+                  <el-option
+                    v-for="dict in $store.getters.dict.sys_user_sex"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="存储容量" class="input-with-select">
+                <el-input v-model="form.disk" oninput="value=value.replace(/[^\d.]/g,'')">
+                  <el-select slot="append" v-model="form.diskProperty" placeholder="请选择">
+                    <el-option label="B" value="B" />
+                    <el-option label="KB" value="KB" />
+                    <el-option label="MB" value="MB" />
+                    <el-option label="GB" value="GB" />
+                    <el-option label="TB" value="TB" />
+                  </el-select>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
-  </el-dialog>
+        </el-form>
+      </el-main>
+      <el-footer>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </el-footer>
+    </el-container>
+  </el-drawer>
 </template>
 
 <script>
@@ -184,6 +189,11 @@ export default {
 </script>
 
 <style scoped>
+.el-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
 .el-input .el-select {
   width: 90px;
 }

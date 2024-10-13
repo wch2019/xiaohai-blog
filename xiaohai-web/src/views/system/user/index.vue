@@ -1,50 +1,6 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item label="用户名称" prop="username">
-          <el-input
-            v-model="queryParams.username"
-            placeholder="请输入用户名称"
-            clearable
-            size="small"
-            style="width: 140px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="用户昵称" prop="nickName">
-          <el-input
-            v-model="queryParams.nickName"
-            placeholder="请输入用户昵称"
-            clearable
-            size="small"
-            style="width: 140px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="状态"
-            clearable
-            size="small"
-            style="width: 100px"
-            @clear="queryParams.status = null"
-          >
-            <el-option
-              v-for="dict in $store.getters.dict.sys_normal_disable"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery('queryForm')">重置</el-button>
-        </el-form-item>
-      </el-form>
-
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button
@@ -81,9 +37,63 @@
           >删除
           </el-button>
         </el-col>
+        <span style="float: right">
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
+              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
+            </el-tooltip>
+          </el-col>
+          <el-col :span="1.5">
+            <el-input
+              v-model="queryParams.username"
+              placeholder="请输入用户名称"
+              clearable
+              size="small"
+              style="width: 140px"
+              @input="handleQuery"
+            />
+          </el-col>
+          <el-col :span="1.5">
+            <el-input
+              v-model="queryParams.nickName"
+              placeholder="请输入用户昵称"
+              clearable
+              size="small"
+              style="width: 140px"
+              @input="handleQuery"
+            />
+          </el-col>
+          <el-col :span="1.5">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="状态"
+              clearable
+              size="small"
+              style="width: 100px;"
+              @clear="queryParams.status = null"
+              @change="handleQuery"
+            >
+              <el-option
+                v-for="dict in $store.getters.dict.sys_normal_disable"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="1.5">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
+              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
+            </el-tooltip>
+          </el-col>
+        </span>
       </el-row>
-
-      <el-table v-loading="loading" border style="margin-top: 10px;width: 100%;" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table
+        v-loading="loading"
+        class="table-margin-top-height"
+        :data="roleList"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" :selectable="judgeSelect" align="center" width="55" />
         <el-table-column label="头像" align="center" prop="avatar" width="120">
           <template slot-scope="scope">
@@ -223,8 +233,8 @@ export default {
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery(formName) {
-      this.$refs[formName].resetFields()
+    resetQuery() {
+      this.queryParams = Object.assign({}, this.$options.data().queryParams)
       this.handleQuery()
     },
     /** 新增按钮操作 */

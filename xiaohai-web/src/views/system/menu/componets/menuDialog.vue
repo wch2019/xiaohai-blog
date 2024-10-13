@@ -1,109 +1,115 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="菜单类型" prop="menuType">
-            <el-radio-group v-model="form.menuType">
-              <el-radio-button label="M">目录</el-radio-button>
-              <el-radio-button label="C">菜单</el-radio-button>
-              <el-radio-button label="F">按钮</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="上级菜单" prop="parentId">
-            <select-tree v-model="form.parentId" :options="menuOptions" :props="defaultProps" />
-          </el-form-item>
-        </el-col>
-        <el-col v-if="form.menuType !== 'F'" :span="24">
-          <el-form-item label="菜单图标" prop="icon">
-            <el-popover
-              placement="bottom-start"
-              width="460"
-              trigger="click"
-              @show="$refs['iconSelect'].reset()"
-            >
-              <IconSelect ref="iconSelect" @selected="selected" />
-              <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
-                <svg-icon v-if="form.icon && form.icon.indexOf('el-icon')== -1" slot="prefix" :icon-class="form.icon"/>
-                <i v-else-if="form.icon" slot="prefix" :class="form.icon"/>
-                <i v-else slot="prefix" class="el-icon-search" />
-              </el-input>
-            </el-popover>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="菜单名称" prop="menuName">
-            <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
-          </el-form-item>
-        </el-col>
-        <el-col v-if="form.menuType !== 'F'" :span="24">
-          <el-form-item prop="path">
-            <span slot="label">
-              <el-tooltip content="访问的路由地址，如：`user`" placement="top">
-                <i class="el-icon-question" />
-              </el-tooltip>
-              路由地址
-            </span>
-            <el-input v-model="form.path" placeholder="请输入路由地址" />
-          </el-form-item>
-        </el-col>
-        <el-col v-if="form.menuType === 'C'" :span="24">
-          <el-form-item prop="component">
-            <span slot="label">
-              <el-tooltip content="路径，如：`system/user/index" placement="top">
-                <i class="el-icon-question" />
-              </el-tooltip>
-              组件路径
-            </span>
-            <el-input v-model="form.component" placeholder="请输入组件路径" />
-          </el-form-item>
-        </el-col>
-        <el-col v-if="form.menuType === 'F'" :span="24">
-          <el-form-item prop="perms">
-            <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
-            <span slot="label">
-              <el-tooltip
-                content="权限字符，如：system:user:list"
-                placement="top"
-              >
-                <i class="el-icon-question" />
-              </el-tooltip>
-              权限字符
-            </span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="显示排序" prop="orderNum">
-            <el-input-number v-model="form.menuSort" controls-position="right" :min="0" />
-          </el-form-item>
-        </el-col>
-        <el-col v-if="form.menuType !== 'F'" :span="12">
-          <el-form-item prop="status" >
-            <span slot="label">
-              <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
-                <i class="el-icon-question" />
-              </el-tooltip>菜单状态
-            </span>
-            <el-radio-group v-model="form.status">
-              <el-radio
-                v-for="dict in $store.getters.dict.sys_normal_disable"
-                :key="dict.dictValue"
-                :label="dict.dictValue"
-              >{{ dict.dictLabel }}
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
-  </el-dialog>
+  <el-drawer :title="title" :visible.sync="open">
+    <!--  <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>-->
+    <el-container style="height: 100%">
+      <el-main>
+        <el-form ref="form" label-position="top" :model="form" :rules="rules" label-width="100px">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="菜单类型" prop="menuType">
+                <el-radio-group v-model="form.menuType">
+                  <el-radio-button label="M">目录</el-radio-button>
+                  <el-radio-button label="C">菜单</el-radio-button>
+                  <el-radio-button label="F">按钮</el-radio-button>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="上级菜单" prop="parentId">
+                <select-tree v-model="form.parentId" :options="menuOptions" :props="defaultProps" />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="form.menuType !== 'F'" :span="24">
+              <el-form-item label="菜单图标" prop="icon">
+                <el-popover
+                  placement="bottom-start"
+                  width="460"
+                  trigger="click"
+                  @show="$refs['iconSelect'].reset()"
+                >
+                  <IconSelect ref="iconSelect" @selected="selected" />
+                  <el-input slot="reference" v-model="form.icon" placeholder="点击选择图标" readonly>
+                    <svg-icon v-if="form.icon && form.icon.indexOf('el-icon')== -1" slot="prefix" :icon-class="form.icon" />
+                    <i v-else-if="form.icon" slot="prefix" :class="form.icon" />
+                    <i v-else slot="prefix" class="el-icon-search" />
+                  </el-input>
+                </el-popover>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="菜单名称" prop="menuName">
+                <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="form.menuType !== 'F'" :span="24">
+              <el-form-item prop="path">
+                <span slot="label">
+                  <el-tooltip content="访问的路由地址，如：`user`" placement="top">
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                  路由地址
+                </span>
+                <el-input v-model="form.path" placeholder="请输入路由地址" />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="form.menuType === 'C'" :span="24">
+              <el-form-item prop="component">
+                <span slot="label">
+                  <el-tooltip content="路径，如：`system/user/index" placement="top">
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                  组件路径
+                </span>
+                <el-input v-model="form.component" placeholder="请输入组件路径" />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="form.menuType === 'F'" :span="24">
+              <el-form-item prop="perms">
+                <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
+                <span slot="label">
+                  <el-tooltip
+                    content="权限字符，如：system:user:list"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                  权限字符
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="显示排序" prop="orderNum">
+                <el-input-number v-model="form.menuSort" :min="0" />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="form.menuType !== 'F'" :span="12">
+              <el-form-item prop="status">
+                <span slot="label">
+                  <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
+                    <i class="el-icon-question" />
+                  </el-tooltip>菜单状态
+                </span>
+                <el-radio-group v-model="form.status">
+                  <el-radio
+                    v-for="dict in $store.getters.dict.sys_normal_disable"
+                    :key="dict.dictValue"
+                    :label="dict.dictValue"
+                    border
+                  >{{ dict.dictLabel }}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </el-main>
+      <el-footer>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </el-footer>
+    </el-container>
+  </el-drawer>
 </template>
 
 <script>
@@ -212,5 +218,9 @@ export default {
 </script>
 
 <style scoped>
-
+.el-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
 </style>

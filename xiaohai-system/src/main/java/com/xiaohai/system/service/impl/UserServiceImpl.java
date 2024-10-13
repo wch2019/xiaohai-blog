@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +18,7 @@ import com.xiaohai.common.utils.Spring.SpringUtils;
 import com.xiaohai.file.service.FileManagerService;
 import com.xiaohai.note.dao.ArticleMapper;
 import com.xiaohai.note.pojo.dto.UserBasicDto;
+import com.xiaohai.note.pojo.entity.Tags;
 import com.xiaohai.system.dao.RoleMapper;
 import com.xiaohai.system.dao.UserMapper;
 import com.xiaohai.system.pojo.dto.ConfigDto;
@@ -189,7 +191,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         BeanUtils.copyProperties(query, user);
         IPage<User> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
-        IPage<User> iPage = baseMapper.selectPage(wherePage, Wrappers.query(user));
+        IPage<User> iPage = baseMapper.selectPage(wherePage,  new LambdaQueryWrapper<User>()
+                .eq(StringUtils.isNotBlank(query.getUsername()), User::getUsername, query.getUsername())
+                .eq(StringUtils.isNotBlank(query.getNickName()), User::getNickName, query.getNickName())
+                .eq(StringUtils.isNotBlank(query.getStatus()), User::getStatus, query.getStatus()));
         List<UserDto> list = new ArrayList<>();
         for (User users : iPage.getRecords()) {
             UserDto userDto = new UserDto();
