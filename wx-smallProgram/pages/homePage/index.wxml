@@ -1,0 +1,31 @@
+<view class="page_contain">
+    <view>
+      <swiper indicator-dots="{{indicatorDots}}"
+        autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"
+              style="height:320rpx;"
+       >
+        <block wx:for="{{imgList}}" wx:key="index">
+          <swiper-item>
+            <image src="{{item.url}}" class="swiper_image"></image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="search_box">
+        <van-search
+         value="{{ value }}"
+         shape="round"
+         background="transparent"
+         placeholder="请输入搜索关键词" />
+      </view>
+    </view>
+    <van-sticky>
+        <view class="title_box">
+            <van-tabs active="{{ active }}"  bind:change="handleTab">
+                <van-tab wx:for="{{classifyList}}" wx:key="index" title="{{item.name}}" name="{{item.id}}">
+                </van-tab>
+            </van-tabs>
+        </view>
+    </van-sticky>
+   <content-list content-list="{{contentList}}"></content-list>
+   <load-more list-is-empty="{{!contentList.length}}" status="{{loadStatus}}"></load-more>
+</view>

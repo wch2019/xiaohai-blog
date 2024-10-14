@@ -1,0 +1,9 @@
+<view class="main_contain">
+	<view class="flex_box">
+		<view wx:for="{{tagsList}}" wx:key="index" class="tags">
+			<view class="tags_left">#</view>
+			<text>{{item.title}}</text>
+			<view class="num">{{item.num}}</view>
+		</view>
+	</view>
+</view>

@@ -1,0 +1,84 @@
+/* pages/mine/index.wxss */
+.main_contain{
+    background-color:white;
+    height: 100%;
+}
+.bg_box{
+    width: 100%;
+    height: 400rpx;
+    position: relative;
+}
+.image{
+    width: 100%;
+    height: 80%;
+}
+.head_box{
+    width: 200rpx;
+    height: 200rpx;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+} 
+.head_img{
+    width: 90%;    
+    height: 90%;
+    border-radius: 50%;
+}
+.nick_box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 80rpx;
+}
+.nickname{
+    font-size: 45rpx;
+    font-weight: 500;
+}
+.icon_box{
+    width: 55%;
+    margin: 40rpx auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.icon_bg{
+    clip-path: polygon(50% 3%, 91% 25%, 91% 75%, 50% 97%, 9% 75%, 9% 25%);
+    background: rgba(0, 0, 0, .05);
+    height: 2.5rem;
+    width: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.icon_content{
+    width: 50%;
+    height: 50%;
+}
+.exhibition_box{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    margin: 40rpx auto;
+}
+.exhibition_flex{
+    text-align: center;
+    line-height: 60rpx;
+}
+.exhibition_title{
+    color: #cccccc;
+    font-size: 14px;
+}
+.exhibition_num{
+    font-weight: 600;
+    font-size: 18px;
+}

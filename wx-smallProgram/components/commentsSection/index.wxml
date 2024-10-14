@@ -1,0 +1,14 @@
+<view>
+    <view wx:if="{{!child && commentList.length}}" class="main_title">全部评论</view>
+    <view wx:for="{{commentList}}" wx:key="index" class="{{child?'main_box':''}}">
+        <view class="header">
+            <view>
+                <image src="{{fileUrl + item.avatar}}" class="image"></image>
+                <text class="name">{{item.username}}</text>
+            </view>
+            <text class="time">{{item.createdTime}}</text>
+        </view>
+        <view class="content">{{item.content}}</view>
+        <comments-section comment-list="{{item.commentTrees}}" child="{{true}}"></comments-section>
+    </view>
+</view>

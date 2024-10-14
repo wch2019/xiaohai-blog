@@ -1,0 +1,39 @@
+.contain_box{
+    height: 96rpx;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom);
+    display: flex;
+    pointer-events: auto;
+    position: fixed;
+    background-color:white;
+    padding: 0 20rpx;
+    align-items: center;
+    justify-content:space-between;
+}
+.flex_icon{
+    display: flex;
+    width: calc(100% - 60% - 40rpx);
+    justify-content: space-between;
+}
+.svg{
+    width: 30rpx;
+    height: 30rpx;
+}
+.flex_con{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 24rpx;
+}
+.input{
+    width: 55%;
+}
+.input_ui{
+    border: 1px solid #dddddd;
+    border-radius: 50rpx;
+    font-size: 24rpx;
+    color: #dddddd;
+    height: 60rpx;
+    padding: 0 20rpx;
+}

@@ -1,0 +1,4 @@
+.hr{
+	border: 2px dashed #b2cbe7;
+	margin: 20rpx 0;
+}

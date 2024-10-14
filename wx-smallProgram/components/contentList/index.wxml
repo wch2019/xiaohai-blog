@@ -1,0 +1,29 @@
+<view class="content_box" wx:for="{{contentList}}" wx:key="index" id="{{item.id}}" bindtap="viewDetail" data-skeleton-list>
+	<view class="title">{{item.title}}</view>
+	<view class="content_flex">
+		<view class="font" style="{{!!item.cover?'width: calc(100% - 200rpx - 10rpx);':'width: 100%;'}}">
+			{{item.summary}}
+		</view>
+		<image wx:if="{{item.cover}}" src="{{fileUrl + item.cover}}" class="content_img"></image>
+	</view>
+	<view class="bottom_box">
+		<view class="info_flex" style="width: 30%;">
+			<image src="{{fileUrl + item.avatar}}" class="head"></image>
+			<view>{{item.nickName}}</view>
+		</view>
+		<view class="info_flex" style="width: 200rpx;justify-content: space-between;">
+			<view class="flex_center">
+				<svg-icon src="/images/homepage/eye-light.svg" color="#dddddd" width="30rpx" height="30rpx" class="icon_content"></svg-icon>
+				{{item.pageView}}
+			</view>
+			<view class="flex_center">
+				<svg-icon src="/images/homepage/give-light.svg" color="#dddddd" width="30rpx" height="30rpx" class="icon_content"></svg-icon>
+				<view>{{item.commentCount}}</view>
+			</view>
+			<view class="flex_center">
+				<svg-icon src="/images/homepage/message.svg" color="#dddddd" width="30rpx" height="30rpx" class="icon_content"></svg-icon>
+				<view>{{item.likeCount}}</view>
+			</view>
+		</view>
+	</view>
+</view>

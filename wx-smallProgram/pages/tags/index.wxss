@@ -1,0 +1,34 @@
+/* pages/tags/index.wxss */
+.main_contain{
+	height: 100%;
+	background-color: white;
+}
+.flex_box{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 20rpx;
+}
+.tags{
+	background-color: #f5f7fa;
+	color: #606266;
+	border-radius: 4px;
+	width: auto;
+	padding: 15rpx 20rpx;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-right: 40rpx;
+	margin-bottom: 20rpx;
+	font-size: 12px;
+}
+.tags_left{
+	margin-right: 10rpx;
+}
+.num{
+	font-size: 8px;
+	padding: 0rpx 10rpx;
+	background-color: #dedfe0;
+	border-radius: 20rpx;
+	margin-left: 10rpx;
+}

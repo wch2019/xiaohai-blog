@@ -1,0 +1,25 @@
+<view class="main_contain">
+    <view class="bg_box">
+        <image src="https://nas.dotcode.top:60002/assets/1-12420eae.jpg" class="image"></image>
+        <view class="head_box">
+            <image src="https://nas.dotcode.top:60002/api/document/upload/files/1/avatar/e8eca782392e4a95b91297270dbce11e.png" class="head_img"></image>
+        </view>
+    </view>
+    <view class="nick_box">
+        <view class="nickname">小海</view>
+        <view>用一点点代码，改变生活</view>
+    </view>
+    <view class="icon_box">
+        <view wx:for="{{iconList}}" wx:key= "index">
+            <view class="icon_bg">
+                <image src="{{item.url}}" class="icon_content"></image>
+            </view>
+        </view>
+    </view>
+    <view class="exhibition_box">
+        <view wx:for="{{exhibitionlist}}" wx:key="index" class="exhibition_flex">
+            <view class="exhibition_title">{{item.title}}</view>
+            <view class="exhibition_num">{{item.num}}</view>
+        </view>
+    </view>
+</view>

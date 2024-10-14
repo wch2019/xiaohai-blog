@@ -1,0 +1,47 @@
+.page_contain{
+	position: relative;
+	padding-bottom: calc(env(safe-area-inset-bottom) + 96rpx);
+}
+.swiper_image{
+	width: 100%;
+	height: 320rpx;
+}
+.search_box{
+	position: absolute;
+	top: 0;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	width: 70%;
+}
+.van-search__content {
+	background-color: rgba(255,255,255,0.2) !important;
+	border: 1px solid white;
+}
+.van-field__control,
+.van-cell{
+	color: white !important;
+}
+.title_box{
+	background-color: white;
+	margin-bottom: 20rpx;
+}
+.icon_flex{
+	width: 70%;
+	margin: 0 auto;
+	padding: 40rpx 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.icon_font{
+	font-size: 80rpx;
+	color: #fd5a5a;
+	opacity: 0.8;
+	font-weight: 900;
+}
+.icon_title{
+	font-size: 30rpx;
+	text-align: center;
+	padding-top: 15rpx;
+}

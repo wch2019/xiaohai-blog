@@ -1,0 +1,19 @@
+<view class="contain_box">
+    <view class="input">
+        <input class="input_ui"  placeholder="评论一句吧..."/>
+    </view>
+    <view class="flex_icon">
+        <view class="flex_con">
+            <image src="../../images/homepage/give-light.svg" class="svg"></image>
+            点赞
+        </view>
+        <view class="flex_con">
+            <image src="../../images/homepage/give-light.svg" class="svg"></image>
+            收藏
+        </view>
+        <view class="flex_con">
+            <image src="../../images/homepage/give-light.svg" class="svg"></image>
+            分享
+        </view>
+    </view>
+</view>

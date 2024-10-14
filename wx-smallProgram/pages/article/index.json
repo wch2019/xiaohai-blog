@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "hr-line":"/components/hrLine/index",
+    "towxml":"/towxml/towxml",
+    "functional-domain":"/components/functionalDomain/index",
+    "comments-section":"/components/commentsSection/index"
+  }
+}

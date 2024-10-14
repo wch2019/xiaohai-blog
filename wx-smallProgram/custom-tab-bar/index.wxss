@@ -1,0 +1,24 @@
+/* custom-tab-bar/index.wxss */
+.tab-bar{
+	width: 100%;
+	height: 96rpx;
+	padding-bottom: env(safe-area-inset-bottom);
+	left: 0;
+	right: 0;
+	bottom:0;
+	display: flex;
+	align-items: center;
+	pointer-events: auto;
+	position: absolute;
+	background-color: white;
+}
+.tab-bar-item{
+	flex: 1;
+	text-align: center;
+}
+.item-text{
+	color: #fd5a5a;
+}
+.item-text-select{
+	text-shadow: 2px 2px 5px #fcbfbf;
+}

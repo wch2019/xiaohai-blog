@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index",
+    "content-list":"/components/contentList/index",
+    "van-sticky": "@vant/weapp/sticky/index",
+    "load-more": "/components/loadMore/index"
+  }
+}

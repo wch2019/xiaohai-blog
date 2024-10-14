@@ -1,0 +1,26 @@
+<view class="page">
+	<view class="content">
+		<view class="title">{{title}}</view>
+		<view class="subheading flex">
+			<image src="{{fileUrl + userBasic.avatar}}" class="avatar"></image>
+			<view class="subheading_right">
+					<view>{{userBasic.username}}</view>
+					<view class="flex">
+						<view class="flex" style="margin-right: 20rpx;">
+							<image src="../../images/homepage/time-light.svg" class="svg"></image>
+							{{createdTime}}
+						</view>
+						<view class="flex">
+							<image src="../../images/homepage/eye-light.svg" class="svg"></image>
+							{{pageView}}
+						</view>
+					</view>
+			</view>
+		</view>
+		<hr-line />
+		<view class="tip">原创 本文DotCode原创文章，转载无需和我联系，但请注明来自本站</view>
+		<towxml nodes="{{nodes}}"/>
+		<comments-section comment-list="{{commentList}}"></comments-section>
+	</view>
+	<functional-domain></functional-domain>
+</view>

@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "svg-icon": "/components/svgIcon/index"
+  }
+}
