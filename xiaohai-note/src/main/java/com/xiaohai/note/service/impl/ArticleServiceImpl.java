@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -46,16 +45,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -359,14 +355,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         PageData pageData = new PageData();
         BeanUtils.copyProperties(iPage, pageData);
         //标签
-        if (type == 5) {
+        if (type!=null&&type == 5) {
             Tags tag = new Tags();
             tag.setId(Math.toIntExact(id));
             tag.setClick(tagsMapper.selectById(Math.toIntExact(id)).getClick() + 1);
             tagsMapper.updateById(tag);
         }
         //分类
-        if (type == 6) {
+        if (type!=null&&type == 6) {
             Category category = new Category();
             category.setId(Math.toIntExact(id));
             category.setClick(categoryMapper.selectById(Math.toIntExact(id)).getClick() + 1);
@@ -397,15 +393,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public List<ArticleSearchDto> searchArticle(String keywords) {
-        // 搜索文章
-        List<Article> articles = baseMapper.selectList(new QueryWrapper<Article>()
-                .eq("is_push", 1)
-                .like("title", keywords)
-                .or().like("summary", keywords).
-                orderByDesc("is_top").
-                orderByDesc("top_time").
-                orderByDesc("created_time"));
         List<ArticleSearchDto> list = new ArrayList<>();
+        if(StringUtil.isBlank(keywords)){
+            return list;
+        }
+        // 搜索文章
+        List<Article> articles = baseMapper.selectList(new LambdaQueryWrapper<Article>()
+                .eq(Article::getIsPush, 1)
+                .like(Article::getTitle, keywords)
+                .or().like(Article::getSummary, keywords).
+                orderByDesc(Article::getIsTop).
+                orderByDesc(Article::getTopTime).
+                orderByDesc(Article::getCreatedTime));
+
         for (Article article : articles) {
             ArticleSearchDto articleSearchDto = new ArticleSearchDto();
             // 文章标题高亮

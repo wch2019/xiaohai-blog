@@ -51,7 +51,7 @@ public class HomeShowController {
     @Operation(summary = "查询展示文章表列表数据")
     @Parameter(name = "pageNum", description = "页码", required = true)
     @Parameter(name = "pageSize", description = "每页数量", required = true)
-    @Parameter(name = "type", description = "1:最新文章,2:最热文章,3:原创文章,4:转载文章,5:标签id,6:分类id", required = true)
+    @Parameter(name = "type", description = "1:最新文章,2:最热文章,3:原创文章,4:转载文章,5:标签,6:分类", required = true)
     @Parameter(name = "id", description = "分类id或者标签id", required = false)
     @Log(title = "展示文章表列表")
     @GetMapping("/articles")
