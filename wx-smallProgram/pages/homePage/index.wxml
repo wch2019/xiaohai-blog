@@ -6,14 +6,15 @@
        >
         <block wx:for="{{imgList}}" wx:key="index">
           <swiper-item>
-            <image src="{{item.url}}" class="swiper_image"></image>
+            <image src="{{fileUrl + item.cover}}" class="swiper_image"></image>
           </swiper-item>
         </block>
       </swiper>
       <view class="search_box">
         <van-search
-         value="{{ value }}"
+         value="{{ keywords }}"
          shape="round"
+         bind:tap="tapSearch"
          background="transparent"
          placeholder="请输入搜索关键词" />
       </view>

@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "hr-line":"/components/hrLine/index"
+  }
+}

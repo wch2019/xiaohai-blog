@@ -10,12 +10,9 @@ Page({
     autoplay: false,
     interval: 2000,
     duration: 500,
-    imgList:[
-      {url:'https://nas.dotcode.top:60002/api/document/upload/image/bing/20230807.jpg',content:'first'},
-      {url:'https://nas.dotcode.top:60002/api/document/upload/files/1/markdown/20240702.jpg',content:'second'},
-      {url:'https://nas.dotcode.top:60002/api/document/upload/image/bing/20231105.jpg',content:'third'}
-    ],
-    value: "",
+    fileUrl:getApp().globalData.fileUrl,
+    imgList:[],
+    keywords: "",
     classifyList:[
       {title:'全部',type:'all'}
     ],
@@ -52,6 +49,7 @@ Page({
   onShow() {
     this.getInstance()
     this.getCategory()
+    this.getImage() // 轮播
   },
 
   /**
@@ -111,6 +109,17 @@ Page({
       })
     }
   },
+  getImage(){
+    reqSwiperData({
+      pageNum:1,
+      pageSize:3,
+      type:2,
+    }).then(res=>{
+      this.setData({
+        imgList:res.data.records
+      })
+    })
+  },
   getContentList(status = true){
     if (!status){
       wx.pageScrollTo({
@@ -121,7 +130,12 @@ Page({
     this.setData({
       loadStatus:1
     })
-    reqSwiperData({...this.data.paramsData}).then(res=>{
+    reqSwiperData({
+      pageNum:this.data.paramsData.pageNum,
+      pageSize:this.data.paramsData.pageSize,
+      type:this.data.paramsData.type,
+      id:this.data.paramsData.id,
+    }).then(res=>{
       this.setData({
         contentList:status?this.data.contentList.concat(res.data.records):res.data.records,
         "paramsData.allPageNum":Math.ceil(res.data.total / res.data.size),
@@ -150,4 +164,9 @@ Page({
       this.getContentList(false)
     })
   },
+  tapSearch(event){
+    wx.navigateTo({
+      url:`/pages/search/index?keywords=${this.data.keywords}`
+    })
+  }
 })

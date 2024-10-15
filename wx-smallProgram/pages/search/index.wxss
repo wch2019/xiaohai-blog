@@ -1,0 +1,26 @@
+/* pages/search/index.wxss */
+.page_box{
+    background-color: white;
+    padding: 20rpx;
+    position: relative;
+    box-sizing: border-box;
+    height: calc(100% - env(safe-area-inset-bottom));
+}
+.data_box{
+    border-bottom: 1px dashed #ccc;
+    padding: 20rpx 0;
+}
+.title{
+    font-size: 30rpx;
+    font-weight: bold;
+    margin-bottom: 20rpx;
+}
+.rich_text{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 24rpx;
+    line-height: 40rpx;
+}
