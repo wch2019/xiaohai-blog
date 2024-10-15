@@ -66,12 +66,29 @@ Page({
   onShareAppMessage() {
 
   },
+  onChange(e) {
+    this.setData({
+      keywords: e.detail,
+    });
+  },
   onClick(){
-    console.log(this.data.keywords,'this.data.keywords')
+    if(!this.data.keywords){
+      this.setData({
+        dataList:[]
+      })
+      return
+    }
     getSearch({keywords:this.data.keywords}).then(res=>{
       this.setData({
         dataList:res.data
       })
+    })
+  },
+  viewDetail(event){
+    console.log(event,'event')
+    let id = event.currentTarget.id
+    wx.navigateTo({
+      url:`/pages/article/index?id=${id}`
     })
   }
 })

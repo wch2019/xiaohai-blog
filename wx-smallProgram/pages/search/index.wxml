@@ -4,11 +4,12 @@
        shape="round"
        use-action-slot
        background="transparent"
+       bind:change="onChange"
        placeholder="请输入搜索关键词">
         <view slot="action" bind:tap="onClick">搜索</view>
     </van-search>
     <hr-line />
-    <view wx:for="{{dataList}}" wx:key="index" class="data_box">
+    <view wx:for="{{dataList}}" wx:key="index" class="data_box" id="{{item.id}}" bindtap="viewDetail">
         <view class="title">{{item.title}}</view>
         <rich-text nodes="{{item.summary}}" class="rich_text"></rich-text>
     </view>
