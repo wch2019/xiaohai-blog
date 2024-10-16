@@ -158,7 +158,7 @@ Page({
   },
   handleTab(event){
     this.setData({
-      "paramsData.id":event.detail.name,
+      "paramsData.id":this.data.classifyList[event.detail.index].id,
       "paramsData.pageNum":1
     },()=>{
       this.getContentList(false)

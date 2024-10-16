@@ -66,11 +66,6 @@ Page({
   onShareAppMessage() {
 
   },
-  onChange(e) {
-    this.setData({
-      keywords: e.detail,
-    });
-  },
   onClick(){
     if(!this.data.keywords){
       this.setData({

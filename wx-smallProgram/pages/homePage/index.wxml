@@ -22,7 +22,7 @@
     <van-sticky>
         <view class="title_box">
             <van-tabs active="{{ active }}"  bind:change="handleTab">
-                <van-tab wx:for="{{classifyList}}" wx:key="index" title="{{item.name}}" name="{{item.id}}">
+                <van-tab wx:for="{{classifyList}}" wx:key="index" title="{{item.name}}">
                 </van-tab>
             </van-tabs>
         </view>

@@ -1,10 +1,9 @@
 <view class="page_box">
     <van-search
-       value="{{ keywords }}"
+       model:value="{{ keywords }}"
        shape="round"
        use-action-slot
        background="transparent"
-       bind:change="onChange"
        placeholder="请输入搜索关键词">
         <view slot="action" bind:tap="onClick">搜索</view>
     </van-search>
