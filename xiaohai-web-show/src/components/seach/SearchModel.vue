@@ -78,6 +78,8 @@ watch(
       getSearch(data.keywords).then((res) => {
         data.articleList = res.data.data
       })
+    }else {
+      data.articleList = []
     }
   }
 )
