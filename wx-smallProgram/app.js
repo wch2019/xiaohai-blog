@@ -1,4 +1,5 @@
 // app.js
+import towxml from '/towxml/index';
 
 App({
   onLaunch() {
@@ -15,7 +16,7 @@ App({
     })
   },
   // 引入`towxml3.0`解析方法
-  towxml:require('/towxml/index'),
+  towxml:towxml,
   globalData: {
     userInfo: null,
     baseURL:'https://nas.dotcode.top:60002',
