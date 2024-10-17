@@ -19,10 +19,10 @@ App({
   towxml:towxml,
   globalData: {
     userInfo: null,
-    baseURL:'https://nas.dotcode.top:60002',
-    // baseURL:'https://www.dotcode.top',
+    // baseURL:'https://nas.dotcode.top:60002',
+    baseURL:'https://www.dotcode.top',
     baseAPI:'/api',
-    fileUrl:'https://nas.dotcode.top:60002/api/document/upload',
-    // fileUrl:'https://www.dotcode.top/api/document/upload'
+    // fileUrl:'https://nas.dotcode.top:60002/api/document/upload',
+    fileUrl:'https://www.dotcode.top/api/document/upload'
   }
 })

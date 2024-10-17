@@ -4,7 +4,7 @@
     padding: 20rpx;
     position: relative;
     box-sizing: border-box;
-    height: calc(100% - env(safe-area-inset-bottom));
+    min-height: 100%;
 }
 .data_box{
     border-bottom: 1px dashed #ccc;
