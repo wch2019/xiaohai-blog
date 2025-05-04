@@ -21,7 +21,11 @@
 
 ## 前言
 
- 本着不想造轮子的理念用过**halo**和**hexo**，见过 **[蘑菇博客](https://gitee.com/moxi159753/mogu_blog_v2)**和**[拾壹博客](https://gitee.com/quequnlong/shiyi-blog)**。别人的用着终究不是很顺手。最终觉得还是自己写个用也是不错的，就当做练手，也是为了折腾。在2023年初开始本项目的开发，开始打算简单写写能用就行，不过最后感觉既然都写了，那就多写点东西吧。目的打造一个**笔记+博客+本地网盘**的项目，现在还没完全构思好，边写边构思。(本项目还未完成，持续更新中，如果有想法的小伙伴也可以分享自己的看法)
+本着不想造轮子的理念用过**halo**和**hexo**，见过 *
+*[蘑菇博客](https://gitee.com/moxi159753/mogu_blog_v2)**和**[拾壹博客](https://gitee.com/quequnlong/shiyi-blog)**
+。别人的用着终究不是很顺手。最终觉得还是自己写个用也是不错的，就当做练手，也是为了折腾。在2023年初开始本项目的开发，开始打算简单写写能用就行，不过最后感觉既然都写了，那就多写点东西吧。目的打造一个
+**笔记+博客+本地网盘**的项目，现在还没完全构思好，边写边构思。(
+本项目还未完成，持续更新中，如果有想法的小伙伴也可以分享自己的看法)
 
 ## 项目介绍
 
@@ -45,10 +49,10 @@ DotCode(点码），是一个前后分离的博客系统。
 
 - 一键建站，快速迁移，数据备份，Markdown导入，Markdown导出
 
-##  项目目录
+## 项目目录
 
 - doc：资源文件；
-- xiaohai_admin: 系统入口； 
+- xiaohai_admin: 系统入口；
 - xiaohai_common：提供公共类；
 - xiaohai_file：提供文件上传相关服务；
 - xiaohai_generator：提供mybatis-plus代码生成相关服务；
@@ -92,6 +96,27 @@ DotCode(点码），是一个前后分离的博客系统。
 - [X] 数据备份，Markdown导入，Markdown导出
 - [ ] ...
 
+## 后端技术
+
+### 框架
+
+| 框架                                                         | 说明                 | 版本           |
+| ------------------------------------------------------------ | -------------------- | -------------- |
+| [Spring Boot](https://spring.io/projects/spring-boot)        | 应用开发框架         | 2.7.18         |
+| [MySQL](https://www.mysql.com/cn/)                           | 数据库服务器         | 8.0+           |
+| [MyBatis Plus](https://mp.baomidou.com/)                     | MyBatis 增强工具包   | 3.5.3.1        |
+| [Redis](https://redis.io/)                                   | Redis                | 5.0 / 6.0 /7.0 |
+| [ Sa-Token ](https://sa-token.cc)                            | 权限认证框架         | 1.34.0         |
+| [hibernate-validator](https://github.com/hibernate/hibernate-validator) | 参数校验组件         | 6.2.5          |
+| [JavaMail API](https://github.com/jakartaee/mail-api)        | 电子邮件发送         | 1.6.7          |
+| [Spring MVC](https://github.com/spring-projects/spring-framework/tree/master/spring-webmvc) | MVC 框架             | 5.3.24         |
+| [Springdoc](https://springdoc.org/)                          | Swagger 文档         | 1.7.0          |
+| [Lombok](https://projectlombok.org/)                         | 消除冗长的 Java 代码 | 1.18.34        |
+| [Hutool](https://www.hutool.cn/)                             | Java工具包类库       | 5.8.25         |
+| [Knife4j](https://doc.xiaominfo.com/)                        | Swagger 文档-增强    | 2.3.2          |
+| [Springdoc](https://springdoc.org/)                          | Swagger 文档         | 1.7.0          |
+| ......                                                       |                           |                |
+
 ## nginx配置
 
 ```    
@@ -126,18 +151,24 @@ server {
     }
     
 ```
+
+## 关注&交流
+
+目前项目还存在很多不足之处，欢迎各位老哥进行技术探讨
+
+<img src="./doc/docs/image/wx.jpg" width="200"/>
+
 ## 打赏
+
 如果觉得项目不错的话可以打赏哦。您的支持就是我最大的动力！
 
 <img src="./doc/docs/image/beg.gif" width="200"/><img src="./doc/docs/image/wxpay.jpg" width="200" />
 
 ## 捐赠信息
 
-| 捐赠者     | 捐赠金额 | 捐赠日期   |
-| ---------- | -------- | ---------- |
-| Powerless🌨 | 1元      | 2024-03-19 |
-
-
+| 捐赠者         | 捐赠金额 | 捐赠日期       |
+|-------------|------|------------|
+| Powerless🌨 | 1元   | 2024-03-19 |
 
 ## 特别鸣谢
 
@@ -149,8 +180,8 @@ server {
 
 ### web
 
-|                     web                      |                     web                     |
-|:--------------------------------------------:|:-------------------------------------------:|
+|                       web                       |                      web                       |
+|:-----------------------------------------------:|:----------------------------------------------:|
 | ![image text](doc/docs/image/web/register.png)  |  ![image text](doc/docs/image/web/login.png)   |
 | ![image text](doc/docs/image/web/dashboard.png) | ![image text](doc/docs/image/web/article.png)  |
 |   ![image text](doc/docs/image/web/edit.png)    |   ![image text](doc/docs/image/web/tags.png)   |
@@ -162,12 +193,12 @@ server {
 
 ### web-show
 
-| web-show                                               | web-show                                               |
-|--------------------------------------------------------|--------------------------------------------------------|
+| web-show                                                  | web-show                                                  |
+|-----------------------------------------------------------|-----------------------------------------------------------|
 | ![image text](doc/docs/image/web-show/index.png)          | ![image text](doc/docs/image/web-show/index-dark.png)     |
 | ![image text](doc/docs/image/web-show/article.png)        | ![image text](doc/docs/image/web-show/back.png)           |
 | ![image text](doc/docs/image/web-show/category.png)       | ![image text](doc/docs/image/web-show/search.png)         |
-| mobile                                                 |  mobile                                                       |
+| mobile                                                    | mobile                                                    |
 | ![image text](doc/docs/image/web-show/mobile-index.png)   | ![image text](doc/docs/image/web-show/mobile-side.png)    |
 | ![image text](doc/docs/image/web-show/mobile-article.png) | ![image text](doc/docs/image/web-show/mobile-comment.png) |
 
