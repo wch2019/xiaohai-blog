@@ -2,28 +2,30 @@ package com.xiaohai.chat.controller;
 
 import com.xiaohai.chat.pojo.ChatMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.stereotype.Controller;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import javax.annotation.Resource;
+import java.security.Principal;
+
+@RestController
 public class ChatController {
 
-    @MessageMapping("/sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        System.out.println("接收消息：" + chatMessage);
-        return chatMessage;
+    @Resource
+    private SimpMessagingTemplate messagingTemplate;
+
+    @MessageMapping("/group") // 群发 对应客户端发送的 /app/group
+    @SendTo("/topic/chat")  // 广播到 /topic/chat
+    public ChatMessage group(ChatMessage message, Principal principal) {
+        message.setFrom(principal.getName());
+        return message;
     }
 
-    @MessageMapping("/addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor) {
-        // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+    @MessageMapping("/chat") // 私聊
+    public void privateChat(ChatMessage message, Principal principal) {
+        message.setFrom(principal.getName());
+        messagingTemplate.convertAndSendToUser(message.getTo(), "/queue/chat", message);
     }
 
 }

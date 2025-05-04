@@ -19,6 +19,12 @@
             <groupId>com.xiaohai</groupId>
             <artifactId>xiaohai-common</artifactId>
         </dependency>
+        <!-- WebSocket 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

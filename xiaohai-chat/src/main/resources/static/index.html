@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室：私聊 + 群聊</title>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 800px;
+            margin: auto;
+        }
+        #chat, #private {
+            border: 1px solid #ccc;
+            height: 200px;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+        }
+        .message { margin: 5px 0; }
+        .self { color: green; }
+        .private { background: #f0f0ff; padding: 5px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<h2>🧑 WebSocket 聊天室</h2>
+<p><strong>连接状态：</strong><span id="status">未连接</span></p>
+
+<label>Token：<input id="token" value="abc123" /></label>
+<label>目标用户（私聊）：<input id="toUser" placeholder="可选，如 bob" /></label>
+<button onclick="connect()">连接</button>
+<button onclick="disconnect()">断开</button>
+
+<h3>💬 群聊</h3>
+<div id="chat"></div>
+
+<h3>👤 私聊</h3>
+<div id="private"></div>
+
+<div style="margin-top:10px;">
+    <input type="text" id="messageInput" placeholder="请输入消息..." style="width: 80%" />
+    <button onclick="sendMessage()">发送</button>
+</div>
+
+<script>
+    let stompClient = null;
+    let currentUser = null;
+
+    function connect() {
+        const token = document.getElementById("token").value.trim();
+        if (!token) return alert("请输入 Token");
+        const socket = new SockJS(`http://localhost:8089/api/messages?token=${token}`);
+        stompClient = Stomp.over(socket);
+        stompClient.connect(
+            {}, // header，可以放 token，但 SockJS 无效
+            function (frame) {
+                console.log("✅ 连接成功:", frame);
+                document.getElementById("status").innerText = "已连接";
+                // 订阅群聊
+                stompClient.subscribe('/topic/chat', (message) => {
+                    console.log("群消息:", message.body);
+                    const msg = JSON.parse(message.body);
+                    showChat(`${msg.from}（群）: ${msg.content}`);
+                });
+                // 订阅私聊
+                stompClient.subscribe('/user/queue/chat', (message) => {
+                    console.log("私聊:", message.body);
+                    const msg = JSON.parse(message.body);
+                    showPrivate(`${msg.from}（私）: ${msg.content}`);
+                });
+                // 获取当前用户名（可通过后端握手成功后传来或放进 Token 中）
+                currentUser = extractUsernameFromToken(token);
+            },
+            function (error) {
+                console.error("❌ 连接失败:", error);
+                document.getElementById("status").innerText = "连接失败";
+            }
+        );
+    }
+
+    function disconnect() {
+        if (stompClient) {
+            stompClient.disconnect(() => {
+                document.getElementById("status").innerText = "已断开";
+                console.log("断开连接");
+            });
+        }
+    }
+
+    function sendMessage() {
+        const content = document.getElementById("messageInput").value.trim();
+        const to = document.getElementById("toUser").value.trim();
+
+        if (!content) return;
+
+        const msg = { content };
+
+        if (to) {
+            msg.to = to;
+            stompClient.send("/app/chat", {}, JSON.stringify(msg));
+            showPrivate(`你 -> ${to}：${content}`, true);
+        } else {
+            stompClient.send("/app/group", {}, JSON.stringify({ content }));
+            showChat(`你（群）：${content}`, true);
+        }
+
+        document.getElementById("messageInput").value = "";
+    }
+
+    function showChat(msg, self = false) {
+        const div = document.createElement("div");
+        div.className = "message" + (self ? " self" : "");
+        div.innerText = msg;
+        document.getElementById("chat").appendChild(div);
+        document.getElementById("chat").scrollTop = chat.scrollHeight;
+    }
+
+    function showPrivate(msg, self = false) {
+        const div = document.createElement("div");
+        div.className = "message private" + (self ? " self" : "");
+        div.innerText = msg;
+        document.getElementById("private").appendChild(div);
+        document.getElementById("private").scrollTop = private.scrollHeight;
+    }
+
+    // 模拟 Token 中获取用户名（实际应解 JWT 或从后端返回）
+    function extractUsernameFromToken(token) {
+        if (token === "abc123") return "alice";
+        if (token === "xyz789") return "bob";
+        return "unknown";
+    }
+</script>
+
+</body>
+</html>
