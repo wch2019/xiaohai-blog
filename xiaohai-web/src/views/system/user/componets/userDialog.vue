@@ -1,6 +1,6 @@
 <template>
   <!-- 添加或修改参数配置对话框 -->
-  <el-drawer :title="title" :visible.sync="open">
+  <el-drawer :title="title" :visible.sync="open" size="40%">
     <!--  <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>-->
     <el-container style="height: 100%;">
       <el-main>

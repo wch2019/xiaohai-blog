@@ -192,8 +192,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BeanUtils.copyProperties(query, user);
         IPage<User> wherePage = new Page<>(PageUtils.getPageNo(), PageUtils.getPageSize());
         IPage<User> iPage = baseMapper.selectPage(wherePage,  new LambdaQueryWrapper<User>()
-                .eq(StringUtils.isNotBlank(query.getUsername()), User::getUsername, query.getUsername())
-                .eq(StringUtils.isNotBlank(query.getNickName()), User::getNickName, query.getNickName())
+                .likeRight(StringUtils.isNotBlank(query.getUsername()), User::getUsername, query.getUsername())
+                .likeRight(StringUtils.isNotBlank(query.getNickName()), User::getNickName, query.getNickName())
                 .eq(StringUtils.isNotBlank(query.getStatus()), User::getStatus, query.getStatus()));
         List<UserDto> list = new ArrayList<>();
         for (User users : iPage.getRecords()) {

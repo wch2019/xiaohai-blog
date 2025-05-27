@@ -1,93 +1,104 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('system:user:add')"
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAdd"
-          >新增
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('system:user:update')"
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-          >修改
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            v-if="$store.getters.permission.includes('system:user:delete')"
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-          >删除
-          </el-button>
-        </el-col>
-        <span style="float: right">
-          <el-col :span="1.5">
-            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">
-              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />
-            </el-tooltip>
-          </el-col>
-          <el-col :span="1.5">
-            <el-input
-              v-model="queryParams.username"
-              placeholder="请输入用户名称"
-              clearable
-              size="small"
-              style="width: 140px"
-              @input="handleQuery"
-            />
-          </el-col>
-          <el-col :span="1.5">
-            <el-input
-              v-model="queryParams.nickName"
-              placeholder="请输入用户昵称"
-              clearable
-              size="small"
-              style="width: 140px"
-              @input="handleQuery"
-            />
-          </el-col>
-          <el-col :span="1.5">
-            <el-select
-              v-model="queryParams.status"
-              placeholder="状态"
-              clearable
-              size="small"
-              style="width: 100px;"
-              @clear="queryParams.status = null"
-              @change="handleQuery"
-            >
-              <el-option
-                v-for="dict in $store.getters.dict.sys_normal_disable"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="1.5">
-            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">
-              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />
-            </el-tooltip>
-          </el-col>
-        </span>
-      </el-row>
+      <UserToolbar
+        :query-params="queryParams"
+        :single="single"
+        :multiple="multiple"
+        @add="handleAdd"
+        @update="handleUpdate"
+        @delete="handleDelete"
+        @reset="resetQuery"
+        @query="handleQuery"
+      />
+
+      <!--      <el-row :gutter="10" class="mb8">-->
+<!--        <el-col :span="1.5">-->
+<!--          <el-button-->
+<!--            v-if="$store.getters.permission.includes('system:user:add')"-->
+<!--            type="primary"-->
+<!--            plain-->
+<!--            icon="el-icon-plus"-->
+<!--            size="mini"-->
+<!--            @click="handleAdd"-->
+<!--          >新增-->
+<!--          </el-button>-->
+<!--        </el-col>-->
+<!--        <el-col :span="1.5">-->
+<!--          <el-button-->
+<!--            v-if="$store.getters.permission.includes('system:user:update')"-->
+<!--            type="success"-->
+<!--            plain-->
+<!--            icon="el-icon-edit"-->
+<!--            size="mini"-->
+<!--            :disabled="single"-->
+<!--            @click="handleUpdate"-->
+<!--          >修改-->
+<!--          </el-button>-->
+<!--        </el-col>-->
+<!--        <el-col :span="1.5">-->
+<!--          <el-button-->
+<!--            v-if="$store.getters.permission.includes('system:user:delete')"-->
+<!--            type="danger"-->
+<!--            plain-->
+<!--            icon="el-icon-delete"-->
+<!--            size="mini"-->
+<!--            :disabled="multiple"-->
+<!--            @click="handleDelete"-->
+<!--          >删除-->
+<!--          </el-button>-->
+<!--        </el-col>-->
+<!--        <span style="float: right">-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">-->
+<!--              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />-->
+<!--            </el-tooltip>-->
+<!--          </el-col>-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-input-->
+<!--              v-model="queryParams.username"-->
+<!--              placeholder="请输入用户名称"-->
+<!--              clearable-->
+<!--              size="small"-->
+<!--              style="width: 140px"-->
+<!--              @input="handleQuery"-->
+<!--            />-->
+<!--          </el-col>-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-input-->
+<!--              v-model="queryParams.nickName"-->
+<!--              placeholder="请输入用户昵称"-->
+<!--              clearable-->
+<!--              size="small"-->
+<!--              style="width: 140px"-->
+<!--              @input="handleQuery"-->
+<!--            />-->
+<!--          </el-col>-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-select-->
+<!--              v-model="queryParams.status"-->
+<!--              placeholder="状态"-->
+<!--              clearable-->
+<!--              size="small"-->
+<!--              style="width: 100px;"-->
+<!--              @clear="queryParams.status = null"-->
+<!--              @change="handleQuery"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                v-for="dict in $store.getters.dict.sys_normal_disable"-->
+<!--                :key="dict.dictValue"-->
+<!--                :label="dict.dictLabel"-->
+<!--                :value="dict.dictValue"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--          </el-col>-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">-->
+<!--              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />-->
+<!--            </el-tooltip>-->
+<!--          </el-col>-->
+<!--        </span>-->
+<!--      </el-row>-->
       <el-table
         v-loading="loading"
         class="table-margin-top-height"
@@ -177,10 +188,11 @@
 import UserDialog from './componets/userDialog.vue'
 import { listUser, delUser, getUser } from '@/api/system/user'
 import { optionSelect } from '@/api/system/role'
+import UserToolbar from "@/components/Toolbar/UserToolbar.vue";
 
 export default {
   name: 'Index',
-  components: { UserDialog },
+  components: {UserToolbar, UserDialog },
   data() {
     return {
       // 遮罩层
