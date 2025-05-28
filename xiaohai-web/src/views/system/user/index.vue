@@ -1,122 +1,44 @@
 <template>
   <div class="app-container">
     <el-card class="box-card box-card-height">
-      <UserToolbar
-        :query-params="queryParams"
-        :single="single"
-        :multiple="multiple"
-        @add="handleAdd"
-        @update="handleUpdate"
-        @delete="handleDelete"
-        @reset="resetQuery"
-        @query="handleQuery"
-      />
-
-      <!--      <el-row :gutter="10" class="mb8">-->
-<!--        <el-col :span="1.5">-->
-<!--          <el-button-->
-<!--            v-if="$store.getters.permission.includes('system:user:add')"-->
-<!--            type="primary"-->
-<!--            plain-->
-<!--            icon="el-icon-plus"-->
-<!--            size="mini"-->
-<!--            @click="handleAdd"-->
-<!--          >新增-->
-<!--          </el-button>-->
-<!--        </el-col>-->
-<!--        <el-col :span="1.5">-->
-<!--          <el-button-->
-<!--            v-if="$store.getters.permission.includes('system:user:update')"-->
-<!--            type="success"-->
-<!--            plain-->
-<!--            icon="el-icon-edit"-->
-<!--            size="mini"-->
-<!--            :disabled="single"-->
-<!--            @click="handleUpdate"-->
-<!--          >修改-->
-<!--          </el-button>-->
-<!--        </el-col>-->
-<!--        <el-col :span="1.5">-->
-<!--          <el-button-->
-<!--            v-if="$store.getters.permission.includes('system:user:delete')"-->
-<!--            type="danger"-->
-<!--            plain-->
-<!--            icon="el-icon-delete"-->
-<!--            size="mini"-->
-<!--            :disabled="multiple"-->
-<!--            @click="handleDelete"-->
-<!--          >删除-->
-<!--          </el-button>-->
-<!--        </el-col>-->
-<!--        <span style="float: right">-->
-<!--          <el-col :span="1.5">-->
-<!--            <el-tooltip class="item" effect="dark" content="清空" placement="top-start">-->
-<!--              <el-button icon="el-icon-delete" size="mini" circle style="min-width: 0;" @click="resetQuery" />-->
-<!--            </el-tooltip>-->
-<!--          </el-col>-->
-<!--          <el-col :span="1.5">-->
-<!--            <el-input-->
-<!--              v-model="queryParams.username"-->
-<!--              placeholder="请输入用户名称"-->
-<!--              clearable-->
-<!--              size="small"-->
-<!--              style="width: 140px"-->
-<!--              @input="handleQuery"-->
-<!--            />-->
-<!--          </el-col>-->
-<!--          <el-col :span="1.5">-->
-<!--            <el-input-->
-<!--              v-model="queryParams.nickName"-->
-<!--              placeholder="请输入用户昵称"-->
-<!--              clearable-->
-<!--              size="small"-->
-<!--              style="width: 140px"-->
-<!--              @input="handleQuery"-->
-<!--            />-->
-<!--          </el-col>-->
-<!--          <el-col :span="1.5">-->
-<!--            <el-select-->
-<!--              v-model="queryParams.status"-->
-<!--              placeholder="状态"-->
-<!--              clearable-->
-<!--              size="small"-->
-<!--              style="width: 100px;"-->
-<!--              @clear="queryParams.status = null"-->
-<!--              @change="handleQuery"-->
-<!--            >-->
-<!--              <el-option-->
-<!--                v-for="dict in $store.getters.dict.sys_normal_disable"-->
-<!--                :key="dict.dictValue"-->
-<!--                :label="dict.dictLabel"-->
-<!--                :value="dict.dictValue"-->
-<!--              />-->
-<!--            </el-select>-->
-<!--          </el-col>-->
-<!--          <el-col :span="1.5">-->
-<!--            <el-tooltip class="item" effect="dark" content="刷新" placement="top-start">-->
-<!--              <el-button icon="el-icon-refresh" size="mini" style="min-width: 0;" circle @click="handleQuery" />-->
-<!--            </el-tooltip>-->
-<!--          </el-col>-->
-<!--        </span>-->
-<!--      </el-row>-->
+      <el-row type="flex" justify="space-between">
+        <el-col :span="7">
+          <ActionButtons
+            :buttons="actionButtons"
+            :single="single"
+            :multiple="multiple"
+            @add="handleAdd"
+            @update="handleUpdate"
+            @delete="handleDelete"
+          />
+        </el-col>
+        <el-col :span="12">
+          <QueryFilters
+            :query-params="queryParams"
+            :filters="queryFilters"
+            @reset="resetQuery"
+            @query="handleQuery"
+          />
+        </el-col>
+      </el-row>
       <el-table
         v-loading="loading"
         class="table-margin-top-height"
         :data="roleList"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" :selectable="judgeSelect" align="center" width="55" />
+        <el-table-column type="selection" :selectable="judgeSelect" align="center" width="55"/>
         <el-table-column label="头像" align="center" prop="avatar" width="120">
           <template slot-scope="scope">
-            <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)" />
-            <el-avatar v-else shape="square"> {{ scope.row.nickName }} </el-avatar>
+            <el-avatar v-if="scope.row.avatar" shape="square" :src="image(scope.row)"/>
+            <el-avatar v-else shape="square"> {{ scope.row.nickName }}</el-avatar>
           </template>
         </el-table-column>
-        <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" width="120" />
-        <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" width="120" />
+        <el-table-column label="用户名" align="center" prop="username" :show-overflow-tooltip="true" width="120"/>
+        <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" width="120"/>
         <el-table-column label="用户性别" align="center" prop="gender" width="120">
           <template slot-scope="scope">
-            <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender" />
+            <dict-tag :options="$store.getters.dict.sys_user_sex" :value="scope.row.gender"/>
           </template>
         </el-table-column>
         <el-table-column label="角色" align="center" prop="roleIds" width="120">
@@ -135,17 +57,20 @@
         <el-table-column label="容量" align="center" prop="disk" min-width="150">
           <template slot-scope="scope">
             <span style="font-size: 12px">{{ scope.row.disk.used }} / {{ scope.row.disk.total }}</span>
-            <el-progress :percentage="scope.row.disk.usage" :stroke-width="14" :show-text="false" color="#6f7ad3" />
+            <el-progress :percentage="scope.row.disk.usage" :stroke-width="14" :show-text="false" color="#6f7ad3"/>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center" prop="status" width="80">
           <template slot-scope="scope">
-            <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status" />
+            <dict-tag :options="$store.getters.dict.sys_normal_disable" :value="scope.row.status"/>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createdTime" width="160" />
-        <el-table-column label="最后登录时间" align="center" prop="loginDate" width="160" />
-        <el-table-column v-if="$store.getters.permission.includes('system:user:delete')||$store.getters.permission.includes('system:user:update')" label="操作" align="center" class-name="small-padding fixed-width" fixed="right" min-width="140">
+        <el-table-column label="创建时间" align="center" prop="createdTime" width="160"/>
+        <el-table-column label="最后登录时间" align="center" prop="loginDate" width="160"/>
+        <el-table-column
+          v-if="$store.getters.permission.includes('system:user:delete')||$store.getters.permission.includes('system:user:update')"
+          label="操作" align="center" class-name="small-padding fixed-width" fixed="right" min-width="140"
+        >
           <template slot-scope="scope">
             <el-button
               v-if="$store.getters.permission.includes('system:user:update')"
@@ -178,7 +103,7 @@
         :limit.sync="queryParams.pageSize"
         @pagination="getList"
       />
-      <UserDialog ref="userDialog" @closeDialog="closeDialog" />
+      <UserDialog ref="userDialog" @closeDialog="closeDialog"/>
     </el-card>
   </div>
 
@@ -188,13 +113,24 @@
 import UserDialog from './componets/userDialog.vue'
 import { listUser, delUser, getUser } from '@/api/system/user'
 import { optionSelect } from '@/api/system/role'
-import UserToolbar from "@/components/Toolbar/UserToolbar.vue";
+import ActionButtons from '@/components/Toolbar/ActionButtons.vue'
+import QueryFilters from '@/components/Toolbar/QueryFilters.vue'
 
 export default {
   name: 'Index',
-  components: {UserToolbar, UserDialog },
+  components: { QueryFilters, ActionButtons, UserDialog },
   data() {
     return {
+      actionButtons: [
+        { type: 'add', label: '新增', icon: 'el-icon-plus', permission: 'system:user:add' },
+        { type: 'update', label: '修改', icon: 'el-icon-edit', permission: 'system:user:update' },
+        { type: 'delete', label: '删除', icon: 'el-icon-delete', permission: 'system:user:delete' }
+      ],
+      queryFilters: [
+        { type: 'input', prop: 'username', placeholder: '请输入用户名' },
+        { type: 'input', prop: 'nickName', placeholder: '请输入昵称' },
+        { type: 'select', prop: 'status', placeholder: '状态', dict: 'sys_normal_disable' }
+      ],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -268,21 +204,32 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      const dictId = row.id || this.ids
+      const dictId = row?.id || this.ids?.[0]
+      if (!dictId) {
+        this.$message.warning('请先选择一条数据进行修改')
+        return
+      }
       getUser(dictId).then(response => {
-        if (this.$refs.userDialog.$refs['form'] !== undefined) {
-          this.$refs.userDialog.$refs['form'].resetFields()
+        const dialog = this.$refs.userDialog
+        if (!dialog) {
+          this.$message.error('用户弹窗组件未注册或引用失败')
+          return
         }
-        this.$refs.userDialog.roleOptions = this.roleOptions
-        this.$refs.userDialog.form = response.data
-        this.$refs.userDialog.open = true
-        this.$refs.userDialog.title = '修改用户'
+        const formRef = dialog.$refs?.form
+        if (formRef) formRef.resetFields()
+
+        dialog.roleOptions = this.roleOptions
+        dialog.form = response.data
+        dialog.open = true
+        dialog.title = '修改用户'
+      }).catch(() => {
+        this.$message.error('获取用户信息失败')
       })
     },
 
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids
+      const ids = row?.id || this.ids
       this.$confirm('是否确认删除用户编号为"' + ids + '"的数据项？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
