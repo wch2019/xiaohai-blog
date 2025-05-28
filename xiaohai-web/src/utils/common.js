@@ -96,3 +96,17 @@ export function getFormattedDate() {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
+/** 测试图标是否正常 */
+export function getValidFaviconUrl(url) {
+  const defaultUrl = process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico?random=' + Date.now()
+  const fallback = '/favicon.png'
+  const testUrl = url || defaultUrl
+  return new Promise((resolve) => {
+    const img = new Image()
+    // 图片加载成功
+    img.onload = () => resolve(testUrl)
+    // 图片加载失败，返回默认
+    img.onerror = () => resolve(fallback)
+    img.src = testUrl
+  })
+}

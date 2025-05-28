@@ -113,12 +113,13 @@
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { getToken } from '@/utils/auth'
 import { getUnread, updateNotifications } from '@/api/note/notifications'
+import { getValidFaviconUrl } from '@/utils/common'
 
 export default {
   name: 'Website',
   data() {
     return {
-      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico',
+      logo: '/favicon.png',
       url: process.env.VUE_APP_BLOG_WEB_API,
       count: 0,
       alertsLike: [],
@@ -138,6 +139,11 @@ export default {
   },
   mounted() {
     this.createSSE()
+  },
+  created() {
+    getValidFaviconUrl().then(validUrl => {
+      this.logo = validUrl
+    })
   },
   methods: {
     createSSE() {

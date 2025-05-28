@@ -15,6 +15,7 @@
 
 <script>
 import variables from '@/styles/variables.scss'
+import { getValidFaviconUrl } from '@/utils/common'
 export default {
   name: 'SidebarLogo',
   props: {
@@ -26,7 +27,7 @@ export default {
   data() {
     return {
       title: 'DotCode',
-      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico?random=' + new Date().getTime()
+      logo: '/favicon.png'
     }
   },
   computed: {
@@ -36,6 +37,11 @@ export default {
     sideTheme() {
       return this.$store.state.settings.sideTheme
     }
+  },
+  created() {
+    getValidFaviconUrl().then(validUrl => {
+      this.logo = validUrl
+    })
   }
 }
 </script>

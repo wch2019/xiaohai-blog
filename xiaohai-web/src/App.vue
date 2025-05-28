@@ -6,10 +6,12 @@
 
 <script>
 // 获取现有的或新建一个 favicon 链接元素
+import { getValidFaviconUrl } from '@/utils/common'
+
 const faviconLink = document.querySelector('link[rel="icon"]')
 if (faviconLink) {
-  const random = new Date().getTime()
-  faviconLink.href = process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico?random=' + random
+  // 图片加载成功后再替换 favicon
+  faviconLink.href = getValidFaviconUrl
 }
 export default {
   name: 'App'

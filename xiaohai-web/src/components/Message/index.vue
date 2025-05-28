@@ -119,12 +119,13 @@
 <script>
 
 import { listNotifications, updateNotifications } from '@/api/note/notifications'
+import { getValidFaviconUrl } from '@/utils/common'
 
 export default {
   name: 'Index',
   data() {
     return {
-      logo: process.env.VUE_APP_BASE_API_FILE + '/system/favicon.ico',
+      logo: '/favicon.png',
       url: process.env.VUE_APP_BLOG_WEB_API,
       // 总条数
       total: 0,
@@ -140,6 +141,9 @@ export default {
     }
   },
   created() {
+    getValidFaviconUrl().then(validUrl => {
+      this.logo = validUrl
+    })
     this.getUnreadList()
   },
   methods: {
